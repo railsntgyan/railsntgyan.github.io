@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Railway Signalling and Telecommunication System - SECR</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --railway-maroon: #7a1c1c;
+      --railway-dark: #501010;
+      --accent-blue: #0b4f6c;
+      --accent-hover: #08384d;
+      --border-color: #333333;
+      --table-border: #444444;
+      --bg-light: #f4f6f9;
+      --bg-card: #ffffff;
+      --text-main: #212529;
+      --text-muted: #555555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* LOGIN OVERLAY / GATEWAY */
+    #loginScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #2b1111, #4a1212, #102a43);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 8px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      border-top: 6px solid var(--railway-maroon);
+      padding: 30px 28px;
+      text-align: center;
+    }
+
+    .login-emblem {
+      width: 64px;
+      height: 64px;
+      background: #fdf2f2;
+      color: var(--railway-maroon);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 10px rgba(122, 28, 28, 0.2);
+    }
+
+    .login-card h2 {
+      font-size: 19px;
+      color: var(--railway-dark);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .login-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .login-form-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .login-form-group label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .login-input-wrapper {
+      position: relative;
+    }
+
+    .login-input-wrapper i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+      font-size: 14px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 10px 12px 10px 38px;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .login-input:focus {
+      border-color: var(--railway-maroon);
+      box-shadow: 0 0 0 3px rgba(122, 28, 28, 0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      background: var(--railway-maroon);
+      color: #ffffff;
+      border: none;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .login-btn:hover {
+      background: var(--railway-dark);
+    }
+
+    .login-btn:active {
+      transform: scale(0.99);
+    }
+
+    .login-error-msg {
+      color: #c0392b;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, var(--railway-dark), var(--railway-maroon));
+      color: white;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #f1c40f;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-logo {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: var(--railway-maroon);
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .header-title h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: #ffd7d7;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-portal {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-cloud {
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+    }
+
+    .btn-logout {
+      background: #c0392b;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #962d22;
+    }
+
+    /* MAIN CONTAINER */
+    .app-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* SIDEBAR */
+    aside {
+      width: 320px;
+      background: var(--bg-card);
+      border-right: 2px solid #ccc;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    }
+
+    .home-btn-container {
+      padding: 12px;
+      border-bottom: 2px solid #ddd;
+      background: #fafafa;
+    }
+
+    .home-btn {
+      width: 100%;
+      background: var(--railway-maroon);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+
+    .home-btn:hover {
+      background: var(--railway-dark);
+      transform: translateY(-1px);
+    }
+
+    /* COLLAPSIBLE SIDEBAR HEADERS */
+    .sidebar-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      color: var(--text-muted);
+      border-bottom: 1px solid #eee;
+      background: #f1f3f5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .sidebar-section-title:hover {
+      background: #e5e9ed;
+      color: var(--railway-maroon);
+    }
+
+    .sidebar-section-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-section-title i.chevron-icon {
+      font-size: 11px;
+      transition: transform 0.25s ease;
+    }
+
+    .collapsible-group.collapsed .chevron-icon {
+      transform: rotate(-90deg);
+    }
+
+    .collapsible-group.collapsed .nav-list {
+      display: none;
+    }
+
+    .nav-list {
+      list-style: none;
+      margin-bottom: 6px;
+    }
+
+    .nav-item {
+      padding: 7px 18px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 4px solid transparent;
+      border-bottom: 1px solid #f5f5f5;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+    }
+
+    .nav-item i {
+      font-size: 12.5px;
+      width: 16px;
+      color: #666;
+    }
+
+    .nav-item:hover {
+      background-color: #e9eff5;
+      color: var(--accent-blue);
+      border-left-color: var(--accent-blue);
+    }
+
+    .nav-item.active {
+      background-color: #e3ebf3;
+      color: var(--railway-maroon);
+      border-left-color: var(--railway-maroon);
+      font-weight: 800;
+    }
+
+    .nav-item.active i {
+      color: var(--railway-maroon);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 20px;
+      overflow-y: auto;
+    }
+
+    .content-header-card {
+      background: white;
+      border: 1px solid #dcdcdc;
+      border-left: 5px solid var(--railway-maroon);
+      padding: 14px 18px;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .view-title-group h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--railway-maroon);
+      text-transform: uppercase;
+    }
+
+    .view-title-group p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .action-toolbar {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--railway-maroon);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--railway-dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--accent-blue);
+      border: 1px solid var(--accent-blue);
+    }
+
+    .btn-outline:hover {
+      background: #f0f7fb;
+    }
+
+    .btn-success {
+      background: #198754;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #146c43;
+    }
+
+    /* FILTER PANEL */
+    .filter-panel {
+      background: white;
+      border: 1px solid #dcdcdc;
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .filter-item select, .filter-item input {
+      padding: 5px 8px;
+      font-size: 12.5px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      background: white;
+    }
+
+    .search-input {
+      min-width: 220px;
+    }
+
+    .reset-link {
+      font-size: 12px;
+      color: var(--accent-blue);
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    /* TABLE SECTION */
+    .table-container {
+      background: white;
+      border: 2px solid var(--table-border);
+      border-radius: 4px;
+      overflow-x: auto;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: #2b3a4a;
+      color: white;
+      padding: 10px 12px;
+      font-weight: 600;
+      border: 1px solid var(--table-border);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 9px 12px;
+      border: 1px solid #d4d4d4;
+      vertical-align: middle;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #fafbfc;
+    }
+
+    tbody tr:hover {
+      background-color: #f1f7fa;
+    }
+
+    .work-link {
+      color: var(--accent-blue);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .work-link:hover {
+      text-decoration: underline;
+      color: var(--railway-maroon);
+    }
+
+    .tag-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 11px;
+      border-radius: 12px;
+      font-weight: 600;
+      background: #e1ecf4;
+      color: #1a4f7c;
+      border: 1px solid #b8d5e8;
+    }
+
+    .agency-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 11px;
+      border-radius: 8px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .dept-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 11px;
+      border-radius: 8px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 12px;
+      font-weight: 700;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1px solid #a5d6a7;
+    }
+
+    .oem-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 10px;
+      font-weight: 700;
+      background: #fdf3e7;
+      color: #b75900;
+      border: 1px solid #fbd38d;
+      white-space: nowrap;
+    }
+
+    .authority-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 10px;
+      font-weight: 700;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
+
+    .equip-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 11px;
+      border-radius: 6px;
+      font-weight: 600;
+      background: #ede7f6;
+      color: #512da8;
+      border: 1px solid #d1c4e9;
+    }
+
+    .drive-pill {
+      background: #e8f0fe;
+      color: #1967d2;
+      border: 1px solid #c2d7fa;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .action-icon-btn {
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #333;
+      transition: all 0.15s;
+    }
+
+    .action-icon-btn:hover {
+      background: var(--railway-maroon);
+      color: white;
+      border-color: var(--railway-maroon);
+    }
+
+    .action-icon-btn.edit-btn:hover {
+      background: #0b4f6c !important;
+      border-color: #0b4f6c !important;
+      color: white !important;
+    }
+
+    .action-icon-btn.edit-btn:hover i {
+      color: white !important;
+    }
+
+    .action-icon-btn.delete-btn:hover {
+      background: #c0392b !important;
+      border-color: #c0392b !important;
+      color: white !important;
+    }
+
+    .action-icon-btn.delete-btn:hover i {
+      color: white !important;
+    }
+
+    /* MODAL POPUPS */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      width: 90%;
+      max-width: 1050px;
+      height: 88vh;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background: var(--railway-dark);
+      color: white;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ffd700;
+    }
+
+    .modal-header h3 {
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .modal-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-btn-control {
+      background: #243342 !important;
+      color: #ffffff !important;
+      border: 1px solid #627d98 !important;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn-control:hover {
+      background: #102a43 !important;
+      border-color: #ffd700 !important;
+      color: #ffffff !important;
+      transform: translateY(-1px);
+    }
+
+    .modal-btn-control i {
+      color: #ffd700 !important;
+    }
+
+    .modal-btn-success {
+      background: #198754 !important;
+      color: #ffffff !important;
+      border: 1px solid #28a745 !important;
+    }
+
+    .modal-btn-success:hover {
+      background: #146c43 !important;
+      border-color: #ffffff !important;
+    }
+
+    .modal-btn-success i {
+      color: #ffffff !important;
+    }
+
+    .modal-close-btn {
+      background: #3b4d61;
+      border: 1px solid #718096;
+      color: #ffffff;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: #c0392b;
+      border-color: #e53e3e;
+      color: white;
+    }
+
+    .modal-body {
+      flex: 1;
+      background: #eef2f5;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .preview-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* FINANCIAL YEAR REPORT MODAL */
+    .report-modal-content {
+      background: white;
+      width: 95%;
+      max-width: 1250px;
+      height: 90vh;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 35px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    .report-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: #ffffff;
+    }
+
+    .report-sheet {
+      border: 1px solid #ddd;
+      padding: 24px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .report-header-banner {
+      text-align: center;
+      border-bottom: 2px solid var(--railway-maroon);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .report-header-banner h2 {
+      font-size: 19px;
+      color: var(--railway-maroon);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .report-header-banner p {
+      font-size: 12.5px;
+      color: #333;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .report-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 8px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      font-size: 12.5px;
+    }
+
+    .report-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .report-table th, .report-table td {
+      border: 1px solid #4a5568;
+      padding: 8px 6px;
+    }
+
+    .report-table th {
+      background-color: #2b3a4a;
+      color: white;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .report-table th.col-category {
+      text-align: left;
+      min-width: 200px;
+      padding-left: 10px;
+    }
+
+    .report-table td.cat-name {
+      text-align: left;
+      font-weight: 700;
+      background: #fafbfc;
+      color: #1a202c;
+      padding-left: 10px;
+    }
+
+    .report-table tr.total-row td {
+      background-color: #edf2f7;
+      font-weight: 800;
+      color: var(--railway-maroon);
+    }
+
+    .report-table td.col-total {
+      background-color: #f7fafc;
+      font-weight: 800;
+      color: var(--accent-blue);
+    }
+
+    .report-table tr.total-row td.grand-total {
+      background-color: #fed7d7;
+      color: #9b2c2c;
+      font-size: 13px;
+    }
+
+    /* FORM MODAL */
+    .form-modal-content {
+      background: white;
+      width: 90%;
+      max-width: 640px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .form-body {
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .form-group input, .form-group select {
+      padding: 7px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .form-footer {
+      padding: 12px 24px;
+      background: #f7f7f7;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .help-hint {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #e9ecef;
+      padding: 6px 20px;
+      font-size: 11.5px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #ccc;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #fyReportSheet, #fyReportSheet *,
+      #printablePreviewDoc, #printablePreviewDoc * {
+        visibility: visible;
+      }
+      #fyReportSheet, #printablePreviewDoc {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FULL PAGE LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-emblem">
+        <i class="fa-solid fa-train"></i>
+      </div>
+      <h2>SECR Portal Security</h2>
+      <p>South East Central Railway <br>Enter official password to access records</p>
+      
+      <div class="login-form-group">
+        <label for="pagePasswordInput">Security Password</label>
+        <div class="login-input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="pagePasswordInput" class="login-input" placeholder="Enter security password" autofocus onkeydown="handleLoginKeyPress(event)">
+        </div>
+      </div>
+
+      <button type="button" class="login-btn" onclick="checkPortalPassword()">
+        <i class="fa-solid fa-right-to-bracket"></i> Access Repository
+      </button>
+
+      <div id="loginErrorMsg" class="login-error-msg">
+        <i class="fa-solid fa-triangle-exclamation"></i> Incorrect password! Please enter valid authorization key.
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="header-logo"><i class="fa-solid fa-train"></i></div>
+      <div class="header-title">
+        <h1>Railway Signalling and Telecommunication System</h1>
+        <p>South East Central Railway (SECR) • Bilaspur Division Technical Repository</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="badge-portal"><i class="fa-solid fa-shield-halved" style="color: #f1c40f;"></i> Protected Access</span>
+      <span class="badge-portal badge-cloud"><i class="fa-solid fa-cloud"></i> Cloud Synced</span>
+      <span class="badge-portal"><i class="fa-solid fa-clock"></i> <span id="currentClock"></span></span>
+      <button class="btn-logout" onclick="logoutPortal()" title="Lock Portal">
+        <i class="fa-solid fa-lock"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- APP CONTAINER -->
+  <div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="home-btn-container">
+        <button class="home-btn" onclick="goHome()">
+          <i class="fa-solid fa-house"></i> HOME
+        </button>
+      </div>
+
+      <!-- SECTION 1: FILES & APPROVALS -->
+      <div class="collapsible-group" id="grpFilesApprovals">
+        <div class="sidebar-section-title" onclick="toggleAccordion('grpFilesApprovals')">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-folder"></i> FILES & APPROVALS</span>
+          <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </div>
+        <ul class="nav-list">
+          <li class="nav-item active" onclick="switchCategory('PCSTE SANCTION')"><i class="fa-solid fa-stamp"></i> PCSTE SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('EI TSAA')"><i class="fa-solid fa-microchip"></i> EI TSAA</li>
+          <li class="nav-item" onclick="switchCategory('MSDAC TSAA')"><i class="fa-solid fa-wave-square"></i> MSDAC TSAA</li>
+          <li class="nav-item" onclick="switchCategory('S&T SPEED CERTIFICATE')"><i class="fa-solid fa-gauge-high"></i> S&T SPEED CERTIFICATE</li>
+          <li class="nav-item" onclick="switchCategory('PCSTE DISPENSATION')"><i class="fa-solid fa-scale-balanced"></i> PCSTE DISPENSATION</li>
+          <li class="nav-item" onclick="switchCategory('GM SANCTION')"><i class="fa-solid fa-file-signature"></i> GM SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('GRADE CONDONATION')"><i class="fa-solid fa-road-circle-exclamation"></i> GRADE CONDONATION</li>
+          <li class="nav-item" onclick="switchCategory('LINE OPENING')"><i class="fa-solid fa-train-subway"></i> LINE OPENING</li>
+          <li class="nav-item" onclick="switchCategory('SPEED RAISING')"><i class="fa-solid fa-gauge"></i> SPEED RAISING</li>
+          <li class="nav-item" onclick="switchCategory('JOINT SAFETY CERTIFICATE (JSC)')"><i class="fa-solid fa-shield-virus"></i> JOINT SAFETY CERTIFICATE (JSC)</li>
+          <li class="nav-item" onclick="switchCategory('INSPECTION NOTE')"><i class="fa-solid fa-clipboard-check"></i> INSPECTION NOTE</li>
+          <li class="nav-item" onclick="switchCategory('SECR POLICY')"><i class="fa-solid fa-book"></i> SECR POLICY</li>
+          <li class="nav-item" onclick="switchCategory('SECR TYPICAL')"><i class="fa-solid fa-diagram-project"></i> SECR TYPICAL</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 2: REFERENCE BOOKS & DOCS -->
+      <div class="collapsible-group collapsed" id="grpRefBooks">
+        <div class="sidebar-section-title" onclick="toggleAccordion('grpRefBooks')">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-book-bookmark"></i> REFERENCE BOOKS & DOCS</span>
+          <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </div>
+        <ul class="nav-list">
+          <li class="nav-item" onclick="switchCategory('IMP. LETTER')"><i class="fa-solid fa-envelope-open-text" style="color:#d9534f;"></i> IMP. LETTER</li>
+          <li class="nav-item" onclick="switchCategory('RDSO TAN (TECHNICAL ADVISORY NOTE)')"><i class="fa-solid fa-note-sticky" style="color:#e67e22;"></i> RDSO TAN (TECHNICAL ADVISORY NOTE)</li>
+          <li class="nav-item" onclick="switchCategory('IRSEM & CORRECTION SLIP')"><i class="fa-solid fa-file-lines"></i> IRSEM & CORRECTION SLIP</li>
+          <li class="nav-item" onclick="switchCategory('IRTEM')"><i class="fa-solid fa-tower-broadcast"></i> IRTEM</li>
+          <li class="nav-item" onclick="switchCategory('GCC')"><i class="fa-solid fa-gavel"></i> GCC (GENERAL CONDITIONS OF CONTRACT)</li>
+          <li class="nav-item" onclick="switchCategory('IRSOD & CORRECTION SLIP')"><i class="fa-solid fa-ruler-combined"></i> IRSOD & CORRECTION SLIP</li>
+          <li class="nav-item" onclick="switchCategory('LINE OPENING (MANUAL)')"><i class="fa-solid fa-route"></i> LINE OPENING</li>
+          <li class="nav-item" onclick="switchCategory('SOP (SCHEDULE OF POWER)')"><i class="fa-solid fa-bolt"></i> SOP (SCHEDULE OF POWER)</li>
+          <li class="nav-item" onclick="switchCategory('OTHER MANUALS')"><i class="fa-solid fa-book-journal-whills"></i> OTHER MANUALS</li>
+          <li class="nav-item" onclick="switchCategory('IRISET E-BOOK (SIGNAL)')"><i class="fa-solid fa-traffic-light"></i> IRISET E-BOOK (SIGNAL)</li>
+          <li class="nav-item" onclick="switchCategory('IRISET E-BOOK (TELECOM)')"><i class="fa-solid fa-satellite-dish"></i> IRISET E-BOOK (TELECOM)</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 3: DOCUMENTS FOR VARIOUS SANCTION/APPROVAL -->
+      <div class="collapsible-group collapsed" id="grpSanctionDocs">
+        <div class="sidebar-section-title" onclick="toggleAccordion('grpSanctionDocs')">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-folder-tree"></i> DOCUMENTS FOR VARIOUS SANCTION/APPROVAL</span>
+          <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </div>
+        <ul class="nav-list">
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR EI TSAA')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR EI TSAA</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR MSDAC TSAA')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR MSDAC TSAA</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR PCSTE SANCTION')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR PCSTE SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR GM SANCTION')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR GM SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR OTHER APPROVALS')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR OTHER APPROVALS</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 4: LDCE GR. B QUESTION PAPER -->
+      <div class="collapsible-group collapsed" id="grpLdcePapers">
+        <div class="sidebar-section-title" onclick="toggleAccordion('grpLdcePapers')">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-graduation-cap"></i> LDCE GR. B QUESTION PAPER</span>
+          <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </div>
+        <ul class="nav-list">
+          <li class="nav-item" onclick="switchCategory('ASTE')"><i class="fa-solid fa-file-circle-question"></i> ASTE</li>
+          <li class="nav-item" onclick="switchCategory('AEN')"><i class="fa-solid fa-file-circle-question"></i> AEN</li>
+          <li class="nav-item" onclick="switchCategory('AMM')"><i class="fa-solid fa-file-circle-question"></i> AMM</li>
+          <li class="nav-item" onclick="switchCategory('APO')"><i class="fa-solid fa-file-circle-question"></i> APO</li>
+          <li class="nav-item" onclick="switchCategory('AFA')"><i class="fa-solid fa-file-circle-question"></i> AFA</li>
+          <li class="nav-item" onclick="switchCategory('AME')"><i class="fa-solid fa-file-circle-question"></i> AME</li>
+          <li class="nav-item" onclick="switchCategory('ACM')"><i class="fa-solid fa-file-circle-question"></i> ACM</li>
+          <li class="nav-item" onclick="switchCategory('AOM')"><i class="fa-solid fa-file-circle-question"></i> AOM</li>
+          <li class="nav-item" onclick="switchCategory('AEE')"><i class="fa-solid fa-file-circle-question"></i> AEE</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 5: IMPORTANT LINKS -->
+      <div class="collapsible-group collapsed" id="grpImportantLinks">
+        <div class="sidebar-section-title" onclick="toggleAccordion('grpImportantLinks')">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-link"></i> IMPORTANT LINKS</span>
+          <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </div>
+        <ul class="nav-list">
+          <li class="nav-item" onclick="switchCategory('IMPORTANT LINKS')"><i class="fa-solid fa-arrow-up-right-from-square"></i> PORTAL & REPO LINKS</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main>
+      <div class="content-header-card">
+        <div class="view-title-group">
+          <h2 id="activeCategoryTitle">PCSTE SANCTION</h2>
+          <p id="activeCategoryDesc">Comprehensive register and record log for Railway S&T technical approvals and sanctions.</p>
+        </div>
+        <div class="action-toolbar">
+          <button class="btn btn-success" onclick="openFYReportModal()"><i class="fa-solid fa-chart-column"></i> FY Report</button>
+          <button class="btn btn-outline" onclick="exportToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+          <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New Record</button>
+        </div>
+      </div>
+
+      <!-- Filters & Sorting Panel -->
+      <div class="filter-panel">
+        <div class="filter-item">
+          <i class="fa-solid fa-calendar"></i>
+          <span>Year:</span>
+          <select id="filterYear" onchange="renderTable()">
+            <option value="ALL">All Years</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+        </div>
+
+        <div class="filter-item" id="filterDivisionWrapper">
+          <i class="fa-solid fa-building"></i>
+          <span>Division:</span>
+          <select id="filterDivision" onchange="renderTable()">
+            <option value="ALL">All Divisions</option>
+            <option value="Bilaspur">Bilaspur</option>
+            <option value="Raipur">Raipur</option>
+            <option value="Nagpur">Nagpur</option>
+            <option value="HQ">HQ / SECR</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="filterSearch" class="search-input" placeholder="Search keywords, description, etc..." onkeyup="renderTable()">
+        </div>
+
+        <span class="reset-link" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset Filters</span>
+      </div>
+
+      <!-- Main Dynamic Table -->
+      <div class="table-container">
+        <table id="mainRecordTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Educational & Official Reference Purpose • SECR Bilaspur Division</span>
+    <span>S&T Department Technical Documentation Repository</span>
+  </footer>
+
+  <!-- MODAL: PREVIEW -->
+  <div class="modal-overlay" id="pdfPreviewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalDocTitle"><i class="fa-brands fa-google-drive"></i> Document Preview</h3>
+        <div class="modal-header-actions">
+          <button class="modal-btn-control" onclick="printPreviewDoc()">
+            <i class="fa-solid fa-print"></i> Print
+          </button>
+          <a id="modalDriveExternalLink" href="#" target="_blank" class="modal-btn-control">
+            <i class="fa-solid fa-download"></i> Download / Drive
+          </a>
+          <button class="modal-close-btn" onclick="closePreviewModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="modal-body" id="modalPreviewBody"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: FY REPORT -->
+  <div class="modal-overlay" id="fyReportModal">
+    <div class="report-modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-chart-column"></i> Financial Year-wise S&T Technical Summary Report</h3>
+        <div class="modal-header-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:12px; font-weight:700; color:#ffffff;">Select FY:</span>
+            <select id="reportFYSelect" style="padding:5px 10px; border-radius:4px; font-size:12px; font-weight:700; background:#ffffff; color:#212529; border:1px solid #ced4da;" onchange="generateFYReport()">
+              <option value="2026-27">2026–27</option>
+              <option value="2025-26" selected>2025–26</option>
+              <option value="2024-25">2024–25</option>
+              <option value="2023-24">2023–24</option>
+            </select>
+          </div>
+          <button class="modal-btn-control" onclick="printReport()">
+            <i class="fa-solid fa-print"></i> Print Report
+          </button>
+          <button class="modal-btn-control modal-btn-success" onclick="exportFYReportCSV()">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+          <button class="modal-close-btn" onclick="closeFYReportModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="report-body">
+        <div class="report-sheet" id="fyReportSheet">
+          <div class="report-header-banner">
+            <h2>South East Central Railway</h2>
+            <p>Office of the Principal Chief Signal & Telecom Engineer (PCSTE), Bilaspur (C.G.)</p>
+            <p style="color:var(--railway-maroon); font-size:13px; font-weight:700; margin-top:6px;">
+              MONTH-WISE S&T TECHNICAL APPROVALS & SANCTIONS SUMMARY REPORT
+            </p>
+          </div>
+
+          <div class="report-meta-bar">
+            <span><b>Financial Year:</b> <span id="reportFYLabel" style="color:var(--railway-maroon); font-weight:800;">2025–26</span></span>
+            <span><b>Period:</b> 01 April to 31 March</span>
+            <span><b>Criterion:</b> Document Letter Issue Date / Date of Forwarding from PCSTE Office</span>
+            <span><b>Generated on:</b> <span id="reportGenDate"></span></span>
+          </div>
+
+          <div class="report-table-wrapper">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th class="col-category">Category / Scheme</th>
+                  <th>Apr</th>
+                  <th>May</th>
+                  <th>Jun</th>
+                  <th>Jul</th>
+                  <th>Aug</th>
+                  <th>Sep</th>
+                  <th>Oct</th>
+                  <th>Nov</th>
+                  <th>Dec</th>
+                  <th>Jan</th>
+                  <th>Feb</th>
+                  <th>Mar</th>
+                  <th style="background:#1a365d; min-width:70px;">Total</th>
+                </tr>
+              </thead>
+              <tbody id="fyReportTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT RECORD FORM -->
+  <div class="modal-overlay" id="addRecordModal">
+    <div class="form-modal-content">
+      <div class="modal-header">
+        <h3 id="formModalHeading"><i class="fa-solid fa-file-circle-plus"></i> Add New Record</h3>
+        <button class="modal-close-btn" onclick="closeAddModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="form-body">
+        <input type="hidden" id="formEditRecordId" value="">
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="formCategory" onchange="toggleFormFields()">
+            <optgroup label="FILES & APPROVALS">
+              <option value="PCSTE SANCTION">PCSTE SANCTION</option>
+              <option value="EI TSAA">EI TSAA</option>
+              <option value="MSDAC TSAA">MSDAC TSAA</option>
+              <option value="S&T SPEED CERTIFICATE">S&T SPEED CERTIFICATE</option>
+              <option value="PCSTE DISPENSATION">PCSTE DISPENSATION</option>
+              <option value="GM SANCTION">GM SANCTION</option>
+              <option value="GRADE CONDONATION">GRADE CONDONATION</option>
+              <option value="LINE OPENING">LINE OPENING</option>
+              <option value="SPEED RAISING">SPEED RAISING</option>
+              <option value="JOINT SAFETY CERTIFICATE (JSC)">JOINT SAFETY CERTIFICATE (JSC)</option>
+              <option value="INSPECTION NOTE">INSPECTION NOTE</option>
+              <option value="SECR POLICY">SECR POLICY</option>
+              <option value="SECR TYPICAL">SECR TYPICAL</option>
+            </optgroup>
+            <optgroup label="REFERENCE BOOKS & DOCS">
+              <option value="IMP. LETTER">IMP. LETTER</option>
+              <option value="RDSO TAN (TECHNICAL ADVISORY NOTE)">RDSO TAN (TECHNICAL ADVISORY NOTE)</option>
+              <option value="IRSEM & CORRECTION SLIP">IRSEM & CORRECTION SLIP</option>
+              <option value="IRTEM">IRTEM</option>
+              <option value="GCC">GCC (GENERAL CONDITIONS OF CONTRACT)</option>
+              <option value="IRSOD & CORRECTION SLIP">IRSOD & CORRECTION SLIP</option>
+              <option value="LINE OPENING (MANUAL)">LINE OPENING</option>
+              <option value="SOP (SCHEDULE OF POWER)">SOP (SCHEDULE OF POWER)</option>
+              <option value="OTHER MANUALS">OTHER MANUALS</option>
+              <option value="IRISET E-BOOK (SIGNAL)">IRISET E-BOOK (SIGNAL)</option>
+              <option value="IRISET E-BOOK (TELECOM)">IRISET E-BOOK (TELECOM)</option>
+            </optgroup>
+            <optgroup label="DOCUMENTS FOR VARIOUS SANCTION/APPROVAL">
+              <option value="DOCUMENTS FOR EI TSAA">DOCUMENTS FOR EI TSAA</option>
+              <option value="DOCUMENTS FOR MSDAC TSAA">DOCUMENTS FOR MSDAC TSAA</option>
+              <option value="DOCUMENTS FOR PCSTE SANCTION">DOCUMENTS FOR PCSTE SANCTION</option>
+              <option value="DOCUMENTS FOR GM SANCTION">DOCUMENTS FOR GM SANCTION</option>
+              <option value="DOCUMENTS FOR OTHER APPROVALS">DOCUMENTS FOR OTHER APPROVALS</option>
+            </optgroup>
+            <optgroup label="LDCE GR. B QUESTION PAPER">
+              <option value="ASTE">ASTE</option>
+              <option value="AEN">AEN</option>
+              <option value="AMM">AMM</option>
+              <option value="APO">APO</option>
+              <option value="AFA">AFA</option>
+              <option value="AME">AME</option>
+              <option value="ACM">ACM</option>
+              <option value="AOM">AOM</option>
+              <option value="AEE">AEE</option>
+            </optgroup>
+            <optgroup label="IMPORTANT LINKS">
+              <option value="IMPORTANT LINKS">IMPORTANT LINKS</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group" id="formStationContainer">
+          <label>Station / Section</label>
+          <input type="text" id="formStation" placeholder="e.g. ROB, BSP Yard, CPH, RIG">
+        </div>
+
+        <div class="form-group" id="formDivisionContainer">
+          <label>Division</label>
+          <select id="formDivision">
+            <option value="Bilaspur">Bilaspur</option>
+            <option value="Raipur">Raipur</option>
+            <option value="Nagpur">Nagpur</option>
+            <option value="HQ">HQ / SECR</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formTanNoContainer" style="display:none;">
+          <label>TAN No.</label>
+          <input type="text" id="formTanNo" placeholder="e.g. STS/E/TAN/3002">
+        </div>
+
+        <div class="form-group" id="formRelatedToContainer" style="display:none;">
+          <label id="formRelatedToLabel">Related to</label>
+          <input type="text" id="formRelatedTo" placeholder="e.g. Dual MSDAC, Electronic Interlocking, Railnet Portal">
+        </div>
+
+        <div class="form-group" id="formDirectLinkContainer" style="display:none;">
+          <label>Web Link (URL)</label>
+          <input type="url" id="formDirectLink" placeholder="https://indianrailways.gov.in">
+        </div>
+
+        <div class="form-group" id="formBookNameContainer" style="display:none;">
+          <label>Book Name</label>
+          <input type="text" id="formBookName" placeholder="e.g. ST-21 Electronic Interlocking / TC-05 OFC Systems">
+        </div>
+
+        <div class="form-group" id="formLdceTypeContainer" style="display:none;">
+          <label>LDCE Exam Type</label>
+          <select id="formLdceType">
+            <option value="30%">30% LDCE (CBT / Written)</option>
+            <option value="70%">70% Departmental Quota</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formWorkContainer">
+          <label id="formWorkLabel">Description</label>
+          <input type="text" id="formWorkName" placeholder="Enter details / work description">
+        </div>
+
+        <div class="form-group" id="formAgencyContainer" style="display:none;">
+          <label>Agency</label>
+          <select id="formAgency">
+            <option value="Project">Project</option>
+            <option value="Con">Construction (Con)</option>
+            <option value="Open line">Open line</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formDepartmentContainer" style="display:none;">
+          <label>Department</label>
+          <input type="text" id="formDepartment" placeholder="e.g. S&T, Mechanical, Civil, Operating">
+        </div>
+
+        <div class="form-group" id="formInspectionByContainer" style="display:none;">
+          <label>Inspection Done by</label>
+          <input type="text" id="formInspectionBy" placeholder="e.g. PCSTE, CSE, CSTE(Plg)">
+        </div>
+
+        <div class="form-group" id="formEquipmentContainer" style="display:none;">
+          <label>Equipment for PCSTE Sanction</label>
+          <input type="text" id="formEquipment" placeholder="e.g. Electric Point Machine, IPS, HASSDAC, EI">
+        </div>
+
+        <div class="form-group" id="formEiOemContainer" style="display:none;">
+          <label>OEM Make</label>
+          <select id="formEiOem">
+            <option value="HITACHI">HITACHI</option>
+            <option value="MEDHA">MEDHA</option>
+            <option value="KYOSON">KYOSON</option>
+            <option value="NIPPON">NIPPON</option>
+            <option value="SAFECONNECT">SAFECONNECT</option>
+            <option value="SIEMENS">SIEMENS</option>
+            <option value="WESTRES">WESTRES</option>
+            <option value="OTHER">OTHER</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formEiSanctionByContainer" style="display:none;">
+          <label>Sanction given by</label>
+          <select id="formEiSanctionBy">
+            <option value="PCSTE">PCSTE</option>
+            <option value="RDSO">RDSO</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formRoutesContainer" style="display:none;">
+          <label>No. of Routes</label>
+          <input type="number" id="formRoutes" placeholder="e.g. 48, 64, 128">
+        </div>
+
+        <div class="form-group" id="formOemContainer" style="display:none;">
+          <label>OEM Make (MSDAC)</label>
+          <input type="text" id="formOem" placeholder="e.g. Frauscher / CEL / Siemens / GG Tronics">
+        </div>
+
+        <div class="form-group" id="formWagonContainer" style="display:none;">
+          <label>Wagon Name / Rolling Stock Type</label>
+          <input type="text" id="formWagon" placeholder="e.g. BOXNHL, BCNHL, BOBRN, WAG-12">
+        </div>
+
+        <div class="form-group" id="formDocNoContainer" style="display:none;">
+          <label id="formDocNoLabel">Policy / Typical No.</label>
+          <input type="text" id="formDocNo" placeholder="e.g. SECR/S&T/P-12/2026">
+        </div>
+
+        <div class="form-group" id="formRelatedEquipContainer" style="display:none;">
+          <label>Related to Equipment</label>
+          <input type="text" id="formRelatedEquip" placeholder="e.g. Point Machine, MSDAC, EI, UFSBI, Cable">
+        </div>
+
+        <div class="form-group" id="formIssuedByContainer" style="display:none;">
+          <label>Issued by</label>
+          <select id="formIssuedBy">
+            <option value="RDSO">RDSO</option>
+            <option value="Railway Board">Railway Board</option>
+            <option value="SECR">SECR</option>
+            <option value="Other Railway">Other Railway</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formDateContainer">
+          <label id="formDateLabel">Date (DD-MM-YYYY)</label>
+          <input type="date" id="formDate" value="2026-09-28">
+          <span class="help-hint">Sr. No. will be assigned automatically based strictly on chronological order.</span>
+        </div>
+
+        <div class="form-group" id="formSecondaryDateContainer" style="display:none;">
+          <label>Date of Sanction (DD-MM-YYYY)</label>
+          <input type="date" id="formSecondaryDate" value="2026-09-28">
+        </div>
+
+        <div class="form-group" id="formDriveLinkContainer">
+          <label><i class="fa-brands fa-google-drive" style="color: #0f9d58;"></i> Google Drive PDF Link</label>
+          <input type="url" id="formDriveLink" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+          <span class="help-hint">Paste Google Drive link for 200MB+ PDF. Set permission to 'Anyone with link can view'.</span>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn btn-outline" onclick="closeAddModal()">Cancel</button>
+        <button class="btn btn-primary" id="formSubmitBtn" onclick="saveRecord()"><i class="fa-solid fa-floppy-disk"></i> Save Record</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===================================================
+    // FIREBASE INITIALIZATION & REALTIME SYNC
+    // ===================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAB8onFJN5t9k8No2YqCbcuFNFAQ5cbpY",
+      authDomain: "signal-portal-6104.firebaseapp.com",
+      projectId: "signal-portal-6104",
+      storageBucket: "signal-portal-6104.firebasestorage.app",
+      messagingSenderId: "177672020477",
+      appId: "1:177672020477:web:9fe0f9565e53b6a5143994",
+      measurementId: "G-Z3PPG9WJBQ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const recordsCol = db.collection('secr_records');
+
+    // EXACT CLOUD PATH AS PER YOUR FIRESTORE STRUCTURE
+    const settingsDoc = db.collection('secr_records').doc('1').collection('settings').doc('passwords');
+
+    // ===================================================
+    // DYNAMIC PASSWORD VERIFICATION
+    // ===================================================
+    let CLOUD_PORTAL_PASS = null;
+    let CLOUD_ADMIN_PASS = null;
+
+    settingsDoc.onSnapshot(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        CLOUD_PORTAL_PASS = data.portalPass ? String(data.portalPass).trim() : null;
+        CLOUD_ADMIN_PASS = data.adminPass ? String(data.adminPass).trim() : null;
+      }
+    }, error => {
+      console.error("Firestore Password read error:", error);
+    });
+
+    function checkPortalPassword() {
+      const input = document.getElementById('pagePasswordInput').value.trim();
+      const errorMsg = document.getElementById('loginErrorMsg');
+
+      if (!CLOUD_PORTAL_PASS) {
+        alert("Connecting to Cloud Security Server... Please wait 2 seconds and try again.");
+        return;
+      }
+
+      if (input === CLOUD_PORTAL_PASS) {
+        sessionStorage.setItem('secr_portal_authorized', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        errorMsg.style.display = 'none';
+      } else {
+        errorMsg.style.display = 'block';
+        document.getElementById('pagePasswordInput').value = '';
+        document.getElementById('pagePasswordInput').focus();
+      }
+    }
+
+    function handleLoginKeyPress(event) {
+      if (event.key === 'Enter') {
+        checkPortalPassword();
+      }
+    }
+
+    function logoutPortal() {
+      sessionStorage.removeItem('secr_portal_authorized');
+      document.getElementById('pagePasswordInput').value = '';
+      document.getElementById('loginErrorMsg').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('pagePasswordInput').focus();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const isAuth = sessionStorage.getItem('secr_portal_authorized');
+      if (isAuth === 'true') {
+        document.getElementById('loginScreen').style.display = 'none';
+      } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('pagePasswordInput').focus();
+      }
+    });
+
+    function verifyAdminPassword(actionName) {
+      if (!CLOUD_ADMIN_PASS) {
+        alert("Security server is initializing, please try after 2 seconds.");
+        return false;
+      }
+
+      const enteredPassword = prompt(`Admin Authentication Required!\n\nPlease enter the Admin Password to ${actionName}:`);
+      if (enteredPassword === null) return false;
+      if (enteredPassword.trim() === CLOUD_ADMIN_PASS) {
+        return true;
+      } else {
+        alert("Galat admin password! Access denied.");
+        return false;
+      }
+    }
+
+    const accordionGroupIds = ['grpFilesApprovals', 'grpRefBooks', 'grpSanctionDocs', 'grpLdcePapers', 'grpImportantLinks'];
+
+    const defaultSubSectionMap = {
+      'grpFilesApprovals': 'PCSTE SANCTION',
+      'grpRefBooks': 'IMP. LETTER',
+      'grpSanctionDocs': 'DOCUMENTS FOR EI TSAA',
+      'grpLdcePapers': 'ASTE',
+      'grpImportantLinks': 'IMPORTANT LINKS'
+    };
+
+    function toggleAccordion(targetGroupId) {
+      const targetGroup = document.getElementById(targetGroupId);
+      if (!targetGroup) return;
+
+      const isCurrentlyCollapsed = targetGroup.classList.contains('collapsed');
+
+      accordionGroupIds.forEach(id => {
+        const grp = document.getElementById(id);
+        if (grp) grp.classList.add('collapsed');
+      });
+
+      if (isCurrentlyCollapsed) {
+        targetGroup.classList.remove('collapsed');
+        const defaultSubSection = defaultSubSectionMap[targetGroupId];
+        if (defaultSubSection) {
+          switchCategory(defaultSubSection);
+        }
+      }
+    }
+
+    function resetAccordionToDefault() {
+      const grpFiles = document.getElementById('grpFilesApprovals');
+      const grpRef = document.getElementById('grpRefBooks');
+      const grpSanction = document.getElementById('grpSanctionDocs');
+      const grpLdce = document.getElementById('grpLdcePapers');
+      const grpLinks = document.getElementById('grpImportantLinks');
+
+      if (grpFiles) grpFiles.classList.remove('collapsed');
+      if (grpRef) grpRef.classList.add('collapsed');
+      if (grpSanction) grpSanction.classList.add('collapsed');
+      if (grpLdce) grpLdce.classList.add('collapsed');
+      if (grpLinks) grpLinks.classList.add('collapsed');
+    }
+
+    function goHome() {
+      resetAccordionToDefault();
+      switchCategory('PCSTE SANCTION');
+    }
+
+    let currentCategory = 'PCSTE SANCTION';
+
+    function formatDateToDDMMYYYY(dateInput) {
+      if (!dateInput) return '';
+      if (/^\d{2}-\d{2}-\d{4}$/.test(dateInput)) return dateInput;
+      const parts = dateInput.split('-');
+      if (parts.length === 3 && parts[0].length === 4) {
+        return `${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[0]}`;
+      }
+      const d = new Date(dateInput);
+      if (!isNaN(d.getTime())) {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${dd}-${mm}-${yyyy}`;
+      }
+      return dateInput;
+    }
+
+    function formatDateToYYYYMMDD(dateInput) {
+      if (!dateInput) return '';
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateInput)) return dateInput;
+      if (/^\d{2}-\d{2}-\d{4}$/.test(dateInput)) {
+        const parts = dateInput.split('-');
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return '';
+    }
+
+    function parseDateToTime(dateStr) {
+      if (!dateStr) return 0;
+      if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+        const [d, m, y] = dateStr.split('-');
+        return new Date(`${y}-${m}-${d}T00:00:00`).getTime();
+      }
+      const t = new Date(dateStr).getTime();
+      return isNaN(t) ? 0 : t;
+    }
+
+    function getFinancialYearAndMonth(dateStr) {
+      if (!dateStr) return null;
+      let d, m, y;
+      if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+        const parts = dateStr.split('-');
+        d = parseInt(parts[0], 10);
+        m = parseInt(parts[1], 10);
+        y = parseInt(parts[2], 10);
+      } else {
+        const dt = new Date(dateStr);
+        if (isNaN(dt.getTime())) return null;
+        m = dt.getMonth() + 1;
+        y = dt.getFullYear();
+      }
+
+      let fyString = '';
+      if (m >= 4) {
+        fyString = `${y}-${String(y + 1).slice(-2)}`;
+      } else {
+        fyString = `${y - 1}-${String(y).slice(-2)}`;
+      }
+
+      const fyMonthIndex = (m >= 4) ? (m - 4) : (m + 8);
+      return { fy: fyString, monthIndex: fyMonthIndex, monthNum: m, year: y };
+    }
+
+    const ldceCategories = ['ASTE', 'AEN', 'AMM', 'APO', 'AFA', 'AME', 'ACM', 'AOM', 'AEE'];
+    const standardManualCategories = [
+      'IRSEM & CORRECTION SLIP', 'IRTEM', 'GCC', 'IRSOD & CORRECTION SLIP',
+      'LINE OPENING (MANUAL)', 'SOP (SCHEDULE OF POWER)', 'OTHER MANUALS'
+    ];
+
+    const docApprovalCategories = [
+      'DOCUMENTS FOR EI TSAA',
+      'DOCUMENTS FOR MSDAC TSAA',
+      'DOCUMENTS FOR PCSTE SANCTION',
+      'DOCUMENTS FOR GM SANCTION',
+      'DOCUMENTS FOR OTHER APPROVALS'
+    ];
+
+    const reportCategories = [
+      'PCSTE SANCTION',
+      'EI TSAA',
+      'MSDAC TSAA',
+      'GM SANCTION',
+      'S&T SPEED CERTIFICATE',
+      'JOINT SAFETY CERTIFICATE (JSC)',
+      'GRADE CONDONATION',
+      'PCSTE DISPENSATION',
+      'LINE OPENING',
+      'SPEED RAISING'
+    ];
+
+    const initialRecords = [
+      { id: 1, category: 'PCSTE SANCTION', station: 'BIA (Bhilai)', division: 'Raipur', equipment: 'RRI Gear', agency: 'Open line', work: 'Route Relay Interlocking yard modification', date: '14-08-2025', year: 2025, driveLink: '' },
+      { id: 2, category: 'PCSTE SANCTION', station: 'CPH (Champa)', division: 'Bilaspur', equipment: 'Dual MSDAC', agency: 'Con', work: 'Provision of Dual MSDAC in auto section', date: '18-02-2026', year: 2026, driveLink: 'https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview' },
+      { id: 3, category: 'EI TSAA', station: 'URK (Urkura)', division: 'Raipur', agency: 'Con', work: 'Yard remodelling with Medha EI system', oem: 'MEDHA', sanctionBy: 'PCSTE', routes: 96, date: '18-09-2025', year: 2025, driveLink: '' },
+      { id: 4, category: 'EI TSAA', station: 'ROB', division: 'Bilaspur', agency: 'Open line', work: 'Commissioning of High-Availability Electronic Interlocking', oem: 'KYOSON', sanctionBy: 'PCSTE', routes: 48, date: '10-01-2026', year: 2026, driveLink: 'https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview' },
+      { id: 5, category: 'MSDAC TSAA', station: 'BYT - HN Section', division: 'Bilaspur', agency: 'Con', work: 'Auto-signalling block section multi-section digital axle counter', oem: 'CEL', date: '15-10-2025', year: 2025, driveLink: '' },
+      { id: 6, category: 'MSDAC TSAA', station: 'BSP - USL Section', division: 'Bilaspur', agency: 'Project', work: 'Replacement of track circuits with Dual MSDAC', oem: 'Frauscher', date: '02-04-2026', year: 2026, driveLink: 'https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview' },
+      { id: 7, category: 'S&T SPEED CERTIFICATE', wagon: 'BOXNHL Wagon', department: 'Mechanical', work: 'Speed raising of BOXNHL wagons to 100 kmph', date: '12-05-2025', year: 2025, driveLink: '' },
+      { id: 8, category: 'PCSTE DISPENSATION', station: 'CPH Yard', division: 'Bilaspur', work: 'Dispensation for signal overlap distance in yard modification', date: '22-07-2025', year: 2025, driveLink: '' },
+      { id: 9, category: 'GM SANCTION', station: 'G - NGP Section', division: 'Nagpur', work: 'Sanction for introduction of twin single line auto signalling', date: '15-01-2026', sanctionDate: '22-02-2026', agency: 'Project', year: 2026, driveLink: '' },
+      { id: 10, category: 'GRADE CONDONATION', station: 'CPH Yard', work: 'Grade condonation for 1 in 400 grade at CPH outer section', date: '05-11-2025', agency: 'Con', year: 2025, driveLink: '' },
+      { id: 11, category: 'LINE OPENING', station: 'RIG - KHS 4th Line', work: 'Opening of 4th Line for public carriage of passengers with MACLS', date: '20-12-2025', agency: 'Con', year: 2025, driveLink: '' },
+      { id: 12, category: 'SPEED RAISING', station: 'BSP - DURG Section', division: 'Raipur', work: 'Speed raising from 110 kmph to 130 kmph on UP/DN Main lines', date: '14-02-2026', agency: 'Open line', year: 2026, driveLink: '' },
+      { id: 13, category: 'JOINT SAFETY CERTIFICATE (JSC)', work: 'Joint Safety Certificate for operation of WAP-7 locomotive at 130 kmph on BSP-NGP route', date: '19-06-2025', year: 2025, driveLink: '' },
+      { id: 14, category: 'IMP. LETTER', relatedEquip: 'Class B SPD', work: 'Guidelines for maintenance and replacement of surge protection devices at EI installations', issuedBy: 'RDSO', date: '05-03-2026', year: 2026, driveLink: '' },
+      { id: 15, category: 'RDSO TAN (TECHNICAL ADVISORY NOTE)', tanNo: 'STS/E/TAN/3002', work: 'Technical advisory note on wiring and testing of Relay based interlocking and EI', relatedTo: 'Electronic Interlocking', date: '15-07-2025', year: 2025, driveLink: '' },
+      { id: 16, category: 'DOCUMENTS FOR EI TSAA', work: 'Standard Checklist & Formats for submission of Application for EI TSAA approval', date: '10-04-2025', year: 2025, driveLink: '' },
+      { id: 17, category: 'DOCUMENTS FOR MSDAC TSAA', work: 'Standard Application form, testing protocols and guidelines for MSDAC TSAA approval', date: '18-05-2025', year: 2025, driveLink: '' },
+      { id: 18, category: 'DOCUMENTS FOR PCSTE SANCTION', work: 'Master document guideline for technical sanction proposal under SEM para 19.5', date: '01-05-2025', year: 2025, driveLink: '' },
+      { id: 19, category: 'DOCUMENTS FOR GM SANCTION', work: 'Model proforma and CRS compliance documents for General Manager sanction', date: '20-08-2025', year: 2025, driveLink: '' },
+      { id: 20, category: 'DOCUMENTS FOR OTHER APPROVALS', work: 'Standard formats for condonation of infringements and temporary dispensations', date: '11-09-2025', year: 2025, driveLink: '' },
+      { id: 21, category: 'IMPORTANT LINKS', relatedTo: 'Indian Railways Official Portal', directLink: 'https://indianrailways.gov.in', year: 2026 },
+      { id: 22, category: 'IMPORTANT LINKS', relatedTo: 'RDSO Signal Directorate Technical Docs', directLink: 'https://rdso.indianrailways.gov.in', year: 2026 },
+      { id: 23, category: 'IMPORTANT LINKS', relatedTo: 'IRISET Knowledge Base & E-Learning', directLink: 'https://iriset.indianrailways.gov.in', year: 2026 },
+      { id: 24, category: 'IRSEM & CORRECTION SLIP', work: 'Indian Railway Signal Engineering Manual (IRSEM) 2021 edition with Advance Correction Slips 1 to 9', date: '01-01-2025', year: 2025, driveLink: '' },
+      { id: 25, category: 'ASTE', year: 2025, ldceType: '30%', work: 'SECR LDCE 30% CBT Question Paper for Group B ASTE with official model answer key', date: '12-10-2025', driveLink: '' }
+    ];
+
+    let records = [];
+
+    // REAL-TIME CLOUD LISTENER
+    recordsCol.onSnapshot((snapshot) => {
+      if (snapshot.empty && records.length === 0) {
+        const batch = db.batch();
+        initialRecords.forEach(item => {
+          const docRef = recordsCol.doc(String(item.id));
+          batch.set(docRef, item);
+        });
+        batch.commit();
+      } else {
+        records = [];
+        snapshot.forEach(doc => {
+          const r = doc.data();
+          records.push({
+            ...r,
+            id: doc.id,
+            category: (r.category || '').toUpperCase().trim(),
+            date: formatDateToDDMMYYYY(r.date)
+          });
+        });
+        renderTable();
+      }
+    }, (error) => {
+      console.error("Firestore sync error: ", error);
+    });
+
+    function getDrivePreviewUrl(rawUrl) {
+      if (!rawUrl) return null;
+      const match = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+      return rawUrl;
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('currentClock').innerText = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function switchCategory(catName) {
+      currentCategory = catName.toUpperCase().trim();
+      document.getElementById('activeCategoryTitle').innerText = currentCategory;
+
+      const divFilterWrapper = document.getElementById('filterDivisionWrapper');
+      const noDivisionSections = [
+        'S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
+        'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
+        ...docApprovalCategories, ...standardManualCategories, 
+        'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'
+      ];
+
+      if (noDivisionSections.includes(currentCategory)) {
+        divFilterWrapper.style.display = 'none';
+      } else {
+        divFilterWrapper.style.display = 'flex';
+      }
+
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        if (item.textContent.trim().toUpperCase().includes(currentCategory)) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
+      renderTable();
+    }
+
+    function renderTable() {
+      const thead = document.getElementById('tableHead');
+      const tbody = document.getElementById('tableBody');
+      const filterYear = document.getElementById('filterYear').value;
+      const filterDiv = document.getElementById('filterDivision').value;
+      const searchTxt = document.getElementById('filterSearch').value.toLowerCase();
+
+      // Table Header definitions: Work column moved right after Division, OEM width minimized
+      if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr. no</th>
+            <th style="width: 140px;">TAN No.</th>
+            <th style="min-width: 380px;">Description</th>
+            <th style="width: 180px;">Related to</th>
+            <th style="width: 120px;">Issue Date</th>
+            <th style="width: 130px;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (docApprovalCategories.includes(currentCategory)) {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr. NO</th>
+            <th style="min-width: 400px;">Description</th>
+            <th style="width: 150px;">Issue Date</th>
+            <th style="width: 130px;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'IMPORTANT LINKS') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 60px;">Sr. NO</th>
+            <th style="width: 320px;">Related to</th>
+            <th style="min-width: 380px;">Link</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr. no</th>
+            <th style="min-width: 420px;">Work Description</th>
+            <th style="width: 240px; white-space:nowrap;">Date of Forwarding from PCSTE Office</th>
+            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (standardManualCategories.includes(currentCategory)) {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr. No</th>
+            <th style="min-width: 420px;">Description</th>
+            <th style="width: 150px; white-space:nowrap;">Date of Issue</th>
+            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr. No</th>
+            <th style="width: 280px;">Book Name</th>
+            <th style="min-width: 380px;">Description</th>
+            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (ldceCategories.includes(currentCategory)) {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr. no</th>
+            <th style="width: 90px;">Year</th>
+            <th style="width: 120px;">Type (30% / 70%)</th>
+            <th style="min-width: 400px;">Description</th>
+            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'PCSTE SANCTION') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="white-space: nowrap;">Division</th>
+            <th style="min-width: 380px;">Work (hyperlinked with sanctioning letter)</th>
+            <th style="white-space: nowrap;">Equipment for PCSTE Sanction</th>
+            <th style="white-space: nowrap;">Agency</th>
+            <th style="white-space: nowrap;">Sanctioning Date</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'EI TSAA') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="white-space: nowrap;">Division</th>
+            <th style="min-width: 380px;">Work Name (EI Description)</th>
+            <th style="width: 95px; white-space: nowrap; text-align:center;">OEM Make</th>
+            <th style="white-space: nowrap;">Sanction given by</th>
+            <th style="white-space: nowrap;">Agency</th>
+            <th style="width: 85px; white-space: nowrap; text-align:center;">Routes</th>
+            <th style="white-space: nowrap;">TSAA Sanction Date</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'MSDAC TSAA') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="white-space: nowrap;">Division</th>
+            <th style="min-width: 380px;">Work Name (MSDAC Scheme)</th>
+            <th style="width: 95px; white-space: nowrap; text-align:center;">OEM Make</th>
+            <th style="white-space: nowrap;">Agency</th>
+            <th style="white-space: nowrap;">TSAA Sanction Date</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'S&T SPEED CERTIFICATE') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Wagon Name</th>
+            <th style="white-space: nowrap;">Department</th>
+            <th style="min-width: 380px;">Description</th>
+            <th style="white-space: nowrap;">Sanction Date</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'GM SANCTION') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="white-space: nowrap;">Division</th>
+            <th style="min-width: 380px;">Work Description</th>
+            <th style="white-space: nowrap;">Date of Forwarding from PCSTE Office</th>
+            <th style="white-space: nowrap;">Date of Sanction</th>
+            <th style="white-space: nowrap;">Agency</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'GRADE CONDONATION' || currentCategory === 'LINE OPENING') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="min-width: 400px;">Work Description</th>
+            <th style="white-space: nowrap;">Date of Forwarding from PCSTE Office</th>
+            <th style="white-space: nowrap;">Agency</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'SPEED RAISING') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="white-space: nowrap;">Division</th>
+            <th style="min-width: 380px;">Work Description</th>
+            <th style="white-space: nowrap;">Date of Forwarding from CSE/PCSTE</th>
+            <th style="white-space: nowrap;">Agency</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'INSPECTION NOTE') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Station / Section</th>
+            <th style="white-space: nowrap;">Division</th>
+            <th style="min-width: 380px;">Inspection Done by</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'IMP. LETTER') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Related to Equipment</th>
+            <th style="min-width: 380px;">Description</th>
+            <th style="white-space: nowrap;">Date of Issue</th>
+            <th style="white-space: nowrap;">Issued By</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      } else {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 50px;">Sr.NO</th>
+            <th style="white-space: nowrap;">Policy / Doc No</th>
+            <th style="white-space: nowrap;">Related to Equipment</th>
+            <th style="min-width: 380px;">Description</th>
+            <th style="white-space: nowrap;">Date of Issue</th>
+            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
+            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+          </tr>
+        `;
+      }
+
+      const hasDivision = !['S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
+                            'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
+                            ...docApprovalCategories, ...standardManualCategories, 
+                            'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'].includes(currentCategory);
+
+      let filtered = records.filter(item => {
+        if (item.category !== currentCategory) return false;
+        if (filterYear !== 'ALL' && String(item.year) !== filterYear) return false;
+        if (hasDivision && filterDiv !== 'ALL' && item.division !== filterDiv) return false;
+
+        if (searchTxt) {
+          const matchStation = item.station && item.station.toLowerCase().includes(searchTxt);
+          const matchWork = item.work && item.work.toLowerCase().includes(searchTxt);
+          const matchDiv = item.division && item.division.toLowerCase().includes(searchTxt);
+          const matchAgency = item.agency && item.agency.toLowerCase().includes(searchTxt);
+          const matchDept = item.department && item.department.toLowerCase().includes(searchTxt);
+          const matchOem = item.oem && item.oem.toLowerCase().includes(searchTxt);
+          const matchBook = item.bookName && item.bookName.toLowerCase().includes(searchTxt);
+          const matchType = item.ldceType && item.ldceType.toLowerCase().includes(searchTxt);
+          const matchTan = item.tanNo && item.tanNo.toLowerCase().includes(searchTxt);
+          const matchRelTo = item.relatedTo && item.relatedTo.toLowerCase().includes(searchTxt);
+          const matchDirLink = item.directLink && item.directLink.toLowerCase().includes(searchTxt);
+          const matchEquip = (item.equipment && item.equipment.toLowerCase().includes(searchTxt)) ||
+                             (item.relatedEquip && item.relatedEquip.toLowerCase().includes(searchTxt));
+          const matchWagon = item.wagon && item.wagon.toLowerCase().includes(searchTxt);
+          const matchDocNo = item.docNo && item.docNo.toLowerCase().includes(searchTxt);
+          const matchIssuedBy = item.issuedBy && item.issuedBy.toLowerCase().includes(searchTxt);
+          const matchInspection = item.inspectionBy && item.inspectionBy.toLowerCase().includes(searchTxt);
+
+          if (!matchStation && !matchWork && !matchDiv && !matchAgency && !matchDept && !matchOem && 
+              !matchEquip && !matchWagon && !matchDocNo && !matchIssuedBy && !matchInspection && 
+              !matchBook && !matchType && !matchTan && !matchRelTo && !matchDirLink) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      filtered.sort((a, b) => {
+        const timeA = parseDateToTime(a.date);
+        const timeB = parseDateToTime(b.date);
+        if (timeA && timeB) return timeA - timeB;
+        return (a.year || 0) - (b.year || 0);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="12" style="text-align:center; padding: 25px; color: #888;">
+              <i class="fa-solid fa-folder-open" style="font-size: 24px; margin-bottom: 6px; display:block;"></i>
+              No technical records found matching the criteria. Click <b>"Add New Record"</b> to register files.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach((rec, idx) => {
+        const driveIndicator = rec.driveLink 
+          ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+          : `<span style="color:#999; font-size:11px;">Not linked</span>`;
+
+        const displayDate = formatDateToDDMMYYYY(rec.date);
+        const displaySanctionDate = formatDateToDDMMYYYY(rec.sanctionDate);
+
+        // ACTION BUTTONS (Eye, Pen/Edit, Trash/Delete)
+        const actionButtons = `
+          <div class="actions-cell">
+            <button class="action-icon-btn" title="View Preview" onclick="openPreview('${escapeHtml(rec.work || rec.bookName || rec.wagon || rec.inspectionBy || rec.relatedTo || '')}', '${rec.driveLink || ''}')">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+            <button class="action-icon-btn edit-btn" title="Edit Record (Admin)" onclick="openEditModal('${rec.id}')">
+              <i class="fa-solid fa-pen-to-square" style="color: #0b4f6c;"></i>
+            </button>
+            <button class="action-icon-btn delete-btn" title="Delete Record (Admin)" onclick="deleteRecord('${rec.id}')">
+              <i class="fa-solid fa-trash-can" style="color: #c0392b;"></i>
+            </button>
+          </div>
+        `;
+
+        if (currentCategory === 'IMPORTANT LINKS') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
+              <td>
+                <a href="${rec.directLink || '#'}" target="_blank" class="work-link" style="color:#198754;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> ${rec.directLink || '—'}
+                </a>
+              </td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b style="color:var(--railway-maroon);">${rec.tanNo || '—'}</b></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-lines" style="color:#e67e22;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedTo || '—'}</span></td>
+              <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (docApprovalCategories.includes(currentCategory)) {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-folder-open" style="color: var(--accent-blue);"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-shield-virus" style="color: #198754;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (standardManualCategories.includes(currentCategory)) {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-book" style="color: var(--railway-maroon);"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b style="color: var(--accent-blue);">${rec.bookName || '—'}</b></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.bookName)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (ldceCategories.includes(currentCategory)) {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.year || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="type-badge">${rec.ldceType || '30%'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-circle-question" style="color: var(--railway-maroon);"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'PCSTE SANCTION') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><span class="equip-badge">${rec.equipment || '—'}</span></td>
+              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'EI TSAA') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap; text-align:center;"><span class="oem-badge">${rec.oem || '—'}</span></td>
+              <td style="white-space:nowrap;"><span class="authority-badge">${rec.sanctionBy || 'PCSTE'}</span></td>
+              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="white-space:nowrap; text-align:center;"><b style="color: var(--accent-blue);">${rec.routes || '—'}</b></td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'MSDAC TSAA') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap; text-align:center;"><span class="oem-badge">${rec.oem || '—'}</span></td>
+              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'S&T SPEED CERTIFICATE') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b style="color: var(--accent-blue);">${rec.wagon || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="dept-badge">${rec.department || 'S&T'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'GM SANCTION') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${displaySanctionDate ? `<b>${displaySanctionDate}</b>` : '—'}</td>
+              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'GRADE CONDONATION' || currentCategory === 'LINE OPENING') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'SPEED RAISING') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'INSPECTION NOTE') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.inspectionBy)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-user-check" style="color: #1967d2;"></i> ${rec.inspectionBy || '—'}
+                </a>
+              </td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'IMP. LETTER') {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;"><span class="authority-badge">${rec.issuedBy || 'RDSO'}</span></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else {
+          html += `
+            <tr>
+              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td style="white-space:nowrap;"><b>${rec.docNo || '—'}</b></td>
+              <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
+              <td>
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                </a>
+              </td>
+              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
+              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        }
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // ==========================================
+    // EDIT RECORD MODAL LOGIC
+    // ==========================================
+    function openEditModal(recordId) {
+      if (!verifyAdminPassword("EDIT this record")) return;
+      const rec = records.find(r => String(r.id) === String(recordId));
+      if (!rec) {
+        alert("Record not found!");
+        return;
+      }
+
+      document.getElementById('formModalHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Record`;
+      document.getElementById('formSubmitBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Record`;
+      document.getElementById('formEditRecordId').value = rec.id;
+
+      document.getElementById('formCategory').value = rec.category || currentCategory;
+      toggleFormFields();
+
+      document.getElementById('formStation').value = rec.station || '';
+      document.getElementById('formDivision').value = rec.division || 'Bilaspur';
+      document.getElementById('formWorkName').value = rec.work || '';
+      document.getElementById('formEquipment').value = rec.equipment || '';
+      document.getElementById('formAgency').value = rec.agency || 'Project';
+      document.getElementById('formDepartment').value = rec.department || '';
+      document.getElementById('formInspectionBy').value = rec.inspectionBy || '';
+      document.getElementById('formEiOem').value = rec.oem || 'HITACHI';
+      document.getElementById('formEiSanctionBy').value = rec.sanctionBy || 'PCSTE';
+      document.getElementById('formRoutes').value = rec.routes || '';
+      document.getElementById('formOem').value = rec.oem || '';
+      document.getElementById('formWagon').value = rec.wagon || '';
+      document.getElementById('formDocNo').value = rec.docNo || '';
+      document.getElementById('formRelatedEquip').value = rec.relatedEquip || '';
+      document.getElementById('formIssuedBy').value = rec.issuedBy || 'RDSO';
+      document.getElementById('formBookName').value = rec.bookName || '';
+      document.getElementById('formLdceType').value = rec.ldceType || '30%';
+      document.getElementById('formTanNo').value = rec.tanNo || '';
+      document.getElementById('formRelatedTo').value = rec.relatedTo || '';
+      document.getElementById('formDirectLink').value = rec.directLink || '';
+      document.getElementById('formDriveLink').value = rec.driveLink || '';
+
+      document.getElementById('formDate').value = formatDateToYYYYMMDD(rec.date);
+      if (rec.sanctionDate) {
+        document.getElementById('formSecondaryDate').value = formatDateToYYYYMMDD(rec.sanctionDate);
+      }
+
+      document.getElementById('addRecordModal').style.display = 'flex';
+    }
+
+    function deleteRecord(recordId) {
+      if (!verifyAdminPassword("DELETE this record")) return;
+      if (confirm("Are you sure you want to permanently delete this record from Cloud Database?")) {
+        recordsCol.doc(String(recordId)).delete().catch(err => {
+          alert("Error deleting record from cloud: " + err.message);
+        });
+      }
+    }
+
+    function escapeHtml(text) {
+      return text ? text.replace(/'/g, "\\'") : '';
+    }
+
+    function resetFilters() {
+      document.getElementById('filterYear').value = 'ALL';
+      document.getElementById('filterDivision').value = 'ALL';
+      document.getElementById('filterSearch').value = '';
+      renderTable();
+    }
+
+    function openPreview(workTitle, driveUrl) {
+      document.getElementById('modalDocTitle').innerHTML = `<i class="fa-brands fa-google-drive" style="color:#ffd700;"></i> ` + workTitle;
+      const body = document.getElementById('modalPreviewBody');
+      const extLink = document.getElementById('modalDriveExternalLink');
+
+      const previewUrl = getDrivePreviewUrl(driveUrl);
+
+      if (previewUrl) {
+        body.innerHTML = `<iframe class="preview-iframe" src="${previewUrl}" allow="autoplay"></iframe>`;
+        extLink.style.display = 'inline-flex';
+        extLink.href = driveUrl;
+      } else {
+        extLink.style.display = 'none';
+        body.innerHTML = `
+          <div id="printablePreviewDoc" style="background:white; margin:20px auto; padding:30px; max-width:800px; height: calc(100% - 40px); overflow-y:auto; box-shadow:0 0 10px rgba(0,0,0,0.1); border-top: 5px solid var(--railway-maroon);">
+            <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">
+              <h3 style="margin:0; font-size:16px;">SOUTH EAST CENTRAL RAILWAY</h3>
+              <p style="margin:3px 0; font-size:13px; font-weight:bold;">Office of the Principal Chief Signal & Telecom Engineer (PCSTE)</p>
+              <p style="margin:0; font-size:11px;">Bilaspur - 495004 (C.G.)</p>
+            </div>
+            <div style="margin-top:20px; font-size:13px; line-height:1.6;">
+              <p><b>Subject:</b> Technical Record Details for: <u>${workTitle}</u></p>
+              <p style="margin-top:10px;">This technical document / question paper is recorded in the South East Central Railway Technical Repository.</p>
+              <div style="margin:25px 0; padding:12px; background:#fff9e6; border-left:4px solid #f39c12; font-size:12px;">
+                <b>Note:</b> A Google Drive link is not currently attached to this record. To preview heavy files (e.g. 200MB PDFs), edit or add the record with the file's Google Drive sharing link.
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('pdfPreviewModal').style.display = 'flex';
+    }
+
+    function printPreviewDoc() {
+      const iframe = document.querySelector('.preview-iframe');
+      if (iframe) {
+        try {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        } catch (e) {
+          window.print();
+        }
+      } else {
+        window.print();
+      }
+    }
+
+    function closePreviewModal() {
+      document.getElementById('pdfPreviewModal').style.display = 'none';
+      document.getElementById('modalPreviewBody').innerHTML = '';
+    }
+
+    function openAddModal() {
+      document.getElementById('formModalHeading').innerHTML = `<i class="fa-solid fa-file-circle-plus"></i> Add New Record`;
+      document.getElementById('formSubmitBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Record`;
+      document.getElementById('formEditRecordId').value = '';
+
+      document.getElementById('formCategory').value = currentCategory;
+      toggleFormFields();
+      document.getElementById('addRecordModal').style.display = 'flex';
+    }
+
+    function closeAddModal() {
+      document.getElementById('addRecordModal').style.display = 'none';
+      document.getElementById('formEditRecordId').value = '';
+      document.getElementById('formStation').value = '';
+      document.getElementById('formWorkName').value = '';
+      document.getElementById('formEquipment').value = '';
+      document.getElementById('formAgency').value = 'Project';
+      document.getElementById('formDepartment').value = '';
+      document.getElementById('formInspectionBy').value = '';
+      document.getElementById('formEiOem').value = 'HITACHI';
+      document.getElementById('formRoutes').value = '';
+      document.getElementById('formOem').value = '';
+      document.getElementById('formWagon').value = '';
+      document.getElementById('formDocNo').value = '';
+      document.getElementById('formRelatedEquip').value = '';
+      document.getElementById('formBookName').value = '';
+      document.getElementById('formLdceType').value = '30%';
+      document.getElementById('formTanNo').value = '';
+      document.getElementById('formRelatedTo').value = '';
+      document.getElementById('formDirectLink').value = '';
+      document.getElementById('formDriveLink').value = '';
+    }
+
+    function toggleFormFields() {
+      const cat = document.getElementById('formCategory').value.toUpperCase().trim();
+
+      const stationBox = document.getElementById('formStationContainer');
+      const divBox = document.getElementById('formDivisionContainer');
+      const workBox = document.getElementById('formWorkContainer');
+      const workLabel = document.getElementById('formWorkLabel');
+      const dateLabel = document.getElementById('formDateLabel');
+      const dateBox = document.getElementById('formDateContainer');
+      const secDateBox = document.getElementById('formSecondaryDateContainer');
+      const driveBox = document.getElementById('formDriveLinkContainer');
+
+      const agencyBox = document.getElementById('formAgencyContainer');
+      const deptBox = document.getElementById('formDepartmentContainer');
+      const inspectionBox = document.getElementById('formInspectionByContainer');
+      const bookBox = document.getElementById('formBookNameContainer');
+      const ldceBox = document.getElementById('formLdceTypeContainer');
+
+      const tanNoBox = document.getElementById('formTanNoContainer');
+      const relatedToBox = document.getElementById('formRelatedToContainer');
+      const directLinkBox = document.getElementById('formDirectLinkContainer');
+
+      const equipBox = document.getElementById('formEquipmentContainer');
+      const eiOemBox = document.getElementById('formEiOemContainer');
+      const eiSanctionByBox = document.getElementById('formEiSanctionByContainer');
+      const routesBox = document.getElementById('formRoutesContainer');
+      const oemBox = document.getElementById('formOemContainer');
+      const wagonBox = document.getElementById('formWagonContainer');
+      const docNoBox = document.getElementById('formDocNoContainer');
+      const docNoLabel = document.getElementById('formDocNoLabel');
+      const relatedEquipBox = document.getElementById('formRelatedEquipContainer');
+      const issuedByBox = document.getElementById('formIssuedByContainer');
+
+      agencyBox.style.display = 'none';
+      deptBox.style.display = 'none';
+      inspectionBox.style.display = 'none';
+      equipBox.style.display = 'none';
+      eiOemBox.style.display = 'none';
+      eiSanctionByBox.style.display = 'none';
+      routesBox.style.display = 'none';
+      oemBox.style.display = 'none';
+      wagonBox.style.display = 'none';
+      docNoBox.style.display = 'none';
+      relatedEquipBox.style.display = 'none';
+      issuedByBox.style.display = 'none';
+      secDateBox.style.display = 'none';
+      bookBox.style.display = 'none';
+      ldceBox.style.display = 'none';
+      tanNoBox.style.display = 'none';
+      relatedToBox.style.display = 'none';
+      directLinkBox.style.display = 'none';
+      dateBox.style.display = 'flex';
+      driveBox.style.display = 'flex';
+
+      workBox.style.display = 'flex';
+      stationBox.style.display = 'flex';
+      divBox.style.display = 'flex';
+
+      workLabel.innerText = 'Description';
+      dateLabel.innerText = 'Letter Date (DD-MM-YYYY)';
+
+      if (cat === 'IMPORTANT LINKS') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        workBox.style.display = 'none';
+        dateBox.style.display = 'none';
+        driveBox.style.display = 'none';
+        relatedToBox.style.display = 'flex';
+        document.getElementById('formRelatedToLabel').innerText = 'Related to (Portal Name)';
+        directLinkBox.style.display = 'flex';
+      } else if (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        tanNoBox.style.display = 'flex';
+        relatedToBox.style.display = 'flex';
+        document.getElementById('formRelatedToLabel').innerText = 'Related to (Equipment / System)';
+        workLabel.innerText = 'Description';
+        dateLabel.innerText = 'Issue Date (DD-MM-YYYY)';
+      } else if (docApprovalCategories.includes(cat)) {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        workLabel.innerText = 'Description';
+        dateLabel.innerText = 'Issue Date (DD-MM-YYYY)';
+      } else if (cat === 'JOINT SAFETY CERTIFICATE (JSC)') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        workLabel.innerText = 'Work Description';
+        dateLabel.innerText = 'Date of Forwarding from PCSTE Office';
+      } else if (standardManualCategories.includes(cat)) {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        dateLabel.innerText = 'Date of Issue (DD-MM-YYYY)';
+      } else if (cat === 'IRISET E-BOOK (SIGNAL)' || cat === 'IRISET E-BOOK (TELECOM)') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        dateBox.style.display = 'none';
+        bookBox.style.display = 'flex';
+        workLabel.innerText = 'Description';
+      } else if (ldceCategories.includes(cat)) {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        ldceBox.style.display = 'flex';
+        dateLabel.innerText = 'Exam Date (DD-MM-YYYY)';
+      } else if (cat === 'PCSTE SANCTION') {
+        equipBox.style.display = 'flex';
+        agencyBox.style.display = 'flex';
+        dateLabel.innerText = 'Sanctioning Date (DD-MM-YYYY)';
+        workLabel.innerText = 'Work Description';
+      } else if (cat === 'EI TSAA') {
+        eiOemBox.style.display = 'flex';
+        eiSanctionByBox.style.display = 'flex';
+        agencyBox.style.display = 'flex';
+        routesBox.style.display = 'flex';
+        dateLabel.innerText = 'TSAA Sanction Date (DD-MM-YYYY)';
+        workLabel.innerText = 'Work Name (EI Description)';
+      } else if (cat === 'MSDAC TSAA') {
+        oemBox.style.display = 'flex';
+        agencyBox.style.display = 'flex';
+        dateLabel.innerText = 'TSAA Sanction Date (DD-MM-YYYY)';
+        workLabel.innerText = 'Work Name (MSDAC Scheme)';
+      } else if (cat === 'S&T SPEED CERTIFICATE') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        wagonBox.style.display = 'flex';
+        deptBox.style.display = 'flex';
+        dateLabel.innerText = 'Sanction Date (DD-MM-YYYY)';
+      } else if (cat === 'GM SANCTION') {
+        agencyBox.style.display = 'flex';
+        secDateBox.style.display = 'flex';
+        dateLabel.innerText = 'Date of Forwarding from PCSTE Office';
+      } else if (cat === 'GRADE CONDONATION' || cat === 'LINE OPENING') {
+        divBox.style.display = 'none';
+        agencyBox.style.display = 'flex';
+        dateLabel.innerText = 'Date of Forwarding from PCSTE Office';
+      } else if (cat === 'SPEED RAISING') {
+        agencyBox.style.display = 'flex';
+        dateLabel.innerText = 'Date of Forwarding from CSE/PCSTE';
+      } else if (cat === 'INSPECTION NOTE') {
+        workBox.style.display = 'none';
+        inspectionBox.style.display = 'flex';
+        dateLabel.innerText = 'Inspection Date (DD-MM-YYYY)';
+      } else if (cat === 'SECR POLICY' || cat === 'SECR TYPICAL') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        docNoBox.style.display = 'flex';
+        docNoLabel.innerText = cat === 'SECR POLICY' ? 'Policy No.' : 'Typical No.';
+        relatedEquipBox.style.display = 'flex';
+        dateLabel.innerText = 'Date of Issue (DD-MM-YYYY)';
+      } else if (cat === 'IMP. LETTER') {
+        stationBox.style.display = 'none';
+        divBox.style.display = 'none';
+        relatedEquipBox.style.display = 'flex';
+        issuedByBox.style.display = 'flex';
+        dateLabel.innerText = 'Date of Issue (DD-MM-YYYY)';
+      }
+    }
+
+    function saveRecord() {
+      const editRecordId = document.getElementById('formEditRecordId').value;
+      const isEditing = Boolean(editRecordId);
+
+      const category = document.getElementById('formCategory').value.toUpperCase().trim();
+      const station = document.getElementById('formStation').value.trim();
+      const division = document.getElementById('formDivision').value;
+      const work = document.getElementById('formWorkName').value.trim();
+      const rawDate = document.getElementById('formDate').value;
+      const secDate = document.getElementById('formSecondaryDate').value;
+      const driveLink = document.getElementById('formDriveLink').value.trim();
+
+      const equipment = document.getElementById('formEquipment').value.trim();
+      const agency = document.getElementById('formAgency').value;
+      const department = document.getElementById('formDepartment').value.trim();
+      const inspectionBy = document.getElementById('formInspectionBy').value.trim();
+      const bookName = document.getElementById('formBookName').value.trim();
+      const ldceType = document.getElementById('formLdceType').value;
+
+      const tanNo = document.getElementById('formTanNo').value.trim();
+      const relatedTo = document.getElementById('formRelatedTo').value.trim();
+      const directLink = document.getElementById('formDirectLink').value.trim();
+
+      const eiOem = document.getElementById('formEiOem').value.trim();
+      const eiSanctionBy = document.getElementById('formEiSanctionBy').value;
+      const routes = document.getElementById('formRoutes').value;
+      const oem = document.getElementById('formOem').value.trim();
+      const wagon = document.getElementById('formWagon').value.trim();
+      const docNo = document.getElementById('formDocNo').value.trim();
+      const relatedEquip = document.getElementById('formRelatedEquip').value.trim();
+      const issuedBy = document.getElementById('formIssuedBy').value;
+
+      if (category === 'IMPORTANT LINKS') {
+        if (!relatedTo || !directLink) {
+          alert('Please enter Related to and Web Link URL.');
+          return;
+        }
+      } else if (category !== 'INSPECTION NOTE' && !work) {
+        alert('Please fill Description / Title / Work.');
+        return;
+      }
+
+      if ((category === 'IRISET E-BOOK (SIGNAL)' || category === 'IRISET E-BOOK (TELECOM)') && !bookName) {
+        alert('Please enter Book Name.');
+        return;
+      }
+
+      if (category === 'INSPECTION NOTE' && !inspectionBy) {
+        alert('Please enter Inspection Done by (Officer name/designation).');
+        return;
+      }
+
+      const noStationCategories = [
+        'JOINT SAFETY CERTIFICATE (JSC)', 'S&T SPEED CERTIFICATE', 'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER',
+        'RDSO TAN (TECHNICAL ADVISORY NOTE)', ...docApprovalCategories, ...standardManualCategories, 
+        'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'
+      ];
+
+      if (!noStationCategories.includes(category) && !station) {
+        alert('Please fill Station / Section.');
+        return;
+      }
+
+      if (!isEditing) {
+        if (!verifyAdminPassword("ADD a new record")) return;
+      }
+
+      const formattedDate = formatDateToDDMMYYYY(rawDate);
+      let yearVal = 2026;
+      if (rawDate && rawDate.includes('-')) {
+        const parts = rawDate.split('-');
+        yearVal = parts[0].length === 4 ? parseInt(parts[0], 10) : parseInt(parts[2], 10);
+      }
+
+      const recordDocId = isEditing ? String(editRecordId) : String(Date.now());
+
+      const recData = {
+        id: recordDocId,
+        category,
+        work,
+        date: formattedDate,
+        year: yearVal,
+        driveLink: driveLink
+      };
+
+      if (!noStationCategories.includes(category)) {
+        recData.station = station;
+        if (!['GRADE CONDONATION', 'LINE OPENING'].includes(category)) {
+          recData.division = division;
+        }
+      }
+
+      if (category === 'IMPORTANT LINKS') {
+        recData.relatedTo = relatedTo;
+        recData.directLink = directLink;
+      } else if (category === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+        recData.tanNo = tanNo;
+        recData.relatedTo = relatedTo;
+      } else if (category === 'PCSTE SANCTION') {
+        recData.equipment = equipment;
+        recData.agency = agency;
+      } else if (category === 'EI TSAA') {
+        recData.oem = eiOem;
+        recData.sanctionBy = eiSanctionBy;
+        recData.agency = agency;
+        if (routes) recData.routes = parseInt(routes, 10);
+      } else if (category === 'MSDAC TSAA') {
+        recData.oem = oem;
+        recData.agency = agency;
+      } else if (category === 'S&T SPEED CERTIFICATE') {
+        recData.wagon = wagon;
+        recData.department = department || 'S&T';
+      } else if (category === 'GM SANCTION') {
+        recData.agency = agency;
+        recData.sanctionDate = formatDateToDDMMYYYY(secDate);
+      } else if (['GRADE CONDONATION', 'LINE OPENING', 'SPEED RAISING'].includes(category)) {
+        recData.agency = agency;
+      } else if (category === 'INSPECTION NOTE') {
+        recData.inspectionBy = inspectionBy;
+      } else if (category === 'SECR POLICY' || category === 'SECR TYPICAL') {
+        recData.docNo = docNo;
+        recData.relatedEquip = relatedEquip;
+      } else if (category === 'IMP. LETTER') {
+        recData.relatedEquip = relatedEquip;
+        recData.issuedBy = issuedBy;
+      } else if (category === 'IRISET E-BOOK (SIGNAL)' || category === 'IRISET E-BOOK (TELECOM)') {
+        recData.bookName = bookName;
+      } else if (ldceCategories.includes(category)) {
+        recData.ldceType = ldceType;
+      }
+
+      recordsCol.doc(recordDocId).set(recData).then(() => {
+        closeAddModal();
+        switchCategory(category);
+      }).catch((err) => {
+        alert("Error saving/updating record to cloud: " + err.message);
+      });
+    }
+
+    function exportToCSV() {
+      let filtered = records.filter(r => r.category === currentCategory);
+      if (filtered.length === 0) {
+        alert('No records to export in current category.');
+        return;
+      }
+
+      filtered.sort((a, b) => {
+        const timeA = parseDateToTime(a.date);
+        const timeB = parseDateToTime(b.date);
+        return timeA - timeB;
+      });
+
+      let csv = '';
+      if (currentCategory === 'IMPORTANT LINKS') {
+        csv = 'Sr. NO,Related to,Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.relatedTo || ''}","${r.directLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+        csv = 'Sr. no,TAN No.,Description,Related to,Issue Date,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.tanNo || ''}","${(r.work || '').replace(/"/g, '""')}","${r.relatedTo || ''}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
+        });
+      } else if (docApprovalCategories.includes(currentCategory)) {
+        csv = 'Sr. NO,Description,Issue Date,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
+        csv = 'Sr. no,Work Description,Date of Forwarding from PCSTE Office,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
+        });
+      } else if (standardManualCategories.includes(currentCategory)) {
+        csv = 'Sr. No,Description,Date of Issue,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
+        csv = 'Sr. No,Book Name,Description,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${(r.bookName || '').replace(/"/g, '""')}","${(r.work || '').replace(/"/g, '""')}","${r.year || ''}","${r.driveLink || ''}"\n`;
+        });
+      } else if (ldceCategories.includes(currentCategory)) {
+        csv = 'Sr. no,Year,Type (30% or 70%),Description,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.year || ''}","${r.ldceType || '30%'}","${(r.work || '').replace(/"/g, '""')}","${r.driveLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'PCSTE SANCTION') {
+        csv = 'Sr.No,Station,Division,Work,Equipment,Agency,Sanction Date,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.equipment || ''}","${r.agency || ''}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'EI TSAA') {
+        csv = 'Sr.No,Station,Division,Work Name,OEM Make,Sanction By,Agency,Routes,TSAA Sanction Date,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.oem || ''}","${r.sanctionBy || ''}","${r.agency || ''}","${r.routes || ''}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'MSDAC TSAA') {
+        csv = 'Sr.No,Station,Division,Work Name,OEM Make,Agency,TSAA Sanction Date,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.oem || ''}","${r.agency || ''}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
+        });
+      } else if (currentCategory === 'IMP. LETTER') {
+        csv = 'Sr.No,Related to Equipment,Description,Date of Issue,Issued By,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.relatedEquip || ''}","${(r.work || '').replace(/"/g, '""')}","${r.date}","${r.issuedBy || ''}","${r.year}","${r.driveLink || ''}"\n`;
+        });
+      } else {
+        csv = 'Sr.No,Station,Division,Work,Date,Year,Drive Link\n';
+        filtered.forEach((r, i) => {
+          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
+        });
+      }
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${currentCategory.replace(/\s+/g, '_')}_Records.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // FINANCIAL YEAR REPORT FACILITY
+    function openFYReportModal() {
+      document.getElementById('reportGenDate').innerText = new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString();
+      generateFYReport();
+      document.getElementById('fyReportModal').style.display = 'flex';
+    }
+
+    function closeFYReportModal() {
+      document.getElementById('fyReportModal').style.display = 'none';
+    }
+
+    function generateFYReport() {
+      const selectedFY = document.getElementById('reportFYSelect').value;
+      document.getElementById('reportFYLabel').innerText = selectedFY;
+      const tbody = document.getElementById('fyReportTableBody');
+
+      const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+
+      const matrix = {};
+      reportCategories.forEach(cat => {
+        matrix[cat] = new Array(12).fill(0);
+      });
+
+      records.forEach(rec => {
+        const cat = (rec.category || '').toUpperCase().trim();
+        if (reportCategories.includes(cat)) {
+          const fyInfo = getFinancialYearAndMonth(rec.date);
+          if (fyInfo && fyInfo.fy === selectedFY) {
+            matrix[cat][fyInfo.monthIndex]++;
+          }
+        }
+      });
+
+      const monthTotals = new Array(12).fill(0);
+      let html = '';
+      let grandTotal = 0;
+
+      reportCategories.forEach(cat => {
+        let catTotal = 0;
+        html += `<tr>`;
+        html += `<td class="cat-name">${cat}</td>`;
+        for (let m = 0; m < 12; m++) {
+          const count = matrix[cat][m];
+          catTotal += count;
+          monthTotals[m] += count;
+          html += `<td>${count > 0 ? `<b>${count}</b>` : '<span style="color:#bbb;">0</span>'}</td>`;
+        }
+        grandTotal += catTotal;
+        html += `<td class="col-total">${catTotal}</td>`;
+        html += `</tr>`;
+      });
+
+      html += `<tr class="total-row">`;
+      html += `<td class="cat-name" style="color:var(--railway-maroon);">MONTHLY TOTAL</td>`;
+      for (let m = 0; m < 12; m++) {
+        html += `<td>${monthTotals[m]}</td>`;
+      }
+      html += `<td class="grand-total">${grandTotal}</td>`;
+      html += `</tr>`;
+
+      tbody.innerHTML = html;
+    }
+
+    function printReport() {
+      window.print();
+    }
+
+    function exportFYReportCSV() {
+      const selectedFY = document.getElementById('reportFYSelect').value;
+      const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+
+      const matrix = {};
+      reportCategories.forEach(cat => {
+        matrix[cat] = new Array(12).fill(0);
+      });
+
+      records.forEach(rec => {
+        const cat = (rec.category || '').toUpperCase().trim();
+        if (reportCategories.includes(cat)) {
+          const fyInfo = getFinancialYearAndMonth(rec.date);
+          if (fyInfo && fyInfo.fy === selectedFY) {
+            matrix[cat][fyInfo.monthIndex]++;
+          }
+        }
+      });
+
+      const monthTotals = new Array(12).fill(0);
+      let grandTotal = 0;
+
+      let csv = `South East Central Railway - S&T Technical Approvals Summary Report (FY ${selectedFY})\n`;
+      csv += `Category,${months.join(',')},Total\n`;
+
+      reportCategories.forEach(cat => {
+        let catTotal = 0;
+        const rowCounts = [];
+        for (let m = 0; m < 12; m++) {
+          const count = matrix[cat][m];
+          catTotal += count;
+          monthTotals[m] += count;
+          rowCounts.push(count);
+        }
+        grandTotal += catTotal;
+        csv += `"${cat}",${rowCounts.join(',')},${catTotal}\n`;
+      });
+
+      csv += `Monthly Total,${monthTotals.join(',')},${grandTotal}\n`;
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `S&T_Summary_Report_FY_${selectedFY}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
