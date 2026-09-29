@@ -2,111 +2,163 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Railway Signalling and Telecommunication System - SECR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RailSNTGyan - Railway S&T Knowledge Portal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+  <!-- Chart.js for Dashboard Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
     :root {
-      --railway-maroon: #7a1c1c;
-      --railway-dark: #501010;
-      --accent-blue: #0b4f6c;
-      --accent-hover: #08384d;
-      --border-color: #333333;
-      --table-border: #444444;
-      --bg-light: #f4f6f9;
-      --bg-card: #ffffff;
-      --text-main: #212529;
-      --text-muted: #555555;
+      --railway-maroon: #701616;
+      --railway-dark: #450c0c;
+      --brand-teal: #009ca6;
+      --brand-navy: #0b3b60;
+      --brand-orange: #f97316;
+      --accent-blue: #0b3b60;
+      --accent-orange: #f97316;
+      --border-color: rgba(226, 232, 240, 0.85);
+      --table-border: rgba(203, 213, 225, 0.8);
+      --bg-light: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      
+      /* Glassmorphism primitives */
+      --glass-bg: rgba(255, 255, 255, 0.84);
+      --glass-bg-hover: rgba(255, 255, 255, 0.96);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.85);
+      --glass-shadow: 0 8px 24px 0 rgba(15, 23, 42, 0.06);
+      --glass-blur: blur(14px);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-family: "Plus Jakarta Sans", "Segoe UI", Tahoma, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-light);
+      background: radial-gradient(circle at 10% 20%, rgba(241, 245, 249, 0.95), transparent 45%),
+                  radial-gradient(circle at 90% 80%, rgba(224, 242, 254, 0.65), transparent 45%),
+                  linear-gradient(135deg, #eef2f6 0%, #f8fafc 100%);
       color: var(--text-main);
       display: flex;
       flex-direction: column;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* LOGIN OVERLAY / GATEWAY */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(241, 245, 249, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.85);
+    }
+
+    /* LOGIN OVERLAY */
     #loginScreen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, #2b1111, #4a1212, #102a43);
+      height: 100dvh;
+      background: radial-gradient(circle at 20% 30%, #009ca6, transparent 60%),
+                  radial-gradient(circle at 80% 80%, #0b3b60, transparent 60%),
+                  linear-gradient(145deg, #051626, #1b0a0a);
+      backdrop-filter: blur(12px);
       z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
     }
 
     .login-card {
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       width: 100%;
       max-width: 440px;
-      border-radius: 8px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-      border-top: 6px solid var(--railway-maroon);
-      padding: 30px 28px;
+      border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+      border-top: 6px solid var(--brand-orange);
+      padding: 34px 28px;
       text-align: center;
+      animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .login-emblem {
-      width: 64px;
-      height: 64px;
-      background: #fdf2f2;
-      color: var(--railway-maroon);
-      border-radius: 50%;
-      display: inline-flex;
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.96) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .login-brand-wrapper {
+      display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 10px rgba(122, 28, 28, 0.2);
+      gap: 14px;
+      margin-bottom: 12px;
     }
 
-    .login-card h2 {
-      font-size: 19px;
-      color: var(--railway-dark);
+    .login-brand-title {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      text-align: left;
+    }
+    .login-brand-title .brand-teal { color: var(--brand-teal); }
+    .login-brand-title .brand-orange { color: var(--brand-orange); }
+
+    .login-brand-subtitle {
+      font-size: 11.5px;
       font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: var(--brand-navy);
+      letter-spacing: 0.2px;
+      margin-top: 2px;
+      text-align: left;
     }
 
-    .login-card p {
-      font-size: 12px;
+    .login-card p.login-desc {
+      font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 5px;
-      margin-bottom: 22px;
-      line-height: 1.5;
+      margin-top: 6px;
+      margin-bottom: 20px;
+      line-height: 1.4;
     }
 
     .login-form-group {
       text-align: left;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .login-form-group label {
       display: block;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
-      color: #333;
-      margin-bottom: 6px;
+      color: #334155;
+      margin-bottom: 5px;
     }
 
     .login-input-wrapper {
@@ -115,178 +167,257 @@
 
     .login-input-wrapper i {
       position: absolute;
-      left: 12px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      color: #777;
-      font-size: 14px;
+      color: #94a3b8;
+      font-size: 13px;
     }
 
     .login-input {
       width: 100%;
-      padding: 10px 12px 10px 38px;
-      border: 1px solid #bbb;
-      border-radius: 5px;
-      font-size: 14px;
+      padding: 11px 14px 11px 38px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 13.5px;
       outline: none;
-      transition: border-color 0.2s;
+      background: rgba(255, 255, 255, 0.95);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .login-input:focus {
-      border-color: var(--railway-maroon);
-      box-shadow: 0 0 0 3px rgba(122, 28, 28, 0.15);
+      border-color: var(--brand-teal);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(0, 156, 166, 0.14);
     }
 
     .login-btn {
       width: 100%;
-      background: var(--railway-maroon);
+      background: linear-gradient(135deg, var(--brand-navy), #082842);
       color: #ffffff;
       border: none;
-      padding: 11px;
+      padding: 12px;
       font-size: 14px;
       font-weight: 700;
-      border-radius: 5px;
+      border-radius: 9px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 5px 16px rgba(11, 59, 96, 0.28);
+      transition: all 0.2s ease;
     }
 
     .login-btn:hover {
-      background: var(--railway-dark);
-    }
-
-    .login-btn:active {
-      transform: scale(0.99);
+      background: linear-gradient(135deg, #0e4b7b, var(--brand-navy));
     }
 
     .login-error-msg {
-      color: #c0392b;
-      font-size: 12px;
+      color: #e11d48;
+      font-size: 11.5px;
       font-weight: 600;
       margin-top: 12px;
       display: none;
     }
 
-    /* HEADER */
+    /* ========================================================
+       HEADER EXACTLY AS PER PHOTO BANNER
+       ======================================================== */
     header {
-      background: linear-gradient(135deg, var(--railway-dark), var(--railway-maroon));
-      color: white;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       padding: 10px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 3px solid #f1c40f;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-      z-index: 10;
+      border-bottom: 3px solid var(--brand-orange);
+      box-shadow: 0 4px 20px rgba(11, 59, 96, 0.08);
+      z-index: 20;
+      flex-shrink: 0;
+      gap: 14px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
 
-    .header-logo {
-      width: 48px;
-      height: 48px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
+    .menu-toggle-btn {
+      display: none;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: var(--brand-navy);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
-      color: var(--railway-maroon);
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
     }
 
-    .header-title h1 {
-      font-size: 20px;
+    .menu-toggle-btn:hover {
+      background: #e2e8f0;
+      color: var(--brand-orange);
+    }
+
+    /* EXACT CIRCULAR EMBLEM FROM USER'S IMAGE */
+    .portal-logo-svg {
+      width: 62px;
+      height: 62px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 10px rgba(0, 156, 166, 0.22));
+      cursor: pointer;
+      transition: transform 0.25s ease;
+    }
+
+    .portal-logo-svg:hover {
+      transform: scale(1.05);
+    }
+
+    .header-brand-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .brand-main-title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+    }
+    .brand-main-title .text-teal { color: var(--brand-teal); }
+    .brand-main-title .text-orange { color: var(--brand-orange); }
+
+    .brand-subline {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--brand-navy);
+      letter-spacing: 0.2px;
+      margin-top: 3px;
+    }
+
+    /* Learn | Explore | Apply | Excel with orange bars */
+    .brand-tagline-motto {
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      color: var(--brand-navy);
+      letter-spacing: 0.6px;
+      margin-top: 2px;
     }
-
-    .header-title p {
-      font-size: 13px;
-      color: #ffd7d7;
-      font-weight: 500;
+    .brand-tagline-motto span.divider {
+      color: var(--brand-orange);
+      font-weight: 800;
+      margin: 0 6px;
+    }
+    .brand-tagline-motto span.tag-item {
+      color: var(--brand-navy);
+      font-weight: 700;
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .badge-portal {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 4px 12px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
     }
 
     .badge-cloud {
-      background: rgba(46, 204, 113, 0.2);
-      border: 1px solid #2ecc71;
-      color: #2ecc71;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      color: #15803d;
     }
 
     .btn-logout {
-      background: #c0392b;
+      background: #e11d48;
       color: white;
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 4px 10px;
-      border-radius: 4px;
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      padding: 6px 14px;
+      border-radius: 8px;
       font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      transition: background 0.2s;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      box-shadow: 0 3px 8px rgba(225, 29, 72, 0.25);
     }
 
     .btn-logout:hover {
-      background: #962d22;
+      background: #be123c;
+      transform: translateY(-1px);
     }
 
-    /* MAIN CONTAINER */
+    /* MAIN APP CONTAINER */
     .app-container {
       display: flex;
       flex: 1;
       overflow: hidden;
+      position: relative;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 25;
     }
 
     /* SIDEBAR */
     aside {
-      width: 320px;
+      width: 290px;
       background: var(--bg-card);
-      border-right: 2px solid #ccc;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       overflow-y: auto;
-      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+      box-shadow: 4px 0 20px rgba(15, 23, 42, 0.04);
+      z-index: 30;
+      flex-shrink: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .home-btn-container {
-      padding: 12px;
-      border-bottom: 2px solid #ddd;
-      background: #fafafa;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.5);
     }
 
     .home-btn {
       width: 100%;
-      background: var(--railway-maroon);
+      background: linear-gradient(135deg, var(--brand-navy), #082842);
       color: white;
       border: none;
       padding: 10px 14px;
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 700;
-      border-radius: 4px;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -294,43 +425,44 @@
       cursor: pointer;
       transition: all 0.2s ease;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 3px 10px rgba(11, 59, 96, 0.22);
     }
 
-    .home-btn:hover {
-      background: var(--railway-dark);
-      transform: translateY(-1px);
+    .home-btn:hover, .home-btn.active-home {
+      background: linear-gradient(135deg, #0e4b7b, var(--brand-navy));
     }
 
-    /* COLLAPSIBLE SIDEBAR HEADERS */
     .sidebar-section-title {
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 10.5px;
+      font-weight: 800;
       text-transform: uppercase;
-      padding: 10px 14px;
-      color: var(--text-muted);
-      border-bottom: 1px solid #eee;
-      background: #f1f3f5;
+      padding: 9px 12px;
+      color: #334155;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(241, 245, 249, 0.6);
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
       user-select: none;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
     }
 
     .sidebar-section-title:hover {
-      background: #e5e9ed;
-      color: var(--railway-maroon);
+      background: rgba(226, 232, 240, 0.85);
+      color: var(--brand-navy);
     }
 
     .sidebar-section-title-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .sidebar-section-title i.chevron-icon {
-      font-size: 11px;
+      font-size: 10px;
       transition: transform 0.25s ease;
     }
 
@@ -344,45 +476,42 @@
 
     .nav-list {
       list-style: none;
-      margin-bottom: 6px;
+      padding: 3px 0;
     }
 
     .nav-item {
-      padding: 7px 18px;
-      font-size: 11.5px;
+      padding: 7px 14px;
+      font-size: 11px;
       font-weight: 700;
-      color: #333;
+      color: #475569;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-left: 4px solid transparent;
-      border-bottom: 1px solid #f5f5f5;
-      transition: all 0.15s ease;
+      gap: 9px;
+      border-left: 3px solid transparent;
+      margin: 1px 4px;
+      border-radius: 5px;
+      transition: all 0.2s ease;
       text-transform: uppercase;
     }
 
     .nav-item i {
       font-size: 12.5px;
       width: 16px;
-      color: #666;
+      text-align: center;
     }
 
     .nav-item:hover {
-      background-color: #e9eff5;
-      color: var(--accent-blue);
-      border-left-color: var(--accent-blue);
+      background-color: rgba(241, 245, 249, 0.9);
+      color: var(--brand-navy);
+      border-left-color: var(--brand-navy);
     }
 
     .nav-item.active {
-      background-color: #e3ebf3;
-      color: var(--railway-maroon);
-      border-left-color: var(--railway-maroon);
+      background: rgba(241, 245, 249, 0.95);
+      color: var(--brand-navy);
+      border-left-color: var(--brand-orange);
       font-weight: 800;
-    }
-
-    .nav-item.active i {
-      color: var(--railway-maroon);
     }
 
     /* MAIN CONTENT */
@@ -390,164 +519,445 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 16px 20px;
+      padding: 14px 18px;
       overflow-y: auto;
+      gap: 12px;
+      min-width: 0;
+      position: relative;
     }
 
-    .content-header-card {
-      background: white;
-      border: 1px solid #dcdcdc;
-      border-left: 5px solid var(--railway-maroon);
-      padding: 14px 18px;
-      border-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    #dashboardView {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .dash-hero {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-left: 5px solid var(--brand-orange);
+      border-radius: 10px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+      box-shadow: var(--glass-shadow);
+      flex-shrink: 0;
+    }
+
+    .dash-hero-title h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--brand-navy);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .dash-hero-title p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .dash-fy-badge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dash-fy-badge {
+      background: linear-gradient(135deg, var(--brand-orange), #ea580c);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-weight: 800;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(249, 115, 22, 0.28);
+    }
+
+    .dash-total-badge {
+      background: linear-gradient(135deg, var(--brand-navy), #082842);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-weight: 800;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(11, 59, 96, 0.22);
+    }
+
+    .infographic-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 2px;
+      flex-shrink: 0;
+    }
+
+    .infographic-title-tag {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-navy);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* PROCESS TIMELINE INFOGRAPHIC */
+    .process-infographic-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: var(--glass-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .process-track-container {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 8px;
+    }
+
+    .process-step-item {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-top: 4px solid var(--step-accent, #0b3b60);
+      border-radius: 9px;
+      padding: 9px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      user-select: none;
+    }
+
+    .process-step-item:hover {
+      background: rgba(255, 255, 255, 0.98);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.1);
+    }
+
+    .process-step-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--step-accent, #0b3b60);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+
+    .process-step-icon {
+      font-size: 17px;
+      color: var(--step-accent, #0b3b60);
+      margin-bottom: 5px;
+    }
+
+    .process-step-title {
+      font-size: 9px;
+      font-weight: 800;
+      color: #1e293b;
+      text-transform: uppercase;
+      line-height: 1.15;
+      height: 22px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+
+    .process-step-counter {
+      background: rgba(241, 245, 249, 0.95);
+      border: 1px solid rgba(203, 213, 225, 0.8);
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--step-accent, #0b3b60);
+      width: 100%;
+    }
+
+    .step-1 { --step-accent: #b91c1c; }
+    .step-2 { --step-accent: #ea580c; }
+    .step-3 { --step-accent: #d97706; }
+    .step-4 { --step-accent: #059669; }
+    .step-5 { --step-accent: #0284c7; }
+    .step-6 { --step-accent: #0b3b60; }
+    .step-7 { --step-accent: #6366f1; }
+    .step-8 { --step-accent: #9333ea; }
+    .step-9 { --step-accent: #be185d; }
+
+    /* Charts Container */
+    .dash-charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+      flex: 1;
+      min-height: 200px;
+    }
+
+    .chart-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: var(--glass-shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    .chart-header h3 {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-navy);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      flex: 1;
+      min-height: 180px;
+      max-height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ========================================================
+       STICKY / FROZEN SECTION CONTROLS IN TABLE VIEW
+       ======================================================== */
+    #tableViewSection {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .content-header-card.sticky-header-card {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-left: 6px solid var(--brand-orange);
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(11, 59, 96, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .view-title-group h2 {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
-      color: var(--railway-maroon);
+      color: var(--brand-navy);
       text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
     .view-title-group p {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     .action-toolbar {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn {
       padding: 7px 14px;
-      font-size: 12.5px;
-      font-weight: 600;
-      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 7px;
       border: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn-primary {
-      background: var(--railway-maroon);
+      background: linear-gradient(135deg, var(--brand-navy), #082842);
       color: white;
+      box-shadow: 0 3px 8px rgba(11, 59, 96, 0.2);
     }
 
     .btn-primary:hover {
-      background: var(--railway-dark);
+      background: linear-gradient(135deg, #0e4b7b, var(--brand-navy));
     }
 
     .btn-outline {
-      background: white;
-      color: var(--accent-blue);
-      border: 1px solid var(--accent-blue);
-    }
-
-    .btn-outline:hover {
-      background: #f0f7fb;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--brand-navy);
+      border: 1px solid #cbd5e1;
     }
 
     .btn-success {
-      background: #198754;
+      background: linear-gradient(135deg, #15803d, #166534);
       color: white;
+      box-shadow: 0 3px 8px rgba(22, 101, 52, 0.2);
     }
 
-    .btn-success:hover {
-      background: #146c43;
-    }
-
-    /* FILTER PANEL */
-    .filter-panel {
-      background: white;
-      border: 1px solid #dcdcdc;
-      padding: 10px 14px;
-      border-radius: 4px;
-      margin-bottom: 14px;
+    .filter-panel.sticky-filter-panel {
+      position: sticky;
+      top: 64px;
+      z-index: 14;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      padding: 9px 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 12px;
+      box-shadow: 0 4px 14px rgba(11, 59, 96, 0.06);
     }
 
     .filter-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 12.5px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
     }
 
     .filter-item select, .filter-item input {
-      padding: 5px 8px;
-      font-size: 12.5px;
-      border: 1px solid #bbb;
-      border-radius: 4px;
-      background: white;
+      padding: 6px 10px;
+      font-size: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      outline: none;
     }
 
     .search-input {
       min-width: 220px;
+      flex: 1;
     }
 
     .reset-link {
-      font-size: 12px;
-      color: var(--accent-blue);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--brand-navy);
       text-decoration: underline;
       cursor: pointer;
       margin-left: auto;
     }
 
-    /* TABLE SECTION */
     .table-container {
-      background: white;
-      border: 2px solid var(--table-border);
-      border-radius: 4px;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
       overflow-x: auto;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      overflow-y: auto;
+      max-height: calc(100vh - 225px);
+      box-shadow: var(--glass-shadow);
+      -webkit-overflow-scrolling: touch;
+      position: relative;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       text-align: left;
-      font-size: 13px;
+      font-size: 12.5px;
+      min-width: 650px;
     }
 
-    thead th {
-      background: #2b3a4a;
-      color: white;
+    table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--brand-navy) !important;
+      color: #ffffff;
       padding: 10px 12px;
-      font-weight: 600;
-      border: 1px solid var(--table-border);
+      font-weight: 800;
+      border-bottom: 2px solid var(--brand-orange);
+      border-right: 1px solid rgba(255,255,255,0.15);
       white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
     tbody td {
-      padding: 9px 12px;
-      border: 1px solid #d4d4d4;
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #f1f5f9;
       vertical-align: middle;
+      background: rgba(255, 255, 255, 0.75);
     }
 
-    tbody tr:nth-child(even) {
-      background-color: #fafbfc;
+    tbody tr:nth-child(even) td {
+      background-color: rgba(248, 250, 252, 0.85);
     }
 
-    tbody tr:hover {
-      background-color: #f1f7fa;
+    tbody tr:hover td {
+      background-color: #f0f7fb;
     }
 
     .work-link {
-      color: var(--accent-blue);
+      color: var(--brand-navy);
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
@@ -558,25 +968,25 @@
 
     .work-link:hover {
       text-decoration: underline;
-      color: var(--railway-maroon);
+      color: var(--brand-orange);
     }
 
     .tag-badge {
       display: inline-block;
       padding: 2px 7px;
-      font-size: 11px;
-      border-radius: 12px;
-      font-weight: 600;
-      background: #e1ecf4;
-      color: #1a4f7c;
-      border: 1px solid #b8d5e8;
+      font-size: 10.5px;
+      border-radius: 8px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
     }
 
     .agency-badge {
       display: inline-block;
       padding: 2px 7px;
-      font-size: 11px;
-      border-radius: 8px;
+      font-size: 10.5px;
+      border-radius: 6px;
       font-weight: 700;
       background: #fef3c7;
       color: #92400e;
@@ -586,8 +996,8 @@
     .dept-badge {
       display: inline-block;
       padding: 2px 7px;
-      font-size: 11px;
-      border-radius: 8px;
+      font-size: 10.5px;
+      border-radius: 6px;
       font-weight: 700;
       background: #e0f2fe;
       color: #0369a1;
@@ -597,55 +1007,55 @@
     .type-badge {
       display: inline-block;
       padding: 2px 8px;
-      font-size: 11px;
-      border-radius: 12px;
+      font-size: 10.5px;
+      border-radius: 8px;
       font-weight: 700;
-      background: #e8f5e9;
-      color: #1b5e20;
-      border: 1px solid #a5d6a7;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
     }
 
     .oem-badge {
       display: inline-block;
       padding: 2px 8px;
-      font-size: 11px;
-      border-radius: 10px;
+      font-size: 10.5px;
+      border-radius: 6px;
       font-weight: 700;
-      background: #fdf3e7;
-      color: #b75900;
-      border: 1px solid #fbd38d;
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
       white-space: nowrap;
     }
 
     .authority-badge {
       display: inline-block;
       padding: 2px 8px;
-      font-size: 11px;
-      border-radius: 10px;
+      font-size: 10.5px;
+      border-radius: 6px;
       font-weight: 700;
-      background: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #c8e6c9;
+      background: #ecfdf5;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
     }
 
     .equip-badge {
       display: inline-block;
       padding: 2px 7px;
-      font-size: 11px;
-      border-radius: 6px;
+      font-size: 10.5px;
+      border-radius: 5px;
       font-weight: 600;
-      background: #ede7f6;
-      color: #512da8;
-      border: 1px solid #d1c4e9;
+      background: #f5f3ff;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
     }
 
     .drive-pill {
-      background: #e8f0fe;
-      color: #1967d2;
-      border: 1px solid #c2d7fa;
-      padding: 2px 6px;
-      border-radius: 10px;
-      font-size: 11px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
@@ -656,44 +1066,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .action-icon-btn {
-      background: transparent;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
       padding: 4px 8px;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
-      color: #333;
-      transition: all 0.15s;
-    }
-
-    .action-icon-btn:hover {
-      background: var(--railway-maroon);
-      color: white;
-      border-color: var(--railway-maroon);
-    }
-
-    .action-icon-btn.edit-btn:hover {
-      background: #0b4f6c !important;
-      border-color: #0b4f6c !important;
-      color: white !important;
-    }
-
-    .action-icon-btn.edit-btn:hover i {
-      color: white !important;
-    }
-
-    .action-icon-btn.delete-btn:hover {
-      background: #c0392b !important;
-      border-color: #c0392b !important;
-      color: white !important;
-    }
-
-    .action-icon-btn.delete-btn:hover i {
-      color: white !important;
+      color: #334155;
     }
 
     /* MODAL POPUPS */
@@ -704,39 +1087,49 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.7);
+      height: 100dvh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 1000;
       align-items: center;
       justify-content: center;
+      padding: 10px;
     }
 
     .modal-content {
-      background: white;
-      width: 90%;
-      max-width: 1050px;
-      height: 88vh;
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      width: 95%;
+      max-width: 960px;
+      height: 90vh;
+      height: 90dvh;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.8);
       overflow: hidden;
+      animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .modal-header {
-      background: var(--railway-dark);
+      background: linear-gradient(135deg, var(--brand-navy), #082842);
       color: white;
-      padding: 10px 18px;
+      padding: 8px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #ffd700;
+      border-bottom: 2px solid var(--brand-orange);
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .modal-header h3 {
-      font-size: 15px;
+      font-size: 13px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: #ffffff;
       font-weight: 700;
     }
@@ -744,75 +1137,47 @@
     .modal-header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
     }
 
     .modal-btn-control {
-      background: #243342 !important;
+      background: rgba(255, 255, 255, 0.15) !important;
       color: #ffffff !important;
-      border: 1px solid #627d98 !important;
-      padding: 5px 12px;
-      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.35) !important;
+      padding: 4px 9px;
+      font-size: 11px;
       font-weight: 600;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .modal-btn-control:hover {
-      background: #102a43 !important;
-      border-color: #ffd700 !important;
-      color: #ffffff !important;
-      transform: translateY(-1px);
-    }
-
-    .modal-btn-control i {
-      color: #ffd700 !important;
     }
 
     .modal-btn-success {
-      background: #198754 !important;
+      background: #15803d !important;
       color: #ffffff !important;
-      border: 1px solid #28a745 !important;
-    }
-
-    .modal-btn-success:hover {
-      background: #146c43 !important;
-      border-color: #ffffff !important;
-    }
-
-    .modal-btn-success i {
-      color: #ffffff !important;
+      border: 1px solid #22c55e !important;
     }
 
     .modal-close-btn {
-      background: #3b4d61;
-      border: 1px solid #718096;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
-      width: 28px;
-      height: 28px;
-      border-radius: 4px;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 13px;
       cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .modal-close-btn:hover {
-      background: #c0392b;
-      border-color: #e53e3e;
-      color: white;
     }
 
     .modal-body {
       flex: 1;
-      background: #eef2f5;
+      background: #f8fafc;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -827,50 +1192,53 @@
 
     /* FINANCIAL YEAR REPORT MODAL */
     .report-modal-content {
-      background: white;
-      width: 95%;
-      max-width: 1250px;
-      height: 90vh;
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      width: 96%;
+      max-width: 1200px;
+      height: 92vh;
+      height: 92dvh;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 35px rgba(0,0,0,0.4);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255, 255, 255, 0.8);
       overflow: hidden;
     }
 
     .report-body {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
-      background: #ffffff;
+      padding: 16px;
+      background: transparent;
+      -webkit-overflow-scrolling: touch;
     }
 
     .report-sheet {
-      border: 1px solid #ddd;
-      padding: 24px;
-      background: white;
-      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+      padding: 16px;
+      background: #ffffff;
+      border-radius: 10px;
     }
 
     .report-header-banner {
       text-align: center;
-      border-bottom: 2px solid var(--railway-maroon);
-      padding-bottom: 12px;
-      margin-bottom: 16px;
+      border-bottom: 2px solid var(--brand-orange);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .report-header-banner h2 {
-      font-size: 19px;
-      color: var(--railway-maroon);
+      font-size: 18px;
+      color: var(--brand-navy);
       text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 0.5px;
+      font-weight: 900;
     }
 
     .report-header-banner p {
-      font-size: 12.5px;
-      color: #333;
-      margin-top: 4px;
+      font-size: 11.5px;
+      color: #334155;
+      margin-top: 2px;
       font-weight: 600;
     }
 
@@ -878,86 +1246,92 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #f8f9fa;
-      padding: 8px 14px;
+      background: #f8fafc;
+      padding: 8px 12px;
       border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      margin-bottom: 16px;
-      font-size: 12.5px;
+      border-radius: 7px;
+      margin-bottom: 14px;
+      font-size: 11px;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .report-table-wrapper {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .report-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
       text-align: center;
+      min-width: 700px;
     }
 
     .report-table th, .report-table td {
-      border: 1px solid #4a5568;
-      padding: 8px 6px;
+      border: 1px solid #cbd5e1;
+      padding: 7px 5px;
     }
 
     .report-table th {
-      background-color: #2b3a4a;
+      background-color: var(--brand-navy);
       color: white;
       font-weight: 700;
-      font-size: 11.5px;
     }
 
     .report-table th.col-category {
       text-align: left;
-      min-width: 200px;
-      padding-left: 10px;
+      min-width: 160px;
+      padding-left: 8px;
     }
 
     .report-table td.cat-name {
       text-align: left;
       font-weight: 700;
-      background: #fafbfc;
-      color: #1a202c;
-      padding-left: 10px;
+      background: #f8fafc;
+      color: #1e293b;
+      padding-left: 8px;
     }
 
     .report-table tr.total-row td {
-      background-color: #edf2f7;
+      background-color: #f1f5f9;
       font-weight: 800;
-      color: var(--railway-maroon);
+      color: var(--brand-navy);
     }
 
     .report-table td.col-total {
-      background-color: #f7fafc;
+      background-color: #f8fafc;
       font-weight: 800;
-      color: var(--accent-blue);
+      color: var(--brand-orange);
     }
 
     .report-table tr.total-row td.grand-total {
-      background-color: #fed7d7;
-      color: #9b2c2c;
-      font-size: 13px;
+      background-color: #ffedd5;
+      color: #9a3412;
+      font-size: 12px;
     }
 
     /* FORM MODAL */
     .form-modal-content {
-      background: white;
-      width: 90%;
-      max-width: 640px;
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      width: 95%;
+      max-width: 580px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.8);
     }
 
     .form-body {
-      padding: 18px 24px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      max-height: 75vh;
+      gap: 10px;
+      max-height: 70vh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .form-group {
@@ -967,59 +1341,141 @@
     }
 
     .form-group label {
-      font-size: 12.5px;
+      font-size: 11.5px;
       font-weight: 700;
-      color: #333;
+      color: #334155;
     }
 
     .form-group input, .form-group select {
       padding: 7px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      outline: none;
     }
 
     .form-footer {
-      padding: 12px 24px;
-      background: #f7f7f7;
-      border-top: 1px solid #e0e0e0;
+      padding: 10px 18px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 8px;
     }
 
     .help-hint {
-      font-size: 11px;
-      color: #666;
+      font-size: 10px;
+      color: #64748b;
       margin-top: 2px;
     }
 
     /* FOOTER */
     footer {
-      background: #e9ecef;
-      padding: 6px 20px;
-      font-size: 11.5px;
-      color: #666;
+      background: rgba(241, 245, 249, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 6px 18px;
+      font-size: 10.5px;
+      color: #64748b;
       display: flex;
       justify-content: space-between;
-      border-top: 1px solid #ccc;
+      align-items: center;
+      border-top: 1px solid var(--border-color);
+      z-index: 10;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
-    @media print {
-      body * {
-        visibility: hidden;
+    /* ========================================================
+       RESPONSIVE BREAKPOINTS
+       ======================================================== */
+    @media (max-width: 1024px) {
+      .menu-toggle-btn {
+        display: inline-flex;
       }
-      #fyReportSheet, #fyReportSheet *,
-      #printablePreviewDoc, #printablePreviewDoc * {
-        visibility: visible;
-      }
-      #fyReportSheet, #printablePreviewDoc {
-        position: absolute;
-        left: 0;
+
+      aside {
+        position: fixed;
         top: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.25);
+      }
+
+      aside.mobile-open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+
+      .dash-charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .process-track-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .filter-panel.sticky-filter-panel {
+        top: 90px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 6px 12px;
+      }
+
+      .portal-logo-svg {
+        width: 48px;
+        height: 48px;
+      }
+
+      .brand-main-title {
+        font-size: 21px;
+      }
+
+      .brand-subline {
+        font-size: 10.5px;
+      }
+
+      .brand-tagline-motto {
+        display: none;
+      }
+
+      .badge-portal {
+        display: none;
+      }
+
+      .process-track-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .action-toolbar {
         width: 100%;
-        border: none;
-        padding: 0;
+        justify-content: flex-start;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .reset-link {
+        margin-left: 0;
+      }
+
+      .filter-panel.sticky-filter-panel {
+        top: 110px;
+      }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 3px;
       }
     }
   </style>
@@ -1029,11 +1485,38 @@
   <!-- FULL PAGE LOGIN SCREEN -->
   <div id="loginScreen">
     <div class="login-card">
-      <div class="login-emblem">
-        <i class="fa-solid fa-train"></i>
+      <div class="login-brand-wrapper">
+        <!-- SVG Vector Logo Matching Attached Photo -->
+        <svg class="portal-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" fill="#ffffff" stroke="#009ca6" stroke-width="2.5"/>
+          <!-- Dynamic Swoosh Arcs in Cyan & Orange -->
+          <path d="M 12 70 Q 30 20 84 25 Q 40 32 18 72 Z" fill="#009ca6"/>
+          <path d="M 18 76 Q 42 46 80 44 Q 45 52 24 78 Z" fill="#f97316"/>
+          <!-- Railway Signal Post -->
+          <rect x="22" y="30" width="7" height="18" rx="3.5" fill="#0f172a"/>
+          <circle cx="25.5" cy="34" r="1.8" fill="#22c55e"/>
+          <circle cx="25.5" cy="39" r="1.8" fill="#eab308"/>
+          <circle cx="25.5" cy="44" r="1.8" fill="#ef4444"/>
+          <!-- Streamlined Express Train Cab -->
+          <path d="M 36 48 L 74 32 C 82 36 84 45 80 54 L 38 60 Z" fill="#0b3b60"/>
+          <path d="M 62 38 L 76 34 C 79 36 80 40 78 44 L 62 46 Z" fill="#ffffff" opacity="0.9"/>
+          <circle cx="74" cy="49" r="2.5" fill="#facc15"/>
+          <circle cx="66" cy="51" r="2.5" fill="#facc15"/>
+          <!-- Railway Tracks -->
+          <path d="M 40 68 L 78 60 M 46 72 L 84 63" stroke="#0b3b60" stroke-width="3" stroke-linecap="round"/>
+          <line x1="48" y1="67" x2="52" y2="74" stroke="#0b3b60" stroke-width="2.5"/>
+          <line x1="58" y1="64" x2="62" y2="71" stroke="#0b3b60" stroke-width="2.5"/>
+          <line x1="68" y1="61" x2="72" y2="68" stroke="#0b3b60" stroke-width="2.5"/>
+        </svg>
+
+        <div>
+          <div class="login-brand-title">
+            <span class="brand-teal">RailSNT</span><span class="brand-orange">Gyan</span>
+          </div>
+          <div class="login-brand-subtitle">Railway S&T Knowledge Portal</div>
+        </div>
       </div>
-      <h2>SECR Portal Security</h2>
-      <p>South East Central Railway <br>Enter official password to access records</p>
+      <p class="login-desc">Empowering Railway S&T Professionals • Enter official password</p>
       
       <div class="login-form-group">
         <label for="pagePasswordInput">Security Password</label>
@@ -1044,7 +1527,7 @@
       </div>
 
       <button type="button" class="login-btn" onclick="checkPortalPassword()">
-        <i class="fa-solid fa-right-to-bracket"></i> Access Repository
+        <i class="fa-solid fa-right-to-bracket"></i> Access Knowledge Repository
       </button>
 
       <div id="loginErrorMsg" class="login-error-msg">
@@ -1053,19 +1536,54 @@
     </div>
   </div>
 
-  <!-- HEADER -->
+  <!-- HEADER WITH EXACT LOGO & TYPOGRAPHY AS PER PHOTO -->
   <header>
     <div class="header-left">
-      <div class="header-logo"><i class="fa-solid fa-train"></i></div>
-      <div class="header-title">
-        <h1>Railway Signalling and Telecommunication System</h1>
-        <p>South East Central Railway (SECR) • Bilaspur Division Technical Repository</p>
+      <!-- Hamburger Toggle for Mobile & Tablet -->
+      <button class="menu-toggle-btn" id="mobileMenuBtn" onclick="toggleSidebarDrawer()" title="Open Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- EXACT CIRCULAR EMBLEM SVG -->
+      <svg class="portal-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" onclick="goHome()" title="RailSNTGyan Home">
+        <circle cx="50" cy="50" r="46" fill="#ffffff" stroke="#009ca6" stroke-width="2.5"/>
+        <!-- Speed Curved Swooshes in Cyan & Orange -->
+        <path d="M 12 70 Q 30 20 84 25 Q 40 32 18 72 Z" fill="#009ca6"/>
+        <path d="M 18 76 Q 42 46 80 44 Q 45 52 24 78 Z" fill="#f97316"/>
+        <!-- Railway Signal Post -->
+        <rect x="22" y="30" width="7" height="18" rx="3.5" fill="#0f172a"/>
+        <circle cx="25.5" cy="34" r="1.8" fill="#22c55e"/>
+        <circle cx="25.5" cy="39" r="1.8" fill="#eab308"/>
+        <circle cx="25.5" cy="44" r="1.8" fill="#ef4444"/>
+        <!-- Streamlined Express Train Cab -->
+        <path d="M 36 48 L 74 32 C 82 36 84 45 80 54 L 38 60 Z" fill="#0b3b60"/>
+        <path d="M 62 38 L 76 34 C 79 36 80 40 78 44 L 62 46 Z" fill="#ffffff" opacity="0.9"/>
+        <circle cx="74" cy="49" r="2.5" fill="#facc15"/>
+        <circle cx="66" cy="51" r="2.5" fill="#facc15"/>
+        <!-- Railway Tracks -->
+        <path d="M 40 68 L 78 60 M 46 72 L 84 63" stroke="#0b3b60" stroke-width="3" stroke-linecap="round"/>
+        <line x1="48" y1="67" x2="52" y2="74" stroke="#0b3b60" stroke-width="2.5"/>
+        <line x1="58" y1="64" x2="62" y2="71" stroke="#0b3b60" stroke-width="2.5"/>
+        <line x1="68" y1="61" x2="72" y2="68" stroke="#0b3b60" stroke-width="2.5"/>
+      </svg>
+
+      <div class="header-brand-block">
+        <div class="brand-main-title">
+          <span class="text-teal">RailSNT</span><span class="text-orange">Gyan</span>
+        </div>
+        <div class="brand-subline">Railway S&T Knowledge Portal</div>
+        <div class="brand-tagline-motto">
+          <span class="tag-item">Learn</span><span class="divider">|</span>
+          <span class="tag-item">Explore</span><span class="divider">|</span>
+          <span class="tag-item">Apply</span><span class="divider">|</span>
+          <span class="tag-item">Excel</span>
+        </div>
       </div>
     </div>
+
     <div class="header-right">
-      <span class="badge-portal"><i class="fa-solid fa-shield-halved" style="color: #f1c40f;"></i> Protected Access</span>
+      <span class="badge-portal"><i class="fa-solid fa-shield-halved" style="color: #f97316;"></i> Protected Access</span>
       <span class="badge-portal badge-cloud"><i class="fa-solid fa-cloud"></i> Cloud Synced</span>
-      <span class="badge-portal"><i class="fa-solid fa-clock"></i> <span id="currentClock"></span></span>
       <button class="btn-logout" onclick="logoutPortal()" title="Lock Portal">
         <i class="fa-solid fa-lock"></i> Logout
       </button>
@@ -1075,165 +1593,304 @@
   <!-- APP CONTAINER -->
   <div class="app-container">
 
+    <!-- Mobile Drawer Backdrop Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebarDrawer()"></div>
+
     <!-- SIDEBAR -->
-    <aside>
+    <aside id="appSidebar">
       <div class="home-btn-container">
-        <button class="home-btn" onclick="goHome()">
-          <i class="fa-solid fa-house"></i> HOME
+        <button class="home-btn active-home" id="sideHomeBtn" onclick="goHome()">
+          <i class="fa-solid fa-house" style="color: #f97316;"></i> HOME
         </button>
       </div>
 
       <!-- SECTION 1: FILES & APPROVALS -->
       <div class="collapsible-group" id="grpFilesApprovals">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpFilesApprovals')">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-folder"></i> FILES & APPROVALS</span>
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-folder-open" style="color: #f59e0b;"></i> FILES & APPROVALS</span>
           <i class="fa-solid fa-chevron-down chevron-icon"></i>
         </div>
         <ul class="nav-list">
-          <li class="nav-item active" onclick="switchCategory('PCSTE SANCTION')"><i class="fa-solid fa-stamp"></i> PCSTE SANCTION</li>
-          <li class="nav-item" onclick="switchCategory('EI TSAA')"><i class="fa-solid fa-microchip"></i> EI TSAA</li>
-          <li class="nav-item" onclick="switchCategory('MSDAC TSAA')"><i class="fa-solid fa-wave-square"></i> MSDAC TSAA</li>
-          <li class="nav-item" onclick="switchCategory('S&T SPEED CERTIFICATE')"><i class="fa-solid fa-gauge-high"></i> S&T SPEED CERTIFICATE</li>
-          <li class="nav-item" onclick="switchCategory('PCSTE DISPENSATION')"><i class="fa-solid fa-scale-balanced"></i> PCSTE DISPENSATION</li>
-          <li class="nav-item" onclick="switchCategory('GM SANCTION')"><i class="fa-solid fa-file-signature"></i> GM SANCTION</li>
-          <li class="nav-item" onclick="switchCategory('GRADE CONDONATION')"><i class="fa-solid fa-road-circle-exclamation"></i> GRADE CONDONATION</li>
-          <li class="nav-item" onclick="switchCategory('LINE OPENING')"><i class="fa-solid fa-train-subway"></i> LINE OPENING</li>
-          <li class="nav-item" onclick="switchCategory('SPEED RAISING')"><i class="fa-solid fa-gauge"></i> SPEED RAISING</li>
-          <li class="nav-item" onclick="switchCategory('JOINT SAFETY CERTIFICATE (JSC)')"><i class="fa-solid fa-shield-virus"></i> JOINT SAFETY CERTIFICATE (JSC)</li>
-          <li class="nav-item" onclick="switchCategory('INSPECTION NOTE')"><i class="fa-solid fa-clipboard-check"></i> INSPECTION NOTE</li>
-          <li class="nav-item" onclick="switchCategory('SECR POLICY')"><i class="fa-solid fa-book"></i> SECR POLICY</li>
-          <li class="nav-item" onclick="switchCategory('SECR TYPICAL')"><i class="fa-solid fa-diagram-project"></i> SECR TYPICAL</li>
+          <li class="nav-item" onclick="switchCategory('PCSTE SANCTION')"><i class="fa-solid fa-stamp" style="color: #dc2626;"></i> PCSTE SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('EI TSAA')"><i class="fa-solid fa-microchip" style="color: #ea580c;"></i> EI TSAA</li>
+          <li class="nav-item" onclick="switchCategory('MSDAC TSAA')"><i class="fa-solid fa-wave-square" style="color: #d97706;"></i> MSDAC TSAA</li>
+          <li class="nav-item" onclick="switchCategory('S&T SPEED CERTIFICATE')"><i class="fa-solid fa-gauge-high" style="color: #0284c7;"></i> S&T SPEED CERTIFICATE</li>
+          <li class="nav-item" onclick="switchCategory('PCSTE DISPENSATION')"><i class="fa-solid fa-scale-balanced" style="color: #db2777;"></i> PCSTE DISPENSATION</li>
+          <li class="nav-item" onclick="switchCategory('GM SANCTION')"><i class="fa-solid fa-file-signature" style="color: #059669;"></i> GM SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('GRADE CONDONATION')"><i class="fa-solid fa-road-circle-exclamation" style="color: #e11d48;"></i> GRADE CONDONATION</li>
+          <li class="nav-item" onclick="switchCategory('LINE OPENING')"><i class="fa-solid fa-train-subway" style="color: #9333ea;"></i> LINE OPENING</li>
+          <li class="nav-item" onclick="switchCategory('SPEED RAISING')"><i class="fa-solid fa-gauge" style="color: #10b981;"></i> SPEED RAISING</li>
+          <li class="nav-item" onclick="switchCategory('JOINT SAFETY CERTIFICATE (JSC)')"><i class="fa-solid fa-shield-virus" style="color: #0d9488;"></i> JOINT SAFETY CERTIFICATE (JSC)</li>
+          <li class="nav-item" onclick="switchCategory('INSPECTION NOTE')"><i class="fa-solid fa-clipboard-check" style="color: #2563eb;"></i> INSPECTION NOTE</li>
+          <li class="nav-item" onclick="switchCategory('SECR POLICY')"><i class="fa-solid fa-book" style="color: #4f46e5;"></i> SECR POLICY</li>
+          <li class="nav-item" onclick="switchCategory('SECR TYPICAL')"><i class="fa-solid fa-diagram-project" style="color: #c026d3;"></i> SECR TYPICAL</li>
         </ul>
       </div>
 
       <!-- SECTION 2: REFERENCE BOOKS & DOCS -->
       <div class="collapsible-group collapsed" id="grpRefBooks">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpRefBooks')">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-book-bookmark"></i> REFERENCE BOOKS & DOCS</span>
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-book-bookmark" style="color: #0284c7;"></i> REFERENCE BOOKS & DOCS</span>
           <i class="fa-solid fa-chevron-down chevron-icon"></i>
         </div>
         <ul class="nav-list">
-          <li class="nav-item" onclick="switchCategory('IMP. LETTER')"><i class="fa-solid fa-envelope-open-text" style="color:#d9534f;"></i> IMP. LETTER</li>
-          <li class="nav-item" onclick="switchCategory('RDSO TAN (TECHNICAL ADVISORY NOTE)')"><i class="fa-solid fa-note-sticky" style="color:#e67e22;"></i> RDSO TAN (TECHNICAL ADVISORY NOTE)</li>
-          <li class="nav-item" onclick="switchCategory('IRSEM & CORRECTION SLIP')"><i class="fa-solid fa-file-lines"></i> IRSEM & CORRECTION SLIP</li>
-          <li class="nav-item" onclick="switchCategory('IRTEM')"><i class="fa-solid fa-tower-broadcast"></i> IRTEM</li>
-          <li class="nav-item" onclick="switchCategory('GCC')"><i class="fa-solid fa-gavel"></i> GCC (GENERAL CONDITIONS OF CONTRACT)</li>
-          <li class="nav-item" onclick="switchCategory('IRSOD & CORRECTION SLIP')"><i class="fa-solid fa-ruler-combined"></i> IRSOD & CORRECTION SLIP</li>
-          <li class="nav-item" onclick="switchCategory('LINE OPENING (MANUAL)')"><i class="fa-solid fa-route"></i> LINE OPENING</li>
-          <li class="nav-item" onclick="switchCategory('SOP (SCHEDULE OF POWER)')"><i class="fa-solid fa-bolt"></i> SOP (SCHEDULE OF POWER)</li>
-          <li class="nav-item" onclick="switchCategory('OTHER MANUALS')"><i class="fa-solid fa-book-journal-whills"></i> OTHER MANUALS</li>
-          <li class="nav-item" onclick="switchCategory('IRISET E-BOOK (SIGNAL)')"><i class="fa-solid fa-traffic-light"></i> IRISET E-BOOK (SIGNAL)</li>
-          <li class="nav-item" onclick="switchCategory('IRISET E-BOOK (TELECOM)')"><i class="fa-solid fa-satellite-dish"></i> IRISET E-BOOK (TELECOM)</li>
+          <li class="nav-item" onclick="switchCategory('IMP. LETTER')"><i class="fa-solid fa-envelope-open-text" style="color: #ef4444;"></i> IMP. LETTER</li>
+          <li class="nav-item" onclick="switchCategory('RDSO TAN (TECHNICAL ADVISORY NOTE)')"><i class="fa-solid fa-note-sticky" style="color: #f97316;"></i> RDSO TAN (TECHNICAL ADVISORY NOTE)</li>
+          <li class="nav-item" onclick="switchCategory('IRSEM & CORRECTION SLIP')"><i class="fa-solid fa-file-lines" style="color: #eab308;"></i> IRSEM & CORRECTION SLIP</li>
+          <li class="nav-item" onclick="switchCategory('IRTEM')"><i class="fa-solid fa-tower-broadcast" style="color: #14b8a6;"></i> IRTEM</li>
+          <li class="nav-item" onclick="switchCategory('GCC')"><i class="fa-solid fa-gavel" style="color: #8b5cf6;"></i> GCC (GENERAL CONDITIONS OF CONTRACT)</li>
+          <li class="nav-item" onclick="switchCategory('IRSOD & CORRECTION SLIP')"><i class="fa-solid fa-ruler-combined" style="color: #ec4899;"></i> IRSOD & CORRECTION SLIP</li>
+          <li class="nav-item" onclick="switchCategory('LINE OPENING (MANUAL)')"><i class="fa-solid fa-route" style="color: #06b6d4;"></i> LINE OPENING</li>
+          <li class="nav-item" onclick="switchCategory('SOP (SCHEDULE OF POWER)')"><i class="fa-solid fa-bolt" style="color: #eab308;"></i> SOP (SCHEDULE OF POWER)</li>
+          <li class="nav-item" onclick="switchCategory('OTHER MANUALS')"><i class="fa-solid fa-book-journal-whills" style="color: #84cc16;"></i> OTHER MANUALS</li>
+          <li class="nav-item" onclick="switchCategory('IRISET E-BOOK (SIGNAL)')"><i class="fa-solid fa-traffic-light" style="color: #22c55e;"></i> IRISET E-BOOK (SIGNAL)</li>
+          <li class="nav-item" onclick="switchCategory('IRISET E-BOOK (TELECOM)')"><i class="fa-solid fa-satellite-dish" style="color: #3b82f6;"></i> IRISET E-BOOK (TELECOM)</li>
         </ul>
       </div>
 
       <!-- SECTION 3: DOCUMENTS FOR VARIOUS SANCTION/APPROVAL -->
       <div class="collapsible-group collapsed" id="grpSanctionDocs">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpSanctionDocs')">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-folder-tree"></i> DOCUMENTS FOR VARIOUS SANCTION/APPROVAL</span>
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-folder-tree" style="color: #8b5cf6;"></i> DOCUMENTS FOR VARIOUS SANCTION/APPROVAL</span>
           <i class="fa-solid fa-chevron-down chevron-icon"></i>
         </div>
         <ul class="nav-list">
-          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR EI TSAA')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR EI TSAA</li>
-          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR MSDAC TSAA')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR MSDAC TSAA</li>
-          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR PCSTE SANCTION')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR PCSTE SANCTION</li>
-          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR GM SANCTION')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR GM SANCTION</li>
-          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR OTHER APPROVALS')"><i class="fa-solid fa-file-lines"></i> DOCUMENTS FOR OTHER APPROVALS</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR EI TSAA')"><i class="fa-solid fa-microchip" style="color: #f97316;"></i> DOCUMENTS FOR EI TSAA</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR MSDAC TSAA')"><i class="fa-solid fa-wave-square" style="color: #eab308;"></i> DOCUMENTS FOR MSDAC TSAA</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR PCSTE SANCTION')"><i class="fa-solid fa-stamp" style="color: #ef4444;"></i> DOCUMENTS FOR PCSTE SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR GM SANCTION')"><i class="fa-solid fa-file-signature" style="color: #10b981;"></i> DOCUMENTS FOR GM SANCTION</li>
+          <li class="nav-item" onclick="switchCategory('DOCUMENTS FOR OTHER APPROVALS')"><i class="fa-solid fa-folder-closed" style="color: #6366f1;"></i> DOCUMENTS FOR OTHER APPROVALS</li>
         </ul>
       </div>
 
       <!-- SECTION 4: LDCE GR. B QUESTION PAPER -->
       <div class="collapsible-group collapsed" id="grpLdcePapers">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpLdcePapers')">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-graduation-cap"></i> LDCE GR. B QUESTION PAPER</span>
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-graduation-cap" style="color: #10b981;"></i> LDCE GR. B QUESTION PAPER</span>
           <i class="fa-solid fa-chevron-down chevron-icon"></i>
         </div>
         <ul class="nav-list">
-          <li class="nav-item" onclick="switchCategory('ASTE')"><i class="fa-solid fa-file-circle-question"></i> ASTE</li>
-          <li class="nav-item" onclick="switchCategory('AEN')"><i class="fa-solid fa-file-circle-question"></i> AEN</li>
-          <li class="nav-item" onclick="switchCategory('AMM')"><i class="fa-solid fa-file-circle-question"></i> AMM</li>
-          <li class="nav-item" onclick="switchCategory('APO')"><i class="fa-solid fa-file-circle-question"></i> APO</li>
-          <li class="nav-item" onclick="switchCategory('AFA')"><i class="fa-solid fa-file-circle-question"></i> AFA</li>
-          <li class="nav-item" onclick="switchCategory('AME')"><i class="fa-solid fa-file-circle-question"></i> AME</li>
-          <li class="nav-item" onclick="switchCategory('ACM')"><i class="fa-solid fa-file-circle-question"></i> ACM</li>
-          <li class="nav-item" onclick="switchCategory('AOM')"><i class="fa-solid fa-file-circle-question"></i> AOM</li>
-          <li class="nav-item" onclick="switchCategory('AEE')"><i class="fa-solid fa-file-circle-question"></i> AEE</li>
+          <li class="nav-item" onclick="switchCategory('ASTE')"><i class="fa-solid fa-traffic-light" style="color: #ef4444;"></i> ASTE</li>
+          <li class="nav-item" onclick="switchCategory('AEN')"><i class="fa-solid fa-person-digging" style="color: #f97316;"></i> AEN</li>
+          <li class="nav-item" onclick="switchCategory('AMM')"><i class="fa-solid fa-boxes-stacked" style="color: #eab308;"></i> AMM</li>
+          <li class="nav-item" onclick="switchCategory('APO')"><i class="fa-solid fa-users-gear" style="color: #14b8a6;"></i> APO</li>
+          <li class="nav-item" onclick="switchCategory('AFA')"><i class="fa-solid fa-calculator" style="color: #3b82f6;"></i> AFA</li>
+          <li class="nav-item" onclick="switchCategory('AME')"><i class="fa-solid fa-gears" style="color: #8b5cf6;"></i> AME</li>
+          <li class="nav-item" onclick="switchCategory('ACM')"><i class="fa-solid fa-ticket" style="color: #ec4899;"></i> ACM</li>
+          <li class="nav-item" onclick="switchCategory('AOM')"><i class="fa-solid fa-train-track" style="color: #06b6d4;"></i> AOM</li>
+          <li class="nav-item" onclick="switchCategory('AEE')"><i class="fa-solid fa-bolt-lightning" style="color: #facc15;"></i> AEE</li>
         </ul>
       </div>
 
       <!-- SECTION 5: IMPORTANT LINKS -->
       <div class="collapsible-group collapsed" id="grpImportantLinks">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpImportantLinks')">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-link"></i> IMPORTANT LINKS</span>
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-link" style="color: #06b6d4;"></i> IMPORTANT LINKS</span>
           <i class="fa-solid fa-chevron-down chevron-icon"></i>
         </div>
         <ul class="nav-list">
-          <li class="nav-item" onclick="switchCategory('IMPORTANT LINKS')"><i class="fa-solid fa-arrow-up-right-from-square"></i> PORTAL & REPO LINKS</li>
+          <li class="nav-item" onclick="switchCategory('IMPORTANT LINKS')"><i class="fa-solid fa-arrow-up-right-from-square" style="color: #3b82f6;"></i> PORTAL & REPO LINKS</li>
         </ul>
       </div>
     </aside>
 
     <!-- MAIN VIEW -->
     <main>
-      <div class="content-header-card">
-        <div class="view-title-group">
-          <h2 id="activeCategoryTitle">PCSTE SANCTION</h2>
-          <p id="activeCategoryDesc">Comprehensive register and record log for Railway S&T technical approvals and sanctions.</p>
+
+      <!-- DASHBOARD HOME VIEW -->
+      <div id="dashboardView">
+        <div class="dash-hero">
+          <div class="dash-hero-title">
+            <h2>Railway S&T Approvals & Sanctions Dashboard</h2>
+            <p>RailSNTGyan Real-Time Knowledge Repository & Analytics Hub</p>
+          </div>
+          <div class="dash-fy-badge-wrapper">
+            <div class="dash-fy-badge">
+              <i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
+              <span id="dashCurrentFYText">FY 2026–27</span>
+            </div>
+            <div class="dash-total-badge">
+              <i class="fa-solid fa-layer-group" style="color: #38bdf8;"></i>
+              <span>Total Current FY: <b id="dashTotalRecordsCount">0</b></span>
+            </div>
+          </div>
         </div>
-        <div class="action-toolbar">
-          <button class="btn btn-success" onclick="openFYReportModal()"><i class="fa-solid fa-chart-column"></i> FY Report</button>
-          <button class="btn btn-outline" onclick="exportToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-          <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New Record</button>
+
+        <!-- VIEW TITLE BAR -->
+        <div class="infographic-controls-bar">
+          <div class="infographic-title-tag">
+            <i class="fa-solid fa-diagram-project" style="color:var(--brand-orange);"></i>
+            Technical Approval Process & Strategy Workflow
+          </div>
+        </div>
+
+        <!-- PROCESS STEPS INFOGRAPHIC TIMELINE -->
+        <div class="process-infographic-card">
+          <div class="process-track-container">
+            <!-- STEP 01 -->
+            <div class="process-step-item step-1" onclick="switchCategory('PCSTE SANCTION')">
+              <div class="process-step-badge">01</div>
+              <div class="process-step-icon"><i class="fa-solid fa-stamp"></i></div>
+              <div class="process-step-title">PCSTE SANCTION</div>
+              <div class="process-step-counter"><span id="nodeCount-PCSTE_SANCTION">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 02 -->
+            <div class="process-step-item step-2" onclick="switchCategory('EI TSAA')">
+              <div class="process-step-badge">02</div>
+              <div class="process-step-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="process-step-title">EI TSAA</div>
+              <div class="process-step-counter"><span id="nodeCount-EI_TSAA">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 03 -->
+            <div class="process-step-item step-3" onclick="switchCategory('MSDAC TSAA')">
+              <div class="process-step-badge">03</div>
+              <div class="process-step-icon"><i class="fa-solid fa-wave-square"></i></div>
+              <div class="process-step-title">MSDAC TSAA</div>
+              <div class="process-step-counter"><span id="nodeCount-MSDAC_TSAA">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 04 -->
+            <div class="process-step-item step-4" onclick="switchCategory('GM SANCTION')">
+              <div class="process-step-badge">04</div>
+              <div class="process-step-icon"><i class="fa-solid fa-file-signature"></i></div>
+              <div class="process-step-title">GM SANCTION</div>
+              <div class="process-step-counter"><span id="nodeCount-GM_SANCTION">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 05 -->
+            <div class="process-step-item step-5" onclick="switchCategory('S&T SPEED CERTIFICATE')">
+              <div class="process-step-badge">05</div>
+              <div class="process-step-icon"><i class="fa-solid fa-gauge-high"></i></div>
+              <div class="process-step-title">SPEED CERT.</div>
+              <div class="process-step-counter"><span id="nodeCount-ST_SPEED_CERTIFICATE">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 06 -->
+            <div class="process-step-item step-6" onclick="switchCategory('JOINT SAFETY CERTIFICATE (JSC)')">
+              <div class="process-step-badge">06</div>
+              <div class="process-step-icon"><i class="fa-solid fa-shield-virus"></i></div>
+              <div class="process-step-title">JSC SAFETY</div>
+              <div class="process-step-counter"><span id="nodeCount-JSC">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 07 -->
+            <div class="process-step-item step-7" onclick="switchCategory('GRADE CONDONATION')">
+              <div class="process-step-badge">07</div>
+              <div class="process-step-icon"><i class="fa-solid fa-road-circle-exclamation"></i></div>
+              <div class="process-step-title">GRADE CONDON.</div>
+              <div class="process-step-counter"><span id="nodeCount-GRADE_CONDONATION">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 08 -->
+            <div class="process-step-item step-8" onclick="switchCategory('LINE OPENING')">
+              <div class="process-step-badge">08</div>
+              <div class="process-step-icon"><i class="fa-solid fa-train-subway"></i></div>
+              <div class="process-step-title">LINE OPENING</div>
+              <div class="process-step-counter"><span id="nodeCount-LINE_OPENING">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 09 -->
+            <div class="process-step-item step-9" onclick="switchCategory('PCSTE DISPENSATION')">
+              <div class="process-step-badge">09</div>
+              <div class="process-step-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+              <div class="process-step-title">DISPENSATION</div>
+              <div class="process-step-counter"><span id="nodeCount-PCSTE_DISPENSATION">0</span> Rec</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Container -->
+        <div class="dash-charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-chart-bar" style="color:var(--brand-orange);"></i> Category-wise Records Distribution (Current FY)</h3>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size:10.5px;" onclick="openFYReportModal()">
+                <i class="fa-solid fa-chart-column"></i> Detailed FY Report
+              </button>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="dashBarChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-chart-pie" style="color:var(--brand-navy);"></i> Proportion Share</h3>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="dashDoughnutChart"></canvas>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Filters & Sorting Panel -->
-      <div class="filter-panel">
-        <div class="filter-item">
-          <i class="fa-solid fa-calendar"></i>
-          <span>Year:</span>
-          <select id="filterYear" onchange="renderTable()">
-            <option value="ALL">All Years</option>
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-          </select>
+      <!-- ========================================================
+           TABLE VIEW SECTION (WITH FROZEN / STICKY HEADERS)
+           ======================================================== -->
+      <div id="tableViewSection" style="display:none;">
+        <!-- 1. STICKY SUBSECTION TITLE & ACTIONS -->
+        <div class="content-header-card sticky-header-card">
+          <div class="view-title-group">
+            <h2 id="activeCategoryTitle">PCSTE SANCTION</h2>
+            <p id="activeCategoryDesc">Comprehensive register and record log for Railway S&T technical approvals and sanctions.</p>
+          </div>
+          <div class="action-toolbar">
+            <button class="btn btn-success" onclick="openFYReportModal()"><i class="fa-solid fa-chart-column"></i> FY Report</button>
+            <button class="btn btn-outline" onclick="exportToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+            <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New Record</button>
+          </div>
         </div>
 
-        <div class="filter-item" id="filterDivisionWrapper">
-          <i class="fa-solid fa-building"></i>
-          <span>Division:</span>
-          <select id="filterDivision" onchange="renderTable()">
-            <option value="ALL">All Divisions</option>
-            <option value="Bilaspur">Bilaspur</option>
-            <option value="Raipur">Raipur</option>
-            <option value="Nagpur">Nagpur</option>
-            <option value="HQ">HQ / SECR</option>
-          </select>
+        <!-- 2. STICKY FILTER & SEARCH PANEL -->
+        <div class="filter-panel sticky-filter-panel">
+          <div class="filter-item">
+            <i class="fa-solid fa-calendar"></i>
+            <span>Year:</span>
+            <select id="filterYear" onchange="renderTable()">
+              <option value="ALL">All Years</option>
+              <option value="2027">2027</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+            </select>
+          </div>
+
+          <div class="filter-item" id="filterDivisionWrapper">
+            <i class="fa-solid fa-building"></i>
+            <span>Division:</span>
+            <select id="filterDivision" onchange="renderTable()">
+              <option value="ALL">All Divisions</option>
+              <option value="Bilaspur">Bilaspur</option>
+              <option value="Raipur">Raipur</option>
+              <option value="Nagpur">Nagpur</option>
+              <option value="HQ">HQ / SECR</option>
+            </select>
+          </div>
+
+          <div class="filter-item" style="flex:1;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="filterSearch" class="search-input" placeholder="Search keywords, description, etc..." onkeyup="renderTable()">
+          </div>
+
+          <span class="reset-link" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset Filters</span>
         </div>
 
-        <div class="filter-item">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="filterSearch" class="search-input" placeholder="Search keywords, description, etc..." onkeyup="renderTable()">
+        <!-- 3. STICKY FIRST-ROW TABLE CONTAINER -->
+        <div class="table-container">
+          <table id="mainRecordTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
         </div>
-
-        <span class="reset-link" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset Filters</span>
-      </div>
-
-      <!-- Main Dynamic Table -->
-      <div class="table-container">
-        <table id="mainRecordTable">
-          <thead id="tableHead"></thead>
-          <tbody id="tableBody"></tbody>
-        </table>
       </div>
     </main>
   </div>
 
   <!-- FOOTER -->
   <footer>
-    <span>Educational & Official Reference Purpose • SECR Bilaspur Division</span>
+    <span>Educational & Official Reference Purpose • RailSNTGyan Knowledge Portal</span>
     <span>S&T Department Technical Documentation Repository</span>
   </footer>
 
@@ -1263,10 +1920,11 @@
         <h3><i class="fa-solid fa-chart-column"></i> Financial Year-wise S&T Technical Summary Report</h3>
         <div class="modal-header-actions">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:12px; font-weight:700; color:#ffffff;">Select FY:</span>
-            <select id="reportFYSelect" style="padding:5px 10px; border-radius:4px; font-size:12px; font-weight:700; background:#ffffff; color:#212529; border:1px solid #ced4da;" onchange="generateFYReport()">
-              <option value="2026-27">2026–27</option>
-              <option value="2025-26" selected>2025–26</option>
+            <span style="font-size:11.5px; font-weight:700; color:#ffffff;">Select FY:</span>
+            <select id="reportFYSelect" style="padding:5px 9px; border-radius:5px; font-size:11.5px; font-weight:700; background:#ffffff; color:#1e293b; border:1px solid #cbd5e1;" onchange="generateFYReport()">
+              <option value="2027-28">2027–28</option>
+              <option value="2026-27" selected>2026–27</option>
+              <option value="2025-26">2025–26</option>
               <option value="2024-25">2024–25</option>
               <option value="2023-24">2023–24</option>
             </select>
@@ -1283,17 +1941,17 @@
       <div class="report-body">
         <div class="report-sheet" id="fyReportSheet">
           <div class="report-header-banner">
-            <h2>South East Central Railway</h2>
-            <p>Office of the Principal Chief Signal & Telecom Engineer (PCSTE), Bilaspur (C.G.)</p>
-            <p style="color:var(--railway-maroon); font-size:13px; font-weight:700; margin-top:6px;">
+            <h2>RailSNTGyan Knowledge Portal</h2>
+            <p>Office of the Principal Chief Signal & Telecom Engineer (PCSTE)</p>
+            <p style="color:var(--brand-orange); font-size:13px; font-weight:800; margin-top:5px;">
               MONTH-WISE S&T TECHNICAL APPROVALS & SANCTIONS SUMMARY REPORT
             </p>
           </div>
 
           <div class="report-meta-bar">
-            <span><b>Financial Year:</b> <span id="reportFYLabel" style="color:var(--railway-maroon); font-weight:800;">2025–26</span></span>
+            <span><b>Financial Year:</b> <span id="reportFYLabel" style="color:var(--brand-navy); font-weight:800;">2026–27</span></span>
             <span><b>Period:</b> 01 April to 31 March</span>
-            <span><b>Criterion:</b> Document Letter Issue Date / Date of Forwarding from PCSTE Office</span>
+            <span><b>Criterion:</b> Document Letter Issue Date / Date of Forwarding</span>
             <span><b>Generated on:</b> <span id="reportGenDate"></span></span>
           </div>
 
@@ -1314,7 +1972,7 @@
                   <th>Jan</th>
                   <th>Feb</th>
                   <th>Mar</th>
-                  <th style="background:#1a365d; min-width:70px;">Total</th>
+                  <th style="background:#0b3b60; min-width:65px;">Total</th>
                 </tr>
               </thead>
               <tbody id="fyReportTableBody"></tbody>
@@ -1521,13 +2179,13 @@
 
         <div class="form-group" id="formDateContainer">
           <label id="formDateLabel">Date (DD-MM-YYYY)</label>
-          <input type="date" id="formDate" value="2026-09-28">
+          <input type="date" id="formDate">
           <span class="help-hint">Sr. No. will be assigned automatically based strictly on chronological order.</span>
         </div>
 
         <div class="form-group" id="formSecondaryDateContainer" style="display:none;">
           <label>Date of Sanction (DD-MM-YYYY)</label>
-          <input type="date" id="formSecondaryDate" value="2026-09-28">
+          <input type="date" id="formSecondaryDate">
         </div>
 
         <div class="form-group" id="formDriveLinkContainer">
@@ -1561,7 +2219,6 @@
     const db = firebase.firestore();
     const recordsCol = db.collection('secr_records');
 
-    // EXACT CLOUD PATH AS PER YOUR FIRESTORE STRUCTURE
     const settingsDoc = db.collection('secr_records').doc('1').collection('settings').doc('passwords');
 
     // ===================================================
@@ -1622,6 +2279,8 @@
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('pagePasswordInput').focus();
       }
+
+      goHome();
     });
 
     function verifyAdminPassword(actionName) {
@@ -1637,6 +2296,25 @@
       } else {
         alert("Galat admin password! Access denied.");
         return false;
+      }
+    }
+
+    // MOBILE DRAWER CONTROLS
+    function toggleSidebarDrawer() {
+      const sidebar = document.getElementById('appSidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar && overlay) {
+        sidebar.classList.toggle('mobile-open');
+        overlay.classList.toggle('active');
+      }
+    }
+
+    function closeSidebarDrawer() {
+      const sidebar = document.getElementById('appSidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar && overlay) {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
       }
     }
 
@@ -1671,25 +2349,37 @@
     }
 
     function resetAccordionToDefault() {
-      const grpFiles = document.getElementById('grpFilesApprovals');
-      const grpRef = document.getElementById('grpRefBooks');
-      const grpSanction = document.getElementById('grpSanctionDocs');
-      const grpLdce = document.getElementById('grpLdcePapers');
-      const grpLinks = document.getElementById('grpImportantLinks');
+      accordionGroupIds.forEach(id => {
+        const grp = document.getElementById(id);
+        if (grp) grp.classList.add('collapsed');
+      });
+    }
 
-      if (grpFiles) grpFiles.classList.remove('collapsed');
-      if (grpRef) grpRef.classList.add('collapsed');
-      if (grpSanction) grpSanction.classList.add('collapsed');
-      if (grpLdce) grpLdce.classList.add('collapsed');
-      if (grpLinks) grpLinks.classList.add('collapsed');
+    function getCurrentFinancialYearString() {
+      const today = new Date();
+      const m = today.getMonth() + 1;
+      const y = today.getFullYear();
+      if (m >= 4) {
+        return `${y}-${String(y + 1).slice(-2)}`;
+      } else {
+        return `${y - 1}-${String(y).slice(-2)}`;
+      }
     }
 
     function goHome() {
       resetAccordionToDefault();
-      switchCategory('PCSTE SANCTION');
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      const homeBtn = document.getElementById('sideHomeBtn');
+      if (homeBtn) homeBtn.classList.add('active-home');
+
+      document.getElementById('dashboardView').style.display = 'flex';
+      document.getElementById('tableViewSection').style.display = 'none';
+
+      updateDashboardView();
+      closeSidebarDrawer();
     }
 
-    let currentCategory = 'PCSTE SANCTION';
+    let currentCategory = 'HOME';
 
     function formatDateToDDMMYYYY(dateInput) {
       if (!dateInput) return '';
@@ -1781,61 +2471,185 @@
       'SPEED RAISING'
     ];
 
-    const initialRecords = [
-      { id: 1, category: 'PCSTE SANCTION', station: 'BIA (Bhilai)', division: 'Raipur', equipment: 'RRI Gear', agency: 'Open line', work: 'Route Relay Interlocking yard modification', date: '14-08-2025', year: 2025, driveLink: '' },
-      { id: 2, category: 'PCSTE SANCTION', station: 'CPH (Champa)', division: 'Bilaspur', equipment: 'Dual MSDAC', agency: 'Con', work: 'Provision of Dual MSDAC in auto section', date: '18-02-2026', year: 2026, driveLink: 'https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview' },
-      { id: 3, category: 'EI TSAA', station: 'URK (Urkura)', division: 'Raipur', agency: 'Con', work: 'Yard remodelling with Medha EI system', oem: 'MEDHA', sanctionBy: 'PCSTE', routes: 96, date: '18-09-2025', year: 2025, driveLink: '' },
-      { id: 4, category: 'EI TSAA', station: 'ROB', division: 'Bilaspur', agency: 'Open line', work: 'Commissioning of High-Availability Electronic Interlocking', oem: 'KYOSON', sanctionBy: 'PCSTE', routes: 48, date: '10-01-2026', year: 2026, driveLink: 'https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview' },
-      { id: 5, category: 'MSDAC TSAA', station: 'BYT - HN Section', division: 'Bilaspur', agency: 'Con', work: 'Auto-signalling block section multi-section digital axle counter', oem: 'CEL', date: '15-10-2025', year: 2025, driveLink: '' },
-      { id: 6, category: 'MSDAC TSAA', station: 'BSP - USL Section', division: 'Bilaspur', agency: 'Project', work: 'Replacement of track circuits with Dual MSDAC', oem: 'Frauscher', date: '02-04-2026', year: 2026, driveLink: 'https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview' },
-      { id: 7, category: 'S&T SPEED CERTIFICATE', wagon: 'BOXNHL Wagon', department: 'Mechanical', work: 'Speed raising of BOXNHL wagons to 100 kmph', date: '12-05-2025', year: 2025, driveLink: '' },
-      { id: 8, category: 'PCSTE DISPENSATION', station: 'CPH Yard', division: 'Bilaspur', work: 'Dispensation for signal overlap distance in yard modification', date: '22-07-2025', year: 2025, driveLink: '' },
-      { id: 9, category: 'GM SANCTION', station: 'G - NGP Section', division: 'Nagpur', work: 'Sanction for introduction of twin single line auto signalling', date: '15-01-2026', sanctionDate: '22-02-2026', agency: 'Project', year: 2026, driveLink: '' },
-      { id: 10, category: 'GRADE CONDONATION', station: 'CPH Yard', work: 'Grade condonation for 1 in 400 grade at CPH outer section', date: '05-11-2025', agency: 'Con', year: 2025, driveLink: '' },
-      { id: 11, category: 'LINE OPENING', station: 'RIG - KHS 4th Line', work: 'Opening of 4th Line for public carriage of passengers with MACLS', date: '20-12-2025', agency: 'Con', year: 2025, driveLink: '' },
-      { id: 12, category: 'SPEED RAISING', station: 'BSP - DURG Section', division: 'Raipur', work: 'Speed raising from 110 kmph to 130 kmph on UP/DN Main lines', date: '14-02-2026', agency: 'Open line', year: 2026, driveLink: '' },
-      { id: 13, category: 'JOINT SAFETY CERTIFICATE (JSC)', work: 'Joint Safety Certificate for operation of WAP-7 locomotive at 130 kmph on BSP-NGP route', date: '19-06-2025', year: 2025, driveLink: '' },
-      { id: 14, category: 'IMP. LETTER', relatedEquip: 'Class B SPD', work: 'Guidelines for maintenance and replacement of surge protection devices at EI installations', issuedBy: 'RDSO', date: '05-03-2026', year: 2026, driveLink: '' },
-      { id: 15, category: 'RDSO TAN (TECHNICAL ADVISORY NOTE)', tanNo: 'STS/E/TAN/3002', work: 'Technical advisory note on wiring and testing of Relay based interlocking and EI', relatedTo: 'Electronic Interlocking', date: '15-07-2025', year: 2025, driveLink: '' },
-      { id: 16, category: 'DOCUMENTS FOR EI TSAA', work: 'Standard Checklist & Formats for submission of Application for EI TSAA approval', date: '10-04-2025', year: 2025, driveLink: '' },
-      { id: 17, category: 'DOCUMENTS FOR MSDAC TSAA', work: 'Standard Application form, testing protocols and guidelines for MSDAC TSAA approval', date: '18-05-2025', year: 2025, driveLink: '' },
-      { id: 18, category: 'DOCUMENTS FOR PCSTE SANCTION', work: 'Master document guideline for technical sanction proposal under SEM para 19.5', date: '01-05-2025', year: 2025, driveLink: '' },
-      { id: 19, category: 'DOCUMENTS FOR GM SANCTION', work: 'Model proforma and CRS compliance documents for General Manager sanction', date: '20-08-2025', year: 2025, driveLink: '' },
-      { id: 20, category: 'DOCUMENTS FOR OTHER APPROVALS', work: 'Standard formats for condonation of infringements and temporary dispensations', date: '11-09-2025', year: 2025, driveLink: '' },
-      { id: 21, category: 'IMPORTANT LINKS', relatedTo: 'Indian Railways Official Portal', directLink: 'https://indianrailways.gov.in', year: 2026 },
-      { id: 22, category: 'IMPORTANT LINKS', relatedTo: 'RDSO Signal Directorate Technical Docs', directLink: 'https://rdso.indianrailways.gov.in', year: 2026 },
-      { id: 23, category: 'IMPORTANT LINKS', relatedTo: 'IRISET Knowledge Base & E-Learning', directLink: 'https://iriset.indianrailways.gov.in', year: 2026 },
-      { id: 24, category: 'IRSEM & CORRECTION SLIP', work: 'Indian Railway Signal Engineering Manual (IRSEM) 2021 edition with Advance Correction Slips 1 to 9', date: '01-01-2025', year: 2025, driveLink: '' },
-      { id: 25, category: 'ASTE', year: 2025, ldceType: '30%', work: 'SECR LDCE 30% CBT Question Paper for Group B ASTE with official model answer key', date: '12-10-2025', driveLink: '' }
-    ];
-
     let records = [];
 
     // REAL-TIME CLOUD LISTENER
     recordsCol.onSnapshot((snapshot) => {
-      if (snapshot.empty && records.length === 0) {
-        const batch = db.batch();
-        initialRecords.forEach(item => {
-          const docRef = recordsCol.doc(String(item.id));
-          batch.set(docRef, item);
+      records = [];
+      snapshot.forEach(doc => {
+        if (doc.id === '1') return;
+        const r = doc.data();
+        records.push({
+          ...r,
+          id: doc.id,
+          category: (r.category || '').toUpperCase().trim(),
+          date: formatDateToDDMMYYYY(r.date)
         });
-        batch.commit();
-      } else {
-        records = [];
-        snapshot.forEach(doc => {
-          const r = doc.data();
-          records.push({
-            ...r,
-            id: doc.id,
-            category: (r.category || '').toUpperCase().trim(),
-            date: formatDateToDDMMYYYY(r.date)
-          });
-        });
-        renderTable();
-      }
+      });
+
+      renderTable();
+      updateDashboardView();
     }, (error) => {
       console.error("Firestore sync error: ", error);
     });
+
+    // DASHBOARD LIVE CALCULATION & CHART LOGIC
+    let dashBarChartInstance = null;
+    let dashDoughnutChartInstance = null;
+
+    const dashTrackedCategories = [
+      { key: 'PCSTE SANCTION', label: 'PCSTE SANCTION', domId: 'kpi-PCSTE_SANCTION', nodeCountId: 'nodeCount-PCSTE_SANCTION', color: '#b91c1c' },
+      { key: 'EI TSAA', label: 'EI TSAA', domId: 'kpi-EI_TSAA', nodeCountId: 'nodeCount-EI_TSAA', color: '#ea580c' },
+      { key: 'MSDAC TSAA', label: 'MSDAC TSAA', domId: 'kpi-MSDAC_TSAA', nodeCountId: 'nodeCount-MSDAC_TSAA', color: '#d97706' },
+      { key: 'GM SANCTION', label: 'GM SANCTION', domId: 'kpi-GM_SANCTION', nodeCountId: 'nodeCount-GM_SANCTION', color: '#059669' },
+      { key: 'S&T SPEED CERTIFICATE', label: 'S&T SPEED CERTIFICATE', domId: 'kpi-ST_SPEED_CERTIFICATE', nodeCountId: 'nodeCount-ST_SPEED_CERTIFICATE', color: '#0284c7' },
+      { key: 'JOINT SAFETY CERTIFICATE (JSC)', label: 'JSC', domId: 'kpi-JSC', nodeCountId: 'nodeCount-JSC', color: '#0b3b60' },
+      { key: 'GRADE CONDONATION', label: 'GRADE CONDONATION', domId: 'kpi-GRADE_CONDONATION', nodeCountId: 'nodeCount-GRADE_CONDONATION', color: '#6366f1' },
+      { key: 'LINE OPENING', label: 'LINE OPENING', domId: 'kpi-LINE_OPENING', nodeCountId: 'nodeCount-LINE_OPENING', color: '#9333ea' },
+      { key: 'PCSTE DISPENSATION', label: 'PCSTE DISPENSATION', domId: 'kpi-PCSTE_DISPENSATION', nodeCountId: 'nodeCount-PCSTE_DISPENSATION', color: '#be185d' }
+    ];
+
+    function updateDashboardView() {
+      const currentFY = getCurrentFinancialYearString();
+      const currentFYLabel = `FY ${currentFY}`;
+
+      const fyElem = document.getElementById('dashCurrentFYText');
+      if (fyElem) fyElem.innerText = currentFYLabel;
+
+      const counts = {};
+      dashTrackedCategories.forEach(item => {
+        counts[item.key] = 0;
+      });
+
+      let totalCurrentFY = 0;
+
+      records.forEach(rec => {
+        const fyInfo = getFinancialYearAndMonth(rec.date);
+        if (fyInfo && fyInfo.fy === currentFY) {
+          totalCurrentFY++;
+          const cat = (rec.category || '').toUpperCase().trim();
+          if (counts[cat] !== undefined) {
+            counts[cat]++;
+          }
+        }
+      });
+
+      dashTrackedCategories.forEach(item => {
+        const nodeCountElem = document.getElementById(item.nodeCountId);
+        if (nodeCountElem) nodeCountElem.innerText = counts[item.key] || 0;
+      });
+
+      const totalElem = document.getElementById('dashTotalRecordsCount');
+      if (totalElem) totalElem.innerText = totalCurrentFY;
+
+      renderDashboardCharts(counts);
+    }
+
+    function renderDashboardCharts(countsMap) {
+      const labels = dashTrackedCategories.map(c => c.label);
+      const dataValues = dashTrackedCategories.map(c => countsMap[c.key] || 0);
+
+      const backgroundColors = [
+        '#b91c1c', '#ea580c', '#d97706', '#059669',
+        '#0284c7', '#0b3b60', '#6366f1', '#9333ea', '#be185d'
+      ];
+
+      // 1. BAR CHART
+      const barCanvas = document.getElementById('dashBarChart');
+      if (barCanvas) {
+        const ctxBar = barCanvas.getContext('2d');
+        if (dashBarChartInstance) {
+          dashBarChartInstance.destroy();
+        }
+        dashBarChartInstance = new Chart(ctxBar, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Records Count',
+              data: dataValues,
+              backgroundColor: backgroundColors,
+              borderRadius: 5,
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                padding: 8,
+                cornerRadius: 6,
+                callbacks: {
+                  label: function(context) {
+                    return ` Records: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(226, 232, 240, 0.8)' },
+                ticks: { stepSize: 1, precision: 0, font: { family: 'Plus Jakarta Sans', size: 10 } }
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  autoSkip: false,
+                  maxRotation: 35,
+                  minRotation: 15,
+                  font: { family: 'Plus Jakarta Sans', size: 9, weight: 600 }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // 2. DOUGHNUT CHART
+      const doughnutCanvas = document.getElementById('dashDoughnutChart');
+      if (doughnutCanvas) {
+        const ctxDoughnut = doughnutCanvas.getContext('2d');
+        if (dashDoughnutChartInstance) {
+          dashDoughnutChartInstance.destroy();
+        }
+        dashDoughnutChartInstance = new Chart(ctxDoughnut, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: dataValues,
+              backgroundColor: backgroundColors,
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  boxWidth: 8,
+                  font: { family: 'Plus Jakarta Sans', size: 9, weight: 600 },
+                  padding: 8
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                padding: 8,
+                cornerRadius: 6
+              }
+            },
+            cutout: '66%'
+          }
+        });
+      }
+    }
 
     function getDrivePreviewUrl(rawUrl) {
       if (!rawUrl) return null;
@@ -1846,15 +2660,15 @@
       return rawUrl;
     }
 
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('currentClock').innerText = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
     function switchCategory(catName) {
       currentCategory = catName.toUpperCase().trim();
+
+      document.getElementById('dashboardView').style.display = 'none';
+      document.getElementById('tableViewSection').style.display = 'flex';
+
+      const homeBtn = document.getElementById('sideHomeBtn');
+      if (homeBtn) homeBtn.classList.remove('active-home');
+
       document.getElementById('activeCategoryTitle').innerText = currentCategory;
 
       const divFilterWrapper = document.getElementById('filterDivisionWrapper');
@@ -1881,16 +2695,18 @@
       });
 
       renderTable();
+      closeSidebarDrawer();
     }
 
     function renderTable() {
       const thead = document.getElementById('tableHead');
       const tbody = document.getElementById('tableBody');
+      if (!thead || !tbody) return;
+
       const filterYear = document.getElementById('filterYear').value;
       const filterDiv = document.getElementById('filterDivision').value;
       const searchTxt = document.getElementById('filterSearch').value.toLowerCase();
 
-      // Table Header definitions: Work column moved right after Division, OEM width minimized
       if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
         thead.innerHTML = `
           <tr>
@@ -2143,8 +2959,8 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="12" style="text-align:center; padding: 25px; color: #888;">
-              <i class="fa-solid fa-folder-open" style="font-size: 24px; margin-bottom: 6px; display:block;"></i>
+            <td colspan="12" style="text-align:center; padding: 28px; color: #94a3b8;">
+              <i class="fa-solid fa-folder-open" style="font-size: 26px; margin-bottom: 6px; display:block; opacity:0.8;"></i>
               No technical records found matching the criteria. Click <b>"Add New Record"</b> to register files.
             </td>
           </tr>
@@ -2156,12 +2972,11 @@
       filtered.forEach((rec, idx) => {
         const driveIndicator = rec.driveLink 
           ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-          : `<span style="color:#999; font-size:11px;">Not linked</span>`;
+          : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
 
         const displayDate = formatDateToDDMMYYYY(rec.date);
         const displaySanctionDate = formatDateToDDMMYYYY(rec.sanctionDate);
 
-        // ACTION BUTTONS (Eye, Pen/Edit, Trash/Delete)
         const actionButtons = `
           <div class="actions-cell">
             <button class="action-icon-btn" title="View Preview" onclick="openPreview('${escapeHtml(rec.work || rec.bookName || rec.wagon || rec.inspectionBy || rec.relatedTo || '')}', '${rec.driveLink || ''}')">
@@ -2171,7 +2986,7 @@
               <i class="fa-solid fa-pen-to-square" style="color: #0b4f6c;"></i>
             </button>
             <button class="action-icon-btn delete-btn" title="Delete Record (Admin)" onclick="deleteRecord('${rec.id}')">
-              <i class="fa-solid fa-trash-can" style="color: #c0392b;"></i>
+              <i class="fa-solid fa-trash-can" style="color: #e11d48;"></i>
             </button>
           </div>
         `;
@@ -2182,7 +2997,7 @@
               <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
               <td>
-                <a href="${rec.directLink || '#'}" target="_blank" class="work-link" style="color:#198754;">
+                <a href="${rec.directLink || '#'}" target="_blank" class="work-link" style="color:#15803d;">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${rec.directLink || '—'}
                 </a>
               </td>
@@ -2193,10 +3008,10 @@
           html += `
             <tr>
               <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b style="color:var(--railway-maroon);">${rec.tanNo || '—'}</b></td>
+              <td style="white-space:nowrap;"><b style="color:var(--accent-orange);">${rec.tanNo || '—'}</b></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-lines" style="color:#e67e22;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-lines" style="color:#ea580c;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedTo || '—'}</span></td>
@@ -2225,7 +3040,7 @@
               <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-shield-virus" style="color: #198754;"></i> ${rec.work}
+                  <i class="fa-solid fa-shield-virus" style="color: #0d9488;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2239,7 +3054,7 @@
               <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-book" style="color: var(--railway-maroon);"></i> ${rec.work}
+                  <i class="fa-solid fa-book" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
@@ -2254,7 +3069,7 @@
               <td style="white-space:nowrap;"><b style="color: var(--accent-blue);">${rec.bookName || '—'}</b></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.bookName)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;">${driveIndicator}</td>
@@ -2269,7 +3084,7 @@
               <td style="white-space:nowrap;"><span class="type-badge">${rec.ldceType || '30%'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-circle-question" style="color: var(--railway-maroon);"></i> ${rec.work}
+                  <i class="fa-solid fa-file-circle-question" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;">${driveIndicator}</td>
@@ -2284,7 +3099,7 @@
               <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><span class="equip-badge">${rec.equipment || '—'}</span></td>
@@ -2302,7 +3117,7 @@
               <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap; text-align:center;"><span class="oem-badge">${rec.oem || '—'}</span></td>
@@ -2322,7 +3137,7 @@
               <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap; text-align:center;"><span class="oem-badge">${rec.oem || '—'}</span></td>
@@ -2340,7 +3155,7 @@
               <td style="white-space:nowrap;"><span class="dept-badge">${rec.department || 'S&T'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2356,7 +3171,7 @@
               <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2373,7 +3188,7 @@
               <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2390,7 +3205,7 @@
               <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2407,7 +3222,7 @@
               <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.inspectionBy)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-user-check" style="color: #1967d2;"></i> ${rec.inspectionBy || '—'}
+                  <i class="fa-solid fa-user-check" style="color: #0284c7;"></i> ${rec.inspectionBy || '—'}
                 </a>
               </td>
               <td style="white-space:nowrap;">${driveIndicator}</td>
@@ -2421,7 +3236,7 @@
               <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2438,7 +3253,7 @@
               <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
               <td>
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-pdf" style="color: #c0392b;"></i> ${rec.work}
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
               <td style="white-space:nowrap;"><b>${displayDate}</b></td>
@@ -2452,9 +3267,7 @@
       tbody.innerHTML = html;
     }
 
-    // ==========================================
-    // EDIT RECORD MODAL LOGIC
-    // ==========================================
+    // EDIT RECORD MODAL
     function openEditModal(recordId) {
       if (!verifyAdminPassword("EDIT this record")) return;
       const rec = records.find(r => String(r.id) === String(recordId));
@@ -2534,16 +3347,16 @@
       } else {
         extLink.style.display = 'none';
         body.innerHTML = `
-          <div id="printablePreviewDoc" style="background:white; margin:20px auto; padding:30px; max-width:800px; height: calc(100% - 40px); overflow-y:auto; box-shadow:0 0 10px rgba(0,0,0,0.1); border-top: 5px solid var(--railway-maroon);">
-            <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">
-              <h3 style="margin:0; font-size:16px;">SOUTH EAST CENTRAL RAILWAY</h3>
-              <p style="margin:3px 0; font-size:13px; font-weight:bold;">Office of the Principal Chief Signal & Telecom Engineer (PCSTE)</p>
-              <p style="margin:0; font-size:11px;">Bilaspur - 495004 (C.G.)</p>
+          <div id="printablePreviewDoc" style="background:white; margin:16px auto; padding:20px; max-width:800px; height: calc(100% - 32px); overflow-y:auto; box-shadow:0 0 10px rgba(0,0,0,0.1); border-top: 5px solid var(--brand-orange); border-radius: 8px;">
+            <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px;">
+              <h3 style="margin:0; font-size:15px;">RailSNTGyan Knowledge Portal</h3>
+              <p style="margin:2px 0; font-size:12px; font-weight:bold;">Office of the Principal Chief Signal & Telecom Engineer (PCSTE)</p>
+              <p style="margin:0; font-size:10.5px;">Railway Signalling & Telecommunication</p>
             </div>
-            <div style="margin-top:20px; font-size:13px; line-height:1.6;">
+            <div style="margin-top:16px; font-size:12px; line-height:1.5;">
               <p><b>Subject:</b> Technical Record Details for: <u>${workTitle}</u></p>
-              <p style="margin-top:10px;">This technical document / question paper is recorded in the South East Central Railway Technical Repository.</p>
-              <div style="margin:25px 0; padding:12px; background:#fff9e6; border-left:4px solid #f39c12; font-size:12px;">
+              <p style="margin-top:8px;">This technical document / question paper is recorded in the RailSNTGyan Technical Repository.</p>
+              <div style="margin:20px 0; padding:10px; background:#fff9e6; border-left:4px solid #f39c12; font-size:11.5px; border-radius: 4px;">
                 <b>Note:</b> A Google Drive link is not currently attached to this record. To preview heavy files (e.g. 200MB PDFs), edit or add the record with the file's Google Drive sharing link.
               </div>
             </div>
@@ -2578,7 +3391,7 @@
       document.getElementById('formSubmitBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Record`;
       document.getElementById('formEditRecordId').value = '';
 
-      document.getElementById('formCategory').value = currentCategory;
+      document.getElementById('formCategory').value = (currentCategory === 'HOME' ? 'PCSTE SANCTION' : currentCategory);
       toggleFormFields();
       document.getElementById('addRecordModal').style.display = 'flex';
     }
@@ -2831,7 +3644,7 @@
       }
 
       const formattedDate = formatDateToDDMMYYYY(rawDate);
-      let yearVal = 2026;
+      let yearVal = new Date().getFullYear();
       if (rawDate && rawDate.includes('-')) {
         const parts = rawDate.split('-');
         yearVal = parts[0].length === 4 ? parseInt(parts[0], 10) : parseInt(parts[2], 10);
@@ -2991,6 +3804,7 @@
     // FINANCIAL YEAR REPORT FACILITY
     function openFYReportModal() {
       document.getElementById('reportGenDate').innerText = new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString();
+      document.getElementById('reportFYSelect').value = getCurrentFinancialYearString();
       generateFYReport();
       document.getElementById('fyReportModal').style.display = 'flex';
     }
@@ -3033,7 +3847,7 @@
           const count = matrix[cat][m];
           catTotal += count;
           monthTotals[m] += count;
-          html += `<td>${count > 0 ? `<b>${count}</b>` : '<span style="color:#bbb;">0</span>'}</td>`;
+          html += `<td>${count > 0 ? `<b>${count}</b>` : '<span style="color:#cbd5e1;">0</span>'}</td>`;
         }
         grandTotal += catTotal;
         html += `<td class="col-total">${catTotal}</td>`;
@@ -3041,7 +3855,7 @@
       });
 
       html += `<tr class="total-row">`;
-      html += `<td class="cat-name" style="color:var(--railway-maroon);">MONTHLY TOTAL</td>`;
+      html += `<td class="cat-name" style="color:var(--brand-navy);">MONTHLY TOTAL</td>`;
       for (let m = 0; m < 12; m++) {
         html += `<td>${monthTotals[m]}</td>`;
       }
@@ -3077,7 +3891,7 @@
       const monthTotals = new Array(12).fill(0);
       let grandTotal = 0;
 
-      let csv = `South East Central Railway - S&T Technical Approvals Summary Report (FY ${selectedFY})\n`;
+      let csv = `RailSNTGyan Knowledge Portal - S&T Technical Approvals Summary Report (FY ${selectedFY})\n`;
       csv += `Category,${months.join(',')},Total\n`;
 
       reportCategories.forEach(cat => {
@@ -3099,7 +3913,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', `S&T_Summary_Report_FY_${selectedFY}.csv`);
+      link.setAttribute('download', `RailSNTGyan_Report_FY_${selectedFY}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
