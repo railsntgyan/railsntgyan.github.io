@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -25,7 +24,8 @@
       --accent-blue: #0b3b60;
       --accent-orange: #f97316;
       --border-color: rgba(226, 232, 240, 0.85);
-      --table-border: rgba(203, 213, 225, 0.8);
+      --table-border: #701616; /* Clean professional Railway Maroon border */
+      --cell-border: rgba(112, 22, 22, 0.28);
       --bg-light: #f1f5f9;
       --bg-card: rgba(255, 255, 255, 0.88);
       --text-main: #1e293b;
@@ -37,6 +37,11 @@
       --glass-border: 1px solid rgba(255, 255, 255, 0.85);
       --glass-shadow: 0 8px 24px 0 rgba(15, 23, 42, 0.06);
       --glass-blur: blur(14px);
+
+      /* Desktop: Comfortable width for first two columns */
+      --col-1-w: 52px;
+      --col-2-min-w: 150px;
+      --col-2-max-w: 220px;
     }
 
     * {
@@ -117,12 +122,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
+      gap: 16px;
       margin-bottom: 12px;
     }
 
     .login-brand-title {
-      font-size: 27px;
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: -0.5px;
       line-height: 1.1;
@@ -222,13 +227,13 @@
     }
 
     /* ========================================================
-       HEADER EXACTLY AS PER PHOTO BANNER
+       MODERN PROFESSIONAL HEADER
        ======================================================== */
     header {
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      padding: 10px 24px;
+      padding: 10px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -236,13 +241,15 @@
       box-shadow: 0 4px 20px rgba(11, 59, 96, 0.08);
       z-index: 20;
       flex-shrink: 0;
-      gap: 14px;
+      gap: 24px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
+      flex: 1 1 auto;
+      min-width: 0;
     }
 
     .menu-toggle-btn {
@@ -250,13 +257,13 @@
       background: #f1f5f9;
       border: 1px solid #cbd5e1;
       color: var(--brand-navy);
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      border-radius: 9px;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 18px;
       flex-shrink: 0;
       transition: all 0.2s ease;
     }
@@ -266,14 +273,13 @@
       color: var(--brand-orange);
     }
 
-    /* EXACT CIRCULAR EMBLEM FROM USER'S IMAGE */
     .portal-logo-svg {
-      width: 62px;
-      height: 62px;
+      width: 84px;
+      height: 84px;
       flex-shrink: 0;
-      filter: drop-shadow(0 4px 10px rgba(0, 156, 166, 0.22));
+      filter: drop-shadow(0 6px 14px rgba(0, 156, 166, 0.32));
       cursor: pointer;
-      transition: transform 0.25s ease;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .portal-logo-svg:hover {
@@ -284,49 +290,92 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      flex: 1 1 auto;
+      min-width: 0;
+      padding-right: 18px;
     }
 
     .brand-main-title {
-      font-size: 28px;
+      font-size: 34px;
       font-weight: 900;
-      letter-spacing: -0.6px;
-      line-height: 1;
+      letter-spacing: -0.8px;
+      line-height: 1.05;
       display: flex;
       align-items: baseline;
+      word-spacing: 2px;
     }
     .brand-main-title .text-teal { color: var(--brand-teal); }
     .brand-main-title .text-orange { color: var(--brand-orange); }
 
     .brand-subline {
-      font-size: 13.5px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--brand-navy);
-      letter-spacing: 0.2px;
+      letter-spacing: 0.3px;
       margin-top: 3px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
-    /* Learn | Explore | Apply | Excel with orange bars */
     .brand-tagline-motto {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
-      color: var(--brand-navy);
-      letter-spacing: 0.6px;
-      margin-top: 2px;
+      color: #64748b;
+      letter-spacing: 1.2px;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
     }
     .brand-tagline-motto span.divider {
       color: var(--brand-orange);
       font-weight: 800;
-      margin: 0 6px;
+      margin: 0 8px;
     }
     .brand-tagline-motto span.tag-item {
       color: var(--brand-navy);
-      font-weight: 700;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .header-quick-search {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-quick-search input {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 7px 14px 7px 34px;
+      font-size: 12px;
+      width: 175px;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .header-quick-search input:focus {
+      width: 230px;
+      border-color: var(--brand-teal);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 156, 166, 0.15);
+    }
+
+    .header-quick-search i {
+      position: absolute;
+      left: 12px;
+      font-size: 12px;
+      color: #94a3b8;
     }
 
     .badge-portal {
@@ -339,6 +388,9 @@
       font-weight: 700;
       letter-spacing: 0.2px;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .badge-cloud {
@@ -347,13 +399,34 @@
       color: #15803d;
     }
 
+    .header-util-btn {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: var(--brand-navy);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .header-util-btn:hover {
+      background: #0b3b60;
+      color: #ffffff;
+      border-color: #0b3b60;
+    }
+
     .btn-logout {
       background: #e11d48;
       color: white;
       border: 1px solid rgba(225, 29, 72, 0.3);
-      padding: 6px 14px;
+      padding: 7px 15px;
       border-radius: 8px;
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -775,26 +848,30 @@
       flex-direction: column;
       flex: 1;
       min-width: 0;
+      height: 100%;
+      overflow: hidden;
     }
 
+    /* 1. STICKY SUBSECTION TITLE & ACTIONS */
     .content-header-card.sticky-header-card {
       position: sticky;
       top: 0;
-      z-index: 15;
-      background: rgba(255, 255, 255, 0.96);
+      z-index: 25;
+      background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
       border-left: 6px solid var(--brand-orange);
-      padding: 12px 18px;
+      padding: 10px 18px;
       border-radius: 10px;
-      box-shadow: 0 4px 16px rgba(11, 59, 96, 0.08);
+      box-shadow: 0 4px 14px rgba(11, 59, 96, 0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
       flex-wrap: wrap;
       gap: 10px;
+      flex-shrink: 0;
     }
 
     .view-title-group h2 {
@@ -853,22 +930,24 @@
       box-shadow: 0 3px 8px rgba(22, 101, 52, 0.2);
     }
 
+    /* 2. STICKY FILTER & SEARCH PANEL */
     .filter-panel.sticky-filter-panel {
       position: sticky;
-      top: 64px;
-      z-index: 14;
-      background: rgba(255, 255, 255, 0.96);
+      top: 0;
+      z-index: 24;
+      background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
-      padding: 9px 14px;
+      padding: 8px 14px;
       border-radius: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 4px 14px rgba(11, 59, 96, 0.06);
+      box-shadow: 0 4px 14px rgba(11, 59, 96, 0.05);
+      flex-shrink: 0;
     }
 
     .filter-item {
@@ -903,18 +982,21 @@
       margin-left: auto;
     }
 
+    /* ========================================================
+       3. DATA TABLES WITH CLEAR BORDERS & UNIVERSAL WORD-WRAPPING
+       ======================================================== */
     .table-container {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--border-color);
+      background: #ffffff;
+      border: 2px solid var(--table-border); /* Clear outer border */
       border-radius: 10px;
       overflow-x: auto;
       overflow-y: auto;
-      max-height: calc(100vh - 225px);
+      flex: 1 1 auto;
+      height: 100%;
       box-shadow: var(--glass-shadow);
       -webkit-overflow-scrolling: touch;
       position: relative;
+      scrollbar-gutter: stable;
     }
 
     table {
@@ -923,37 +1005,165 @@
       border-spacing: 0;
       text-align: left;
       font-size: 12.5px;
-      min-width: 650px;
+      min-width: 780px;
+      border: 1px solid var(--table-border);
     }
 
+    /* Pinned Table Header Row - Word Wrapping Enabled For All Headers */
     table thead th {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
       background: var(--brand-navy) !important;
       color: #ffffff;
-      padding: 10px 12px;
+      padding: 8px 10px;
       font-weight: 800;
-      border-bottom: 2px solid var(--brand-orange);
-      border-right: 1px solid rgba(255,255,255,0.15);
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      border-bottom: 2px solid var(--table-border);
+      border-right: 1px solid rgba(255, 255, 255, 0.25);
+      white-space: normal !important;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      vertical-align: middle;
+      line-height: 1.25;
     }
 
+    /* Freeze First Column (Sr. No) */
+    table thead th:nth-child(1),
+    table tbody td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      width: var(--col-1-w);
+      min-width: var(--col-1-w);
+      max-width: var(--col-1-w);
+      text-align: center;
+      background: #ffffff;
+      border-right: 1px solid var(--table-border) !important;
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+
+    table thead th:nth-child(1) {
+      z-index: 23;
+      background: var(--brand-navy) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
+    }
+
+    table tbody td:nth-child(1) {
+      z-index: 11;
+    }
+
+    /* Freeze Second Column */
+    table thead th:nth-child(2),
+    table tbody td:nth-child(2) {
+      position: sticky;
+      left: var(--col-1-w);
+      width: var(--col-2-min-w);
+      min-width: var(--col-2-min-w);
+      max-width: var(--col-2-max-w);
+      background: #ffffff;
+      border-right: 2px solid var(--table-border) !important;
+      box-shadow: 4px 0 8px -2px rgba(11, 59, 96, 0.12);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+    }
+
+    table thead th:nth-child(2) {
+      z-index: 23;
+      background: var(--brand-navy) !important;
+      border-right: 2px solid var(--brand-orange) !important;
+      line-height: 1.2;
+    }
+
+    table tbody td:nth-child(2) {
+      z-index: 11;
+      line-height: 1.25;
+    }
+
+    table tbody tr:nth-child(even) td:nth-child(1),
+    table tbody tr:nth-child(even) td:nth-child(2) {
+      background: #f8fafc;
+    }
+
+    table tbody tr:hover td:nth-child(1),
+    table tbody tr:hover td:nth-child(2) {
+      background: #eef6fb !important;
+    }
+
+    /* Clear and professional Maroon cell borders */
     tbody td {
-      padding: 8px 12px;
-      border-bottom: 1px solid #e2e8f0;
-      border-right: 1px solid #f1f5f9;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--cell-border);
+      border-right: 1px solid var(--cell-border);
       vertical-align: middle;
-      background: rgba(255, 255, 255, 0.75);
+      background: #ffffff;
     }
 
     tbody tr:nth-child(even) td {
-      background-color: rgba(248, 250, 252, 0.85);
+      background-color: #f8fafc;
     }
 
     tbody tr:hover td {
       background-color: #f0f7fb;
+    }
+
+    /* Word wrapping for all short & medium-text table columns across all sub-sections */
+    tbody td:not(.work-desc-cell) {
+      white-space: normal !important;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      line-height: 1.25;
+    }
+
+    /* Work Description Column: PRESERVED EXACTLY AS CURRENT (NO CHANGES) */
+    td.work-desc-cell, 
+    th.work-desc-th {
+      min-width: 380px;
+    }
+
+    /* Specific Compact Column Widths with Word Wrapping */
+    .col-compact-wrap {
+      white-space: normal !important;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      line-height: 1.25;
+    }
+
+    .col-pcste-equipment {
+      width: 140px;
+      max-width: 160px;
+    }
+
+    .col-oem-make {
+      width: 105px;
+      max-width: 115px;
+      text-align: center;
+    }
+
+    .col-sanction-date {
+      width: 110px;
+      max-width: 125px;
+      text-align: center;
+    }
+
+    .col-drive-compact {
+      width: 95px;
+      max-width: 105px;
+      text-align: center;
+      padding: 6px 4px !important;
+    }
+
+    .col-drive-compact .drive-pill {
+      padding: 2px 6px;
+      font-size: 10px;
+      gap: 3px;
+      white-space: normal;
+      text-align: center;
+      display: inline-flex;
+      word-break: break-word;
     }
 
     .work-link {
@@ -964,6 +1174,7 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      word-break: break-word;
     }
 
     .work-link:hover {
@@ -980,6 +1191,8 @@
       background: #e0f2fe;
       color: #0369a1;
       border: 1px solid #bae6fd;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .agency-badge {
@@ -991,6 +1204,8 @@
       background: #fef3c7;
       color: #92400e;
       border: 1px solid #fde68a;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .dept-badge {
@@ -1002,6 +1217,8 @@
       background: #e0f2fe;
       color: #0369a1;
       border: 1px solid #bae6fd;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .type-badge {
@@ -1013,40 +1230,50 @@
       background: #ecfdf5;
       color: #047857;
       border: 1px solid #a7f3d0;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .oem-badge {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 2px 6px;
       font-size: 10.5px;
       border-radius: 6px;
       font-weight: 700;
       background: #fff7ed;
       color: #c2410c;
       border: 1px solid #fed7aa;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.2;
     }
 
     .authority-badge {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 2px 6px;
       font-size: 10.5px;
       border-radius: 6px;
       font-weight: 700;
       background: #ecfdf5;
       color: #15803d;
       border: 1px solid #bbf7d0;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.2;
     }
 
     .equip-badge {
       display: inline-block;
-      padding: 2px 7px;
-      font-size: 10.5px;
+      padding: 2px 6px;
+      font-size: 10px;
       border-radius: 5px;
       font-weight: 600;
       background: #f5f3ff;
       color: #6d28d9;
       border: 1px solid #ddd6fe;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.2;
     }
 
     .drive-pill {
@@ -1060,6 +1287,8 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .actions-cell {
@@ -1388,9 +1617,15 @@
     }
 
     /* ========================================================
-       RESPONSIVE BREAKPOINTS
+       RESPONSIVE BREAKPOINTS (TABLET & MOBILE OPTIMIZATIONS)
        ======================================================== */
     @media (max-width: 1024px) {
+      :root {
+        --col-1-w: 42px;
+        --col-2-min-w: 110px;
+        --col-2-max-w: 130px;
+      }
+
       .menu-toggle-btn {
         display: inline-flex;
       }
@@ -1420,27 +1655,73 @@
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .filter-panel.sticky-filter-panel {
-        top: 90px;
+      .header-quick-search {
+        display: none;
+      }
+
+      .brand-main-title {
+        font-size: 28px;
+      }
+
+      .brand-subline {
+        font-size: 13px;
+      }
+
+      .portal-logo-svg {
+        width: 70px;
+        height: 70px;
+      }
+
+      table {
+        min-width: 700px;
+        font-size: 12px;
+      }
+
+      table thead th, tbody td {
+        padding: 7px 8px;
+      }
+
+      .col-pcste-equipment {
+        width: 120px;
+        max-width: 135px;
+      }
+
+      .col-sanction-date {
+        width: 95px;
+        max-width: 105px;
       }
     }
 
     @media (max-width: 768px) {
+      :root {
+        --col-1-w: 36px;
+        --col-2-min-w: 88px;
+        --col-2-max-w: 105px;
+      }
+
+      main {
+        padding: 8px;
+        gap: 8px;
+      }
+
       header {
-        padding: 6px 12px;
+        padding: 8px 12px;
+        gap: 12px;
       }
 
       .portal-logo-svg {
-        width: 48px;
-        height: 48px;
+        width: 60px;
+        height: 60px;
       }
 
       .brand-main-title {
-        font-size: 21px;
+        font-size: 24px;
       }
 
       .brand-subline {
-        font-size: 10.5px;
+        font-size: 11.5px;
+        white-space: normal;
+        line-height: 1.25;
       }
 
       .brand-tagline-motto {
@@ -1455,27 +1736,89 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .content-header-card.sticky-header-card {
+        padding: 8px 12px;
+        margin-bottom: 6px;
+      }
+
+      .view-title-group h2 {
+        font-size: 14px;
+      }
+
       .action-toolbar {
         width: 100%;
         justify-content: flex-start;
       }
 
+      .action-toolbar .btn {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+
+      .filter-panel.sticky-filter-panel {
+        padding: 6px 10px;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
       .search-input {
         width: 100%;
+        min-width: 140px;
       }
 
       .reset-link {
         margin-left: 0;
       }
 
-      .filter-panel.sticky-filter-panel {
-        top: 110px;
+      table {
+        min-width: 580px;
+        font-size: 11px;
+      }
+
+      table thead th, tbody td {
+        padding: 6px 5px;
+      }
+
+      table thead th:nth-child(2) {
+        font-size: 10.5px;
+        letter-spacing: -0.2px;
+      }
+
+      table tbody td:nth-child(2) {
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      table thead th:nth-child(1),
+      table tbody td:nth-child(1) {
+        font-size: 10.5px;
+      }
+
+      .col-pcste-equipment {
+        width: 105px;
+        max-width: 115px;
+      }
+
+      .col-drive-compact {
+        width: 80px;
+        max-width: 90px;
+      }
+
+      .col-oem-make {
+        width: 80px;
+        max-width: 90px;
+      }
+
+      .col-sanction-date {
+        width: 85px;
+        max-width: 95px;
       }
 
       footer {
         flex-direction: column;
         text-align: center;
         gap: 3px;
+        padding: 6px 12px;
       }
     }
   </style>
@@ -1486,27 +1829,117 @@
   <div id="loginScreen">
     <div class="login-card">
       <div class="login-brand-wrapper">
-        <!-- SVG Vector Logo Matching Attached Photo -->
-        <svg class="portal-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" fill="#ffffff" stroke="#009ca6" stroke-width="2.5"/>
-          <!-- Dynamic Swoosh Arcs in Cyan & Orange -->
-          <path d="M 12 70 Q 30 20 84 25 Q 40 32 18 72 Z" fill="#009ca6"/>
-          <path d="M 18 76 Q 42 46 80 44 Q 45 52 24 78 Z" fill="#f97316"/>
-          <!-- Railway Signal Post -->
-          <rect x="22" y="30" width="7" height="18" rx="3.5" fill="#0f172a"/>
-          <circle cx="25.5" cy="34" r="1.8" fill="#22c55e"/>
-          <circle cx="25.5" cy="39" r="1.8" fill="#eab308"/>
-          <circle cx="25.5" cy="44" r="1.8" fill="#ef4444"/>
-          <!-- Streamlined Express Train Cab -->
-          <path d="M 36 48 L 74 32 C 82 36 84 45 80 54 L 38 60 Z" fill="#0b3b60"/>
-          <path d="M 62 38 L 76 34 C 79 36 80 40 78 44 L 62 46 Z" fill="#ffffff" opacity="0.9"/>
-          <circle cx="74" cy="49" r="2.5" fill="#facc15"/>
-          <circle cx="66" cy="51" r="2.5" fill="#facc15"/>
-          <!-- Railway Tracks -->
-          <path d="M 40 68 L 78 60 M 46 72 L 84 63" stroke="#0b3b60" stroke-width="3" stroke-linecap="round"/>
-          <line x1="48" y1="67" x2="52" y2="74" stroke="#0b3b60" stroke-width="2.5"/>
-          <line x1="58" y1="64" x2="62" y2="71" stroke="#0b3b60" stroke-width="2.5"/>
-          <line x1="68" y1="61" x2="72" y2="68" stroke="#0b3b60" stroke-width="2.5"/>
+        <svg class="portal-logo-svg" viewBox="0 0 500 500" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="trainBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#b0cddb"/>
+              <stop offset="50%" stop-color="#eaf2f8"/>
+              <stop offset="85%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#9bb7c7"/>
+            </linearGradient>
+
+            <linearGradient id="windshieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#051937"/>
+              <stop offset="100%" stop-color="#0081c8"/>
+            </linearGradient>
+
+            <linearGradient id="arcOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff8c00"/>
+              <stop offset="100%" stop-color="#f37021"/>
+            </linearGradient>
+
+            <linearGradient id="arcBlueGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#005288"/>
+              <stop offset="100%" stop-color="#00a4e4"/>
+            </linearGradient>
+
+            <radialGradient id="redGlowGrad" cx="35%" cy="35%" r="70%">
+              <stop offset="0%" stop-color="#ff6b6b"/>
+              <stop offset="55%" stop-color="#e60000"/>
+              <stop offset="100%" stop-color="#990000"/>
+            </radialGradient>
+
+            <style>
+              .navy-deep { fill: #0b2545; }
+              .book-line { stroke: #0b2545; stroke-width: 4; stroke-linecap: round; }
+            </style>
+          </defs>
+
+          <g transform="translate(250, 245)">
+            <g id="framing-rings">
+              <path d="M 60,-155 A 165 165 0 0 1 165,30" fill="none" stroke="url(#arcOrangeGrad)" stroke-width="18" stroke-linecap="round"/>
+              <path d="M 165,30 A 165 165 0 0 1 -20,165" fill="none" stroke="url(#arcOrangeGrad)" stroke-width="18" stroke-linecap="round"/>
+              <path d="M -155,-35 A 165 165 0 0 1 -45,-155" fill="none" stroke="url(#arcBlueGrad)" stroke-width="17" stroke-linecap="round"/>
+              <path d="M -125,-15 A 128 128 0 0 1 -35,-122" fill="none" stroke="#68c5f2" stroke-width="10" stroke-dasharray="16 11" stroke-linecap="round"/>
+            </g>
+
+            <g id="telecom-tower" transform="translate(70, -100)">
+              <path d="M -18,-24 A 26 26 0 0 1 18,-24" fill="none" stroke="#f37021" stroke-width="5" stroke-linecap="round"/>
+              <path d="M -32,-38 A 45 45 0 0 1 32,-38" fill="none" stroke="#f37021" stroke-width="5" stroke-linecap="round"/>
+              <path d="M -46,-52 A 64 64 0 0 1 46,-52" fill="none" stroke="#f37021" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="0" cy="-9" r="8.5" fill="#f37021"/>
+              <polygon points="0,0 -26,90 26,90" fill="none" stroke="#0b2545" stroke-width="6" stroke-linejoin="round"/>
+              <line x1="-9" y1="28" x2="9" y2="28" stroke="#0b2545" stroke-width="4.5"/>
+              <line x1="-17" y1="58" x2="17" y2="58" stroke="#0b2545" stroke-width="5"/>
+              <line x1="-9" y1="28" x2="17" y2="58" stroke="#0b2545" stroke-width="4"/>
+              <line x1="9" y1="28" x2="-17" y2="58" stroke="#0b2545" stroke-width="4"/>
+            </g>
+
+            <g id="signal-post" transform="translate(-15, -102)">
+              <rect x="-5" y="32" width="10" height="70" class="navy-deep"/>
+              <rect x="-22" y="-54" width="44" height="92" rx="22" class="navy-deep"/>
+              <path d="M -22,-35 C -34,-35 -34,-17 -22,-17" fill="none" stroke="#0b2545" stroke-width="4.5"/>
+              <path d="M -22,-11 C -34,-11 -34,7 -22,7" fill="none" stroke="#0b2545" stroke-width="4.5"/>
+              <path d="M -22,13 C -34,13 -34,31 -22,31" fill="none" stroke="#0b2545" stroke-width="4.5"/>
+              <circle cx="0" cy="-26" r="9.5" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
+              <circle cx="0" cy="-2" r="9.5" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
+              <circle cx="0" cy="22" r="9.5" fill="url(#redGlowGrad)"/>
+              <circle cx="-3" cy="19" r="2.8" fill="#ffffff" opacity="0.9"/>
+            </g>
+
+            <g id="railway-track">
+              <path d="M -155,135 C -145,50 -55,-5 125,-60" fill="none" stroke="#0081c8" stroke-width="9.5" stroke-linecap="round"/>
+              <path d="M -90,150 C -80,80 0,30 145,-25" fill="none" stroke="#0081c8" stroke-width="9.5" stroke-linecap="round"/>
+              <line x1="-146" y1="120" x2="-102" y2="138" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="-132" y1="92" x2="-80" y2="114" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="-111" y1="67" x2="-56" y2="88" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="-86" y1="45" x2="-28" y2="65" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="-56" y1="26" x2="0" y2="42" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="-22" y1="10" x2="35" y2="23" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="15" y1="-5" x2="68" y2="7" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+              <line x1="55" y1="-21" x2="102" y2="-9" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+            </g>
+
+            <g id="bullet-train" transform="translate(62, -28)">
+              <line x1="-185" y1="10" x2="-80" y2="10" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
+              <line x1="-205" y1="19" x2="-95" y2="19" stroke="#00a4e4" stroke-width="5" stroke-linecap="round"/>
+              <line x1="-165" y1="28" x2="-65" y2="28" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
+              <path d="M -85,25 L 30,25 C 65,25 90,16 112,0" fill="none" stroke="#0b2545" stroke-width="5.5" stroke-linecap="round"/>
+              <path d="M 25,27 L 105,27" stroke="#00a4e4" stroke-width="4" stroke-linecap="round"/>
+              <path d="M -85,23 L 25,23 C 65,23 96,14 112,-2 C 98,-25 55,-28 15,-28 L -85,-28 Z" fill="url(#trainBodyGrad)" stroke="#0b2545" stroke-width="5" stroke-linejoin="round"/>
+              <path d="M 45,-26 C 68,-23 88,-14 104,-3 C 90,0 72,4 48,4 Z" fill="url(#windshieldGrad)" stroke="#0b2545" stroke-width="2"/>
+              <path d="M -80,-16 L 30,-16 C 36,-16 41,-12 41,-6 C 41,0 36,4 30,4 L -80,4 Z" fill="#0b2545"/>
+              <rect x="-75" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+              <rect x="-56" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+              <rect x="-37" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+              <rect x="-18" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+              <rect x="2" y="-12" width="14" height="11" rx="2.5" fill="#8ad1f0"/>
+              <path d="M 20,-12 L 31,-12 C 34,-12 36,-10 36,-6 C 36,-2 34,-1 31,-1 L 20,-1 Z" fill="#8ad1f0"/>
+              <path d="M -85,11 L 45,11 C 65,11 82,6 94,-1" fill="none" stroke="#00a4e4" stroke-width="4.5" stroke-linecap="round"/>
+            </g>
+
+            <g id="gyan-book" transform="translate(68, 62)">
+              <rect x="-46" y="-10" width="92" height="70" rx="10" fill="#ffffff" stroke="#0b2545" stroke-width="7.5"/>
+              <path d="M -38,8 C -24,4 -10,9 0,14 C 10,9 24,4 38,8 L 38,44 C 24,40 10,44 0,49 C -10,44 -24,40 -38,44 Z" fill="#ffffff"/>
+              <path d="M 0,14 L 0,49" stroke="#0b2545" stroke-width="5" stroke-linecap="round"/>
+              <line x1="-30" y1="18" x2="-8" y2="21" class="book-line"/>
+              <line x1="-30" y1="27" x2="-8" y2="30" class="book-line"/>
+              <line x1="-30" y1="36" x2="-8" y2="39" class="book-line"/>
+              <line x1="8" y1="21" x2="30" y2="18" class="book-line"/>
+              <line x1="8" y1="30" x2="30" y2="27" class="book-line"/>
+              <line x1="8" y1="39" x2="30" y2="36" class="book-line"/>
+            </g>
+          </g>
         </svg>
 
         <div>
@@ -1536,7 +1969,7 @@
     </div>
   </div>
 
-  <!-- HEADER WITH EXACT LOGO & TYPOGRAPHY AS PER PHOTO -->
+  <!-- HEADER -->
   <header>
     <div class="header-left">
       <!-- Hamburger Toggle for Mobile & Tablet -->
@@ -1544,34 +1977,126 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <!-- EXACT CIRCULAR EMBLEM SVG -->
-      <svg class="portal-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" onclick="goHome()" title="RailSNTGyan Home">
-        <circle cx="50" cy="50" r="46" fill="#ffffff" stroke="#009ca6" stroke-width="2.5"/>
-        <!-- Speed Curved Swooshes in Cyan & Orange -->
-        <path d="M 12 70 Q 30 20 84 25 Q 40 32 18 72 Z" fill="#009ca6"/>
-        <path d="M 18 76 Q 42 46 80 44 Q 45 52 24 78 Z" fill="#f97316"/>
-        <!-- Railway Signal Post -->
-        <rect x="22" y="30" width="7" height="18" rx="3.5" fill="#0f172a"/>
-        <circle cx="25.5" cy="34" r="1.8" fill="#22c55e"/>
-        <circle cx="25.5" cy="39" r="1.8" fill="#eab308"/>
-        <circle cx="25.5" cy="44" r="1.8" fill="#ef4444"/>
-        <!-- Streamlined Express Train Cab -->
-        <path d="M 36 48 L 74 32 C 82 36 84 45 80 54 L 38 60 Z" fill="#0b3b60"/>
-        <path d="M 62 38 L 76 34 C 79 36 80 40 78 44 L 62 46 Z" fill="#ffffff" opacity="0.9"/>
-        <circle cx="74" cy="49" r="2.5" fill="#facc15"/>
-        <circle cx="66" cy="51" r="2.5" fill="#facc15"/>
-        <!-- Railway Tracks -->
-        <path d="M 40 68 L 78 60 M 46 72 L 84 63" stroke="#0b3b60" stroke-width="3" stroke-linecap="round"/>
-        <line x1="48" y1="67" x2="52" y2="74" stroke="#0b3b60" stroke-width="2.5"/>
-        <line x1="58" y1="64" x2="62" y2="71" stroke="#0b3b60" stroke-width="2.5"/>
-        <line x1="68" y1="61" x2="72" y2="68" stroke="#0b3b60" stroke-width="2.5"/>
+      <!-- SVG LOGO EMBLEM (ENLARGED & BOLDENED) -->
+      <svg class="portal-logo-svg" viewBox="0 0 500 500" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" onclick="goHome()" title="RailSNTGyan Home">
+        <defs>
+          <linearGradient id="trainBodyGradH" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#b0cddb"/>
+            <stop offset="50%" stop-color="#eaf2f8"/>
+            <stop offset="85%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#9bb7c7"/>
+          </linearGradient>
+
+          <linearGradient id="windshieldGradH" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#051937"/>
+            <stop offset="100%" stop-color="#0081c8"/>
+          </linearGradient>
+
+          <linearGradient id="arcOrangeGradH" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff8c00"/>
+            <stop offset="100%" stop-color="#f37021"/>
+          </linearGradient>
+
+          <linearGradient id="arcBlueGradH" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#005288"/>
+            <stop offset="100%" stop-color="#00a4e4"/>
+          </linearGradient>
+
+          <radialGradient id="redGlowGradH" cx="35%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#ff6b6b"/>
+            <stop offset="55%" stop-color="#e60000"/>
+            <stop offset="100%" stop-color="#990000"/>
+          </radialGradient>
+
+          <style>
+            .navy-deep-h { fill: #0b2545; }
+            .book-line-h { stroke: #0b2545; stroke-width: 4.5; stroke-linecap: round; }
+          </style>
+        </defs>
+
+        <g transform="translate(250, 245)">
+          <g id="framing-rings-h">
+            <path d="M 60,-155 A 165 165 0 0 1 165,30" fill="none" stroke="url(#arcOrangeGradH)" stroke-width="19" stroke-linecap="round"/>
+            <path d="M 165,30 A 165 165 0 0 1 -20,165" fill="none" stroke="url(#arcOrangeGradH)" stroke-width="19" stroke-linecap="round"/>
+            <path d="M -155,-35 A 165 165 0 0 1 -45,-155" fill="none" stroke="url(#arcBlueGradH)" stroke-width="18" stroke-linecap="round"/>
+            <path d="M -125,-15 A 128 128 0 0 1 -35,-122" fill="none" stroke="#68c5f2" stroke-width="10.5" stroke-dasharray="16 11" stroke-linecap="round"/>
+          </g>
+
+          <g id="telecom-tower-h" transform="translate(70, -100)">
+            <path d="M -18,-24 A 26 26 0 0 1 18,-24" fill="none" stroke="#f37021" stroke-width="5.5" stroke-linecap="round"/>
+            <path d="M -32,-38 A 45 45 0 0 1 32,-38" fill="none" stroke="#f37021" stroke-width="5.5" stroke-linecap="round"/>
+            <path d="M -46,-52 A 64 64 0 0 1 46,-52" fill="none" stroke="#f37021" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="0" cy="-9" r="9" fill="#f37021"/>
+            <polygon points="0,0 -26,90 26,90" fill="none" stroke="#0b2545" stroke-width="6.5" stroke-linejoin="round"/>
+            <line x1="-9" y1="28" x2="9" y2="28" stroke="#0b2545" stroke-width="5"/>
+            <line x1="-17" y1="58" x2="17" y2="58" stroke="#0b2545" stroke-width="5.5"/>
+            <line x1="-9" y1="28" x2="17" y2="58" stroke="#0b2545" stroke-width="4.5"/>
+            <line x1="9" y1="28" x2="-17" y2="58" stroke="#0b2545" stroke-width="4.5"/>
+          </g>
+
+          <g id="signal-post-h" transform="translate(-15, -102)">
+            <rect x="-5" y="32" width="10" height="70" class="navy-deep-h"/>
+            <rect x="-22" y="-54" width="44" height="92" rx="22" class="navy-deep-h"/>
+            <path d="M -22,-35 C -34,-35 -34,-17 -22,-17" fill="none" stroke="#0b2545" stroke-width="5"/>
+            <path d="M -22,-11 C -34,-11 -34,7 -22,7" fill="none" stroke="#0b2545" stroke-width="5"/>
+            <path d="M -22,13 C -34,13 -34,31 -22,31" fill="none" stroke="#0b2545" stroke-width="5"/>
+            <circle cx="0" cy="-26" r="10" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
+            <circle cx="0" cy="-2" r="10" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
+            <circle cx="0" cy="22" r="10" fill="url(#redGlowGradH)"/>
+            <circle cx="-3" cy="19" r="3" fill="#ffffff" opacity="0.95"/>
+          </g>
+
+          <g id="railway-track-h">
+            <path d="M -155,135 C -145,50 -55,-5 125,-60" fill="none" stroke="#0081c8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M -90,150 C -80,80 0,30 145,-25" fill="none" stroke="#0081c8" stroke-width="10" stroke-linecap="round"/>
+            <line x1="-146" y1="120" x2="-102" y2="138" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="-132" y1="92" x2="-80" y2="114" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="-111" y1="67" x2="-56" y2="88" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="-86" y1="45" x2="-28" y2="65" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="-56" y1="26" x2="0" y2="42" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="-22" y1="10" x2="35" y2="23" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="15" y1="-5" x2="68" y2="7" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="55" y1="-21" x2="102" y2="-9" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+          </g>
+
+          <g id="bullet-train-h" transform="translate(62, -28)">
+            <line x1="-185" y1="10" x2="-80" y2="10" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
+            <line x1="-205" y1="19" x2="-95" y2="19" stroke="#00a4e4" stroke-width="5" stroke-linecap="round"/>
+            <line x1="-165" y1="28" x2="-65" y2="28" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
+            <path d="M -85,25 L 30,25 C 65,25 90,16 112,0" fill="none" stroke="#0b2545" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 25,27 L 105,27" stroke="#00a4e4" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M -85,23 L 25,23 C 65,23 96,14 112,-2 C 98,-25 55,-28 15,-28 L -85,-28 Z" fill="url(#trainBodyGradH)" stroke="#0b2545" stroke-width="5.5" stroke-linejoin="round"/>
+            <path d="M 45,-26 C 68,-23 88,-14 104,-3 C 90,0 72,4 48,4 Z" fill="url(#windshieldGradH)" stroke="#0b2545" stroke-width="2"/>
+            <path d="M -80,-16 L 30,-16 C 36,-16 41,-12 41,-6 C 41,0 36,4 30,4 L -80,4 Z" fill="#0b2545"/>
+            <rect x="-75" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+            <rect x="-56" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+            <rect x="-37" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+            <rect x="-18" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+            <rect x="2" y="-12" width="14" height="11" rx="2.5" fill="#8ad1f0"/>
+            <path d="M 20,-12 L 31,-12 C 34,-12 36,-10 36,-6 C 36,-2 34,-1 31,-1 L 20,-1 Z" fill="#8ad1f0"/>
+            <path d="M -85,11 L 45,11 C 65,11 82,6 94,-1" fill="none" stroke="#00a4e4" stroke-width="5" stroke-linecap="round"/>
+          </g>
+
+          <g id="gyan-book-h" transform="translate(68, 62)">
+            <rect x="-46" y="-10" width="92" height="70" rx="10" fill="#ffffff" stroke="#0b2545" stroke-width="8"/>
+            <path d="M -38,8 C -24,4 -10,9 0,14 C 10,9 24,4 38,8 L 38,44 C 24,40 10,44 0,49 C -10,44 -24,40 -38,44 Z" fill="#ffffff"/>
+            <path d="M 0,14 L 0,49" stroke="#0b2545" stroke-width="5.5" stroke-linecap="round"/>
+            <line x1="-30" y1="18" x2="-8" y2="21" class="book-line-h"/>
+            <line x1="-30" y1="27" x2="-8" y2="30" class="book-line-h"/>
+            <line x1="-30" y1="36" x2="-8" y2="39" class="book-line-h"/>
+            <line x1="8" y1="21" x2="30" y2="18" class="book-line-h"/>
+            <line x1="8" y1="30" x2="30" y2="27" class="book-line-h"/>
+            <line x1="8" y1="39" x2="30" y2="36" class="book-line-h"/>
+          </g>
+        </g>
       </svg>
 
+      <!-- EXTENDED HEADING TOWARDS RIGHT -->
       <div class="header-brand-block">
         <div class="brand-main-title">
           <span class="text-teal">RailSNT</span><span class="text-orange">Gyan</span>
         </div>
-        <div class="brand-subline">Railway S&T Knowledge Portal</div>
+        <div class="brand-subline">Railway Signalling & Telecommunication Technical Knowledge Portal</div>
         <div class="brand-tagline-motto">
           <span class="tag-item">Learn</span><span class="divider">|</span>
           <span class="tag-item">Explore</span><span class="divider">|</span>
@@ -1581,9 +2106,21 @@
       </div>
     </div>
 
+    <!-- MODERN HEADER CONTROLS -->
     <div class="header-right">
-      <span class="badge-portal"><i class="fa-solid fa-shield-halved" style="color: #f97316;"></i> Protected Access</span>
-      <span class="badge-portal badge-cloud"><i class="fa-solid fa-cloud"></i> Cloud Synced</span>
+      <div class="header-quick-search" title="Quick Repository Search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="headerGlobalSearch" placeholder="Search records..." onkeyup="syncHeaderSearch(this.value)">
+      </div>
+
+      <span class="badge-portal badge-cloud" id="networkStatusBadge">
+        <i class="fa-solid fa-wifi"></i> Online
+      </span>
+
+      <button class="header-util-btn" onclick="toggleFullScreen()" title="Full Screen View">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+
       <button class="btn-logout" onclick="logoutPortal()" title="Lock Portal">
         <i class="fa-solid fa-lock"></i> Logout
       </button>
@@ -1826,7 +2363,7 @@
       </div>
 
       <!-- ========================================================
-           TABLE VIEW SECTION (WITH FROZEN / STICKY HEADERS)
+           TABLE VIEW SECTION (PINNED 3-TIER CONTROL + FROZEN 2 COLS)
            ======================================================== -->
       <div id="tableViewSection" style="display:none;">
         <!-- 1. STICKY SUBSECTION TITLE & ACTIONS -->
@@ -1877,7 +2414,7 @@
           <span class="reset-link" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset Filters</span>
         </div>
 
-        <!-- 3. STICKY FIRST-ROW TABLE CONTAINER -->
+        <!-- 3. TABLE WITH FROZEN FIRST ROW + FROZEN FIRST TWO COLUMNS -->
         <div class="table-container">
           <table id="mainRecordTable">
             <thead id="tableHead"></thead>
@@ -2299,6 +2836,36 @@
       }
     }
 
+    // ==========================================
+    // MOBILE / HARDWARE BACK BUTTON NAVIGATION
+    // ==========================================
+    window.addEventListener('popstate', function (event) {
+      const sidebar = document.getElementById('appSidebar');
+      if (sidebar && sidebar.classList.contains('mobile-open')) {
+        closeSidebarDrawer();
+        history.pushState(null, null, window.location.href);
+        return;
+      }
+      if (document.getElementById('pdfPreviewModal').style.display === 'flex') {
+        closePreviewModal();
+        history.pushState(null, null, window.location.href);
+      } else if (document.getElementById('fyReportModal').style.display === 'flex') {
+        closeFYReportModal();
+        history.pushState(null, null, window.location.href);
+      } else if (document.getElementById('addRecordModal').style.display === 'flex') {
+        closeAddModal();
+        history.pushState(null, null, window.location.href);
+      } else {
+        const tableSec = document.getElementById('tableViewSection');
+        if (tableSec && tableSec.style.display === 'flex') {
+          goHome();
+          history.pushState(null, null, window.location.href);
+        }
+      }
+    });
+
+    history.pushState(null, null, window.location.href);
+
     // MOBILE DRAWER CONTROLS
     function toggleSidebarDrawer() {
       const sidebar = document.getElementById('appSidebar');
@@ -2306,6 +2873,9 @@
       if (sidebar && overlay) {
         sidebar.classList.toggle('mobile-open');
         overlay.classList.toggle('active');
+        if (sidebar.classList.contains('mobile-open')) {
+          history.pushState(null, null, window.location.href);
+        }
       }
     }
 
@@ -2320,14 +2890,6 @@
 
     const accordionGroupIds = ['grpFilesApprovals', 'grpRefBooks', 'grpSanctionDocs', 'grpLdcePapers', 'grpImportantLinks'];
 
-    const defaultSubSectionMap = {
-      'grpFilesApprovals': 'PCSTE SANCTION',
-      'grpRefBooks': 'IMP. LETTER',
-      'grpSanctionDocs': 'DOCUMENTS FOR EI TSAA',
-      'grpLdcePapers': 'ASTE',
-      'grpImportantLinks': 'IMPORTANT LINKS'
-    };
-
     function toggleAccordion(targetGroupId) {
       const targetGroup = document.getElementById(targetGroupId);
       if (!targetGroup) return;
@@ -2341,10 +2903,6 @@
 
       if (isCurrentlyCollapsed) {
         targetGroup.classList.remove('collapsed');
-        const defaultSubSection = defaultSubSectionMap[targetGroupId];
-        if (defaultSubSection) {
-          switchCategory(defaultSubSection);
-        }
       }
     }
 
@@ -2696,6 +3254,7 @@
 
       renderTable();
       closeSidebarDrawer();
+      history.pushState(null, null, window.location.href);
     }
 
     function renderTable() {
@@ -2710,203 +3269,203 @@
       if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr. no</th>
-            <th style="width: 140px;">TAN No.</th>
-            <th style="min-width: 380px;">Description</th>
+            <th style="width: var(--col-1-w);">Sr. no</th>
+            <th style="width: var(--col-2-min-w);">TAN No.</th>
+            <th class="work-desc-th">Description</th>
             <th style="width: 180px;">Related to</th>
-            <th style="width: 120px;">Issue Date</th>
-            <th style="width: 130px;">Drive Attachment</th>
+            <th class="col-sanction-date">Issue Date</th>
+            <th class="col-drive-compact">Drive Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (docApprovalCategories.includes(currentCategory)) {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr. NO</th>
-            <th style="min-width: 400px;">Description</th>
-            <th style="width: 150px;">Issue Date</th>
-            <th style="width: 130px;">Drive Attachment</th>
+            <th style="width: var(--col-1-w);">Sr. NO</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Issue Date</th>
+            <th class="col-drive-compact">Drive Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'IMPORTANT LINKS') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 60px;">Sr. NO</th>
+            <th style="width: var(--col-1-w);">Sr. NO</th>
             <th style="width: 320px;">Related to</th>
-            <th style="min-width: 380px;">Link</th>
+            <th class="work-desc-th">Link</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr. no</th>
-            <th style="min-width: 420px;">Work Description</th>
-            <th style="width: 240px; white-space:nowrap;">Date of Forwarding from PCSTE Office</th>
-            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: var(--col-1-w);">Sr. no</th>
+            <th class="work-desc-th">Work Description</th>
+            <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
+            <th class="col-drive-compact">Drive Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (standardManualCategories.includes(currentCategory)) {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr. No</th>
-            <th style="min-width: 420px;">Description</th>
-            <th style="width: 150px; white-space:nowrap;">Date of Issue</th>
-            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: var(--col-1-w);">Sr. No</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Date of Issue</th>
+            <th class="col-drive-compact">Drive Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr. No</th>
-            <th style="width: 280px;">Book Name</th>
-            <th style="min-width: 380px;">Description</th>
-            <th style="width: 140px;">Drive Attachment</th>
+            <th style="width: var(--col-1-w);">Sr. No</th>
+            <th style="width: var(--col-2-min-w);">Book Name</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-drive-compact">Drive Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (ldceCategories.includes(currentCategory)) {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr. no</th>
-            <th style="width: 90px;">Year</th>
+            <th style="width: var(--col-1-w);">Sr. no</th>
+            <th style="width: var(--col-2-min-w);">Year</th>
             <th style="width: 120px;">Type (30% / 70%)</th>
-            <th style="min-width: 400px;">Description</th>
-            <th style="width: 140px;">Drive Attachment</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-drive-compact">Drive Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'PCSTE SANCTION') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="white-space: nowrap;">Division</th>
-            <th style="min-width: 380px;">Work (hyperlinked with sanctioning letter)</th>
-            <th style="white-space: nowrap;">Equipment for PCSTE Sanction</th>
-            <th style="white-space: nowrap;">Agency</th>
-            <th style="white-space: nowrap;">Sanctioning Date</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Work (hyperlinked with sanctioning letter)</th>
+            <th class="col-pcste-equipment">Equipment for PCSTE Sanction</th>
+            <th style="width: 100px;">Agency</th>
+            <th class="col-sanction-date">Sanctioning Date</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'EI TSAA') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="white-space: nowrap;">Division</th>
-            <th style="min-width: 380px;">Work Name (EI Description)</th>
-            <th style="width: 95px; white-space: nowrap; text-align:center;">OEM Make</th>
-            <th style="white-space: nowrap;">Sanction given by</th>
-            <th style="white-space: nowrap;">Agency</th>
-            <th style="width: 85px; white-space: nowrap; text-align:center;">Routes</th>
-            <th style="white-space: nowrap;">TSAA Sanction Date</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Work Name (EI Description)</th>
+            <th class="col-oem-make">OEM Make</th>
+            <th style="width: 115px;">Sanction given by</th>
+            <th style="width: 100px;">Agency</th>
+            <th style="width: 85px; text-align:center;">Routes</th>
+            <th class="col-sanction-date">TSAA Sanction Date</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'MSDAC TSAA') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="white-space: nowrap;">Division</th>
-            <th style="min-width: 380px;">Work Name (MSDAC Scheme)</th>
-            <th style="width: 95px; white-space: nowrap; text-align:center;">OEM Make</th>
-            <th style="white-space: nowrap;">Agency</th>
-            <th style="white-space: nowrap;">TSAA Sanction Date</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Work Name (MSDAC Scheme)</th>
+            <th class="col-oem-make">OEM Make</th>
+            <th style="width: 100px;">Agency</th>
+            <th class="col-sanction-date">TSAA Sanction Date</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'S&T SPEED CERTIFICATE') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Wagon Name</th>
-            <th style="white-space: nowrap;">Department</th>
-            <th style="min-width: 380px;">Description</th>
-            <th style="white-space: nowrap;">Sanction Date</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Wagon Name</th>
+            <th style="width: 120px;">Department</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Sanction Date</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'GM SANCTION') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="white-space: nowrap;">Division</th>
-            <th style="min-width: 380px;">Work Description</th>
-            <th style="white-space: nowrap;">Date of Forwarding from PCSTE Office</th>
-            <th style="white-space: nowrap;">Date of Sanction</th>
-            <th style="white-space: nowrap;">Agency</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Work Description</th>
+            <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
+            <th class="col-sanction-date">Date of Sanction</th>
+            <th style="width: 100px;">Agency</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'GRADE CONDONATION' || currentCategory === 'LINE OPENING') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="min-width: 400px;">Work Description</th>
-            <th style="white-space: nowrap;">Date of Forwarding from PCSTE Office</th>
-            <th style="white-space: nowrap;">Agency</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th class="work-desc-th">Work Description</th>
+            <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
+            <th style="width: 100px;">Agency</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'SPEED RAISING') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="white-space: nowrap;">Division</th>
-            <th style="min-width: 380px;">Work Description</th>
-            <th style="white-space: nowrap;">Date of Forwarding from CSE/PCSTE</th>
-            <th style="white-space: nowrap;">Agency</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Work Description</th>
+            <th class="col-sanction-date">Date of Forwarding from CSE/PCSTE</th>
+            <th style="width: 100px;">Agency</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'INSPECTION NOTE') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Station / Section</th>
-            <th style="white-space: nowrap;">Division</th>
-            <th style="min-width: 380px;">Inspection Done by</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Inspection Done by</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'IMP. LETTER') {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Related to Equipment</th>
-            <th style="min-width: 380px;">Description</th>
-            <th style="white-space: nowrap;">Date of Issue</th>
-            <th style="white-space: nowrap;">Issued By</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Related to Equipment</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Date of Issue</th>
+            <th style="width: 120px;">Issued By</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else {
         thead.innerHTML = `
           <tr>
-            <th style="width: 50px;">Sr.NO</th>
-            <th style="white-space: nowrap;">Policy / Doc No</th>
-            <th style="white-space: nowrap;">Related to Equipment</th>
-            <th style="min-width: 380px;">Description</th>
-            <th style="white-space: nowrap;">Date of Issue</th>
-            <th style="width: 130px; white-space: nowrap;">Drive Attachment</th>
-            <th style="width: 110px; text-align:center; white-space: nowrap;">Action</th>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Policy / Doc No</th>
+            <th>Related to Equipment</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Date of Issue</th>
+            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       }
@@ -2970,10 +3529,6 @@
 
       let html = '';
       filtered.forEach((rec, idx) => {
-        const driveIndicator = rec.driveLink 
-          ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-          : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
-
         const displayDate = formatDateToDDMMYYYY(rec.date);
         const displaySanctionDate = formatDateToDDMMYYYY(rec.sanctionDate);
 
@@ -2994,9 +3549,9 @@
         if (currentCategory === 'IMPORTANT LINKS') {
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
+              <td><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
-              <td>
+              <td class="work-desc-cell">
                 <a href="${rec.directLink || '#'}" target="_blank" class="work-link" style="color:#15803d;">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${rec.directLink || '—'}
                 </a>
@@ -3005,259 +3560,307 @@
             </tr>
           `;
         } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b style="color:var(--accent-orange);">${rec.tanNo || '—'}</b></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b style="color:var(--accent-orange);">${rec.tanNo || '—'}</b></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-lines" style="color:#ea580c;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedTo || '—'}</span></td>
-              <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td><span class="equip-badge">${rec.relatedTo || '—'}</span></td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (docApprovalCategories.includes(currentCategory)) {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-folder-open" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-shield-virus" style="color: #0d9488;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (standardManualCategories.includes(currentCategory)) {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-book" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate || '—'}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b style="color: var(--accent-blue);">${rec.bookName || '—'}</b></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b style="color: var(--accent-blue);">${rec.bookName || '—'}</b></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.bookName)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (ldceCategories.includes(currentCategory)) {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.year || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="type-badge">${rec.ldceType || '30%'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.year || '—'}</b></td>
+              <td><span class="type-badge">${rec.ldceType || '30%'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-circle-question" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'PCSTE SANCTION') {
+          const driveIndicatorCompact = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:9.5px;">None</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><span class="equip-badge">${rec.equipment || '—'}</span></td>
-              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
-              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+              <td class="col-pcste-equipment"><span class="equip-badge">${rec.equipment || '—'}</span></td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-drive-compact">${driveIndicatorCompact}</td>
+              <td style="text-align:center; white-space: nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'EI TSAA') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap; text-align:center;"><span class="oem-badge">${rec.oem || '—'}</span></td>
-              <td style="white-space:nowrap;"><span class="authority-badge">${rec.sanctionBy || 'PCSTE'}</span></td>
-              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td style="white-space:nowrap; text-align:center;"><b style="color: var(--accent-blue);">${rec.routes || '—'}</b></td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-oem-make"><span class="oem-badge">${rec.oem || '—'}</span></td>
+              <td><span class="authority-badge">${rec.sanctionBy || 'PCSTE'}</span></td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td style="text-align:center;"><b style="color: var(--accent-blue);">${rec.routes || '—'}</b></td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'MSDAC TSAA') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap; text-align:center;"><span class="oem-badge">${rec.oem || '—'}</span></td>
-              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-oem-make"><span class="oem-badge">${rec.oem || '—'}</span></td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'S&T SPEED CERTIFICATE') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b style="color: var(--accent-blue);">${rec.wagon || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="dept-badge">${rec.department || 'S&T'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b style="color: var(--accent-blue);">${rec.wagon || '—'}</b></td>
+              <td><span class="dept-badge">${rec.department || 'S&T'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'GM SANCTION') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${displaySanctionDate ? `<b>${displaySanctionDate}</b>` : '—'}</td>
-              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-sanction-date">${displaySanctionDate ? `<b>${displaySanctionDate}</b>` : '—'}</td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'GRADE CONDONATION' || currentCategory === 'LINE OPENING') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'SPEED RAISING') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;"><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'INSPECTION NOTE') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.station || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="tag-badge">${rec.division || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.inspectionBy)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-user-check" style="color: #0284c7;"></i> ${rec.inspectionBy || '—'}
                 </a>
               </td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (currentCategory === 'IMP. LETTER') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;"><span class="authority-badge">${rec.issuedBy || 'RDSO'}</span></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td><span class="authority-badge">${rec.issuedBy || 'RDSO'}</span></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
+            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
           html += `
             <tr>
-              <td style="white-space:nowrap;"><b>${idx + 1}</b></td>
-              <td style="white-space:nowrap;"><b>${rec.docNo || '—'}</b></td>
-              <td style="white-space:nowrap;"><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
-              <td>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.docNo || '—'}</b></td>
+              <td><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
+              <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td style="white-space:nowrap;"><b>${displayDate}</b></td>
-              <td style="white-space:nowrap;">${driveIndicator}</td>
+              <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -3267,539 +3870,48 @@
       tbody.innerHTML = html;
     }
 
-    // EDIT RECORD MODAL
-    function openEditModal(recordId) {
-      if (!verifyAdminPassword("EDIT this record")) return;
-      const rec = records.find(r => String(r.id) === String(recordId));
-      if (!rec) {
-        alert("Record not found!");
-        return;
+    // SYNC HEADER SEARCH WITH ACTIVE TABLE SEARCH
+    function syncHeaderSearch(query) {
+      const tableFilterSearch = document.getElementById('filterSearch');
+      if (tableFilterSearch) {
+        tableFilterSearch.value = query;
       }
-
-      document.getElementById('formModalHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Record`;
-      document.getElementById('formSubmitBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Record`;
-      document.getElementById('formEditRecordId').value = rec.id;
-
-      document.getElementById('formCategory').value = rec.category || currentCategory;
-      toggleFormFields();
-
-      document.getElementById('formStation').value = rec.station || '';
-      document.getElementById('formDivision').value = rec.division || 'Bilaspur';
-      document.getElementById('formWorkName').value = rec.work || '';
-      document.getElementById('formEquipment').value = rec.equipment || '';
-      document.getElementById('formAgency').value = rec.agency || 'Project';
-      document.getElementById('formDepartment').value = rec.department || '';
-      document.getElementById('formInspectionBy').value = rec.inspectionBy || '';
-      document.getElementById('formEiOem').value = rec.oem || 'HITACHI';
-      document.getElementById('formEiSanctionBy').value = rec.sanctionBy || 'PCSTE';
-      document.getElementById('formRoutes').value = rec.routes || '';
-      document.getElementById('formOem').value = rec.oem || '';
-      document.getElementById('formWagon').value = rec.wagon || '';
-      document.getElementById('formDocNo').value = rec.docNo || '';
-      document.getElementById('formRelatedEquip').value = rec.relatedEquip || '';
-      document.getElementById('formIssuedBy').value = rec.issuedBy || 'RDSO';
-      document.getElementById('formBookName').value = rec.bookName || '';
-      document.getElementById('formLdceType').value = rec.ldceType || '30%';
-      document.getElementById('formTanNo').value = rec.tanNo || '';
-      document.getElementById('formRelatedTo').value = rec.relatedTo || '';
-      document.getElementById('formDirectLink').value = rec.directLink || '';
-      document.getElementById('formDriveLink').value = rec.driveLink || '';
-
-      document.getElementById('formDate').value = formatDateToYYYYMMDD(rec.date);
-      if (rec.sanctionDate) {
-        document.getElementById('formSecondaryDate').value = formatDateToYYYYMMDD(rec.sanctionDate);
-      }
-
-      document.getElementById('addRecordModal').style.display = 'flex';
-    }
-
-    function deleteRecord(recordId) {
-      if (!verifyAdminPassword("DELETE this record")) return;
-      if (confirm("Are you sure you want to permanently delete this record from Cloud Database?")) {
-        recordsCol.doc(String(recordId)).delete().catch(err => {
-          alert("Error deleting record from cloud: " + err.message);
-        });
-      }
-    }
-
-    function escapeHtml(text) {
-      return text ? text.replace(/'/g, "\\'") : '';
-    }
-
-    function resetFilters() {
-      document.getElementById('filterYear').value = 'ALL';
-      document.getElementById('filterDivision').value = 'ALL';
-      document.getElementById('filterSearch').value = '';
-      renderTable();
-    }
-
-    function openPreview(workTitle, driveUrl) {
-      document.getElementById('modalDocTitle').innerHTML = `<i class="fa-brands fa-google-drive" style="color:#ffd700;"></i> ` + workTitle;
-      const body = document.getElementById('modalPreviewBody');
-      const extLink = document.getElementById('modalDriveExternalLink');
-
-      const previewUrl = getDrivePreviewUrl(driveUrl);
-
-      if (previewUrl) {
-        body.innerHTML = `<iframe class="preview-iframe" src="${previewUrl}" allow="autoplay"></iframe>`;
-        extLink.style.display = 'inline-flex';
-        extLink.href = driveUrl;
+      const tableSec = document.getElementById('tableViewSection');
+      if (!tableSec || tableSec.style.display !== 'flex') {
+        switchCategory(currentCategory === 'HOME' ? 'PCSTE SANCTION' : currentCategory);
       } else {
-        extLink.style.display = 'none';
-        body.innerHTML = `
-          <div id="printablePreviewDoc" style="background:white; margin:16px auto; padding:20px; max-width:800px; height: calc(100% - 32px); overflow-y:auto; box-shadow:0 0 10px rgba(0,0,0,0.1); border-top: 5px solid var(--brand-orange); border-radius: 8px;">
-            <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px;">
-              <h3 style="margin:0; font-size:15px;">RailSNTGyan Knowledge Portal</h3>
-              <p style="margin:2px 0; font-size:12px; font-weight:bold;">Office of the Principal Chief Signal & Telecom Engineer (PCSTE)</p>
-              <p style="margin:0; font-size:10.5px;">Railway Signalling & Telecommunication</p>
-            </div>
-            <div style="margin-top:16px; font-size:12px; line-height:1.5;">
-              <p><b>Subject:</b> Technical Record Details for: <u>${workTitle}</u></p>
-              <p style="margin-top:8px;">This technical document / question paper is recorded in the RailSNTGyan Technical Repository.</p>
-              <div style="margin:20px 0; padding:10px; background:#fff9e6; border-left:4px solid #f39c12; font-size:11.5px; border-radius: 4px;">
-                <b>Note:</b> A Google Drive link is not currently attached to this record. To preview heavy files (e.g. 200MB PDFs), edit or add the record with the file's Google Drive sharing link.
-              </div>
-            </div>
-          </div>
-        `;
+        renderTable();
       }
-
-      document.getElementById('pdfPreviewModal').style.display = 'flex';
     }
 
-    function printPreviewDoc() {
-      const iframe = document.querySelector('.preview-iframe');
-      if (iframe) {
-        try {
-          iframe.contentWindow.focus();
-          iframe.contentWindow.print();
-        } catch (e) {
-          window.print();
-        }
+    // FULLSCREEN TOGGLE FEATURE
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
       } else {
-        window.print();
-      }
-    }
-
-    function closePreviewModal() {
-      document.getElementById('pdfPreviewModal').style.display = 'none';
-      document.getElementById('modalPreviewBody').innerHTML = '';
-    }
-
-    function openAddModal() {
-      document.getElementById('formModalHeading').innerHTML = `<i class="fa-solid fa-file-circle-plus"></i> Add New Record`;
-      document.getElementById('formSubmitBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Record`;
-      document.getElementById('formEditRecordId').value = '';
-
-      document.getElementById('formCategory').value = (currentCategory === 'HOME' ? 'PCSTE SANCTION' : currentCategory);
-      toggleFormFields();
-      document.getElementById('addRecordModal').style.display = 'flex';
-    }
-
-    function closeAddModal() {
-      document.getElementById('addRecordModal').style.display = 'none';
-      document.getElementById('formEditRecordId').value = '';
-      document.getElementById('formStation').value = '';
-      document.getElementById('formWorkName').value = '';
-      document.getElementById('formEquipment').value = '';
-      document.getElementById('formAgency').value = 'Project';
-      document.getElementById('formDepartment').value = '';
-      document.getElementById('formInspectionBy').value = '';
-      document.getElementById('formEiOem').value = 'HITACHI';
-      document.getElementById('formRoutes').value = '';
-      document.getElementById('formOem').value = '';
-      document.getElementById('formWagon').value = '';
-      document.getElementById('formDocNo').value = '';
-      document.getElementById('formRelatedEquip').value = '';
-      document.getElementById('formBookName').value = '';
-      document.getElementById('formLdceType').value = '30%';
-      document.getElementById('formTanNo').value = '';
-      document.getElementById('formRelatedTo').value = '';
-      document.getElementById('formDirectLink').value = '';
-      document.getElementById('formDriveLink').value = '';
-    }
-
-    function toggleFormFields() {
-      const cat = document.getElementById('formCategory').value.toUpperCase().trim();
-
-      const stationBox = document.getElementById('formStationContainer');
-      const divBox = document.getElementById('formDivisionContainer');
-      const workBox = document.getElementById('formWorkContainer');
-      const workLabel = document.getElementById('formWorkLabel');
-      const dateLabel = document.getElementById('formDateLabel');
-      const dateBox = document.getElementById('formDateContainer');
-      const secDateBox = document.getElementById('formSecondaryDateContainer');
-      const driveBox = document.getElementById('formDriveLinkContainer');
-
-      const agencyBox = document.getElementById('formAgencyContainer');
-      const deptBox = document.getElementById('formDepartmentContainer');
-      const inspectionBox = document.getElementById('formInspectionByContainer');
-      const bookBox = document.getElementById('formBookNameContainer');
-      const ldceBox = document.getElementById('formLdceTypeContainer');
-
-      const tanNoBox = document.getElementById('formTanNoContainer');
-      const relatedToBox = document.getElementById('formRelatedToContainer');
-      const directLinkBox = document.getElementById('formDirectLinkContainer');
-
-      const equipBox = document.getElementById('formEquipmentContainer');
-      const eiOemBox = document.getElementById('formEiOemContainer');
-      const eiSanctionByBox = document.getElementById('formEiSanctionByContainer');
-      const routesBox = document.getElementById('formRoutesContainer');
-      const oemBox = document.getElementById('formOemContainer');
-      const wagonBox = document.getElementById('formWagonContainer');
-      const docNoBox = document.getElementById('formDocNoContainer');
-      const docNoLabel = document.getElementById('formDocNoLabel');
-      const relatedEquipBox = document.getElementById('formRelatedEquipContainer');
-      const issuedByBox = document.getElementById('formIssuedByContainer');
-
-      agencyBox.style.display = 'none';
-      deptBox.style.display = 'none';
-      inspectionBox.style.display = 'none';
-      equipBox.style.display = 'none';
-      eiOemBox.style.display = 'none';
-      eiSanctionByBox.style.display = 'none';
-      routesBox.style.display = 'none';
-      oemBox.style.display = 'none';
-      wagonBox.style.display = 'none';
-      docNoBox.style.display = 'none';
-      relatedEquipBox.style.display = 'none';
-      issuedByBox.style.display = 'none';
-      secDateBox.style.display = 'none';
-      bookBox.style.display = 'none';
-      ldceBox.style.display = 'none';
-      tanNoBox.style.display = 'none';
-      relatedToBox.style.display = 'none';
-      directLinkBox.style.display = 'none';
-      dateBox.style.display = 'flex';
-      driveBox.style.display = 'flex';
-
-      workBox.style.display = 'flex';
-      stationBox.style.display = 'flex';
-      divBox.style.display = 'flex';
-
-      workLabel.innerText = 'Description';
-      dateLabel.innerText = 'Letter Date (DD-MM-YYYY)';
-
-      if (cat === 'IMPORTANT LINKS') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        workBox.style.display = 'none';
-        dateBox.style.display = 'none';
-        driveBox.style.display = 'none';
-        relatedToBox.style.display = 'flex';
-        document.getElementById('formRelatedToLabel').innerText = 'Related to (Portal Name)';
-        directLinkBox.style.display = 'flex';
-      } else if (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        tanNoBox.style.display = 'flex';
-        relatedToBox.style.display = 'flex';
-        document.getElementById('formRelatedToLabel').innerText = 'Related to (Equipment / System)';
-        workLabel.innerText = 'Description';
-        dateLabel.innerText = 'Issue Date (DD-MM-YYYY)';
-      } else if (docApprovalCategories.includes(cat)) {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        workLabel.innerText = 'Description';
-        dateLabel.innerText = 'Issue Date (DD-MM-YYYY)';
-      } else if (cat === 'JOINT SAFETY CERTIFICATE (JSC)') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        workLabel.innerText = 'Work Description';
-        dateLabel.innerText = 'Date of Forwarding from PCSTE Office';
-      } else if (standardManualCategories.includes(cat)) {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        dateLabel.innerText = 'Date of Issue (DD-MM-YYYY)';
-      } else if (cat === 'IRISET E-BOOK (SIGNAL)' || cat === 'IRISET E-BOOK (TELECOM)') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        dateBox.style.display = 'none';
-        bookBox.style.display = 'flex';
-        workLabel.innerText = 'Description';
-      } else if (ldceCategories.includes(cat)) {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        ldceBox.style.display = 'flex';
-        dateLabel.innerText = 'Exam Date (DD-MM-YYYY)';
-      } else if (cat === 'PCSTE SANCTION') {
-        equipBox.style.display = 'flex';
-        agencyBox.style.display = 'flex';
-        dateLabel.innerText = 'Sanctioning Date (DD-MM-YYYY)';
-        workLabel.innerText = 'Work Description';
-      } else if (cat === 'EI TSAA') {
-        eiOemBox.style.display = 'flex';
-        eiSanctionByBox.style.display = 'flex';
-        agencyBox.style.display = 'flex';
-        routesBox.style.display = 'flex';
-        dateLabel.innerText = 'TSAA Sanction Date (DD-MM-YYYY)';
-        workLabel.innerText = 'Work Name (EI Description)';
-      } else if (cat === 'MSDAC TSAA') {
-        oemBox.style.display = 'flex';
-        agencyBox.style.display = 'flex';
-        dateLabel.innerText = 'TSAA Sanction Date (DD-MM-YYYY)';
-        workLabel.innerText = 'Work Name (MSDAC Scheme)';
-      } else if (cat === 'S&T SPEED CERTIFICATE') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        wagonBox.style.display = 'flex';
-        deptBox.style.display = 'flex';
-        dateLabel.innerText = 'Sanction Date (DD-MM-YYYY)';
-      } else if (cat === 'GM SANCTION') {
-        agencyBox.style.display = 'flex';
-        secDateBox.style.display = 'flex';
-        dateLabel.innerText = 'Date of Forwarding from PCSTE Office';
-      } else if (cat === 'GRADE CONDONATION' || cat === 'LINE OPENING') {
-        divBox.style.display = 'none';
-        agencyBox.style.display = 'flex';
-        dateLabel.innerText = 'Date of Forwarding from PCSTE Office';
-      } else if (cat === 'SPEED RAISING') {
-        agencyBox.style.display = 'flex';
-        dateLabel.innerText = 'Date of Forwarding from CSE/PCSTE';
-      } else if (cat === 'INSPECTION NOTE') {
-        workBox.style.display = 'none';
-        inspectionBox.style.display = 'flex';
-        dateLabel.innerText = 'Inspection Date (DD-MM-YYYY)';
-      } else if (cat === 'SECR POLICY' || cat === 'SECR TYPICAL') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        docNoBox.style.display = 'flex';
-        docNoLabel.innerText = cat === 'SECR POLICY' ? 'Policy No.' : 'Typical No.';
-        relatedEquipBox.style.display = 'flex';
-        dateLabel.innerText = 'Date of Issue (DD-MM-YYYY)';
-      } else if (cat === 'IMP. LETTER') {
-        stationBox.style.display = 'none';
-        divBox.style.display = 'none';
-        relatedEquipBox.style.display = 'flex';
-        issuedByBox.style.display = 'flex';
-        dateLabel.innerText = 'Date of Issue (DD-MM-YYYY)';
-      }
-    }
-
-    function saveRecord() {
-      const editRecordId = document.getElementById('formEditRecordId').value;
-      const isEditing = Boolean(editRecordId);
-
-      const category = document.getElementById('formCategory').value.toUpperCase().trim();
-      const station = document.getElementById('formStation').value.trim();
-      const division = document.getElementById('formDivision').value;
-      const work = document.getElementById('formWorkName').value.trim();
-      const rawDate = document.getElementById('formDate').value;
-      const secDate = document.getElementById('formSecondaryDate').value;
-      const driveLink = document.getElementById('formDriveLink').value.trim();
-
-      const equipment = document.getElementById('formEquipment').value.trim();
-      const agency = document.getElementById('formAgency').value;
-      const department = document.getElementById('formDepartment').value.trim();
-      const inspectionBy = document.getElementById('formInspectionBy').value.trim();
-      const bookName = document.getElementById('formBookName').value.trim();
-      const ldceType = document.getElementById('formLdceType').value;
-
-      const tanNo = document.getElementById('formTanNo').value.trim();
-      const relatedTo = document.getElementById('formRelatedTo').value.trim();
-      const directLink = document.getElementById('formDirectLink').value.trim();
-
-      const eiOem = document.getElementById('formEiOem').value.trim();
-      const eiSanctionBy = document.getElementById('formEiSanctionBy').value;
-      const routes = document.getElementById('formRoutes').value;
-      const oem = document.getElementById('formOem').value.trim();
-      const wagon = document.getElementById('formWagon').value.trim();
-      const docNo = document.getElementById('formDocNo').value.trim();
-      const relatedEquip = document.getElementById('formRelatedEquip').value.trim();
-      const issuedBy = document.getElementById('formIssuedBy').value;
-
-      if (category === 'IMPORTANT LINKS') {
-        if (!relatedTo || !directLink) {
-          alert('Please enter Related to and Web Link URL.');
-          return;
-        }
-      } else if (category !== 'INSPECTION NOTE' && !work) {
-        alert('Please fill Description / Title / Work.');
-        return;
-      }
-
-      if ((category === 'IRISET E-BOOK (SIGNAL)' || category === 'IRISET E-BOOK (TELECOM)') && !bookName) {
-        alert('Please enter Book Name.');
-        return;
-      }
-
-      if (category === 'INSPECTION NOTE' && !inspectionBy) {
-        alert('Please enter Inspection Done by (Officer name/designation).');
-        return;
-      }
-
-      const noStationCategories = [
-        'JOINT SAFETY CERTIFICATE (JSC)', 'S&T SPEED CERTIFICATE', 'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER',
-        'RDSO TAN (TECHNICAL ADVISORY NOTE)', ...docApprovalCategories, ...standardManualCategories, 
-        'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'
-      ];
-
-      if (!noStationCategories.includes(category) && !station) {
-        alert('Please fill Station / Section.');
-        return;
-      }
-
-      if (!isEditing) {
-        if (!verifyAdminPassword("ADD a new record")) return;
-      }
-
-      const formattedDate = formatDateToDDMMYYYY(rawDate);
-      let yearVal = new Date().getFullYear();
-      if (rawDate && rawDate.includes('-')) {
-        const parts = rawDate.split('-');
-        yearVal = parts[0].length === 4 ? parseInt(parts[0], 10) : parseInt(parts[2], 10);
-      }
-
-      const recordDocId = isEditing ? String(editRecordId) : String(Date.now());
-
-      const recData = {
-        id: recordDocId,
-        category,
-        work,
-        date: formattedDate,
-        year: yearVal,
-        driveLink: driveLink
-      };
-
-      if (!noStationCategories.includes(category)) {
-        recData.station = station;
-        if (!['GRADE CONDONATION', 'LINE OPENING'].includes(category)) {
-          recData.division = division;
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
         }
       }
-
-      if (category === 'IMPORTANT LINKS') {
-        recData.relatedTo = relatedTo;
-        recData.directLink = directLink;
-      } else if (category === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
-        recData.tanNo = tanNo;
-        recData.relatedTo = relatedTo;
-      } else if (category === 'PCSTE SANCTION') {
-        recData.equipment = equipment;
-        recData.agency = agency;
-      } else if (category === 'EI TSAA') {
-        recData.oem = eiOem;
-        recData.sanctionBy = eiSanctionBy;
-        recData.agency = agency;
-        if (routes) recData.routes = parseInt(routes, 10);
-      } else if (category === 'MSDAC TSAA') {
-        recData.oem = oem;
-        recData.agency = agency;
-      } else if (category === 'S&T SPEED CERTIFICATE') {
-        recData.wagon = wagon;
-        recData.department = department || 'S&T';
-      } else if (category === 'GM SANCTION') {
-        recData.agency = agency;
-        recData.sanctionDate = formatDateToDDMMYYYY(secDate);
-      } else if (['GRADE CONDONATION', 'LINE OPENING', 'SPEED RAISING'].includes(category)) {
-        recData.agency = agency;
-      } else if (category === 'INSPECTION NOTE') {
-        recData.inspectionBy = inspectionBy;
-      } else if (category === 'SECR POLICY' || category === 'SECR TYPICAL') {
-        recData.docNo = docNo;
-        recData.relatedEquip = relatedEquip;
-      } else if (category === 'IMP. LETTER') {
-        recData.relatedEquip = relatedEquip;
-        recData.issuedBy = issuedBy;
-      } else if (category === 'IRISET E-BOOK (SIGNAL)' || category === 'IRISET E-BOOK (TELECOM)') {
-        recData.bookName = bookName;
-      } else if (ldceCategories.includes(category)) {
-        recData.ldceType = ldceType;
-      }
-
-      recordsCol.doc(recordDocId).set(recData).then(() => {
-        closeAddModal();
-        switchCategory(category);
-      }).catch((err) => {
-        alert("Error saving/updating record to cloud: " + err.message);
-      });
     }
 
-    function exportToCSV() {
-      let filtered = records.filter(r => r.category === currentCategory);
-      if (filtered.length === 0) {
-        alert('No records to export in current category.');
-        return;
+    // ONLINE / OFFLINE STATUS DETECTOR
+    window.addEventListener('online', () => {
+      const b = document.getElementById('networkStatusBadge');
+      if (b) {
+        b.innerHTML = '<i class="fa-solid fa-wifi"></i> Online';
+        b.className = 'badge-portal badge-cloud';
       }
+    });
 
-      filtered.sort((a, b) => {
-        const timeA = parseDateToTime(a.date);
-        const timeB = parseDateToTime(b.date);
-        return timeA - timeB;
-      });
-
-      let csv = '';
-      if (currentCategory === 'IMPORTANT LINKS') {
-        csv = 'Sr. NO,Related to,Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.relatedTo || ''}","${r.directLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
-        csv = 'Sr. no,TAN No.,Description,Related to,Issue Date,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.tanNo || ''}","${(r.work || '').replace(/"/g, '""')}","${r.relatedTo || ''}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
-        });
-      } else if (docApprovalCategories.includes(currentCategory)) {
-        csv = 'Sr. NO,Description,Issue Date,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
-        csv = 'Sr. no,Work Description,Date of Forwarding from PCSTE Office,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
-        });
-      } else if (standardManualCategories.includes(currentCategory)) {
-        csv = 'Sr. No,Description,Date of Issue,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.year || ''}","${r.driveLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
-        csv = 'Sr. No,Book Name,Description,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${(r.bookName || '').replace(/"/g, '""')}","${(r.work || '').replace(/"/g, '""')}","${r.year || ''}","${r.driveLink || ''}"\n`;
-        });
-      } else if (ldceCategories.includes(currentCategory)) {
-        csv = 'Sr. no,Year,Type (30% or 70%),Description,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.year || ''}","${r.ldceType || '30%'}","${(r.work || '').replace(/"/g, '""')}","${r.driveLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'PCSTE SANCTION') {
-        csv = 'Sr.No,Station,Division,Work,Equipment,Agency,Sanction Date,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.equipment || ''}","${r.agency || ''}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'EI TSAA') {
-        csv = 'Sr.No,Station,Division,Work Name,OEM Make,Sanction By,Agency,Routes,TSAA Sanction Date,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.oem || ''}","${r.sanctionBy || ''}","${r.agency || ''}","${r.routes || ''}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'MSDAC TSAA') {
-        csv = 'Sr.No,Station,Division,Work Name,OEM Make,Agency,TSAA Sanction Date,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.oem || ''}","${r.agency || ''}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
-        });
-      } else if (currentCategory === 'IMP. LETTER') {
-        csv = 'Sr.No,Related to Equipment,Description,Date of Issue,Issued By,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.relatedEquip || ''}","${(r.work || '').replace(/"/g, '""')}","${r.date}","${r.issuedBy || ''}","${r.year}","${r.driveLink || ''}"\n`;
-        });
-      } else {
-        csv = 'Sr.No,Station,Division,Work,Date,Year,Drive Link\n';
-        filtered.forEach((r, i) => {
-          csv += `"${i+1}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.date}","${r.year}","${r.driveLink || ''}"\n`;
-        });
+    window.addEventListener('offline', () => {
+      const b = document.getElementById('networkStatusBadge');
+      if (b) {
+        b.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Offline';
+        b.className = 'badge-portal';
+        b.style.color = '#e11d48';
       }
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `${currentCategory.replace(/\s+/g, '_')}_Records.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    });
 
     // FINANCIAL YEAR REPORT FACILITY
     function openFYReportModal() {
@@ -3807,6 +3919,7 @@
       document.getElementById('reportFYSelect').value = getCurrentFinancialYearString();
       generateFYReport();
       document.getElementById('fyReportModal').style.display = 'flex';
+      history.pushState(null, null, window.location.href);
     }
 
     function closeFYReportModal() {
@@ -3917,6 +4030,271 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+    // MODAL PREVIEW HANDLER
+    function openPreview(title, link) {
+      if (!link) {
+        alert("No Drive attachment link has been provided for this record.");
+        return;
+      }
+      document.getElementById('modalDocTitle').innerText = title || "Document Preview";
+      const embedUrl = getDrivePreviewUrl(link);
+      document.getElementById('modalPreviewBody').innerHTML = `<iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe>`;
+      document.getElementById('modalDriveExternalLink').href = link;
+      document.getElementById('pdfPreviewModal').style.display = 'flex';
+      history.pushState(null, null, window.location.href);
+    }
+
+    function closePreviewModal() {
+      document.getElementById('modalPreviewBody').innerHTML = '';
+      document.getElementById('pdfPreviewModal').style.display = 'none';
+    }
+
+    function printPreviewDoc() {
+      const iframe = document.querySelector('.preview-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      } else {
+        window.print();
+      }
+    }
+
+    // RESET FILTERS
+    function resetFilters() {
+      document.getElementById('filterYear').value = 'ALL';
+      const divFilter = document.getElementById('filterDivision');
+      if (divFilter) divFilter.value = 'ALL';
+      document.getElementById('filterSearch').value = '';
+      const headerSearch = document.getElementById('headerGlobalSearch');
+      if (headerSearch) headerSearch.value = '';
+      renderTable();
+    }
+
+    // FORM MODAL LOGIC
+    function openAddModal() {
+      if (!verifyAdminPassword("add a new record")) return;
+      document.getElementById('formModalHeading').innerHTML = '<i class="fa-solid fa-file-circle-plus"></i> Add New Record';
+      document.getElementById('formEditRecordId').value = '';
+      document.getElementById('formCategory').value = currentCategory === 'HOME' ? 'PCSTE SANCTION' : currentCategory;
+      clearFormFields();
+      toggleFormFields();
+      document.getElementById('addRecordModal').style.display = 'flex';
+      history.pushState(null, null, window.location.href);
+    }
+
+    function openEditModal(recordId) {
+      if (!verifyAdminPassword("edit this record")) return;
+      const rec = records.find(r => r.id === recordId);
+      if (!rec) return;
+
+      document.getElementById('formModalHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Record';
+      document.getElementById('formEditRecordId').value = rec.id;
+      document.getElementById('formCategory').value = rec.category;
+      toggleFormFields();
+
+      document.getElementById('formStation').value = rec.station || '';
+      document.getElementById('formDivision').value = rec.division || 'Bilaspur';
+      document.getElementById('formTanNo').value = rec.tanNo || '';
+      document.getElementById('formRelatedTo').value = rec.relatedTo || '';
+      document.getElementById('formDirectLink').value = rec.directLink || '';
+      document.getElementById('formBookName').value = rec.bookName || '';
+      document.getElementById('formLdceType').value = rec.ldceType || '30%';
+      document.getElementById('formWorkName').value = rec.work || '';
+      document.getElementById('formAgency').value = rec.agency || 'Project';
+      document.getElementById('formDepartment').value = rec.department || '';
+      document.getElementById('formInspectionBy').value = rec.inspectionBy || '';
+      document.getElementById('formEquipment').value = rec.equipment || '';
+      document.getElementById('formEiOem').value = rec.oem || 'HITACHI';
+      document.getElementById('formEiSanctionBy').value = rec.sanctionBy || 'PCSTE';
+      document.getElementById('formRoutes').value = rec.routes || '';
+      document.getElementById('formOem').value = rec.oem || '';
+      document.getElementById('formWagon').value = rec.wagon || '';
+      document.getElementById('formDocNo').value = rec.docNo || '';
+      document.getElementById('formRelatedEquip').value = rec.relatedEquip || '';
+      document.getElementById('formIssuedBy').value = rec.issuedBy || 'RDSO';
+      document.getElementById('formDate').value = formatDateToYYYYMMDD(rec.date);
+      document.getElementById('formSecondaryDate').value = formatDateToYYYYMMDD(rec.sanctionDate);
+      document.getElementById('formDriveLink').value = rec.driveLink || '';
+
+      document.getElementById('addRecordModal').style.display = 'flex';
+      history.pushState(null, null, window.location.href);
+    }
+
+    function closeAddModal() {
+      document.getElementById('addRecordModal').style.display = 'none';
+    }
+
+    function clearFormFields() {
+      document.getElementById('formStation').value = '';
+      document.getElementById('formTanNo').value = '';
+      document.getElementById('formRelatedTo').value = '';
+      document.getElementById('formDirectLink').value = '';
+      document.getElementById('formBookName').value = '';
+      document.getElementById('formWorkName').value = '';
+      document.getElementById('formDepartment').value = '';
+      document.getElementById('formInspectionBy').value = '';
+      document.getElementById('formEquipment').value = '';
+      document.getElementById('formRoutes').value = '';
+      document.getElementById('formOem').value = '';
+      document.getElementById('formWagon').value = '';
+      document.getElementById('formDocNo').value = '';
+      document.getElementById('formRelatedEquip').value = '';
+      document.getElementById('formDate').value = '';
+      document.getElementById('formSecondaryDate').value = '';
+      document.getElementById('formDriveLink').value = '';
+    }
+
+    function toggleFormFields() {
+      const cat = document.getElementById('formCategory').value;
+
+      const isTan = (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)');
+      const isLinks = (cat === 'IMPORTANT LINKS');
+      const isBooks = (cat === 'IRISET E-BOOK (SIGNAL)' || cat === 'IRISET E-BOOK (TELECOM)');
+      const isLdce = ldceCategories.includes(cat);
+      const isDocApproval = docApprovalCategories.includes(cat);
+      const isStandardManual = standardManualCategories.includes(cat);
+      const isJsc = (cat === 'JOINT SAFETY CERTIFICATE (JSC)');
+      const isPcste = (cat === 'PCSTE SANCTION');
+      const isEi = (cat === 'EI TSAA');
+      const isMsdac = (cat === 'MSDAC TSAA');
+      const isSpeedCert = (cat === 'S&T SPEED CERTIFICATE');
+      const isGm = (cat === 'GM SANCTION');
+      const isGradeOrLine = (cat === 'GRADE CONDONATION' || cat === 'LINE OPENING');
+      const isSpeedRaising = (cat === 'SPEED RAISING');
+      const isInspection = (cat === 'INSPECTION NOTE');
+      const isImpLetter = (cat === 'IMP. LETTER');
+      const isPolicyOrTypical = (cat === 'SECR POLICY' || cat === 'SECR TYPICAL');
+
+      document.getElementById('formStationContainer').style.display = 
+        (isPcste || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
+
+      document.getElementById('formDivisionContainer').style.display = 
+        (isPcste || isEi || isMsdac || isGm || isSpeedRaising || isInspection) ? 'flex' : 'none';
+
+      document.getElementById('formTanNoContainer').style.display = isTan ? 'flex' : 'none';
+      document.getElementById('formRelatedToContainer').style.display = (isTan || isLinks) ? 'flex' : 'none';
+      document.getElementById('formDirectLinkContainer').style.display = isLinks ? 'flex' : 'none';
+      document.getElementById('formBookNameContainer').style.display = isBooks ? 'flex' : 'none';
+      document.getElementById('formLdceTypeContainer').style.display = isLdce ? 'flex' : 'none';
+
+      document.getElementById('formWorkContainer').style.display = isLinks ? 'none' : 'flex';
+      document.getElementById('formAgencyContainer').style.display = 
+        (isPcste || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising) ? 'flex' : 'none';
+      document.getElementById('formDepartmentContainer').style.display = isSpeedCert ? 'flex' : 'none';
+      document.getElementById('formInspectionByContainer').style.display = isInspection ? 'flex' : 'none';
+      document.getElementById('formEquipmentContainer').style.display = isPcste ? 'flex' : 'none';
+      document.getElementById('formEiOemContainer').style.display = isEi ? 'flex' : 'none';
+      document.getElementById('formEiSanctionByContainer').style.display = isEi ? 'flex' : 'none';
+      document.getElementById('formRoutesContainer').style.display = isEi ? 'flex' : 'none';
+      document.getElementById('formOemContainer').style.display = isMsdac ? 'flex' : 'none';
+      document.getElementById('formWagonContainer').style.display = isSpeedCert ? 'flex' : 'none';
+      document.getElementById('formDocNoContainer').style.display = isPolicyOrTypical ? 'flex' : 'none';
+      document.getElementById('formRelatedEquipContainer').style.display = (isImpLetter || isPolicyOrTypical) ? 'flex' : 'none';
+      document.getElementById('formIssuedByContainer').style.display = isImpLetter ? 'flex' : 'none';
+
+      document.getElementById('formDateContainer').style.display = isLinks ? 'none' : 'flex';
+      document.getElementById('formSecondaryDateContainer').style.display = isGm ? 'flex' : 'none';
+
+      // Field Labels Customization
+      const dateLbl = document.getElementById('formDateLabel');
+      if (isGm || isGradeOrLine || isJsc) {
+        dateLbl.innerText = "Date of Forwarding from PCSTE Office";
+      } else if (isSpeedRaising) {
+        dateLbl.innerText = "Date of Forwarding from CSE/PCSTE";
+      } else if (isTan || isImpLetter || isPolicyOrTypical || isStandardManual || isDocApproval) {
+        dateLbl.innerText = "Date of Issue (DD-MM-YYYY)";
+      } else {
+        dateLbl.innerText = "Sanctioning Date (DD-MM-YYYY)";
+      }
+
+      const workLbl = document.getElementById('formWorkLabel');
+      if (isEi) workLbl.innerText = "Work Name (EI Description)";
+      else if (isMsdac) workLbl.innerText = "Work Name (MSDAC Scheme)";
+      else if (isBooks) workLbl.innerText = "Book Description / Subject";
+      else if (isLdce) workLbl.innerText = "Question Paper Details";
+      else workLbl.innerText = "Work Description";
+    }
+
+    async function saveRecord() {
+      const editId = document.getElementById('formEditRecordId').value;
+      const cat = document.getElementById('formCategory').value;
+      const dateVal = document.getElementById('formDate').value;
+      const secondaryDateVal = document.getElementById('formSecondaryDate').value;
+
+      const recordData = {
+        category: cat,
+        station: document.getElementById('formStation').value.trim(),
+        division: document.getElementById('formDivision').value,
+        tanNo: document.getElementById('formTanNo').value.trim(),
+        relatedTo: document.getElementById('formRelatedTo').value.trim(),
+        directLink: document.getElementById('formDirectLink').value.trim(),
+        bookName: document.getElementById('formBookName').value.trim(),
+        ldceType: document.getElementById('formLdceType').value,
+        work: document.getElementById('formWorkName').value.trim(),
+        agency: document.getElementById('formAgency').value,
+        department: document.getElementById('formDepartment').value.trim(),
+        inspectionBy: document.getElementById('formInspectionBy').value.trim(),
+        equipment: document.getElementById('formEquipment').value.trim(),
+        oem: (cat === 'EI TSAA') ? document.getElementById('formEiOem').value : document.getElementById('formOem').value.trim(),
+        sanctionBy: document.getElementById('formEiSanctionBy').value,
+        routes: document.getElementById('formRoutes').value.trim(),
+        wagon: document.getElementById('formWagon').value.trim(),
+        docNo: document.getElementById('formDocNo').value.trim(),
+        relatedEquip: document.getElementById('formRelatedEquip').value.trim(),
+        issuedBy: document.getElementById('formIssuedBy').value,
+        date: formatDateToDDMMYYYY(dateVal),
+        sanctionDate: formatDateToDDMMYYYY(secondaryDateVal),
+        year: dateVal ? new Date(dateVal).getFullYear() : (new Date().getFullYear()),
+        driveLink: document.getElementById('formDriveLink').value.trim()
+      };
+
+      try {
+        if (editId) {
+          await recordsCol.doc(editId).update(recordData);
+        } else {
+          await recordsCol.add(recordData);
+        }
+        closeAddModal();
+      } catch (err) {
+        alert("Firestore save error: " + err.message);
+      }
+    }
+
+    async function deleteRecord(recordId) {
+      if (!verifyAdminPassword("delete this record permanently")) return;
+      if (confirm("Are you sure you want to delete this record? This action cannot be undone.")) {
+        try {
+          await recordsCol.doc(recordId).delete();
+        } catch (err) {
+          alert("Firestore delete error: " + err.message);
+        }
+      }
+    }
+
+    function exportToCSV() {
+      if (!records || records.length === 0) {
+        alert("No records to export.");
+        return;
+      }
+      let csv = "Category,Station,Division,Work/Description,Date,Agency,OEM,Drive Link\n";
+      records.filter(r => r.category === currentCategory).forEach(r => {
+        csv += `"${r.category}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.agency || ''}","${r.oem || ''}","${r.driveLink || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${currentCategory.replace(/[^a-zA-Z0-9]/g, '_')}_records.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
   </script>
 </body>
