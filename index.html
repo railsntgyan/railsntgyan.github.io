@@ -3742,6 +3742,19 @@
       }
     }
 
+    // FUNCTION TO SAFELY HANDLE EXTERNAL SITES ACROSS WEB & ANDROID WEBVIEW
+    function openExternalLinkSafe(title, url) {
+      if (!url || url === '#') return;
+      const isAndroidApp = /wv|Android.*Version\/[0-9.]+/i.test(navigator.userAgent);
+      if (isAndroidApp && url.startsWith('http')) {
+        const clean = url.replace(/^https?:\/\//i, '');
+        const scheme = url.startsWith('https') ? 'https' : 'http';
+        window.location.href = `intent://${clean}#Intent;scheme=${scheme};action=android.intent.action.VIEW;end`;
+      } else {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    }
+
     function renderTable() {
       const thead = document.getElementById('tableHead');
       const tbody = document.getElementById('tableBody');
@@ -4066,7 +4079,7 @@
               <td><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
               <td class="work-desc-cell">
-                <a href="${rec.directLink || '#'}" target="_blank" rel="noopener noreferrer" class="work-link" style="color:#15803d;">
+                <a href="javascript:void(0)" onclick="openExternalLinkSafe('${escapeHtml(rec.relatedTo || 'Link')}', '${rec.directLink || '#'}')" class="work-link" style="color:#15803d;">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${rec.directLink || '—'}
                 </a>
               </td>
