@@ -165,10 +165,13 @@
     }
 
     .login-logo-container {
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(241, 245, 249, 0.7) 100%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.75) 100%);
       padding: 10px;
       border-radius: 50%;
-      box-shadow: 0 8px 24px rgba(11, 59, 96, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 24px -2px rgba(11, 59, 96, 0.22),
+                  0 2px 6px rgba(0, 0, 0, 0.08),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.9),
+                  inset 0 -2px 4px rgba(11, 59, 96, 0.08);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -177,7 +180,11 @@
     .login-logo-svg {
       width: 90px;
       height: 90px;
-      filter: drop-shadow(0 6px 14px rgba(0, 156, 166, 0.35));
+      filter: drop-shadow(0 -1px 0.8px rgba(255, 255, 255, 0.85))
+              drop-shadow(0 1.5px 1.5px rgba(11, 37, 69, 0.45))
+              drop-shadow(0 5px 10px rgba(0, 156, 166, 0.28))
+              drop-shadow(0 10px 18px rgba(11, 59, 96, 0.25));
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
     }
 
     .login-brand-title {
@@ -331,13 +338,20 @@
       width: 84px;
       height: 84px;
       flex-shrink: 0;
-      filter: drop-shadow(0 6px 14px rgba(0, 156, 166, 0.32));
       cursor: pointer;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: drop-shadow(0 -1px 0.8px rgba(255, 255, 255, 0.8))
+              drop-shadow(0 1.5px 1.5px rgba(11, 37, 69, 0.42))
+              drop-shadow(0 4px 8px rgba(0, 156, 166, 0.26))
+              drop-shadow(0 9px 16px rgba(11, 59, 96, 0.22));
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
     }
 
     .portal-logo-svg:hover {
-      transform: scale(1.05);
+      transform: translateY(-2px) scale(1.04);
+      filter: drop-shadow(0 -1.5px 1px rgba(255, 255, 255, 0.95))
+              drop-shadow(0 2px 2px rgba(11, 37, 69, 0.5))
+              drop-shadow(0 7px 14px rgba(0, 156, 166, 0.35))
+              drop-shadow(0 14px 22px rgba(11, 59, 96, 0.28));
     }
 
     .header-brand-block {
@@ -751,6 +765,7 @@
     .process-infographic-card {
       background: var(--glass-bg);
       backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: blur(14px);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--border-color);
       border-radius: 12px;
@@ -1086,9 +1101,9 @@
       line-height: 1.25;
     }
 
-    /* Freeze First Column (Sr. No) */
-    table thead th:nth-child(1),
-    table tbody td:nth-child(1) {
+    /* Freeze First Column (Sr. No) - Default */
+    table:not(.unfreeze-table) thead th:nth-child(1),
+    table:not(.unfreeze-table) tbody td:nth-child(1) {
       position: sticky;
       left: 0;
       width: var(--col-1-w);
@@ -1102,19 +1117,19 @@
       white-space: nowrap !important;
     }
 
-    table thead th:nth-child(1) {
+    table:not(.unfreeze-table) thead th:nth-child(1) {
       z-index: 25;
       background: var(--brand-navy) !important;
       border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
     }
 
-    table tbody td:nth-child(1) {
+    table:not(.unfreeze-table) tbody td:nth-child(1) {
       z-index: 11;
     }
 
-    /* Freeze Second Column */
-    table thead th:nth-child(2),
-    table tbody td:nth-child(2) {
+    /* Freeze Second Column - Default */
+    table:not(.unfreeze-table) thead th:nth-child(2),
+    table:not(.unfreeze-table) tbody td:nth-child(2) {
       position: sticky;
       left: var(--col-1-w);
       width: var(--col-2-min-w);
@@ -1128,14 +1143,14 @@
       word-break: normal;
     }
 
-    table thead th:nth-child(2) {
+    table:not(.unfreeze-table) thead th:nth-child(2) {
       z-index: 25;
       background: var(--brand-navy) !important;
       border-right: 2px solid var(--brand-orange) !important;
       line-height: 1.2;
     }
 
-    table tbody td:nth-child(2) {
+    table:not(.unfreeze-table) tbody td:nth-child(2) {
       z-index: 11;
       line-height: 1.25;
     }
@@ -1148,6 +1163,45 @@
     table tbody tr:hover td:nth-child(1),
     table tbody tr:hover td:nth-child(2) {
       background: #eef6fb !important;
+    }
+
+    /* ========================================================
+       UNFROZEN STYLES FOR SPECIFIED TWO SECTIONS
+       ======================================================== */
+    table.unfreeze-table {
+      min-width: 100% !important;
+    }
+
+    table.unfreeze-table thead th:nth-child(1),
+    table.unfreeze-table tbody td:nth-child(1),
+    table.unfreeze-table thead th:nth-child(2),
+    table.unfreeze-table tbody td:nth-child(2) {
+      position: static !important;
+      left: auto !important;
+      box-shadow: none !important;
+      z-index: auto !important;
+    }
+
+    table.unfreeze-table thead th:nth-child(1),
+    table.unfreeze-table thead th:nth-child(2) {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 20 !important;
+      background: var(--brand-navy) !important;
+    }
+
+    table.unfreeze-table thead th:nth-child(1),
+    table.unfreeze-table tbody td:nth-child(1) {
+      width: 55px !important;
+      min-width: 55px !important;
+      max-width: 60px !important;
+      text-align: center;
+      border-right: 1px solid var(--cell-border) !important;
+    }
+
+    table.unfreeze-table thead th:nth-child(2),
+    table.unfreeze-table tbody td:nth-child(2) {
+      border-right: 1px solid var(--cell-border) !important;
     }
 
     tbody td {
@@ -1167,7 +1221,7 @@
     }
 
     /* NON-WORK DESCRIPTION COLUMNS */
-    tbody td:not(.work-desc-cell) {
+    tbody td:not(.work-desc-cell):not(.work-desc-wide) {
       white-space: normal;
       word-wrap: normal;
       overflow-wrap: normal;
@@ -1175,9 +1229,29 @@
       line-height: 1.25;
     }
 
+    /* NORMAL WORK DESCRIPTION CELL (RESPONSIVE & WRAPPED) */
     td.work-desc-cell, 
     th.work-desc-th {
       min-width: 380px;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: normal;
+      line-height: 1.35;
+    }
+
+    /* BALANCED & PRACTICAL DESCRIPTION CELL FOR REFERENCE BOOKS & SANCTION DOCS */
+    td.work-desc-wide,
+    th.work-desc-wide {
+      min-width: 440px !important;
+      max-width: 620px !important;
+      width: auto !important;
+      white-space: normal !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+      word-break: normal !important;
+      line-height: 1.4 !important;
+      padding: 9px 12px !important;
     }
 
     .col-pcste-equipment {
@@ -1198,15 +1272,25 @@
       white-space: nowrap !important;
     }
 
-    .col-drive-compact {
-      min-width: 95px;
+    /* DRIVE ATTACHMENT COLUMN (LETTER KO BREAK NA KARE, CLEAN WORD WRAP) */
+    .col-drive-compact,
+    th.col-drive-compact {
+      width: 95px !important;
+      min-width: 95px !important;
+      max-width: 110px !important;
       text-align: center;
       padding: 6px 4px !important;
-      white-space: nowrap !important;
+      white-space: normal !important;
+      word-wrap: normal !important;
+      overflow-wrap: normal !important;
+      word-break: normal !important;
+      hyphens: none !important;
+      vertical-align: middle;
+      line-height: 1.2;
     }
 
     .col-drive-compact .drive-pill {
-      padding: 2px 6px;
+      padding: 3px 6px;
       font-size: 10px;
       gap: 3px;
       white-space: nowrap !important;
@@ -1222,7 +1306,9 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      word-break: break-word;
+      word-break: normal;
+      overflow-wrap: break-word;
+      white-space: normal;
     }
 
     .work-link:hover {
@@ -1322,13 +1408,13 @@
       background: #eff6ff;
       color: #1d4ed8;
       border: 1px solid #bfdbfe;
-      padding: 2px 7px;
-      border-radius: 8px;
-      font-size: 10.5px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       white-space: nowrap;
     }
 
@@ -1834,7 +1920,7 @@
       }
 
       /* FROZEN STICKY TABLE HEADER */
-      table thead th {
+      table:not(.unfreeze-table) thead th {
         position: sticky !important;
         top: 0 !important;
         z-index: 40 !important;
@@ -1844,17 +1930,25 @@
         font-size: 11.5px;
       }
 
-      table thead th:nth-child(1),
-      table thead th:nth-child(2) {
+      table:not(.unfreeze-table) thead th:nth-child(1),
+      table:not(.unfreeze-table) thead th:nth-child(2) {
         position: sticky !important;
         top: 0 !important;
         z-index: 45 !important;
       }
 
-      table tbody td:nth-child(1),
-      table tbody td:nth-child(2) {
+      table:not(.unfreeze-table) tbody td:nth-child(1),
+      table:not(.unfreeze-table) tbody td:nth-child(2) {
         position: sticky !important;
         z-index: 12 !important;
+      }
+
+      /* Unfrozen table on tablet/mobile */
+      table.unfreeze-table thead th {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 25 !important;
+        background: var(--brand-navy) !important;
       }
 
       .dash-charts-grid {
@@ -1998,18 +2092,18 @@
         padding: 5px 4px;
       }
 
-      table thead th:nth-child(2) {
+      table:not(.unfreeze-table) thead th:nth-child(2) {
         font-size: 10px;
         letter-spacing: -0.2px;
       }
 
-      table tbody td:nth-child(2) {
+      table:not(.unfreeze-table) tbody td:nth-child(2) {
         font-size: 10.5px;
         font-weight: 700;
       }
 
-      table thead th:nth-child(1),
-      table tbody td:nth-child(1) {
+      table:not(.unfreeze-table) thead th:nth-child(1),
+      table:not(.unfreeze-table) tbody td:nth-child(1) {
         font-size: 10px;
       }
 
@@ -2018,7 +2112,8 @@
       }
 
       .col-drive-compact {
-        min-width: 80px;
+        min-width: 85px !important;
+        width: 85px !important;
       }
 
       .col-oem-make {
@@ -2367,7 +2462,7 @@
           <li class="nav-item" onclick="switchCategory('EI TSAA')"><i class="fa-solid fa-microchip" style="color: #ea580c;"></i> EI TSAA</li>
           <li class="nav-item" onclick="switchCategory('MSDAC TSAA')"><i class="fa-solid fa-wave-square" style="color: #d97706;"></i> MSDAC TSAA</li>
           <li class="nav-item" onclick="switchCategory('S&T SPEED CERTIFICATE')"><i class="fa-solid fa-gauge-high" style="color: #0284c7;"></i> S&T SPEED CERTIFICATE</li>
-          <li class="nav-item" onclick="switchCategory('PCSTE DISPENSATION')"><i class="fa-solid fa-scale-balanced" style="color: #db2777;"></i> PCSTE DISPENSATION</li>
+          <li class="nav-item" onclick="switchCategory('DISPENSATION')"><i class="fa-solid fa-scale-balanced" style="color: #db2777;"></i> DISPENSATION</li>
           <li class="nav-item" onclick="switchCategory('GM SANCTION')"><i class="fa-solid fa-file-signature" style="color: #059669;"></i> GM SANCTION</li>
           <li class="nav-item" onclick="switchCategory('GRADE CONDONATION')"><i class="fa-solid fa-road-circle-exclamation" style="color: #e11d48;"></i> GRADE CONDONATION</li>
           <li class="nav-item" onclick="switchCategory('LINE OPENING')"><i class="fa-solid fa-train-subway" style="color: #9333ea;"></i> LINE OPENING</li>
@@ -2544,7 +2639,7 @@
             </div>
 
             <!-- STEP 09 -->
-            <div class="process-step-item step-9" onclick="switchCategory('PCSTE DISPENSATION')">
+            <div class="process-step-item step-9" onclick="switchCategory('DISPENSATION')">
               <div class="process-step-badge">09</div>
               <div class="process-step-icon"><i class="fa-solid fa-scale-balanced"></i></div>
               <div class="process-step-title">DISPENSATION</div>
@@ -2767,7 +2862,7 @@
               <option value="EI TSAA">EI TSAA</option>
               <option value="MSDAC TSAA">MSDAC TSAA</option>
               <option value="S&T SPEED CERTIFICATE">S&T SPEED CERTIFICATE</option>
-              <option value="PCSTE DISPENSATION">PCSTE DISPENSATION</option>
+              <option value="DISPENSATION">DISPENSATION</option>
               <option value="GM SANCTION">GM SANCTION</option>
               <option value="GRADE CONDONATION">GRADE CONDONATION</option>
               <option value="LINE OPENING">LINE OPENING</option>
@@ -2866,8 +2961,19 @@
           <label>Agency</label>
           <select id="formAgency">
             <option value="Project">Project</option>
-            <option value="Con">Construction (Con)</option>
-            <option value="Open line">Open line</option>
+            <option value="Construction">Construction</option>
+            <option value="Division">Division</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="formGivenByContainer" style="display:none;">
+          <label>Given by</label>
+          <select id="formGivenBy">
+            <option value="PCSTE">PCSTE</option>
+            <option value="PCSTE & PCEE">PCSTE & PCEE</option>
+            <option value="PCOM">PCOM</option>
+            <option value="GM">GM</option>
+            <option value="CRS">CRS</option>
           </select>
         </div>
 
@@ -3046,6 +3152,9 @@
         document.getElementById('pagePasswordInput').focus();
       }
 
+      // Initialize state for back button navigation
+      history.replaceState({ view: 'home' }, '', '');
+
       updateMobileHeaderHeight();
       window.addEventListener('resize', () => {
         updateMobileHeaderHeight();
@@ -3057,7 +3166,7 @@
       }, 150));
 
       initTopScrollbarSync();
-      goHome();
+      goHome(false);
     });
 
     function updateMobileHeaderHeight() {
@@ -3166,28 +3275,27 @@
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
         closeSidebarDrawer();
-        history.pushState(null, null, window.location.href);
         return;
       }
       if (document.getElementById('pdfPreviewModal').style.display === 'flex') {
         closePreviewModal();
-        history.pushState(null, null, window.location.href);
-      } else if (document.getElementById('fyReportModal').style.display === 'flex') {
+        return;
+      }
+      if (document.getElementById('fyReportModal').style.display === 'flex') {
         closeFYReportModal();
-        history.pushState(null, null, window.location.href);
-      } else if (document.getElementById('addRecordModal').style.display === 'flex') {
+        return;
+      }
+      if (document.getElementById('addRecordModal').style.display === 'flex') {
         closeAddModal();
-        history.pushState(null, null, window.location.href);
+        return;
+      }
+
+      if (event.state && event.state.view === 'category') {
+        switchCategory(event.state.category, false);
       } else {
-        const tableSec = document.getElementById('tableViewSection');
-        if (tableSec && tableSec.style.display === 'flex') {
-          goHome();
-          history.pushState(null, null, window.location.href);
-        }
+        goHome(false);
       }
     });
-
-    history.pushState(null, null, window.location.href);
 
     // MOBILE DRAWER CONTROLS
     function toggleSidebarDrawer() {
@@ -3196,9 +3304,6 @@
       if (sidebar && overlay) {
         sidebar.classList.toggle('mobile-open');
         overlay.classList.toggle('active');
-        if (sidebar.classList.contains('mobile-open')) {
-          history.pushState(null, null, window.location.href);
-        }
       }
     }
 
@@ -3247,7 +3352,7 @@
       }
     }
 
-    function goHome() {
+    function goHome(pushState = true) {
       resetAccordionToDefault();
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       const homeBtn = document.getElementById('sideHomeBtn');
@@ -3255,6 +3360,12 @@
 
       document.getElementById('dashboardView').style.display = 'flex';
       document.getElementById('tableViewSection').style.display = 'none';
+
+      currentCategory = 'HOME';
+
+      if (pushState) {
+        history.pushState({ view: 'home' }, '', '');
+      }
 
       updateDashboardView();
       closeSidebarDrawer();
@@ -3347,7 +3458,7 @@
       'S&T SPEED CERTIFICATE',
       'JOINT SAFETY CERTIFICATE (JSC)',
       'GRADE CONDONATION',
-      'PCSTE DISPENSATION',
+      'DISPENSATION',
       'LINE OPENING',
       'SPEED RAISING'
     ];
@@ -3360,10 +3471,12 @@
       snapshot.forEach(doc => {
         if (doc.id === '1') return;
         const r = doc.data();
+        let cat = (r.category || '').toUpperCase().trim();
+        if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
         records.push({
           ...r,
           id: doc.id,
-          category: (r.category || '').toUpperCase().trim(),
+          category: cat,
           date: formatDateToDDMMYYYY(r.date)
         });
       });
@@ -3387,7 +3500,7 @@
       { key: 'JOINT SAFETY CERTIFICATE (JSC)', label: 'JSC', domId: 'kpi-JSC', nodeCountId: 'nodeCount-JSC', color: '#0b3b60' },
       { key: 'GRADE CONDONATION', label: 'GRADE CONDONATION', domId: 'kpi-GRADE_CONDONATION', nodeCountId: 'nodeCount-GRADE_CONDONATION', color: '#6366f1' },
       { key: 'LINE OPENING', label: 'LINE OPENING', domId: 'kpi-LINE_OPENING', nodeCountId: 'nodeCount-LINE_OPENING', color: '#9333ea' },
-      { key: 'PCSTE DISPENSATION', label: 'PCSTE DISPENSATION', domId: 'kpi-PCSTE_DISPENSATION', nodeCountId: 'nodeCount-PCSTE_DISPENSATION', color: '#be185d' }
+      { key: 'DISPENSATION', label: 'DISPENSATION', domId: 'kpi-PCSTE_DISPENSATION', nodeCountId: 'nodeCount-PCSTE_DISPENSATION', color: '#be185d' }
     ];
 
     function updateDashboardView() {
@@ -3408,7 +3521,8 @@
         const fyInfo = getFinancialYearAndMonth(rec.date);
         if (fyInfo && fyInfo.fy === currentFY) {
           totalCurrentFY++;
-          const cat = (rec.category || '').toUpperCase().trim();
+          let cat = (rec.category || '').toUpperCase().trim();
+          if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
           if (counts[cat] !== undefined) {
             counts[cat]++;
           }
@@ -3541,8 +3655,10 @@
       return rawUrl;
     }
 
-    function switchCategory(catName) {
-      currentCategory = catName.toUpperCase().trim();
+    function switchCategory(catName, pushState = true) {
+      let normCat = catName.toUpperCase().trim();
+      if (normCat === 'PCSTE DISPENSATION') normCat = 'DISPENSATION';
+      currentCategory = normCat;
 
       document.getElementById('dashboardView').style.display = 'none';
       document.getElementById('tableViewSection').style.display = 'flex';
@@ -3568,7 +3684,8 @@
 
       const navItems = document.querySelectorAll('.nav-item');
       navItems.forEach(item => {
-        if (item.textContent.trim().toUpperCase().includes(currentCategory)) {
+        const itemText = item.textContent.trim().toUpperCase();
+        if (itemText.includes(currentCategory) || (currentCategory === 'DISPENSATION' && itemText.includes('DISPENSATION'))) {
           item.classList.add('active');
         } else {
           item.classList.remove('active');
@@ -3584,17 +3701,29 @@
       renderTable();
       updateMobileHeaderHeight();
       closeSidebarDrawer();
-      history.pushState(null, null, window.location.href);
+
+      if (pushState) {
+        history.pushState({ view: 'category', category: currentCategory }, '', '');
+      }
     }
 
     function renderTable() {
       const thead = document.getElementById('tableHead');
       const tbody = document.getElementById('tableBody');
-      if (!thead || !tbody) return;
+      const tableElem = document.getElementById('mainRecordTable');
+      if (!thead || !tbody || !tableElem) return;
 
       const filterYear = document.getElementById('filterYear').value;
       const filterDiv = document.getElementById('filterDivision').value;
       const searchTxt = document.getElementById('filterSearch').value.toLowerCase();
+
+      // UNFREEZE ONLY FOR: Reference Books & Docs AND Documents for Various Sanction / Approval
+      const isUnfrozenSection = standardManualCategories.includes(currentCategory) || docApprovalCategories.includes(currentCategory);
+      if (isUnfrozenSection) {
+        tableElem.classList.add('unfreeze-table');
+      } else {
+        tableElem.classList.remove('unfreeze-table');
+      }
 
       if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
         thead.innerHTML = `
@@ -3604,17 +3733,17 @@
             <th class="work-desc-th">Description</th>
             <th style="width: 180px;">Related to</th>
             <th class="col-sanction-date">Issue Date</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (docApprovalCategories.includes(currentCategory)) {
         thead.innerHTML = `
           <tr>
-            <th style="width: var(--col-1-w);">Sr. NO</th>
-            <th class="work-desc-th">Description</th>
+            <th style="width: 60px;">Sr. NO</th>
+            <th class="work-desc-wide">Description</th>
             <th class="col-sanction-date">Issue Date</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3630,20 +3759,22 @@
       } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
         thead.innerHTML = `
           <tr>
-            <th style="width: var(--col-1-w);">Sr. no</th>
-            <th class="work-desc-th">Work Description</th>
-            <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th style="width: var(--col-1-w);">Sr. No</th>
+            <th>Wagon Name</th>
+            <th style="width: 120px;">Department</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Date of Forwarding</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (standardManualCategories.includes(currentCategory)) {
         thead.innerHTML = `
           <tr>
-            <th style="width: var(--col-1-w);">Sr. No</th>
-            <th class="work-desc-th">Description</th>
+            <th style="width: 60px;">Sr. No</th>
+            <th class="work-desc-wide">Description</th>
             <th class="col-sanction-date">Date of Issue</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3653,7 +3784,7 @@
             <th style="width: var(--col-1-w);">Sr. No</th>
             <th style="width: var(--col-2-min-w);">Book Name</th>
             <th class="work-desc-th">Description</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3664,7 +3795,7 @@
             <th style="width: var(--col-2-min-w);">Year</th>
             <th style="width: 120px;">Type (30% / 70%)</th>
             <th class="work-desc-th">Description</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3678,7 +3809,21 @@
             <th class="col-pcste-equipment">Equipment for PCSTE Sanction</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">Sanctioning Date</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
+            <th style="width: 110px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'DISPENSATION') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: var(--col-1-w);">Sr. No</th>
+            <th>Station/Section</th>
+            <th style="width: 110px;">Division</th>
+            <th class="work-desc-th">Work Description</th>
+            <th style="width: 105px;">Agency</th>
+            <th style="width: 125px;">Given by</th>
+            <th class="col-sanction-date">Date of Forwarding & Issuing</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3694,7 +3839,7 @@
             <th style="width: 100px;">Agency</th>
             <th style="width: 85px; text-align:center;">Routes</th>
             <th class="col-sanction-date">TSAA Sanction Date</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3708,7 +3853,7 @@
             <th class="col-oem-make">OEM Make</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">TSAA Sanction Date</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3720,7 +3865,7 @@
             <th style="width: 120px;">Department</th>
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Sanction Date</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3734,7 +3879,7 @@
             <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
             <th class="col-sanction-date">Date of Sanction</th>
             <th style="width: 100px;">Agency</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3746,7 +3891,7 @@
             <th class="work-desc-th">Work Description</th>
             <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
             <th style="width: 100px;">Agency</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3759,7 +3904,7 @@
             <th class="work-desc-th">Work Description</th>
             <th class="col-sanction-date">Date of Forwarding from CSE/PCSTE</th>
             <th style="width: 100px;">Agency</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3770,7 +3915,7 @@
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
             <th class="work-desc-th">Inspection Done by</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3782,7 +3927,7 @@
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Date of Issue</th>
             <th style="width: 120px;">Issued By</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3794,7 +3939,7 @@
             <th>Related to Equipment</th>
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Date of Issue</th>
-            <th class="col-drive-compact">Drive Attachment</th>
+            <th class="col-drive-compact">Drive<br>Attachment</th>
             <th style="width: 110px; text-align:center;">Action</th>
           </tr>
         `;
@@ -3806,7 +3951,9 @@
                             'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'].includes(currentCategory);
 
       let filtered = records.filter(item => {
-        if (item.category !== currentCategory) return false;
+        let recCat = (item.category || '').toUpperCase().trim();
+        if (recCat === 'PCSTE DISPENSATION') recCat = 'DISPENSATION';
+        if (recCat !== currentCategory) return false;
         if (filterYear !== 'ALL' && String(item.year) !== filterYear) return false;
         if (hasDivision && filterDiv !== 'ALL' && item.division !== filterDiv) return false;
 
@@ -3828,10 +3975,11 @@
           const matchDocNo = item.docNo && item.docNo.toLowerCase().includes(searchTxt);
           const matchIssuedBy = item.issuedBy && item.issuedBy.toLowerCase().includes(searchTxt);
           const matchInspection = item.inspectionBy && item.inspectionBy.toLowerCase().includes(searchTxt);
+          const matchGivenBy = item.givenBy && item.givenBy.toLowerCase().includes(searchTxt);
 
           if (!matchStation && !matchWork && !matchDiv && !matchAgency && !matchDept && !matchOem && 
               !matchEquip && !matchWagon && !matchDocNo && !matchIssuedBy && !matchInspection && 
-              !matchBook && !matchType && !matchTan && !matchRelTo && !matchDirLink) {
+              !matchBook && !matchType && !matchTan && !matchRelTo && !matchDirLink && !matchGivenBy) {
             return false;
           }
         }
@@ -3892,8 +4040,8 @@
           `;
         } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -3911,12 +4059,12 @@
           `;
         } else if (docApprovalCategories.includes(currentCategory)) {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td class="work-desc-cell">
+              <td class="work-desc-wide">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-folder-open" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
@@ -3928,11 +4076,13 @@
           `;
         } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
+              <td><b style="color: var(--accent-blue);">${rec.wagon || '—'}</b></td>
+              <td><span class="dept-badge">${rec.department || 'S&T'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-shield-virus" style="color: #0d9488;"></i> ${rec.work}
@@ -3945,12 +4095,12 @@
           `;
         } else if (standardManualCategories.includes(currentCategory)) {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td class="work-desc-cell">
+              <td class="work-desc-wide">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-book" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
@@ -3962,8 +4112,8 @@
           `;
         } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -3979,8 +4129,8 @@
           `;
         } else if (ldceCategories.includes(currentCategory)) {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -3998,7 +4148,7 @@
         } else if (currentCategory === 'PCSTE SANCTION') {
           const driveIndicatorCompact = rec.driveLink 
             ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
-            : `<span style="color:#94a3b8; font-size:9.5px;">None</span>`;
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">None</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4016,10 +4166,31 @@
               <td style="text-align:center; white-space: nowrap;">${actionButtons}</td>
             </tr>
           `;
+        } else if (currentCategory === 'DISPENSATION') {
+          const driveIndicator = rec.driveLink 
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
+          html += `
+            <tr>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
+              <td class="work-desc-cell">
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
+                </a>
+              </td>
+              <td><span class="agency-badge">${rec.agency || '—'}</span></td>
+              <td><span class="authority-badge">${rec.givenBy || rec.sanctionBy || 'PCSTE'}</span></td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
+              <td class="col-drive-compact">${driveIndicator}</td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
         } else if (currentCategory === 'EI TSAA') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4041,8 +4212,8 @@
           `;
         } else if (currentCategory === 'MSDAC TSAA') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4062,8 +4233,8 @@
           `;
         } else if (currentCategory === 'S&T SPEED CERTIFICATE') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4081,8 +4252,8 @@
           `;
         } else if (currentCategory === 'GM SANCTION') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4102,8 +4273,8 @@
           `;
         } else if (currentCategory === 'GRADE CONDONATION' || currentCategory === 'LINE OPENING') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4121,8 +4292,8 @@
           `;
         } else if (currentCategory === 'SPEED RAISING') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4141,8 +4312,8 @@
           `;
         } else if (currentCategory === 'INSPECTION NOTE') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4159,8 +4330,8 @@
           `;
         } else if (currentCategory === 'IMP. LETTER') {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4178,8 +4349,8 @@
           `;
         } else {
           const driveIndicator = rec.driveLink 
-            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive PDF</span>` 
-            : `<span style="color:#94a3b8; font-size:10px;">Not linked</span>`;
+            ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
+            : `<span style="color:#94a3b8; font-size:10px; white-space:nowrap;">Not linked</span>`;
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
@@ -4251,7 +4422,6 @@
       document.getElementById('reportFYSelect').value = getCurrentFinancialYearString();
       generateFYReport();
       document.getElementById('fyReportModal').style.display = 'flex';
-      history.pushState(null, null, window.location.href);
     }
 
     function closeFYReportModal() {
@@ -4271,7 +4441,8 @@
       });
 
       records.forEach(rec => {
-        const cat = (rec.category || '').toUpperCase().trim();
+        let cat = (rec.category || '').toUpperCase().trim();
+        if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
         if (reportCategories.includes(cat)) {
           const fyInfo = getFinancialYearAndMonth(rec.date);
           if (fyInfo && fyInfo.fy === selectedFY) {
@@ -4324,7 +4495,8 @@
       });
 
       records.forEach(rec => {
-        const cat = (rec.category || '').toUpperCase().trim();
+        let cat = (rec.category || '').toUpperCase().trim();
+        if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
         if (reportCategories.includes(cat)) {
           const fyInfo = getFinancialYearAndMonth(rec.date);
           if (fyInfo && fyInfo.fy === selectedFY) {
@@ -4375,7 +4547,6 @@
       document.getElementById('modalPreviewBody').innerHTML = `<iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe>`;
       document.getElementById('modalDriveExternalLink').href = link;
       document.getElementById('pdfPreviewModal').style.display = 'flex';
-      history.pushState(null, null, window.location.href);
     }
 
     function closePreviewModal() {
@@ -4413,7 +4584,6 @@
       clearFormFields();
       toggleFormFields();
       document.getElementById('addRecordModal').style.display = 'flex';
-      history.pushState(null, null, window.location.href);
     }
 
     function openEditModal(recordId) {
@@ -4423,7 +4593,9 @@
 
       document.getElementById('formModalHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Record';
       document.getElementById('formEditRecordId').value = rec.id;
-      document.getElementById('formCategory').value = rec.category;
+      let recCat = rec.category;
+      if (recCat === 'PCSTE DISPENSATION') recCat = 'DISPENSATION';
+      document.getElementById('formCategory').value = recCat;
       toggleFormFields();
 
       document.getElementById('formStation').value = rec.station || '';
@@ -4435,6 +4607,7 @@
       document.getElementById('formLdceType').value = rec.ldceType || '30%';
       document.getElementById('formWorkName').value = rec.work || '';
       document.getElementById('formAgency').value = rec.agency || 'Project';
+      document.getElementById('formGivenBy').value = rec.givenBy || rec.sanctionBy || 'PCSTE';
       document.getElementById('formDepartment').value = rec.department || '';
       document.getElementById('formInspectionBy').value = rec.inspectionBy || '';
       document.getElementById('formEquipment').value = rec.equipment || '';
@@ -4451,7 +4624,6 @@
       document.getElementById('formDriveLink').value = rec.driveLink || '';
 
       document.getElementById('addRecordModal').style.display = 'flex';
-      history.pushState(null, null, window.location.href);
     }
 
     function closeAddModal() {
@@ -4479,7 +4651,8 @@
     }
 
     function toggleFormFields() {
-      const cat = document.getElementById('formCategory').value;
+      let cat = document.getElementById('formCategory').value;
+      if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
 
       const isTan = (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)');
       const isLinks = (cat === 'IMPORTANT LINKS');
@@ -4489,6 +4662,7 @@
       const isStandardManual = standardManualCategories.includes(cat);
       const isJsc = (cat === 'JOINT SAFETY CERTIFICATE (JSC)');
       const isPcste = (cat === 'PCSTE SANCTION');
+      const isDispensation = (cat === 'DISPENSATION');
       const isEi = (cat === 'EI TSAA');
       const isMsdac = (cat === 'MSDAC TSAA');
       const isSpeedCert = (cat === 'S&T SPEED CERTIFICATE');
@@ -4500,10 +4674,10 @@
       const isPolicyOrTypical = (cat === 'SECR POLICY' || cat === 'SECR TYPICAL');
 
       document.getElementById('formStationContainer').style.display = 
-        (isPcste || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
+        (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
 
       document.getElementById('formDivisionContainer').style.display = 
-        (isPcste || isEi || isMsdac || isGm || isSpeedRaising || isInspection) ? 'flex' : 'none';
+        (isPcste || isDispensation || isEi || isMsdac || isGm || isSpeedRaising || isInspection) ? 'flex' : 'none';
 
       document.getElementById('formTanNoContainer').style.display = isTan ? 'flex' : 'none';
       document.getElementById('formRelatedToContainer').style.display = (isTan || isLinks) ? 'flex' : 'none';
@@ -4513,15 +4687,18 @@
 
       document.getElementById('formWorkContainer').style.display = isLinks ? 'none' : 'flex';
       document.getElementById('formAgencyContainer').style.display = 
-        (isPcste || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising) ? 'flex' : 'none';
-      document.getElementById('formDepartmentContainer').style.display = isSpeedCert ? 'flex' : 'none';
+        (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising) ? 'flex' : 'none';
+      
+      document.getElementById('formGivenByContainer').style.display = isDispensation ? 'flex' : 'none';
+
+      document.getElementById('formDepartmentContainer').style.display = (isSpeedCert || isJsc) ? 'flex' : 'none';
       document.getElementById('formInspectionByContainer').style.display = isInspection ? 'flex' : 'none';
       document.getElementById('formEquipmentContainer').style.display = isPcste ? 'flex' : 'none';
       document.getElementById('formEiOemContainer').style.display = isEi ? 'flex' : 'none';
       document.getElementById('formEiSanctionByContainer').style.display = isEi ? 'flex' : 'none';
       document.getElementById('formRoutesContainer').style.display = isEi ? 'flex' : 'none';
       document.getElementById('formOemContainer').style.display = isMsdac ? 'flex' : 'none';
-      document.getElementById('formWagonContainer').style.display = isSpeedCert ? 'flex' : 'none';
+      document.getElementById('formWagonContainer').style.display = (isSpeedCert || isJsc) ? 'flex' : 'none';
       document.getElementById('formDocNoContainer').style.display = isPolicyOrTypical ? 'flex' : 'none';
       document.getElementById('formRelatedEquipContainer').style.display = (isImpLetter || isPolicyOrTypical) ? 'flex' : 'none';
       document.getElementById('formIssuedByContainer').style.display = isImpLetter ? 'flex' : 'none';
@@ -4531,8 +4708,12 @@
 
       // Field Labels Customization
       const dateLbl = document.getElementById('formDateLabel');
-      if (isGm || isGradeOrLine || isJsc) {
+      if (isGm || isGradeOrLine) {
         dateLbl.innerText = "Date of Forwarding from PCSTE Office";
+      } else if (isJsc) {
+        dateLbl.innerText = "Date of Forwarding (DD-MM-YYYY)";
+      } else if (isDispensation) {
+        dateLbl.innerText = "Date of Forwarding & Issuing (DD-MM-YYYY)";
       } else if (isSpeedRaising) {
         dateLbl.innerText = "Date of Forwarding from CSE/PCSTE";
       } else if (isTan || isImpLetter || isPolicyOrTypical || isStandardManual || isDocApproval) {
@@ -4546,12 +4727,14 @@
       else if (isMsdac) workLbl.innerText = "Work Name (MSDAC Scheme)";
       else if (isBooks) workLbl.innerText = "Book Description / Subject";
       else if (isLdce) workLbl.innerText = "Question Paper Details";
+      else if (isDispensation) workLbl.innerText = "Work Description";
       else workLbl.innerText = "Work Description";
     }
 
     async function saveRecord() {
       const editId = document.getElementById('formEditRecordId').value;
-      const cat = document.getElementById('formCategory').value;
+      let cat = document.getElementById('formCategory').value;
+      if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
       const dateVal = document.getElementById('formDate').value;
       const secondaryDateVal = document.getElementById('formSecondaryDate').value;
 
@@ -4566,11 +4749,12 @@
         ldceType: document.getElementById('formLdceType').value,
         work: document.getElementById('formWorkName').value.trim(),
         agency: document.getElementById('formAgency').value,
+        givenBy: document.getElementById('formGivenBy').value,
         department: document.getElementById('formDepartment').value.trim(),
         inspectionBy: document.getElementById('formInspectionBy').value.trim(),
         equipment: document.getElementById('formEquipment').value.trim(),
         oem: (cat === 'EI TSAA') ? document.getElementById('formEiOem').value : document.getElementById('formOem').value.trim(),
-        sanctionBy: document.getElementById('formEiSanctionBy').value,
+        sanctionBy: (cat === 'DISPENSATION') ? document.getElementById('formGivenBy').value : document.getElementById('formEiSanctionBy').value,
         routes: document.getElementById('formRoutes').value.trim(),
         wagon: document.getElementById('formWagon').value.trim(),
         docNo: document.getElementById('formDocNo').value.trim(),
