@@ -1547,6 +1547,54 @@
       border: none;
     }
 
+    /* IN-APP EXTERNAL WEB BROWSER MODAL (SAFE BACK TO HOME) */
+    #inAppWebModal {
+      padding: 0;
+      z-index: 10000;
+    }
+    #inAppWebModal .modal-content {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      max-width: 100%;
+      border-radius: 0;
+      border: none;
+    }
+    .inapp-web-header {
+      background: var(--brand-navy);
+      color: #ffffff;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--brand-orange);
+      flex-shrink: 0;
+      gap: 8px;
+    }
+    .inapp-back-btn {
+      background: #f97316;
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .inapp-site-title {
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      text-align: center;
+    }
+
     /* FINANCIAL YEAR REPORT MODAL */
     .report-modal-content {
       background: rgba(255, 255, 255, 0.96);
@@ -2774,6 +2822,22 @@
     </div>
   </div>
 
+  <!-- IN-APP EXTERNAL WEBSITE VIEWER (APP SAFE EXIT PREVENTION) -->
+  <div class="modal-overlay" id="inAppWebModal">
+    <div class="modal-content">
+      <div class="inapp-web-header">
+        <button class="inapp-back-btn" onclick="closeInAppWebModal()">
+          <i class="fa-solid fa-arrow-left"></i> Back to Portal
+        </button>
+        <span class="inapp-site-title" id="inAppSiteTitle">External Website</span>
+        <button class="modal-close-btn" onclick="closeInAppWebModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <iframe id="inAppWebIframe" class="preview-iframe" src="" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: FY REPORT -->
   <div class="modal-overlay" id="fyReportModal">
     <div class="report-modal-content">
@@ -3296,6 +3360,12 @@
         history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
         return;
       }
+      if (document.getElementById('inAppWebModal').style.display === 'flex') {
+        closeInAppWebModal();
+        goHome(false);
+        history.pushState({ view: 'home' }, '', '');
+        return;
+      }
       if (document.getElementById('pdfPreviewModal').style.display === 'flex') {
         closePreviewModal();
         history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
@@ -3745,14 +3815,27 @@
     // FUNCTION TO SAFELY HANDLE EXTERNAL SITES ACROSS WEB & ANDROID WEBVIEW
     function openExternalLinkSafe(title, url) {
       if (!url || url === '#') return;
-      const isAndroidApp = /wv|Android.*Version\/[0-9.]+/i.test(navigator.userAgent);
-      if (isAndroidApp && url.startsWith('http')) {
-        const clean = url.replace(/^https?:\/\//i, '');
-        const scheme = url.startsWith('https') ? 'https' : 'http';
-        window.location.href = `intent://${clean}#Intent;scheme=${scheme};action=android.intent.action.VIEW;end`;
+      
+      const modal = document.getElementById('inAppWebModal');
+      const iframe = document.getElementById('inAppWebIframe');
+      const titleElem = document.getElementById('inAppSiteTitle');
+      
+      if (modal && iframe) {
+        titleElem.innerText = title || "External Website";
+        iframe.src = url;
+        modal.style.display = 'flex';
+        history.pushState({ view: 'external_browser' }, '', '');
       } else {
         window.open(url, '_blank', 'noopener,noreferrer');
       }
+    }
+
+    function closeInAppWebModal() {
+      const modal = document.getElementById('inAppWebModal');
+      const iframe = document.getElementById('inAppWebIframe');
+      if (iframe) iframe.src = 'about:blank';
+      if (modal) modal.style.display = 'none';
+      goHome(true);
     }
 
     function renderTable() {
