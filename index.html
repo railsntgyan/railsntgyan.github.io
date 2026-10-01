@@ -3154,6 +3154,7 @@
 
       // Initialize state for back button navigation
       history.replaceState({ view: 'home' }, '', '');
+      history.pushState({ view: 'home' }, '', '');
 
       updateMobileHeaderHeight();
       window.addEventListener('resize', () => {
@@ -3168,6 +3169,23 @@
       initTopScrollbarSync();
       goHome(false);
     });
+
+    // Android/WebView back button restore safety trap
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        ensureHistoryBase();
+        const activeModal = document.querySelector('.modal-overlay[style*="display: flex"]');
+        if (activeModal) {
+          activeModal.style.display = 'none';
+        }
+      }
+    });
+
+    function ensureHistoryBase() {
+      if (!history.state || history.state.view !== 'home') {
+        history.replaceState({ view: 'home' }, '', '');
+      }
+    }
 
     function updateMobileHeaderHeight() {
       const hdr = document.getElementById('mainHeader');
@@ -3269,24 +3287,36 @@
     }
 
     // ==========================================
-    // MOBILE / HARDWARE BACK BUTTON NAVIGATION
+    // MOBILE / HARDWARE BACK BUTTON NAVIGATION (ANDROID APP & WEBVIEW SAFE)
     // ==========================================
     window.addEventListener('popstate', function (event) {
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
         closeSidebarDrawer();
+        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
         return;
       }
       if (document.getElementById('pdfPreviewModal').style.display === 'flex') {
         closePreviewModal();
+        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
         return;
       }
       if (document.getElementById('fyReportModal').style.display === 'flex') {
         closeFYReportModal();
+        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
         return;
       }
       if (document.getElementById('addRecordModal').style.display === 'flex') {
         closeAddModal();
+        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
+        return;
+      }
+
+      // If user is inside any category or table view, back button MUST bring them HOME
+      const tableSec = document.getElementById('tableViewSection');
+      if (tableSec && tableSec.style.display === 'flex') {
+        goHome(false);
+        history.pushState({ view: 'home' }, '', '');
         return;
       }
 
@@ -3294,6 +3324,8 @@
         switchCategory(event.state.category, false);
       } else {
         goHome(false);
+        // Retain baseline so continuous back button won't exit webview unexpectedly
+        history.pushState({ view: 'home' }, '', '');
       }
     });
 
@@ -3304,6 +3336,9 @@
       if (sidebar && overlay) {
         sidebar.classList.toggle('mobile-open');
         overlay.classList.toggle('active');
+        if (sidebar.classList.contains('mobile-open')) {
+          history.pushState({ view: 'drawer' }, '', '');
+        }
       }
     }
 
@@ -4031,7 +4066,7 @@
               <td><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
               <td class="work-desc-cell">
-                <a href="${rec.directLink || '#'}" target="_blank" class="work-link" style="color:#15803d;">
+                <a href="${rec.directLink || '#'}" target="_blank" rel="noopener noreferrer" class="work-link" style="color:#15803d;">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${rec.directLink || '—'}
                 </a>
               </td>
@@ -4422,6 +4457,7 @@
       document.getElementById('reportFYSelect').value = getCurrentFinancialYearString();
       generateFYReport();
       document.getElementById('fyReportModal').style.display = 'flex';
+      history.pushState({ view: 'modal', modal: 'fyReport' }, '', '');
     }
 
     function closeFYReportModal() {
@@ -4547,6 +4583,7 @@
       document.getElementById('modalPreviewBody').innerHTML = `<iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe>`;
       document.getElementById('modalDriveExternalLink').href = link;
       document.getElementById('pdfPreviewModal').style.display = 'flex';
+      history.pushState({ view: 'modal', modal: 'preview' }, '', '');
     }
 
     function closePreviewModal() {
@@ -4584,6 +4621,7 @@
       clearFormFields();
       toggleFormFields();
       document.getElementById('addRecordModal').style.display = 'flex';
+      history.pushState({ view: 'modal', modal: 'addForm' }, '', '');
     }
 
     function openEditModal(recordId) {
@@ -4624,6 +4662,7 @@
       document.getElementById('formDriveLink').value = rec.driveLink || '';
 
       document.getElementById('addRecordModal').style.display = 'flex';
+      history.pushState({ view: 'modal', modal: 'editForm' }, '', '');
     }
 
     function closeAddModal() {
