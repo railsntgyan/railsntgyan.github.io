@@ -80,7 +80,44 @@
       background: rgba(100, 116, 139, 0.85);
     }
 
-    /* LOGIN OVERLAY */
+    /* TOP SYNCHRONIZED SCROLLBAR (DESKTOP, TABLET & MOBILE) */
+    .top-scrollbar-wrapper {
+      width: 100%;
+      overflow-x: scroll !important;
+      overflow-y: hidden !important;
+      height: 14px;
+      min-height: 14px;
+      background: #e2e8f0;
+      border: 2px solid var(--table-border);
+      border-bottom: 2px solid var(--brand-navy);
+      border-radius: 8px 8px 0 0;
+      margin: 0;
+      padding: 0;
+      flex-shrink: 0;
+      display: none;
+      z-index: 30;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
+    }
+    .top-scrollbar-content {
+      height: 100%;
+      min-height: 1px;
+    }
+    .top-scrollbar-wrapper::-webkit-scrollbar {
+      height: 10px !important;
+      display: block !important;
+      -webkit-appearance: none;
+    }
+    .top-scrollbar-wrapper::-webkit-scrollbar-track {
+      background: #e2e8f0 !important;
+    }
+    .top-scrollbar-wrapper::-webkit-scrollbar-thumb {
+      background: var(--brand-orange) !important;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* LOGIN OVERLAY - ATTRACTIVE & LOGO CENTERED ABOVE TEXT */
     #loginScreen {
       position: fixed;
       top: 0;
@@ -120,29 +157,46 @@
 
     .login-brand-wrapper {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .login-logo-container {
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(241, 245, 249, 0.7) 100%);
+      padding: 10px;
+      border-radius: 50%;
+      box-shadow: 0 8px 24px rgba(11, 59, 96, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.8);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-logo-svg {
+      width: 90px;
+      height: 90px;
+      filter: drop-shadow(0 6px 14px rgba(0, 156, 166, 0.35));
     }
 
     .login-brand-title {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
       letter-spacing: -0.5px;
       line-height: 1.1;
-      text-align: left;
+      text-align: center;
     }
     .login-brand-title .brand-teal { color: var(--brand-teal); }
     .login-brand-title .brand-orange { color: var(--brand-orange); }
 
     .login-brand-subtitle {
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 800;
       color: var(--brand-navy);
-      letter-spacing: 0.2px;
-      margin-top: 2px;
-      text-align: left;
+      letter-spacing: 0.3px;
+      margin-top: 3px;
+      text-align: center;
     }
 
     .login-card p.login-desc {
@@ -239,7 +293,7 @@
       justify-content: space-between;
       border-bottom: 3px solid var(--brand-orange);
       box-shadow: 0 4px 20px rgba(11, 59, 96, 0.08);
-      z-index: 50;
+      z-index: 100;
       flex-shrink: 0;
       gap: 24px;
     }
@@ -605,6 +659,7 @@
       flex-direction: column;
       gap: 12px;
       width: 100%;
+      overflow-y: auto;
     }
 
     .dash-hero {
@@ -931,6 +986,10 @@
       box-shadow: 0 3px 8px rgba(22, 101, 52, 0.2);
     }
 
+    .mobile-filter-toggle-btn {
+      display: none;
+    }
+
     /* 2. FILTER & SEARCH PANEL */
     .filter-panel.sticky-filter-panel {
       position: sticky;
@@ -987,7 +1046,8 @@
     .table-container {
       background: #ffffff;
       border: 2px solid var(--table-border);
-      border-radius: 10px;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
       overflow-x: auto;
       overflow-y: auto;
       flex: 1 1 auto;
@@ -1020,8 +1080,8 @@
       border-bottom: 2px solid var(--table-border);
       border-right: 1px solid rgba(255, 255, 255, 0.25);
       white-space: normal !important;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+      word-wrap: normal;
+      overflow-wrap: normal;
       vertical-align: middle;
       line-height: 1.25;
     }
@@ -1039,10 +1099,11 @@
       border-right: 1px solid var(--table-border) !important;
       padding-left: 2px;
       padding-right: 2px;
+      white-space: nowrap !important;
     }
 
     table thead th:nth-child(1) {
-      z-index: 23;
+      z-index: 25;
       background: var(--brand-navy) !important;
       border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
     }
@@ -1062,14 +1123,13 @@
       background: #ffffff;
       border-right: 2px solid var(--table-border) !important;
       box-shadow: 4px 0 8px -2px rgba(11, 59, 96, 0.12);
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      word-break: break-word;
-      hyphens: auto;
+      word-wrap: normal;
+      overflow-wrap: normal;
+      word-break: normal;
     }
 
     table thead th:nth-child(2) {
-      z-index: 23;
+      z-index: 25;
       background: var(--brand-navy) !important;
       border-right: 2px solid var(--brand-orange) !important;
       line-height: 1.2;
@@ -1106,11 +1166,12 @@
       background-color: #f0f7fb;
     }
 
+    /* NON-WORK DESCRIPTION COLUMNS */
     tbody td:not(.work-desc-cell) {
-      white-space: normal !important;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      word-break: break-word;
+      white-space: normal;
+      word-wrap: normal;
+      overflow-wrap: normal;
+      word-break: normal;
       line-height: 1.25;
     }
 
@@ -1120,37 +1181,37 @@
     }
 
     .col-pcste-equipment {
-      width: 140px;
-      max-width: 160px;
+      min-width: 145px;
+      white-space: normal;
+      word-break: normal;
     }
 
     .col-oem-make {
-      width: 105px;
-      max-width: 115px;
+      min-width: 115px;
       text-align: center;
+      white-space: nowrap !important;
     }
 
     .col-sanction-date {
-      width: 110px;
-      max-width: 125px;
+      min-width: 115px;
       text-align: center;
+      white-space: nowrap !important;
     }
 
     .col-drive-compact {
-      width: 95px;
-      max-width: 105px;
+      min-width: 95px;
       text-align: center;
       padding: 6px 4px !important;
+      white-space: nowrap !important;
     }
 
     .col-drive-compact .drive-pill {
       padding: 2px 6px;
       font-size: 10px;
       gap: 3px;
-      white-space: normal;
+      white-space: nowrap !important;
       text-align: center;
       display: inline-flex;
-      word-break: break-word;
     }
 
     .work-link {
@@ -1178,8 +1239,7 @@
       background: #e0f2fe;
       color: #0369a1;
       border: 1px solid #bae6fd;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
     }
 
     .agency-badge {
@@ -1191,8 +1251,7 @@
       background: #fef3c7;
       color: #92400e;
       border: 1px solid #fde68a;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
     }
 
     .dept-badge {
@@ -1204,8 +1263,7 @@
       background: #e0f2fe;
       color: #0369a1;
       border: 1px solid #bae6fd;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
     }
 
     .type-badge {
@@ -1217,21 +1275,19 @@
       background: #ecfdf5;
       color: #047857;
       border: 1px solid #a7f3d0;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
     }
 
     .oem-badge {
       display: inline-block;
-      padding: 2px 6px;
+      padding: 2px 8px;
       font-size: 10.5px;
       border-radius: 6px;
       font-weight: 700;
       background: #fff7ed;
       color: #c2410c;
       border: 1px solid #fed7aa;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap !important;
       line-height: 1.2;
     }
 
@@ -1244,8 +1300,7 @@
       background: #ecfdf5;
       color: #15803d;
       border: 1px solid #bbf7d0;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
       line-height: 1.2;
     }
 
@@ -1259,7 +1314,7 @@
       color: #6d28d9;
       border: 1px solid #ddd6fe;
       white-space: normal;
-      word-break: break-word;
+      word-break: normal;
       line-height: 1.2;
     }
 
@@ -1274,8 +1329,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
     }
 
     .actions-cell {
@@ -1283,6 +1337,7 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
+      white-space: nowrap;
     }
 
     .action-icon-btn {
@@ -1604,7 +1659,7 @@
     }
 
     /* ========================================================
-       RESPONSIVE BREAKPOINTS (TABLET & MOBILE STICKY TABLE FIX)
+       ULTRA COMPACT RESPONSIVE DESIGN (TABLET & MOBILE)
        ======================================================== */
     @media (max-width: 1024px) {
       :root {
@@ -1615,6 +1670,12 @@
 
       .menu-toggle-btn {
         display: inline-flex;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 150;
       }
 
       aside {
@@ -1631,44 +1692,169 @@
         transform: translateX(0);
       }
 
-      .sidebar-overlay.active {
-        display: block;
-        z-index: 998 !important;
-      }
-
+      /* HOME VIEW SCROLLS NATURALLY, TABLE VIEW IS CONTROLLED */
       main {
         overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden !important;
+        padding: 8px 10px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      #dashboardView {
+        overflow-y: visible !important;
+        height: auto !important;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
 
       #tableViewSection {
-        height: auto !important;
-        overflow: visible !important;
+        flex: 1 1 auto;
+        min-height: 0;
+        height: calc(100vh - 75px) !important;
+        height: calc(100dvh - 75px) !important;
+        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
       }
 
+      /* COMPACT TITLE & ACTION CARD */
       .content-header-card.sticky-header-card,
-      .filter-panel.sticky-filter-panel {
-        position: static !important;
-        box-shadow: none;
+      #tableViewSection > .content-header-card {
+        padding: 6px 10px;
+        margin-bottom: 0;
+        border-radius: 7px;
+        border-left-width: 4px;
+        box-shadow: 0 2px 6px rgba(11, 59, 96, 0.04);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
       }
 
+      .view-title-group h2 {
+        font-size: 13px;
+        line-height: 1.1;
+      }
+
+      .view-title-group p {
+        display: none !important;
+      }
+
+      .action-toolbar {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+
+      .action-toolbar .btn {
+        padding: 4px 8px;
+        font-size: 10.5px;
+        border-radius: 5px;
+      }
+
+      /* MOBILE FILTER TOGGLE BUTTON */
+      .mobile-filter-toggle-btn {
+        display: inline-flex !important;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: var(--brand-navy);
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 5px;
+        cursor: pointer;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* COMPACT FILTER PANEL */
+      .filter-panel.sticky-filter-panel,
+      #tableViewSection > .filter-panel {
+        padding: 5px 8px;
+        gap: 6px;
+        margin-bottom: 0;
+        border-radius: 7px;
+        box-shadow: 0 2px 6px rgba(11, 59, 96, 0.03);
+        flex-shrink: 0;
+      }
+
+      .filter-panel.mobile-collapsed {
+        display: none !important;
+      }
+
+      .filter-item {
+        font-size: 11px;
+        gap: 4px;
+      }
+
+      .filter-item select, .filter-item input {
+        padding: 3px 6px;
+        font-size: 11px;
+        border-radius: 5px;
+      }
+
+      .search-input {
+        min-width: 120px;
+      }
+
+      .reset-link {
+        font-size: 10.5px;
+      }
+
+      /* TOP SYNCHRONIZED SCROLLBAR FLUSH WITH TABLE */
+      .top-scrollbar-wrapper {
+        display: block !important;
+        height: 12px !important;
+        min-height: 12px !important;
+        background: #e2e8f0 !important;
+        border: 2px solid var(--table-border) !important;
+        border-bottom: 2px solid var(--brand-navy) !important;
+        border-radius: 7px 7px 0 0 !important;
+        margin: 0 !important;
+        flex-shrink: 0;
+      }
+
+      /* FULL-HEIGHT TABLE CONTAINER */
       .table-container {
-        height: auto !important;
-        max-height: none !important;
-        overflow-y: visible !important;
+        flex: 1 1 auto !important;
+        height: 100% !important;
         overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        position: relative !important;
+        border: 2px solid var(--table-border) !important;
+        border-top: none !important;
+        border-radius: 0 0 7px 7px !important;
+        background: #ffffff;
       }
 
-      /* Ensures table header sticks properly under main window without sliding under top header */
+      /* FROZEN STICKY TABLE HEADER */
       table thead th {
         position: sticky !important;
         top: 0 !important;
-        z-index: 30 !important;
+        z-index: 40 !important;
+        background: var(--brand-navy) !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+        padding: 6px 7px;
+        font-size: 11.5px;
       }
 
       table thead th:nth-child(1),
       table thead th:nth-child(2) {
-        z-index: 35 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 45 !important;
+      }
+
+      table tbody td:nth-child(1),
+      table tbody td:nth-child(2) {
+        position: sticky !important;
+        z-index: 12 !important;
       }
 
       .dash-charts-grid {
@@ -1684,35 +1870,29 @@
       }
 
       .brand-main-title {
-        font-size: 28px;
+        font-size: 26px;
       }
 
       .brand-subline {
-        font-size: 13px;
+        font-size: 12.5px;
       }
 
       .portal-logo-svg {
-        width: 70px;
-        height: 70px;
+        width: 65px;
+        height: 65px;
       }
 
       table {
         min-width: 700px;
-        font-size: 12px;
-      }
-
-      table thead th, tbody td {
-        padding: 7px 8px;
+        font-size: 11.5px;
       }
 
       .col-pcste-equipment {
-        width: 120px;
-        max-width: 135px;
+        min-width: 120px;
       }
 
       .col-sanction-date {
-        width: 95px;
-        max-width: 105px;
+        min-width: 100px;
       }
     }
 
@@ -1724,30 +1904,28 @@
       }
 
       main {
-        padding: 8px;
-        gap: 8px;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
+        padding: 4px 6px;
+        gap: 4px;
       }
 
       header {
-        padding: 8px 12px;
-        gap: 12px;
+        padding: 6px 10px;
+        gap: 8px;
       }
 
       .portal-logo-svg {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
       }
 
       .brand-main-title {
-        font-size: 24px;
+        font-size: 21px;
       }
 
       .brand-subline {
-        font-size: 11.5px;
+        font-size: 11px;
         white-space: normal;
-        line-height: 1.25;
+        line-height: 1.15;
       }
 
       .brand-tagline-motto {
@@ -1758,68 +1936,57 @@
         display: none;
       }
 
+      .btn-logout {
+        padding: 5px 9px;
+        font-size: 11px;
+      }
+
       .process-track-container {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .content-header-card.sticky-header-card {
-        position: static !important;
-        padding: 8px 12px;
-        margin-bottom: 6px;
+      /* COMPACT TOP CARD IN MOBILE PHONE */
+      .content-header-card.sticky-header-card,
+      #tableViewSection > .content-header-card {
+        padding: 5px 8px;
+        flex-wrap: nowrap;
       }
 
       .view-title-group h2 {
-        font-size: 14px;
-      }
-
-      .action-toolbar {
-        width: 100%;
-        justify-content: flex-start;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
       }
 
       .action-toolbar .btn {
-        padding: 5px 10px;
-        font-size: 11px;
+        padding: 3px 6px;
+        font-size: 10px;
       }
 
-      .filter-panel.sticky-filter-panel {
-        position: static !important;
-        padding: 6px 10px;
-        gap: 8px;
-        margin-bottom: 6px;
+      .action-toolbar .btn span.btn-text {
+        display: none;
+      }
+
+      /* CONDENSED FILTER PANEL ON PHONE */
+      .filter-panel.sticky-filter-panel,
+      #tableViewSection > .filter-panel {
+        padding: 4px 6px;
+        gap: 4px;
+      }
+
+      .filter-item {
+        font-size: 10px;
+      }
+
+      .filter-item select, .filter-item input {
+        padding: 2px 4px;
+        font-size: 10.5px;
       }
 
       .search-input {
-        width: 100%;
-        min-width: 140px;
-      }
-
-      .reset-link {
-        margin-left: 0;
-      }
-
-      #tableViewSection {
-        height: auto !important;
-        overflow: visible !important;
-      }
-
-      .table-container {
-        height: auto !important;
-        max-height: none !important;
-        overflow-y: visible !important;
-        overflow-x: auto !important;
-      }
-
-      /* Mobile Sticky Table Header offset */
-      table thead th {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 30 !important;
-      }
-
-      table thead th:nth-child(1),
-      table thead th:nth-child(2) {
-        z-index: 35 !important;
+        min-width: 90px;
       }
 
       table {
@@ -1828,49 +1995,42 @@
       }
 
       table thead th, tbody td {
-        padding: 6px 5px;
+        padding: 5px 4px;
       }
 
       table thead th:nth-child(2) {
-        font-size: 10.5px;
+        font-size: 10px;
         letter-spacing: -0.2px;
       }
 
       table tbody td:nth-child(2) {
-        font-size: 11px;
+        font-size: 10.5px;
         font-weight: 700;
       }
 
       table thead th:nth-child(1),
       table tbody td:nth-child(1) {
-        font-size: 10.5px;
+        font-size: 10px;
       }
 
       .col-pcste-equipment {
-        width: 105px;
-        max-width: 115px;
+        min-width: 105px;
       }
 
       .col-drive-compact {
-        width: 80px;
-        max-width: 90px;
+        min-width: 80px;
       }
 
       .col-oem-make {
-        width: 80px;
-        max-width: 90px;
+        min-width: 85px;
       }
 
       .col-sanction-date {
-        width: 85px;
-        max-width: 95px;
+        min-width: 90px;
       }
 
       footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 3px;
-        padding: 6px 12px;
+        display: none;
       }
     }
   </style>
@@ -1881,118 +2041,121 @@
   <div id="loginScreen">
     <div class="login-card">
       <div class="login-brand-wrapper">
-        <svg class="portal-logo-svg" viewBox="0 0 500 500" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="trainBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#b0cddb"/>
-              <stop offset="50%" stop-color="#eaf2f8"/>
-              <stop offset="85%" stop-color="#ffffff"/>
-              <stop offset="100%" stop-color="#9bb7c7"/>
-            </linearGradient>
+        <!-- PROMINENT CENTERED LOGO ABOVE BRAND TEXT -->
+        <div class="login-logo-container">
+          <svg class="login-logo-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="trainBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#b0cddb"/>
+                <stop offset="50%" stop-color="#eaf2f8"/>
+                <stop offset="85%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#9bb7c7"/>
+              </linearGradient>
 
-            <linearGradient id="windshieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#051937"/>
-              <stop offset="100%" stop-color="#0081c8"/>
-            </linearGradient>
+              <linearGradient id="windshieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#051937"/>
+                <stop offset="100%" stop-color="#0081c8"/>
+              </linearGradient>
 
-            <linearGradient id="arcOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#ff8c00"/>
-              <stop offset="100%" stop-color="#f37021"/>
-            </linearGradient>
+              <linearGradient id="arcOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff8c00"/>
+                <stop offset="100%" stop-color="#f37021"/>
+              </linearGradient>
 
-            <linearGradient id="arcBlueGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#005288"/>
-              <stop offset="100%" stop-color="#00a4e4"/>
-            </linearGradient>
+              <linearGradient id="arcBlueGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#005288"/>
+                <stop offset="100%" stop-color="#00a4e4"/>
+              </linearGradient>
 
-            <radialGradient id="redGlowGrad" cx="35%" cy="35%" r="70%">
-              <stop offset="0%" stop-color="#ff6b6b"/>
-              <stop offset="55%" stop-color="#e60000"/>
-              <stop offset="100%" stop-color="#990000"/>
-            </radialGradient>
+              <radialGradient id="redGlowGrad" cx="35%" cy="35%" r="70%">
+                <stop offset="0%" stop-color="#ff6b6b"/>
+                <stop offset="55%" stop-color="#e60000"/>
+                <stop offset="100%" stop-color="#990000"/>
+              </radialGradient>
 
-            <style>
-              .navy-deep { fill: #0b2545; }
-              .book-line { stroke: #0b2545; stroke-width: 4; stroke-linecap: round; }
-            </style>
-          </defs>
+              <style>
+                .navy-deep { fill: #0b2545; }
+                .book-line { stroke: #0b2545; stroke-width: 4; stroke-linecap: round; }
+              </style>
+            </defs>
 
-          <g transform="translate(250, 245)">
-            <g id="framing-rings">
-              <path d="M 60,-155 A 165 165 0 0 1 165,30" fill="none" stroke="url(#arcOrangeGrad)" stroke-width="18" stroke-linecap="round"/>
-              <path d="M 165,30 A 165 165 0 0 1 -20,165" fill="none" stroke="url(#arcOrangeGrad)" stroke-width="18" stroke-linecap="round"/>
-              <path d="M -155,-35 A 165 165 0 0 1 -45,-155" fill="none" stroke="url(#arcBlueGrad)" stroke-width="17" stroke-linecap="round"/>
-              <path d="M -125,-15 A 128 128 0 0 1 -35,-122" fill="none" stroke="#68c5f2" stroke-width="10" stroke-dasharray="16 11" stroke-linecap="round"/>
+            <g transform="translate(250, 245)">
+              <g id="framing-rings">
+                <path d="M 60,-155 A 165 165 0 0 1 165,30" fill="none" stroke="url(#arcOrangeGrad)" stroke-width="18" stroke-linecap="round"/>
+                <path d="M 165,30 A 165 165 0 0 1 -20,165" fill="none" stroke="url(#arcOrangeGrad)" stroke-width="18" stroke-linecap="round"/>
+                <path d="M -155,-35 A 165 165 0 0 1 -45,-155" fill="none" stroke="url(#arcBlueGrad)" stroke-width="17" stroke-linecap="round"/>
+                <path d="M -125,-15 A 128 128 0 0 1 -35,-122" fill="none" stroke="#68c5f2" stroke-width="10" stroke-dasharray="16 11" stroke-linecap="round"/>
+              </g>
+
+              <g id="telecom-tower" transform="translate(70, -100)">
+                <path d="M -18,-24 A 26 26 0 0 1 18,-24" fill="none" stroke="#f37021" stroke-width="5" stroke-linecap="round"/>
+                <path d="M -32,-38 A 45 45 0 0 1 32,-38" fill="none" stroke="#f37021" stroke-width="5" stroke-linecap="round"/>
+                <path d="M -46,-52 A 64 64 0 0 1 46,-52" fill="none" stroke="#f37021" stroke-width="5.5" stroke-linecap="round"/>
+                <circle cx="0" cy="-9" r="8.5" fill="#f37021"/>
+                <polygon points="0,0 -26,90 26,90" fill="none" stroke="#0b2545" stroke-width="6" stroke-linejoin="round"/>
+                <line x1="-9" y1="28" x2="9" y2="28" stroke="#0b2545" stroke-width="4.5"/>
+                <line x1="-17" y1="58" x2="17" y2="58" stroke="#0b2545" stroke-width="5"/>
+                <line x1="-9" y1="28" x2="17" y2="58" stroke="#0b2545" stroke-width="4"/>
+                <line x1="9" y1="28" x2="-17" y2="58" stroke="#0b2545" stroke-width="4"/>
+              </g>
+
+              <g id="signal-post" transform="translate(-15, -102)">
+                <rect x="-5" y="32" width="10" height="70" class="navy-deep"/>
+                <rect x="-22" y="-54" width="44" height="92" rx="22" class="navy-deep"/>
+                <path d="M -22,-35 C -34,-35 -34,-17 -22,-17" fill="none" stroke="#0b2545" stroke-width="4.5"/>
+                <path d="M -22,-11 C -34,-11 -34,7 -22,7" fill="none" stroke="#0b2545" stroke-width="4.5"/>
+                <path d="M -22,13 C -34,13 -34,31 -22,31" fill="none" stroke="#0b2545" stroke-width="4.5"/>
+                <circle cx="0" cy="-26" r="9.5" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
+                <circle cx="0" cy="-2" r="9.5" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
+                <circle cx="0" cy="22" r="9.5" fill="url(#redGlowGrad)"/>
+                <circle cx="-3" cy="19" r="2.8" fill="#ffffff" opacity="0.9"/>
+              </g>
+
+              <g id="railway-track">
+                <path d="M -155,135 C -145,50 -55,-5 125,-60" fill="none" stroke="#0081c8" stroke-width="9.5" stroke-linecap="round"/>
+                <path d="M -90,150 C -80,80 0,30 145,-25" fill="none" stroke="#0081c8" stroke-width="9.5" stroke-linecap="round"/>
+                <line x1="-146" y1="120" x2="-102" y2="138" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="-132" y1="92" x2="-80" y2="114" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="-111" y1="67" x2="-56" y2="88" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="-86" y1="45" x2="-28" y2="65" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="-56" y1="26" x2="0" y2="42" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="-22" y1="10" x2="35" y2="23" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="15" y1="-5" x2="68" y2="7" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
+                <line x1="55" y1="-21" x2="102" y2="-9" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
+              </g>
+
+              <g id="bullet-train" transform="translate(62, -28)">
+                <line x1="-185" y1="10" x2="-80" y2="10" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
+                <line x1="-205" y1="19" x2="-95" y2="19" stroke="#00a4e4" stroke-width="5" stroke-linecap="round"/>
+                <line x1="-165" y1="28" x2="-65" y2="28" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
+                <path d="M -85,25 L 30,25 C 65,25 90,16 112,0" fill="none" stroke="#0b2545" stroke-width="5.5" stroke-linecap="round"/>
+                <path d="M 25,27 L 105,27" stroke="#00a4e4" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M -85,23 L 25,23 C 65,23 96,14 112,-2 C 98,-25 55,-28 15,-28 L -85,-28 Z" fill="url(#trainBodyGrad)" stroke="#0b2545" stroke-width="5.5" stroke-linejoin="round"/>
+                <path d="M 45,-26 C 68,-23 88,-14 104,-3 C 90,0 72,4 48,4 Z" fill="url(#windshieldGrad)" stroke="#0b2545" stroke-width="2"/>
+                <path d="M -80,-16 L 30,-16 C 36,-16 41,-12 41,-6 C 41,0 36,4 30,4 L -80,4 Z" fill="#0b2545"/>
+                <rect x="-75" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+                <rect x="-56" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+                <rect x="-37" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+                <rect x="-18" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
+                <rect x="2" y="-12" width="14" height="11" rx="2.5" fill="#8ad1f0"/>
+                <path d="M 20,-12 L 31,-12 C 34,-12 36,-10 36,-6 C 36,-2 34,-1 31,-1 L 20,-1 Z" fill="#8ad1f0"/>
+                <path d="M -85,11 L 45,11 C 65,11 82,6 94,-1" fill="none" stroke="#00a4e4" stroke-width="4.5" stroke-linecap="round"/>
+              </g>
+
+              <g id="gyan-book" transform="translate(68, 62)">
+                <rect x="-46" y="-10" width="92" height="70" rx="10" fill="#ffffff" stroke="#0b2545" stroke-width="7.5"/>
+                <path d="M -38,8 C -24,4 -10,9 0,14 C 10,9 24,4 38,8 L 38,44 C 24,40 10,44 0,49 C -10,44 -24,40 -38,44 Z" fill="#ffffff"/>
+                <path d="M 0,14 L 0,49" stroke="#0b2545" stroke-width="5" stroke-linecap="round"/>
+                <line x1="-30" y1="18" x2="-8" y2="21" class="book-line"/>
+                <line x1="-30" y1="27" x2="-8" y2="30" class="book-line"/>
+                <line x1="-30" y1="36" x2="-8" y2="39" class="book-line"/>
+                <line x1="8" y1="21" x2="30" y2="18" class="book-line"/>
+                <line x1="8" y1="30" x2="30" y2="27" class="book-line"/>
+                <line x1="8" y1="39" x2="30" y2="36" class="book-line"/>
+              </g>
             </g>
-
-            <g id="telecom-tower" transform="translate(70, -100)">
-              <path d="M -18,-24 A 26 26 0 0 1 18,-24" fill="none" stroke="#f37021" stroke-width="5" stroke-linecap="round"/>
-              <path d="M -32,-38 A 45 45 0 0 1 32,-38" fill="none" stroke="#f37021" stroke-width="5" stroke-linecap="round"/>
-              <path d="M -46,-52 A 64 64 0 0 1 46,-52" fill="none" stroke="#f37021" stroke-width="5.5" stroke-linecap="round"/>
-              <circle cx="0" cy="-9" r="8.5" fill="#f37021"/>
-              <polygon points="0,0 -26,90 26,90" fill="none" stroke="#0b2545" stroke-width="6" stroke-linejoin="round"/>
-              <line x1="-9" y1="28" x2="9" y2="28" stroke="#0b2545" stroke-width="4.5"/>
-              <line x1="-17" y1="58" x2="17" y2="58" stroke="#0b2545" stroke-width="5"/>
-              <line x1="-9" y1="28" x2="17" y2="58" stroke="#0b2545" stroke-width="4"/>
-              <line x1="9" y1="28" x2="-17" y2="58" stroke="#0b2545" stroke-width="4"/>
-            </g>
-
-            <g id="signal-post" transform="translate(-15, -102)">
-              <rect x="-5" y="32" width="10" height="70" class="navy-deep"/>
-              <rect x="-22" y="-54" width="44" height="92" rx="22" class="navy-deep"/>
-              <path d="M -22,-35 C -34,-35 -34,-17 -22,-17" fill="none" stroke="#0b2545" stroke-width="4.5"/>
-              <path d="M -22,-11 C -34,-11 -34,7 -22,7" fill="none" stroke="#0b2545" stroke-width="4.5"/>
-              <path d="M -22,13 C -34,13 -34,31 -22,31" fill="none" stroke="#0b2545" stroke-width="4.5"/>
-              <circle cx="0" cy="-26" r="9.5" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
-              <circle cx="0" cy="-2" r="9.5" fill="#141920" stroke="#070c12" stroke-width="1.5"/>
-              <circle cx="0" cy="22" r="9.5" fill="url(#redGlowGrad)"/>
-              <circle cx="-3" cy="19" r="2.8" fill="#ffffff" opacity="0.9"/>
-            </g>
-
-            <g id="railway-track">
-              <path d="M -155,135 C -145,50 -55,-5 125,-60" fill="none" stroke="#0081c8" stroke-width="9.5" stroke-linecap="round"/>
-              <path d="M -90,150 C -80,80 0,30 145,-25" fill="none" stroke="#0081c8" stroke-width="9.5" stroke-linecap="round"/>
-              <line x1="-146" y1="120" x2="-102" y2="138" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="-132" y1="92" x2="-80" y2="114" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="-111" y1="67" x2="-56" y2="88" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="-86" y1="45" x2="-28" y2="65" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="-56" y1="26" x2="0" y2="42" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="-22" y1="10" x2="35" y2="23" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="15" y1="-5" x2="68" y2="7" stroke="#0081c8" stroke-width="8" stroke-linecap="round"/>
-              <line x1="55" y1="-21" x2="102" y2="-9" stroke="#0081c8" stroke-width="8.5" stroke-linecap="round"/>
-            </g>
-
-            <g id="bullet-train" transform="translate(62, -28)">
-              <line x1="-185" y1="10" x2="-80" y2="10" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
-              <line x1="-205" y1="19" x2="-95" y2="19" stroke="#00a4e4" stroke-width="5" stroke-linecap="round"/>
-              <line x1="-165" y1="28" x2="-65" y2="28" stroke="#8ad1f0" stroke-width="4" stroke-linecap="round"/>
-              <path d="M -85,25 L 30,25 C 65,25 90,16 112,0" fill="none" stroke="#0b2545" stroke-width="5.5" stroke-linecap="round"/>
-              <path d="M 25,27 L 105,27" stroke="#00a4e4" stroke-width="4" stroke-linecap="round"/>
-              <path d="M -85,23 L 25,23 C 65,23 96,14 112,-2 C 98,-25 55,-28 15,-28 L -85,-28 Z" fill="url(#trainBodyGrad)" stroke="#0b2545" stroke-width="5" stroke-linejoin="round"/>
-              <path d="M 45,-26 C 68,-23 88,-14 104,-3 C 90,0 72,4 48,4 Z" fill="url(#windshieldGrad)" stroke="#0b2545" stroke-width="2"/>
-              <path d="M -80,-16 L 30,-16 C 36,-16 41,-12 41,-6 C 41,0 36,4 30,4 L -80,4 Z" fill="#0b2545"/>
-              <rect x="-75" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
-              <rect x="-56" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
-              <rect x="-37" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
-              <rect x="-18" y="-12" width="13" height="11" rx="2.5" fill="#8ad1f0"/>
-              <rect x="2" y="-12" width="14" height="11" rx="2.5" fill="#8ad1f0"/>
-              <path d="M 20,-12 L 31,-12 C 34,-12 36,-10 36,-6 C 36,-2 34,-1 31,-1 L 20,-1 Z" fill="#8ad1f0"/>
-              <path d="M -85,11 L 45,11 C 65,11 82,6 94,-1" fill="none" stroke="#00a4e4" stroke-width="4.5" stroke-linecap="round"/>
-            </g>
-
-            <g id="gyan-book" transform="translate(68, 62)">
-              <rect x="-46" y="-10" width="92" height="70" rx="10" fill="#ffffff" stroke="#0b2545" stroke-width="7.5"/>
-              <path d="M -38,8 C -24,4 -10,9 0,14 C 10,9 24,4 38,8 L 38,44 C 24,40 10,44 0,49 C -10,44 -24,40 -38,44 Z" fill="#ffffff"/>
-              <path d="M 0,14 L 0,49" stroke="#0b2545" stroke-width="5" stroke-linecap="round"/>
-              <line x1="-30" y1="18" x2="-8" y2="21" class="book-line"/>
-              <line x1="-30" y1="27" x2="-8" y2="30" class="book-line"/>
-              <line x1="-30" y1="36" x2="-8" y2="39" class="book-line"/>
-              <line x1="8" y1="21" x2="30" y2="18" class="book-line"/>
-              <line x1="8" y1="30" x2="30" y2="27" class="book-line"/>
-              <line x1="8" y1="39" x2="30" y2="36" class="book-line"/>
-            </g>
-          </g>
-        </svg>
+          </svg>
+        </div>
 
         <div>
           <div class="login-brand-title">
@@ -2012,7 +2175,7 @@
       </div>
 
       <button type="button" class="login-btn" onclick="checkPortalPassword()">
-        <i class="fa-solid fa-right-to-bracket"></i> Access Knowledge Repository
+        <i class="fa-solid fa-right-to-bracket"></i> Login
       </button>
 
       <div id="loginErrorMsg" class="login-error-msg">
@@ -2022,14 +2185,14 @@
   </div>
 
   <!-- HEADER -->
-  <header>
+  <header id="mainHeader">
     <div class="header-left">
       <!-- Hamburger Toggle for Mobile & Tablet -->
       <button class="menu-toggle-btn" id="mobileMenuBtn" onclick="toggleSidebarDrawer()" title="Open Navigation">
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <!-- SVG LOGO EMBLEM (ENLARGED & BOLDENED) -->
+      <!-- SVG LOGO EMBLEM -->
       <svg class="portal-logo-svg" viewBox="0 0 500 500" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" onclick="goHome()" title="RailSNTGyan Home">
         <defs>
           <linearGradient id="trainBodyGradH" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -2148,7 +2311,7 @@
         <div class="brand-main-title">
           <span class="text-teal">RailSNT</span><span class="text-orange">Gyan</span>
         </div>
-        <div class="brand-subline">Railway Signalling & Telecommunication Technical Knowledge Portal</div>
+        <div class="brand-subline">Railway S&T Knowledge Portal</div>
         <div class="brand-tagline-motto">
           <span class="tag-item">Learn</span><span class="divider">|</span>
           <span class="tag-item">Explore</span><span class="divider">|</span>
@@ -2284,9 +2447,9 @@
     </aside>
 
     <!-- MAIN VIEW -->
-    <main>
+    <main id="mainContent">
 
-      <!-- DASHBOARD HOME VIEW -->
+      <!-- DASHBOARD HOME VIEW (FULL SCROLLABLE IN MOBILE) -->
       <div id="dashboardView">
         <div class="dash-hero">
           <div class="dash-hero-title">
@@ -2425,14 +2588,23 @@
             <p id="activeCategoryDesc">Comprehensive register and record log for Railway S&T technical approvals and sanctions.</p>
           </div>
           <div class="action-toolbar">
-            <button class="btn btn-success" onclick="openFYReportModal()"><i class="fa-solid fa-chart-column"></i> FY Report</button>
-            <button class="btn btn-outline" onclick="exportToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-            <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New Record</button>
+            <button class="mobile-filter-toggle-btn" onclick="toggleMobileFilterPanel()" title="Toggle Filters">
+              <i class="fa-solid fa-filter"></i> Filters
+            </button>
+            <button class="btn btn-success" onclick="openFYReportModal()" title="FY Report">
+              <i class="fa-solid fa-chart-column"></i> <span class="btn-text">FY Report</span>
+            </button>
+            <button class="btn btn-outline" onclick="exportToCSV()" title="Export CSV">
+              <i class="fa-solid fa-file-csv"></i> <span class="btn-text">Export CSV</span>
+            </button>
+            <button class="btn btn-primary" onclick="openAddModal()" title="Add New Record">
+              <i class="fa-solid fa-plus"></i> <span class="btn-text">Add New Record</span>
+            </button>
           </div>
         </div>
 
         <!-- 2. FILTER & SEARCH PANEL -->
-        <div class="filter-panel sticky-filter-panel">
+        <div class="filter-panel sticky-filter-panel" id="mainFilterPanel">
           <div class="filter-item">
             <i class="fa-solid fa-calendar"></i>
             <span>Year:</span>
@@ -2463,11 +2635,16 @@
             <input type="text" id="filterSearch" class="search-input" placeholder="Search keywords, description, etc..." onkeyup="renderTable()">
           </div>
 
-          <span class="reset-link" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset Filters</span>
+          <span class="reset-link" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset</span>
         </div>
 
-        <!-- 3. TABLE CONTAINER -->
-        <div class="table-container">
+        <!-- TOP SYNCHRONIZED SCROLLBAR -->
+        <div class="top-scrollbar-wrapper" id="topScrollbarWrapper">
+          <div class="top-scrollbar-content" id="topScrollbarContent"></div>
+        </div>
+
+        <!-- 3. TABLE CONTAINER (WITH STICKY THEAD) -->
+        <div class="table-container" id="mainTableContainer">
           <table id="mainRecordTable">
             <thead id="tableHead"></thead>
             <tbody id="tableBody"></tbody>
@@ -2869,8 +3046,27 @@
         document.getElementById('pagePasswordInput').focus();
       }
 
+      updateMobileHeaderHeight();
+      window.addEventListener('resize', () => {
+        updateMobileHeaderHeight();
+        updateTopScrollbarWidth();
+      });
+      window.addEventListener('orientationchange', () => setTimeout(() => {
+        updateMobileHeaderHeight();
+        updateTopScrollbarWidth();
+      }, 150));
+
+      initTopScrollbarSync();
       goHome();
     });
+
+    function updateMobileHeaderHeight() {
+      const hdr = document.getElementById('mainHeader');
+      if (hdr) {
+        const h = hdr.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--mobile-header-h', `${h}px`);
+      }
+    }
 
     function verifyAdminPassword(actionName) {
       if (!CLOUD_ADMIN_PASS) {
@@ -2885,6 +3081,81 @@
       } else {
         alert("Galat admin password! Access denied.");
         return false;
+      }
+    }
+
+    // TOGGLE MOBILE FILTER PANEL FUNCTION
+    function toggleMobileFilterPanel() {
+      const pnl = document.getElementById('mainFilterPanel');
+      if (pnl) {
+        pnl.classList.toggle('mobile-collapsed');
+        updateTopScrollbarWidth();
+      }
+    }
+
+    // ==========================================
+    // TOP SYNCHRONIZED SCROLLBAR CONTROLLER (TOUCH & DESKTOP)
+    // ==========================================
+    let isSyncingTop = false;
+    let isSyncingBottom = false;
+
+    function initTopScrollbarSync() {
+      const topWrapper = document.getElementById('topScrollbarWrapper');
+      const tableContainer = document.getElementById('mainTableContainer');
+
+      if (!topWrapper || !tableContainer) return;
+
+      topWrapper.addEventListener('scroll', () => {
+        if (isSyncingTop) return;
+        isSyncingBottom = true;
+        tableContainer.scrollLeft = topWrapper.scrollLeft;
+        requestAnimationFrame(() => { isSyncingBottom = false; });
+      }, { passive: true });
+
+      tableContainer.addEventListener('scroll', () => {
+        if (isSyncingBottom) return;
+        isSyncingTop = true;
+        topWrapper.scrollLeft = tableContainer.scrollLeft;
+        requestAnimationFrame(() => { isSyncingTop = false; });
+      }, { passive: true });
+
+      // Direct Touch Drag support for mobile/tablets
+      let startX = 0;
+      let startScroll = 0;
+
+      topWrapper.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startScroll = topWrapper.scrollLeft;
+        }
+      }, { passive: true });
+
+      topWrapper.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1) {
+          const deltaX = startX - e.touches[0].clientX;
+          topWrapper.scrollLeft = startScroll + deltaX;
+          tableContainer.scrollLeft = topWrapper.scrollLeft;
+        }
+      }, { passive: true });
+    }
+
+    function updateTopScrollbarWidth() {
+      const topWrapper = document.getElementById('topScrollbarWrapper');
+      const topContent = document.getElementById('topScrollbarContent');
+      const tableContainer = document.getElementById('mainTableContainer');
+      const table = document.getElementById('mainRecordTable');
+
+      if (!topWrapper || !topContent || !tableContainer || !table) return;
+
+      const scrollWidth = Math.max(table.scrollWidth, table.offsetWidth);
+      const clientWidth = tableContainer.clientWidth;
+
+      if (scrollWidth > (clientWidth + 2) && tableContainer.offsetParent !== null) {
+        topWrapper.style.display = 'block';
+        topContent.style.width = scrollWidth + 'px';
+        topWrapper.scrollLeft = tableContainer.scrollLeft;
+      } else {
+        topWrapper.style.display = 'none';
       }
     }
 
@@ -3304,7 +3575,14 @@
         }
       });
 
+      // Default: mobile par filter panel ko compact rakhein
+      const pnl = document.getElementById('mainFilterPanel');
+      if (pnl && window.innerWidth <= 768) {
+        pnl.classList.add('mobile-collapsed');
+      }
+
       renderTable();
+      updateMobileHeaderHeight();
       closeSidebarDrawer();
       history.pushState(null, null, window.location.href);
     }
@@ -3576,6 +3854,7 @@
             </td>
           </tr>
         `;
+        setTimeout(updateTopScrollbarWidth, 60);
         return;
       }
 
@@ -3618,7 +3897,7 @@
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td><b style="color:var(--accent-orange);">${rec.tanNo || '—'}</b></td>
+              <td><b style="color:var(--accent-orange); white-space:nowrap;">${rec.tanNo || '—'}</b></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-lines" style="color:#ea580c;"></i> ${rec.work}
@@ -3904,7 +4183,7 @@
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td><b>${rec.docNo || '—'}</b></td>
+              <td><b style="white-space:nowrap;">${rec.docNo || '—'}</b></td>
               <td><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
@@ -3920,6 +4199,7 @@
       });
 
       tbody.innerHTML = html;
+      setTimeout(updateTopScrollbarWidth, 60);
     }
 
     // SYNC HEADER SEARCH WITH ACTIVE TABLE SEARCH
