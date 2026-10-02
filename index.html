@@ -3243,6 +3243,12 @@
           activeModal.style.display = 'none';
         }
       }
+
+      // Restore Important Links even when the browser does a full page
+      // recreation instead of using its Back/Forward cache.
+      if (sessionStorage.getItem('importantLinksReturnState')) {
+        setTimeout(restoreImportantLinksReturnState, event.persisted ? 0 : 150);
+      }
     });
 
     function ensureHistoryBase() {
@@ -3588,6 +3594,10 @@
 
       renderTable();
       updateDashboardView();
+
+      // If the page was recreated by Android/mobile Back, restore the
+      // Important Links section after Firestore has repopulated the table.
+      restoreImportantLinksReturnState();
     }, (error) => {
       console.error("Firestore sync error: ", error);
     });
@@ -3812,22 +3822,77 @@
       }
     }
 
-    // FUNCTION TO SAFELY HANDLE EXTERNAL SITES ACROSS WEB & ANDROID WEBVIEW
+    // IMPORTANT LINKS: preserve the exact portal state before leaving the page.
+    // The external URL is opened by the browser's normal link navigation, so
+    // Android/mobile Back returns to this same page instead of an iframe modal.
+    function saveImportantLinksReturnState() {
+      if (currentCategory !== 'IMPORTANT LINKS') return;
+
+      const main = document.querySelector('main');
+      const tableContainer = document.getElementById('mainTableContainer');
+
+      const state = {
+        category: currentCategory,
+        mainScrollTop: main ? main.scrollTop : 0,
+        tableScrollTop: tableContainer ? tableContainer.scrollTop : 0,
+        tableScrollLeft: tableContainer ? tableContainer.scrollLeft : 0
+      };
+
+      sessionStorage.setItem('importantLinksReturnState', JSON.stringify(state));
+
+      // Keep the current SPA history entry intact while recording the
+      // section/scroll position for browsers that recreate the page on Back.
+      history.replaceState(
+        Object.assign({}, history.state || {}, {
+          view: 'category',
+          category: 'IMPORTANT LINKS',
+          returnScroll: state
+        }),
+        '',
+        ''
+      );
+    }
+
+    function restoreImportantLinksReturnState() {
+      const raw = sessionStorage.getItem('importantLinksReturnState');
+      if (!raw) return;
+
+      let state;
+      try {
+        state = JSON.parse(raw);
+      } catch (e) {
+        sessionStorage.removeItem('importantLinksReturnState');
+        return;
+      }
+
+      if (!state || state.category !== 'IMPORTANT LINKS') return;
+
+      if (currentCategory !== 'IMPORTANT LINKS') {
+        switchCategory('IMPORTANT LINKS', false);
+      }
+
+      const main = document.querySelector('main');
+      const tableContainer = document.getElementById('mainTableContainer');
+
+      requestAnimationFrame(() => {
+        if (main) main.scrollTop = Number(state.mainScrollTop) || 0;
+        if (tableContainer) {
+          tableContainer.scrollTop = Number(state.tableScrollTop) || 0;
+          tableContainer.scrollLeft = Number(state.tableScrollLeft) || 0;
+        }
+        updateTopScrollbarWidth();
+      });
+
+      // The state is only for the return from this external navigation.
+      sessionStorage.removeItem('importantLinksReturnState');
+    }
+
+    // Kept for compatibility with any existing callers. Important Links now
+    // use normal browser navigation instead of the in-page iframe viewer.
     function openExternalLinkSafe(title, url) {
       if (!url || url === '#') return;
-      
-      const modal = document.getElementById('inAppWebModal');
-      const iframe = document.getElementById('inAppWebIframe');
-      const titleElem = document.getElementById('inAppSiteTitle');
-      
-      if (modal && iframe) {
-        titleElem.innerText = title || "External Website";
-        iframe.src = url;
-        modal.style.display = 'flex';
-        history.pushState({ view: 'external_browser' }, '', '');
-      } else {
-        window.open(url, '_blank', 'noopener,noreferrer');
-      }
+      saveImportantLinksReturnState();
+      window.location.href = url;
     }
 
     function closeInAppWebModal() {
@@ -4162,9 +4227,16 @@
               <td><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
               <td class="work-desc-cell">
-                <a href="javascript:void(0)" onclick="openExternalLinkSafe('${escapeHtml(rec.relatedTo || 'Link')}', '${rec.directLink || '#'}')" class="work-link" style="color:#15803d;">
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> ${rec.directLink || '—'}
-                </a>
+                ${rec.directLink ? `
+                <a href="${escapeHtml(rec.directLink)}"
+                   onclick="saveImportantLinksReturnState()"
+                   class="work-link"
+                   style="color:#15803d;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(rec.directLink)}
+                </a>` : `
+                <span class="work-link" style="color:#94a3b8; cursor:default;">
+                  <i class="fa-solid fa-link-slash"></i> —
+                </span>`}
               </td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
