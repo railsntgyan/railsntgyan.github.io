@@ -3200,6 +3200,7 @@
     }
 
     function logoutPortal() {
+      sessionStorage.setItem('railsntgyan_allow_exit', 'true');
       sessionStorage.removeItem('secr_portal_authorized');
       document.getElementById('pagePasswordInput').value = '';
       document.getElementById('loginErrorMsg').style.display = 'none';
@@ -3216,8 +3217,11 @@
         document.getElementById('pagePasswordInput').focus();
       }
 
-      // Initialize state for back button navigation
-      history.replaceState({ view: 'home' }, '', '');
+      // Initialize protected browser/app Back navigation.
+      // While logged in, the base entry is a guard. Back from HOME therefore
+      // stays inside RailSNTGyan; Logout is the intentional way to end the session.
+      sessionStorage.removeItem('railsntgyan_allow_exit');
+      history.replaceState({ view: 'guard' }, '', '');
       history.pushState({ view: 'home' }, '', '');
 
       updateMobileHeaderHeight();
@@ -3251,9 +3255,26 @@
       }
     });
 
+    // Prevent accidental Back exit while the portal session is active.
+    // Section/category history still works normally. When the protected base
+    // entry is reached, return to HOME and recreate the HOME history entry.
+    window.addEventListener('popstate', (event) => {
+      const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
+      const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
+
+      if (isAuth && !allowExit && event.state && event.state.view === 'guard') {
+        goHome(false);
+        history.pushState({ view: 'home' }, '', '');
+      }
+    });
+
     function ensureHistoryBase() {
-      if (!history.state || history.state.view !== 'home') {
-        history.replaceState({ view: 'home' }, '', '');
+      const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
+      const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
+
+      if (isAuth && !allowExit && (!history.state || !history.state.view)) {
+        history.replaceState({ view: 'guard' }, '', '');
+        history.pushState({ view: 'home' }, '', '');
       }
     }
 
@@ -3359,9 +3380,6 @@
     // ==========================================
     // MOBILE / HARDWARE BACK BUTTON NAVIGATION (ANDROID APP & WEBVIEW SAFE)
     // ==========================================
-    // The Android system Back button itself is handled by the WebIntoApp
-    // native WebView container. The page must therefore leave external links
-    // in the WebView's normal history (see Important Links above).
     window.addEventListener('popstate', function (event) {
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
@@ -3894,14 +3912,8 @@
     // use normal browser navigation instead of the in-page iframe viewer.
     function openExternalLinkSafe(title, url) {
       if (!url || url === '#') return;
-
-      // Keep Important Links in the same WebView browsing context.
-      // This is important for Android/WebIntoApp so the WebView retains
-      // the external page in its normal navigation history.
       saveImportantLinksReturnState();
-
-      // Explicit _self navigation avoids opening a second window/WebView.
-      window.location.assign(url);
+      window.location.href = url;
     }
 
     function closeInAppWebModal() {
@@ -4238,8 +4250,7 @@
               <td class="work-desc-cell">
                 ${rec.directLink ? `
                 <a href="${escapeHtml(rec.directLink)}"
-                   target="_self"
-                   onclick="saveImportantLinksReturnState(); return true;"
+                   onclick="saveImportantLinksReturnState()"
                    class="work-link"
                    style="color:#15803d;">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(rec.directLink)}
