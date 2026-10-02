@@ -4638,8 +4638,10 @@
       } else {
         tableElem.classList.remove('unfreeze-table');
       }
+      tableElem.classList.remove('rdso-tan-table');
 
       if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+        tableElem.classList.add('rdso-tan-table');
         thead.innerHTML = `
           <tr>
             <th style="width: var(--col-1-w);">Sr. no</th>
@@ -4647,8 +4649,7 @@
             <th class="work-desc-th">Description</th>
             <th style="width: 180px;">Related to</th>
             <th class="col-sanction-date">Issue Date</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (docApprovalCategories.includes(currentCategory)) {
@@ -4657,8 +4658,7 @@
             <th style="width: 60px;">Sr. NO</th>
             <th class="work-desc-wide">Description</th>
             <th class="col-sanction-date">Issue Date</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'IMPORTANT LINKS') {
@@ -4667,7 +4667,7 @@
             <th style="width: var(--col-1-w);">Sr. NO</th>
             <th style="width: 320px;">Related to</th>
             <th class="work-desc-th">Link</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'JOINT SAFETY CERTIFICATE (JSC)') {
@@ -4678,8 +4678,7 @@
             <th style="width: 120px;">Department</th>
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Date of Forwarding</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (standardManualCategories.includes(currentCategory)) {
@@ -4688,8 +4687,7 @@
             <th style="width: 60px;">Sr. No</th>
             <th class="work-desc-wide">Description</th>
             <th class="col-sanction-date">Date of Issue</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
@@ -4698,8 +4696,7 @@
             <th style="width: var(--col-1-w);">Sr. No</th>
             <th style="width: var(--col-2-min-w);">Book Name</th>
             <th class="work-desc-th">Description</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (ldceCategories.includes(currentCategory)) {
@@ -4709,8 +4706,7 @@
             <th style="width: var(--col-2-min-w);">Year</th>
             <th style="width: 120px;">Type (30% / 70%)</th>
             <th class="work-desc-th">Description</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'PCSTE SANCTION') {
@@ -4723,8 +4719,7 @@
             <th class="col-pcste-equipment">Equipment for PCSTE Sanction</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">Sanctioning Date</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'DISPENSATION') {
@@ -4737,8 +4732,7 @@
             <th style="width: 105px;">Agency</th>
             <th style="width: 125px;">Given by</th>
             <th class="col-sanction-date">Date of Forwarding & Issuing</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'EI TSAA') {
@@ -4753,8 +4747,7 @@
             <th style="width: 100px;">Agency</th>
             <th style="width: 85px; text-align:center;">Routes</th>
             <th class="col-sanction-date">TSAA Sanction Date</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'MSDAC TSAA') {
@@ -4767,8 +4760,7 @@
             <th class="col-oem-make">OEM Make</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">TSAA Sanction Date</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'S&T SPEED CERTIFICATE') {
@@ -4779,8 +4771,7 @@
             <th style="width: 120px;">Department</th>
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Sanction Date</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'GM SANCTION') {
@@ -4793,8 +4784,7 @@
             <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
             <th class="col-sanction-date">Date of Sanction</th>
             <th style="width: 100px;">Agency</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'GRADE CONDONATION' || currentCategory === 'LINE OPENING') {
@@ -4805,8 +4795,7 @@
             <th class="work-desc-th">Work Description</th>
             <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
             <th style="width: 100px;">Agency</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'SPEED RAISING') {
@@ -4818,8 +4807,7 @@
             <th class="work-desc-th">Work Description</th>
             <th class="col-sanction-date">Date of Forwarding from CSE/PCSTE</th>
             <th style="width: 100px;">Agency</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'INSPECTION NOTE') {
@@ -4829,8 +4817,7 @@
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
             <th class="work-desc-th">Inspection Done by</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (currentCategory === 'IMP. LETTER') {
@@ -4841,8 +4828,7 @@
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Date of Issue</th>
             <th style="width: 120px;">Issued By</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else {
@@ -4853,8 +4839,7 @@
             <th>Related to Equipment</th>
             <th class="work-desc-th">Description</th>
             <th class="col-sanction-date">Date of Issue</th>
-            <th class="col-drive-compact">Drive<br>Attachment</th>
-            <th style="width: 110px; text-align:center;">Action</th>
+            <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       }
@@ -4925,8 +4910,17 @@
         const displayDate = formatDateToDDMMYYYY(rec.date);
         const displaySanctionDate = formatDateToDDMMYYYY(rec.sanctionDate);
 
+        const attachmentChainButton = rec.driveLink
+          ? `<button class="action-icon-btn attachment-chain-btn linked" title="Attachment Linked - Open" onclick="openPreview('${escapeHtml(rec.work || rec.bookName || rec.wagon || rec.inspectionBy || rec.relatedTo || '')}', '${rec.driveLink || ''}', '${escapeHtml(rec.station || rec.wagon || rec.bookName || rec.tanNo || rec.relatedTo || rec.relatedEquip || rec.docNo || rec.inspectionBy || '')}')">
+               <i class="fa-solid fa-link"></i>
+             </button>`
+          : `<button class="action-icon-btn attachment-chain-btn broken" title="No Attachment Link" disabled>
+               <i class="fa-solid fa-link-slash"></i>
+             </button>`;
+
         const actionButtons = `
           <div class="actions-cell">
+            ${attachmentChainButton}
             <button class="action-icon-btn" title="View Preview" onclick="openPreview('${escapeHtml(rec.work || rec.bookName || rec.wagon || rec.inspectionBy || rec.relatedTo || '')}', '${rec.driveLink || ''}', '${escapeHtml(rec.station || rec.wagon || rec.bookName || rec.tanNo || rec.relatedTo || rec.relatedEquip || rec.docNo || rec.inspectionBy || '')}')">
               <i class="fa-solid fa-eye"></i>
             </button>
@@ -4966,7 +4960,7 @@
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td><b style="color:var(--accent-orange); white-space:nowrap;">${rec.tanNo || '—'}</b></td>
+              <td class="tan-no-cell"><b class="tan-no-text">${rec.tanNo || '—'}</b></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-lines" style="color:#ea580c;"></i> ${rec.work}
@@ -4974,7 +4968,6 @@
               </td>
               <td><span class="equip-badge">${rec.relatedTo || '—'}</span></td>
               <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -4991,7 +4984,6 @@
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5010,7 +5002,6 @@
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5027,7 +5018,6 @@
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5044,7 +5034,6 @@
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
                 </a>
               </td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5062,7 +5051,6 @@
                   <i class="fa-solid fa-file-circle-question" style="color: var(--accent-blue);"></i> ${rec.work}
                 </a>
               </td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5083,7 +5071,6 @@
               <td class="col-pcste-equipment"><span class="equip-badge">${rec.equipment || '—'}</span></td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td class="col-drive-compact">${driveIndicatorCompact}</td>
               <td style="text-align:center; white-space: nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5104,7 +5091,6 @@
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
               <td><span class="authority-badge">${rec.givenBy || rec.sanctionBy || 'PCSTE'}</span></td>
               <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5127,7 +5113,6 @@
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
               <td style="text-align:center;"><b style="color: var(--accent-blue);">${rec.routes || '—'}</b></td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5148,7 +5133,6 @@
               <td class="col-oem-make"><span class="oem-badge">${rec.oem || '—'}</span></td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5167,7 +5151,6 @@
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5188,7 +5171,6 @@
               <td class="col-sanction-date"><b>${displayDate}</b></td>
               <td class="col-sanction-date">${displaySanctionDate ? `<b>${displaySanctionDate}</b>` : '—'}</td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5207,7 +5189,6 @@
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5227,7 +5208,6 @@
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5245,7 +5225,6 @@
                   <i class="fa-solid fa-user-check" style="color: #0284c7;"></i> ${rec.inspectionBy || '—'}
                 </a>
               </td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5264,7 +5243,6 @@
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
               <td><span class="authority-badge">${rec.issuedBy || 'RDSO'}</span></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5283,7 +5261,6 @@
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td class="col-drive-compact">${driveIndicator}</td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5895,5 +5872,678 @@
       return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
   </script>
+
+<style id="rdso-tan-column-fix">
+.rdso-tan-table th:nth-child(2), .rdso-tan-table td:nth-child(2){
+ min-width:155px!important;width:155px!important;max-width:190px!important;
+ white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;
+ line-height:1.35!important;
+}
+</style>
+<script>
+document.addEventListener('click',function(e){
+ const x=e.target.closest('[onclick*="RDSO TAN"]');
+ if(x) setTimeout(()=>{const t=document.getElementById('dataTable');if(t)t.classList.add('rdso-tan-table');},50);
+});
+</script>
+
+
+<style id="rdso-tan-wrap-final">
+/* Final RDSO TAN No. mobile fix */
+.rdso-tan-table th:nth-child(2),
+.rdso-tan-table td:nth-child(2) {
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  white-space: normal !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  hyphens: auto !important;
+  line-height: 1.35 !important;
+}
+.rdso-tan-table td:nth-child(2) * {
+  white-space: normal !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  max-width: 100% !important;
+}
+</style>
+<script>
+(function(){
+ function applyTanFix(){
+   var title=(document.querySelector('.view-title-group h2')||{}).textContent||'';
+   if(/RDSO\\s*TAN/i.test(title)){
+     var t=document.getElementById('dataTable') || document.querySelector('.table-container table');
+     if(t) t.classList.add('rdso-tan-table');
+   }
+ }
+ document.addEventListener('click',function(){setTimeout(applyTanFix,80);});
+ window.addEventListener('load',function(){setTimeout(applyTanFix,100);});
+ new MutationObserver(applyTanFix).observe(document.body,{subtree:true,childList:true,characterData:true});
+})();
+</script>
+
+
+<style id="rdso-tan-actual-fix">
+/* RDSO TAN: actual TAN No. cell fix */
+#mainRecordTable.rdso-tan-table th:nth-child(2),
+#mainRecordTable.rdso-tan-table td.tan-no-cell {
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    white-space: normal !important;
+    vertical-align: middle !important;
+}
+#mainRecordTable.rdso-tan-table td.tan-no-cell .tan-no-text {
+    display: block !important;
+    width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    line-height: 1.45 !important;
+    color: var(--accent-orange) !important;
+}
+</style>
+
+
+<style id="light-dark-theme">
+  /* Smooth theme transition */
+  body, header, aside, main, .dash-hero, .process-infographic-card, .chart-card,
+  .content-header-card, .filter-panel, .table-container, table, tbody td,
+  .sidebar-section-title, .home-btn-container, .modal-content {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+
+  body.dark-theme {
+    --bg-light: #0b1220;
+    --bg-card: rgba(15, 23, 42, 0.96);
+    --text-main: #e5edf7;
+    --text-muted: #a9b8cc;
+    --border-color: rgba(100, 116, 139, 0.45);
+    --cell-border: rgba(148, 163, 184, 0.32);
+    --glass-bg: rgba(15, 23, 42, 0.90);
+    --glass-bg-hover: rgba(30, 41, 59, 0.98);
+    background: linear-gradient(135deg, #07101d 0%, #111827 100%) !important;
+    color: var(--text-main) !important;
+  }
+
+  body.dark-theme header,
+  body.dark-theme aside,
+  body.dark-theme .home-btn-container,
+  body.dark-theme .content-header-card.sticky-header-card,
+  body.dark-theme .filter-panel.sticky-filter-panel,
+  body.dark-theme .dash-hero,
+  body.dark-theme .process-infographic-card,
+  body.dark-theme .chart-card {
+    background: rgba(15, 23, 42, 0.96) !important;
+    color: #e5edf7 !important;
+    border-color: rgba(100,116,139,.45) !important;
+  }
+
+  body.dark-theme .sidebar-section-title,
+  body.dark-theme .nav-item,
+  body.dark-theme .dash-hero-title h2,
+  body.dark-theme .infographic-title-tag,
+  body.dark-theme .chart-header h3,
+  body.dark-theme .view-title-group h2,
+  body.dark-theme .filter-item {
+    color: #dbeafe !important;
+  }
+
+  body.dark-theme .sidebar-section-title {
+    background: rgba(30, 41, 59, .92) !important;
+  }
+
+  body.dark-theme .nav-item:hover,
+  body.dark-theme .nav-item.active {
+    background: rgba(51, 65, 85, .78) !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-theme .process-step-item {
+    background: rgba(30, 41, 59, .95) !important;
+    border-color: rgba(100,116,139,.5) !important;
+  }
+  body.dark-theme .process-step-title { color: #f1f5f9 !important; }
+  body.dark-theme .process-step-counter {
+    background: rgba(15,23,42,.95) !important;
+    border-color: rgba(100,116,139,.5) !important;
+  }
+
+  body.dark-theme .table-container,
+  body.dark-theme table,
+  body.dark-theme tbody td {
+    background: #111827 !important;
+    color: #e5edf7 !important;
+  }
+  body.dark-theme tbody tr:nth-child(even) td { background: #172033 !important; }
+  body.dark-theme tbody tr:hover td { background: #1e293b !important; }
+
+  body.dark-theme table:not(.unfreeze-table) tbody td:nth-child(1),
+  body.dark-theme table:not(.unfreeze-table) tbody td:nth-child(2) {
+    background: #111827 !important;
+    color: #e5edf7 !important;
+  }
+  body.dark-theme table:not(.unfreeze-table) tbody tr:nth-child(even) td:nth-child(1),
+  body.dark-theme table:not(.unfreeze-table) tbody tr:nth-child(even) td:nth-child(2) {
+    background: #172033 !important;
+  }
+
+  body.dark-theme input,
+  body.dark-theme select,
+  body.dark-theme textarea,
+  body.dark-theme .header-quick-search input {
+    background: #172033 !important;
+    color: #f1f5f9 !important;
+    border-color: #475569 !important;
+  }
+
+  body.dark-theme .modal-content,
+  body.dark-theme .modal-body {
+    background: #111827 !important;
+    color: #e5edf7 !important;
+  }
+
+  .theme-toggle-btn {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #0b3b60;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all .2s ease;
+    flex-shrink: 0;
+  }
+  .theme-toggle-btn:hover { transform: translateY(-1px); }
+  body.dark-theme .theme-toggle-btn {
+    background: #1e293b;
+    color: #fbbf24;
+    border-color: #475569;
+  }
+</style>
+
+<script id="light-dark-theme-script">
+(function () {
+  function applyTheme(theme) {
+    const dark = theme === 'dark';
+    document.body.classList.toggle('dark-theme', dark);
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) {
+      btn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      btn.title = dark ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+      btn.setAttribute('aria-label', btn.title);
+    }
+    try { localStorage.setItem('railsntgyan-theme', theme); } catch(e) {}
+  }
+
+  window.toggleRailTheme = function () {
+    applyTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark');
+  };
+
+  function installThemeButton() {
+    if (document.getElementById('themeToggleBtn')) return;
+    const fullscreen = document.querySelector('[onclick*="toggleFullscreen"], [title*="Full"], .header-util-btn');
+    const logout = document.querySelector('.btn-logout');
+    const host = (fullscreen && fullscreen.parentElement) || (logout && logout.parentElement);
+    if (!host) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'themeToggleBtn';
+    btn.type = 'button';
+    btn.className = 'theme-toggle-btn';
+    btn.onclick = window.toggleRailTheme;
+    if (fullscreen && fullscreen.parentElement === host) host.insertBefore(btn, fullscreen);
+    else if (logout && logout.parentElement === host) host.insertBefore(btn, logout);
+    else host.appendChild(btn);
+
+    let saved = 'light';
+    try { saved = localStorage.getItem('railsntgyan-theme') || 'dark'; } catch(e) {}
+    applyTheme(saved);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installThemeButton);
+  } else {
+    installThemeButton();
+  }
+})();
+</script>
+
+
+<style id="dark-readable-final">
+/* DARK MODE — readable contrast without washing out buttons/badges */
+body.dark-theme { color:#e5edf7 !important; }
+
+body.dark-theme .brand-main-title,
+body.dark-theme .brand-subline,
+body.dark-theme .brand-tagline-motto,
+body.dark-theme .brand-tagline-motto .tag-item,
+body.dark-theme .sidebar-section-title,
+body.dark-theme .nav-item,
+body.dark-theme .view-title-group h2,
+body.dark-theme .view-title-group p,
+body.dark-theme .dash-hero-title h2,
+body.dark-theme .dash-hero-title p,
+body.dark-theme .infographic-title-tag,
+body.dark-theme .chart-header h3,
+body.dark-theme .filter-item,
+body.dark-theme tbody td,
+body.dark-theme .work-link {
+ color:#e8f1ff !important;
+}
+
+/* Table badges: dark text on their existing light backgrounds */
+body.dark-theme .tag-badge,
+body.dark-theme .agency-badge,
+body.dark-theme .dept-badge,
+body.dark-theme .type-badge,
+body.dark-theme .oem-badge,
+body.dark-theme .authority-badge,
+body.dark-theme .equip-badge,
+body.dark-theme .drive-pill {
+ color:#0f2740 !important;
+ font-weight:800 !important;
+}
+
+/* Action buttons/icons remain visible */
+body.dark-theme .action-icon-btn {
+ background:#dbe7f5 !important;
+ color:#0b2945 !important;
+ border-color:#8da4bc !important;
+}
+body.dark-theme .action-icon-btn i { color:#0b2945 !important; }
+
+/* Toolbar controls */
+body.dark-theme .btn-outline,
+body.dark-theme .mobile-filter-toggle-btn {
+ background:#e8eef6 !important;
+ color:#0b2945 !important;
+ border-color:#9fb0c2 !important;
+}
+body.dark-theme .btn-outline i,
+body.dark-theme .mobile-filter-toggle-btn i { color:#0b2945 !important; }
+
+/* Login screen/card must stay light and readable even if dark theme is saved */
+body.dark-theme #loginScreen .login-card {
+ background:rgba(255,255,255,.97) !important;
+ color:#1e293b !important;
+}
+body.dark-theme #loginScreen .login-brand-title { color:#0b3b60 !important; }
+body.dark-theme #loginScreen .login-brand-title .brand-teal { color:#009ca6 !important; }
+body.dark-theme #loginScreen .login-brand-title .brand-orange { color:#f97316 !important; }
+body.dark-theme #loginScreen .login-brand-subtitle { color:#0b3b60 !important; }
+body.dark-theme #loginScreen .login-desc { color:#64748b !important; }
+body.dark-theme #loginScreen label { color:#334155 !important; }
+body.dark-theme #loginScreen .login-input {
+ background:#fff !important;
+ color:#172033 !important;
+ border-color:#94a3b8 !important;
+}
+body.dark-theme #loginScreen .login-input::placeholder { color:#64748b !important; }
+body.dark-theme #loginScreen .login-input-wrapper i { color:#64748b !important; }
+body.dark-theme #loginScreen .login-btn,
+body.dark-theme #loginScreen .login-btn i { color:#fff !important; }
+
+/* Header stays light in both themes so logo/title remain crisp */
+body.dark-theme header { background:rgba(255,255,255,.98) !important; }
+body.dark-theme header .brand-main-title { color:#0b3b60 !important; }
+body.dark-theme header .brand-main-title .text-teal { color:#009ca6 !important; }
+body.dark-theme header .brand-main-title .text-orange { color:#f97316 !important; }
+body.dark-theme header .brand-subline,
+body.dark-theme header .brand-tagline-motto,
+body.dark-theme header .brand-tagline-motto .tag-item { color:#0b3b60 !important; }
+body.dark-theme header .menu-toggle-btn { color:#0b3b60 !important; }
+
+/* TAN number readable */
+body.dark-theme #mainRecordTable.rdso-tan-table .tan-no-text { color:#f8fafc !important; }
+</style>
+
+
+<style id="dark-header-login-final">
+/* ===== DARK HEADER ===== */
+body.dark-theme header {
+  background: linear-gradient(135deg, #081525 0%, #10243a 55%, #0b1c2f 100%) !important;
+  border-bottom-color: #f97316 !important;
+  box-shadow: 0 4px 22px rgba(0,0,0,.38) !important;
+}
+body.dark-theme header .brand-main-title { color:#f8fafc !important; }
+body.dark-theme header .brand-main-title .text-teal { color:#5ee7e7 !important; }
+body.dark-theme header .brand-main-title .text-orange { color:#fb923c !important; }
+body.dark-theme header .brand-subline { color:#dbeafe !important; }
+body.dark-theme header .brand-tagline-motto,
+body.dark-theme header .brand-tagline-motto .tag-item { color:#cbd5e1 !important; }
+body.dark-theme header .brand-tagline-motto .divider { color:#fb923c !important; }
+
+body.dark-theme header .menu-toggle-btn,
+body.dark-theme header .header-util-btn,
+body.dark-theme header .theme-toggle-btn {
+  background:#172a42 !important;
+  color:#f8fafc !important;
+  border-color:#52657b !important;
+}
+body.dark-theme header .menu-toggle-btn i,
+body.dark-theme header .header-util-btn i,
+body.dark-theme header .theme-toggle-btn i { color:#f8fafc !important; }
+
+body.dark-theme header .badge-portal {
+  background:#172a42 !important;
+  color:#e5edf7 !important;
+  border-color:#52657b !important;
+}
+body.dark-theme header .badge-cloud {
+  background:rgba(22,101,52,.35) !important;
+  color:#bbf7d0 !important;
+  border-color:#22c55e !important;
+}
+body.dark-theme header .header-quick-search input {
+  background:#13243a !important;
+  color:#f8fafc !important;
+  border-color:#52657b !important;
+}
+body.dark-theme header .header-quick-search input::placeholder { color:#aebed0 !important; }
+body.dark-theme header .header-quick-search i { color:#cbd5e1 !important; }
+
+/* ===== DARK LOGIN PAGE ===== */
+body.dark-theme #loginScreen {
+  background:
+    radial-gradient(circle at 20% 25%, rgba(0,156,166,.34), transparent 48%),
+    radial-gradient(circle at 80% 78%, rgba(11,59,96,.42), transparent 50%),
+    linear-gradient(145deg, #030a13 0%, #071827 52%, #0b1220 100%) !important;
+}
+body.dark-theme #loginScreen .login-card {
+  background:linear-gradient(145deg, rgba(15,29,46,.98), rgba(9,20,34,.98)) !important;
+  color:#eaf2ff !important;
+  border:1px solid rgba(100,116,139,.55) !important;
+  border-top:6px solid #f97316 !important;
+  box-shadow:0 24px 65px rgba(0,0,0,.55) !important;
+}
+body.dark-theme #loginScreen .login-logo-container {
+  background:radial-gradient(circle, #f8fafc 0%, #dce8f3 100%) !important;
+}
+body.dark-theme #loginScreen .login-brand-title { color:#f8fafc !important; }
+body.dark-theme #loginScreen .login-brand-title .brand-teal { color:#5ee7e7 !important; }
+body.dark-theme #loginScreen .login-brand-title .brand-orange { color:#fb923c !important; }
+body.dark-theme #loginScreen .login-brand-subtitle { color:#dbeafe !important; }
+body.dark-theme #loginScreen .login-desc { color:#b9c8d9 !important; }
+body.dark-theme #loginScreen label { color:#e2e8f0 !important; }
+
+body.dark-theme #loginScreen .login-input {
+  background:#111f32 !important;
+  color:#f8fafc !important;
+  border-color:#52657b !important;
+  box-shadow:none !important;
+}
+body.dark-theme #loginScreen .login-input::placeholder { color:#aebed0 !important; }
+body.dark-theme #loginScreen .login-input-wrapper i { color:#cbd5e1 !important; }
+body.dark-theme #loginScreen .login-input:focus {
+  border-color:#5ee7e7 !important;
+  box-shadow:0 0 0 4px rgba(94,231,231,.12) !important;
+}
+body.dark-theme #loginScreen .login-btn {
+  background:linear-gradient(135deg,#0e5b78,#0b3b60) !important;
+  color:#fff !important;
+  border:1px solid rgba(94,231,231,.22) !important;
+}
+body.dark-theme #loginScreen .login-btn i { color:#fff !important; }
+body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
+</style>
+
+
+<style id="dark-header-corrected-strong">
+/* Force the actual app header and its inner wrappers to dark mode */
+body.dark-theme header,
+body.dark-theme .app-header,
+body.dark-theme header .header-inner,
+body.dark-theme header .header-left,
+body.dark-theme header .header-center,
+body.dark-theme header .header-right,
+body.dark-theme header .brand-area,
+body.dark-theme header .brand-block {
+  background:#0b1628 !important;
+  background-image:none !important;
+  color:#f8fafc !important;
+}
+
+/* Remove any light/glass overlay in header */
+body.dark-theme header::before,
+body.dark-theme header::after {
+  background:transparent !important;
+  opacity:0 !important;
+}
+
+/* Brand text — high contrast */
+body.dark-theme header .brand-main-title,
+body.dark-theme header .brand-title,
+body.dark-theme header .brand-subline,
+body.dark-theme header .brand-subtitle,
+body.dark-theme header .brand-tagline-motto,
+body.dark-theme header .tag-item {
+  color:#f8fafc !important;
+  text-shadow:none !important;
+}
+body.dark-theme header .text-teal,
+body.dark-theme header .brand-teal { color:#5ee7e7 !important; }
+body.dark-theme header .text-orange,
+body.dark-theme header .brand-orange { color:#fb923c !important; }
+
+/* Header controls */
+body.dark-theme header button:not(.btn-logout),
+body.dark-theme header .menu-toggle-btn,
+body.dark-theme header .header-util-btn,
+body.dark-theme header .theme-toggle-btn {
+  background:#162a43 !important;
+  color:#f8fafc !important;
+  border-color:#52657b !important;
+  box-shadow:0 4px 12px rgba(0,0,0,.28) !important;
+}
+body.dark-theme header button:not(.btn-logout) i,
+body.dark-theme header .menu-toggle-btn i,
+body.dark-theme header .header-util-btn i,
+body.dark-theme header .theme-toggle-btn i {
+  color:#f8fafc !important;
+}
+
+/* Keep logout prominent */
+body.dark-theme header .btn-logout {
+  background:linear-gradient(135deg,#f43f5e,#e11d48) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+body.dark-theme header .btn-logout i { color:#fff !important; }
+
+/* Orange separator retained */
+body.dark-theme header { border-bottom:5px solid #f97316 !important; }
+
+/* Logo plate: subtle light circle only around logo, not whole header */
+body.dark-theme header .brand-logo,
+body.dark-theme header .logo-img {
+  filter:none !important;
+}
+</style>
+
+
+<style id="main-header-full-dark-final">
+/* FINAL: color the REAL #mainHeader itself, not its child blocks */
+html body.dark-theme #mainHeader {
+  background: #0b1628 !important;
+  background-color: #0b1628 !important;
+  background-image: linear-gradient(135deg,#081525 0%,#10243a 55%,#0b1628 100%) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 4px solid #f97316 !important;
+  box-shadow: 0 5px 20px rgba(0,0,0,.38) !important;
+}
+
+/* Child areas must be transparent so the header is one continuous block */
+html body.dark-theme #mainHeader > .header-left,
+html body.dark-theme #mainHeader > .header-right,
+html body.dark-theme #mainHeader .header-brand-block,
+html body.dark-theme #mainHeader .header-action-stack {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Header text */
+html body.dark-theme #mainHeader .brand-main-title { color:#f8fafc !important; }
+html body.dark-theme #mainHeader .brand-main-title .text-teal { color:#5ee7e7 !important; }
+html body.dark-theme #mainHeader .brand-main-title .text-orange { color:#fb923c !important; }
+html body.dark-theme #mainHeader .brand-subline { color:#e2e8f0 !important; }
+html body.dark-theme #mainHeader .brand-tagline-motto,
+html body.dark-theme #mainHeader .brand-tagline-motto .tag-item { color:#cbd5e1 !important; }
+
+/* Header buttons */
+html body.dark-theme #mainHeader .menu-toggle-btn,
+html body.dark-theme #mainHeader .header-util-btn,
+html body.dark-theme #mainHeader .theme-toggle-btn {
+  background:#172a42 !important;
+  color:#fff !important;
+  border:1px solid #52657b !important;
+}
+html body.dark-theme #mainHeader .menu-toggle-btn i,
+html body.dark-theme #mainHeader .header-util-btn i,
+html body.dark-theme #mainHeader .theme-toggle-btn i { color:#fff !important; }
+
+html body.dark-theme #mainHeader .btn-logout {
+  background:linear-gradient(135deg,#f43f5e,#e11d48) !important;
+  color:#fff !important;
+}
+</style>
+
+
+<style id="dark-special-column-text-fix">
+/* Dark mode: specific data columns that were still using very dark text */
+body.dark-theme #mainRecordTable td.routes-dark-fix,
+body.dark-theme #mainRecordTable td.wagon-dark-fix,
+body.dark-theme #mainRecordTable td.related-dark-fix,
+body.dark-theme #mainRecordTable td.routes-dark-fix *,
+body.dark-theme #mainRecordTable td.wagon-dark-fix *,
+body.dark-theme #mainRecordTable td.related-dark-fix * {
+  color:#eaf2ff !important;
+  opacity:1 !important;
+}
+</style>
+<script id="dark-special-column-script">
+(function(){
+ function fixSpecialColumns(){
+   var table=document.getElementById('mainRecordTable');
+   if(!table) return;
+   var heads=[].slice.call(table.querySelectorAll('thead th')).map(function(th){
+     return (th.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+   });
+   table.querySelectorAll('tbody tr').forEach(function(tr){
+     var cells=tr.querySelectorAll('td');
+     heads.forEach(function(h,i){
+       if(!cells[i]) return;
+       cells[i].classList.remove('routes-dark-fix','wagon-dark-fix','related-dark-fix');
+       if(h==='routes' || h.indexOf('no of route')>=0 || h.indexOf('no. of route')>=0) cells[i].classList.add('routes-dark-fix');
+       if(h.indexOf('wagon name')>=0) cells[i].classList.add('wagon-dark-fix');
+       if(h.indexOf('related to')>=0) cells[i].classList.add('related-dark-fix');
+     });
+   });
+ }
+ document.addEventListener('click',function(){setTimeout(fixSpecialColumns,80);});
+ window.addEventListener('load',function(){setTimeout(fixSpecialColumns,120);});
+ new MutationObserver(function(){fixSpecialColumns();}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<script id="remove-description-hyperlinks">
+(function(){
+  function removeDescriptionLinks(){
+    var table=document.getElementById('mainRecordTable');
+    if(!table) return;
+    var heads=[].slice.call(table.querySelectorAll('thead th')).map(function(th){
+      return (th.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    });
+    table.querySelectorAll('tbody tr').forEach(function(tr){
+      var cells=tr.querySelectorAll('td');
+      heads.forEach(function(h,i){
+        if(!cells[i]) return;
+        if(h==='description' || h.indexOf('work description')>=0 || h==='work name' || h.indexOf('work name')>=0 || h==='work' || h.startsWith('work (')){
+          cells[i].querySelectorAll('a').forEach(function(a){
+            var span=document.createElement('span');
+            span.innerHTML=a.innerHTML;
+            a.replaceWith(span);
+          });
+        }
+      });
+    });
+  }
+  window.addEventListener('load',function(){setTimeout(removeDescriptionLinks,150);});
+  document.addEventListener('click',function(){setTimeout(removeDescriptionLinks,100);});
+  new MutationObserver(removeDescriptionLinks).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<style id="pcste-work-no-link-final">
+#mainRecordTable td.no-work-link,
+#mainRecordTable td.no-work-link * {
+    text-decoration: none !important;
+    cursor: default !important;
+}
+</style>
+<script id="pcste-work-no-link-style">
+(function(){
+  function markPcsteWork(){
+    var table=document.getElementById('mainRecordTable');
+    if(!table) return;
+    var heads=[].slice.call(table.querySelectorAll('thead th')).map(function(th){
+      return (th.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    });
+    var wi=heads.findIndex(function(h){ return h==='work' || h.startsWith('work ('); });
+    if(wi<0) return;
+    table.querySelectorAll('tbody tr').forEach(function(tr){
+      var td=tr.querySelectorAll('td')[wi];
+      if(td) td.classList.add('no-work-link');
+    });
+  }
+  window.addEventListener('load',function(){setTimeout(markPcsteWork,180);});
+  document.addEventListener('click',function(){setTimeout(markPcsteWork,120);});
+  new MutationObserver(markPcsteWork).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<style id="attachment-chain-action-style">
+.attachment-chain-btn.linked {
+  background:#e8fff3 !important;
+  border-color:#86d9ad !important;
+}
+.attachment-chain-btn.linked i {
+  color:#15803d !important;
+}
+.attachment-chain-btn.broken {
+  background:#f1f5f9 !important;
+  border-color:#cbd5e1 !important;
+  cursor:not-allowed !important;
+  opacity:.78 !important;
+}
+.attachment-chain-btn.broken i {
+  color:#94a3b8 !important;
+}
+body.dark-theme .attachment-chain-btn.linked {
+  background:#123c2b !important;
+  border-color:#2f8f62 !important;
+}
+body.dark-theme .attachment-chain-btn.linked i {
+  color:#86efac !important;
+}
+body.dark-theme .attachment-chain-btn.broken {
+  background:#263244 !important;
+  border-color:#52657b !important;
+}
+body.dark-theme .attachment-chain-btn.broken i {
+  color:#94a3b8 !important;
+}
+</style>
+
 </body>
 </html>
