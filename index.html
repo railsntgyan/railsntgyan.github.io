@@ -3359,6 +3359,9 @@
     // ==========================================
     // MOBILE / HARDWARE BACK BUTTON NAVIGATION (ANDROID APP & WEBVIEW SAFE)
     // ==========================================
+    // The Android system Back button itself is handled by the WebIntoApp
+    // native WebView container. The page must therefore leave external links
+    // in the WebView's normal history (see Important Links above).
     window.addEventListener('popstate', function (event) {
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
@@ -3891,8 +3894,14 @@
     // use normal browser navigation instead of the in-page iframe viewer.
     function openExternalLinkSafe(title, url) {
       if (!url || url === '#') return;
+
+      // Keep Important Links in the same WebView browsing context.
+      // This is important for Android/WebIntoApp so the WebView retains
+      // the external page in its normal navigation history.
       saveImportantLinksReturnState();
-      window.location.href = url;
+
+      // Explicit _self navigation avoids opening a second window/WebView.
+      window.location.assign(url);
     }
 
     function closeInAppWebModal() {
@@ -4229,7 +4238,8 @@
               <td class="work-desc-cell">
                 ${rec.directLink ? `
                 <a href="${escapeHtml(rec.directLink)}"
-                   onclick="saveImportantLinksReturnState()"
+                   target="_self"
+                   onclick="saveImportantLinksReturnState(); return true;"
                    class="work-link"
                    style="color:#15803d;">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(rec.directLink)}
