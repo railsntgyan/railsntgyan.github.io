@@ -415,6 +415,12 @@
       flex-shrink: 0;
     }
 
+    .header-action-stack {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .header-quick-search {
       position: relative;
       display: flex;
@@ -574,6 +580,19 @@
     .home-btn:hover, .home-btn.active-home {
       background: linear-gradient(135deg, #0e4b7b, var(--brand-navy));
     }
+
+    /* Keep HOME fixed at the top of the navigation drawer like a nav bar */
+    .home-btn-container {
+      position: sticky;
+      top: 0;
+      z-index: 1005;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 4px 12px rgba(11, 59, 96, 0.10);
+    }
+
 
     .sidebar-section-title {
       font-size: 10.5px;
@@ -1717,6 +1736,180 @@
       font-size: 12px;
     }
 
+
+    /* =========================================================
+       FY REPORT TABLE FIX
+       Keeps Category / Scheme fully visible on desktop, tablet
+       and mobile, without affecting the main record tables.
+       ========================================================= */
+    #fyReportModal .report-table-wrapper {
+      width: 100%;
+      overflow-x: auto !important;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid #dbe3ec;
+      border-radius: 8px;
+    }
+
+    #fyReportModal table.report-table {
+      width: 100%;
+      min-width: 980px !important;
+      table-layout: fixed;
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+    /* Override the global "first column = 52px" rule used by main tables */
+    #fyReportModal table.report-table thead th.col-category,
+    #fyReportModal table.report-table tbody td.cat-name {
+      position: sticky !important;
+      left: 0 !important;
+      width: 190px !important;
+      min-width: 190px !important;
+      max-width: 190px !important;
+      text-align: left !important;
+      padding: 8px 10px !important;
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      overflow-wrap: break-word !important;
+      word-break: normal !important;
+      line-height: 1.25 !important;
+      border-right: 2px solid var(--brand-orange) !important;
+      box-shadow: 4px 0 8px -5px rgba(11, 59, 96, 0.45);
+    }
+
+    #fyReportModal table.report-table thead th.col-category {
+      z-index: 8 !important;
+      background: var(--brand-navy) !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+    }
+
+    #fyReportModal table.report-table tbody td.cat-name {
+      z-index: 5 !important;
+      background: #f8fafc !important;
+      color: #1e293b !important;
+      font-weight: 800 !important;
+    }
+
+    #fyReportModal table.report-table tbody tr:nth-child(even) td.cat-name {
+      background: #f1f5f9 !important;
+    }
+
+    #fyReportModal table.report-table tbody tr.total-row td.cat-name {
+      background: #eaf0f6 !important;
+      color: var(--brand-navy) !important;
+    }
+
+    /* Month columns */
+    #fyReportModal table.report-table th:not(.col-category),
+    #fyReportModal table.report-table td:not(.cat-name) {
+      width: 55px;
+      min-width: 55px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #fyReportModal table.report-table th:last-child,
+    #fyReportModal table.report-table td:last-child {
+      width: 68px;
+      min-width: 68px;
+    }
+
+    @media (max-width: 768px) {
+      #fyReportModal .report-modal-content {
+        width: 98%;
+        height: 94dvh;
+      }
+
+      #fyReportModal .report-body {
+        padding: 8px;
+      }
+
+      #fyReportModal .report-sheet {
+        padding: 9px;
+      }
+
+      #fyReportModal .report-header-banner h2 {
+        font-size: 15px;
+      }
+
+      #fyReportModal .report-meta-bar {
+        font-size: 10px;
+        padding: 7px 8px;
+      }
+
+      #fyReportModal table.report-table {
+        min-width: 960px !important;
+        font-size: 10.5px;
+      }
+
+      #fyReportModal table.report-table thead th.col-category,
+      #fyReportModal table.report-table tbody td.cat-name {
+        width: 185px !important;
+        min-width: 185px !important;
+        max-width: 185px !important;
+      }
+    }
+
+
+    /* FY REPORT: disable sticky Category column */
+    #fyReportModal table.report-table thead th.col-category,
+    #fyReportModal table.report-table tbody td.cat-name {
+      position: static !important;
+      left: auto !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+    }
+
+
+    /* FY REPORT FINAL VIEW */
+    #fyReportModal .report-meta-bar {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      align-items: center !important;
+      column-gap: 16px !important;
+    }
+
+    #fyReportModal .report-meta-bar > div:nth-child(1) {
+      text-align: left !important;
+    }
+
+    #fyReportModal .report-meta-bar > div:nth-child(2) {
+      text-align: right !important;
+      justify-self: end !important;
+    }
+
+    #fyReportModal .report-meta-bar > div:nth-child(3) {
+      grid-column: 1 / -1 !important;
+      text-align: left !important;
+    }
+
+    /* One uniform border colour throughout the FY report table */
+    #fyReportModal table.report-table,
+    #fyReportModal table.report-table th,
+    #fyReportModal table.report-table td,
+    #fyReportModal table.report-table thead th.col-category,
+    #fyReportModal table.report-table tbody td.cat-name {
+      border-color: #cbd5e1 !important;
+    }
+
+    #fyReportModal table.report-table thead th.col-category,
+    #fyReportModal table.report-table tbody td.cat-name {
+      border-right: 1px solid #cbd5e1 !important;
+    }
+
+    @media (max-width: 600px) {
+      #fyReportModal .report-meta-bar {
+        grid-template-columns: 1fr 1fr !important;
+        column-gap: 8px !important;
+      }
+      #fyReportModal .report-meta-bar > div:nth-child(2) {
+        text-align: right !important;
+      }
+    }
+
     /* FORM MODAL */
     .form-modal-content {
       background: rgba(255, 255, 255, 0.95);
@@ -2078,6 +2271,18 @@
         display: none;
       }
 
+      .header-action-stack {
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .header-action-stack .header-util-btn {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+      }
+
       .btn-logout {
         padding: 5px 9px;
         font-size: 11px;
@@ -2176,7 +2381,89 @@
         display: none;
       }
     }
+  
+/* === RailSNTGyan Header Appearance Enhancement === */
+#mainHeader {
+  background: linear-gradient(115deg, #ffffff 0%, #f4fbfc 48%, #fff7ed 100%) !important;
+  border-bottom: 4px solid #f97316 !important;
+  box-shadow: 0 5px 18px rgba(11,59,96,.16) !important;
+}
+#mainHeader .header-left { min-width: 0 !important; }
+#mainHeader .portal-logo-svg {
+  width: 82px !important; height: 82px !important; min-width: 82px !important;
+  filter: saturate(1.28) contrast(1.08) drop-shadow(0 3px 5px rgba(11,59,96,.18));
+}
+#mainHeader .brand-title, #mainHeader .header-brand-title, #mainHeader .portal-title {
+  font-weight: 900 !important; letter-spacing: -1px !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,.06);
+}
+#mainHeader .brand-teal { color:#008c99 !important; }
+#mainHeader .brand-orange { color:#f05a0b !important; }
+#mainHeader .brand-subtitle, #mainHeader .header-brand-subtitle, #mainHeader .portal-subtitle {
+  color:#0b3b60 !important; font-weight:800 !important; opacity:1 !important;
+}
+#mainHeader .tagline, #mainHeader .header-tagline, #mainHeader .portal-tagline {
+  color:#334155 !important; font-weight:700 !important; opacity:1 !important;
+}
+@media (max-width: 768px) {
+  #mainHeader { min-height: 112px !important; height:auto !important; padding:10px 12px !important; }
+  #mainHeader .header-left { gap:10px !important; flex:1 1 auto !important; overflow:visible !important; }
+  #mainHeader .portal-logo-svg { width:74px !important; height:74px !important; min-width:74px !important; }
+  #mainHeader .brand-title, #mainHeader .header-brand-title, #mainHeader .portal-title { font-size:29px !important; line-height:1.02 !important; white-space:nowrap !important; }
+  #mainHeader .brand-subtitle, #mainHeader .header-brand-subtitle, #mainHeader .portal-subtitle { font-size:15px !important; line-height:1.15 !important; display:block !important; white-space:normal !important; }
+  #mainHeader .tagline, #mainHeader .header-tagline, #mainHeader .portal-tagline { font-size:11px !important; line-height:1.2 !important; display:block !important; white-space:normal !important; }
+}
+@media (max-width: 480px) {
+  #mainHeader { padding:9px 9px !important; min-height:108px !important; }
+  #mainHeader .portal-logo-svg { width:68px !important; height:68px !important; min-width:68px !important; }
+  #mainHeader .brand-title, #mainHeader .header-brand-title, #mainHeader .portal-title { font-size:25px !important; }
+  #mainHeader .brand-subtitle, #mainHeader .header-brand-subtitle, #mainHeader .portal-subtitle { font-size:13px !important; }
+}
+</style>
+
+  <!-- FONT & MOBILE READABILITY IMPROVEMENT -->
+  <style>
+    /* Sidebar readability */
+    .home-btn { font-size: 14px !important; font-weight: 800 !important; padding: 11px 14px !important; }
+    .sidebar-section-title { font-size: 12.5px !important; font-weight: 900 !important; line-height: 1.3 !important; padding: 11px 13px !important; }
+    .nav-item { font-size: 12.5px !important; font-weight: 750 !important; line-height: 1.3 !important; padding: 9px 14px !important; }
+    .nav-item i { font-size: 14px !important; }
+
+    /* Dashboard headings/cards */
+    .dash-hero-title h2 { font-size: 19px !important; font-weight: 900 !important; }
+    .dash-hero-title p { font-size: 13px !important; font-weight: 600 !important; }
+    .dash-fy-badge, .dash-total-badge { font-size: 13px !important; padding: 7px 14px !important; }
+    .infographic-title-tag { font-size: 14px !important; font-weight: 900 !important; }
+    .process-step-badge { width: 29px !important; height: 29px !important; font-size: 12px !important; }
+    .process-step-icon { font-size: 20px !important; }
+    .process-step-title { font-size: 11.5px !important; line-height: 1.25 !important; height: 30px !important; }
+    .process-step-counter { font-size: 12px !important; padding: 4px 7px !important; }
+    .chart-header h3 { font-size: 14px !important; font-weight: 900 !important; }
+
+    /* Main section/table controls remain compact but clearly readable */
+    .view-title-group h2 { font-size: 19px !important; }
+    .view-title-group p { font-size: 13px !important; }
+    .btn, .filter-item, .filter-item select, .filter-item input { font-size: 13px !important; }
+
+    @media (max-width: 768px) {
+      aside { width: min(82vw, 330px) !important; }
+      .home-btn { font-size: 15px !important; }
+      .sidebar-section-title { font-size: 13.5px !important; padding: 12px 14px !important; }
+      .nav-item { font-size: 13.5px !important; padding: 10px 15px !important; gap: 10px !important; }
+      .nav-item i { font-size: 15px !important; width: 18px !important; }
+
+      .dash-hero-title h2 { font-size: 20px !important; }
+      .dash-hero-title p { font-size: 13.5px !important; }
+      .infographic-title-tag { font-size: 14px !important; }
+      .process-track-container { gap: 10px !important; }
+      .process-step-item { min-width: 130px; padding: 11px 8px !important; }
+      .process-step-title { font-size: 12px !important; height: 32px !important; }
+      .process-step-counter { font-size: 12.5px !important; }
+      .chart-header h3 { font-size: 14px !important; }
+      .view-title-group h2 { font-size: 18px !important; }
+    }
   </style>
+
 </head>
 <body>
 
@@ -2369,7 +2656,393 @@
           <style>
             .navy-deep-h { fill: #0b2545; }
             .book-line-h { stroke: #0b2545; stroke-width: 4.5; stroke-linecap: round; }
-          </style>
+          
+
+    /* =========================================================
+       FY REPORT — FINAL CLEAN TABLE
+       No sticky/frozen row or column anywhere in this report.
+       ========================================================= */
+
+    #fyReportModal .report-table-wrapper {
+      width: 100% !important;
+      overflow-x: auto !important;
+      overflow-y: visible !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #fyReportModal table.report-table {
+      position: static !important;
+      width: 100% !important;
+      min-width: 980px !important;
+      table-layout: fixed !important;
+      border-collapse: collapse !important;
+    }
+
+    /* Force EVERY FY-report cell to behave like a normal table cell.
+       This overrides any global sticky first-column / header rules. */
+    #fyReportModal table.report-table thead,
+    #fyReportModal table.report-table tbody,
+    #fyReportModal table.report-table tr,
+    #fyReportModal table.report-table th,
+    #fyReportModal table.report-table td,
+    #fyReportModal table.report-table th:first-child,
+    #fyReportModal table.report-table td:first-child,
+    #fyReportModal table.report-table th:nth-child(n),
+    #fyReportModal table.report-table td:nth-child(n),
+    #fyReportModal table.report-table .col-category,
+    #fyReportModal table.report-table .cat-name {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      z-index: auto !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Category / Scheme is a normal, wider first column */
+    #fyReportModal table.report-table th:first-child,
+    #fyReportModal table.report-table td:first-child,
+    #fyReportModal table.report-table .col-category,
+    #fyReportModal table.report-table .cat-name {
+      width: 220px !important;
+      min-width: 220px !important;
+      max-width: 220px !important;
+      text-align: left !important;
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      padding: 8px 10px !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+
+    #fyReportModal table.report-table th:not(:first-child),
+    #fyReportModal table.report-table td:not(:first-child) {
+      width: 56px !important;
+      min-width: 56px !important;
+      max-width: 56px !important;
+      text-align: center !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+
+    #fyReportModal table.report-table th:last-child,
+    #fyReportModal table.report-table td:last-child {
+      width: 70px !important;
+      min-width: 70px !important;
+      max-width: 70px !important;
+    }
+
+    /* No sticky header row */
+    #fyReportModal table.report-table thead th {
+      position: static !important;
+      top: auto !important;
+    }
+
+    /* FY at extreme left and Period at extreme right */
+    #fyReportModal .report-meta-bar {
+      display: grid !important;
+      grid-template-columns: 1fr auto !important;
+      width: 100% !important;
+      align-items: center !important;
+      column-gap: 16px !important;
+    }
+
+    #fyReportModal .report-meta-bar > div:nth-child(1) {
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+      justify-self: start !important;
+      text-align: left !important;
+    }
+
+    #fyReportModal .report-meta-bar > div:nth-child(2) {
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+      justify-self: end !important;
+      text-align: right !important;
+      margin-left: auto !important;
+    }
+
+    #fyReportModal .report-meta-bar > div:nth-child(3) {
+      grid-column: 1 / -1 !important;
+      grid-row: 2 !important;
+      justify-self: start !important;
+      text-align: left !important;
+    }
+
+
+
+    /* =========================================================
+       FY REPORT PRINT — CLEAN SINGLE PAGE
+       Prints only the report sheet, not modal controls/background.
+       ========================================================= */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 6mm;
+      }
+
+      html, body {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        overflow: visible !important;
+      }
+
+      /* Hide everything except the FY report modal */
+      body > * {
+        display: none !important;
+      }
+
+      #fyReportModal {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        backdrop-filter: none !important;
+        overflow: visible !important;
+      }
+
+      #fyReportModal .report-modal-content {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        background: #fff !important;
+      }
+
+      /* Do not print the blue modal toolbar / buttons */
+      #fyReportModal .report-modal-header,
+      #fyReportModal .report-controls,
+      #fyReportModal .report-actions,
+      #fyReportModal button,
+      #fyReportModal select {
+        display: none !important;
+      }
+
+      #fyReportModal .report-body {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+      }
+
+      #fyReportModal .report-sheet {
+        display: block !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 4mm !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid-page !important;
+      }
+
+      #fyReportModal .report-header-banner {
+        margin: 0 0 3mm 0 !important;
+        padding: 0 0 2mm 0 !important;
+      }
+
+      #fyReportModal .report-header-banner h2 {
+        margin: 0 !important;
+        font-size: 15pt !important;
+        line-height: 1.15 !important;
+      }
+
+      #fyReportModal .report-header-banner p {
+        margin: 1mm 0 !important;
+        font-size: 8.5pt !important;
+        line-height: 1.15 !important;
+      }
+
+      #fyReportModal .report-meta-bar {
+        margin: 0 0 3mm 0 !important;
+        padding: 2mm 3mm !important;
+        font-size: 8pt !important;
+        line-height: 1.2 !important;
+      }
+
+      #fyReportModal .report-table-wrapper {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        border: 0 !important;
+      }
+
+      #fyReportModal table.report-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+        font-size: 7pt !important;
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid-page !important;
+      }
+
+      #fyReportModal table.report-table thead,
+      #fyReportModal table.report-table tbody,
+      #fyReportModal table.report-table tr,
+      #fyReportModal table.report-table th,
+      #fyReportModal table.report-table td {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        z-index: auto !important;
+        box-shadow: none !important;
+      }
+
+      #fyReportModal table.report-table th,
+      #fyReportModal table.report-table td {
+        box-sizing: border-box !important;
+        padding: 1.5mm 1mm !important;
+        height: auto !important;
+        line-height: 1.15 !important;
+        border: 1px solid #cbd5e1 !important;
+        overflow: hidden !important;
+      }
+
+      #fyReportModal table.report-table th:first-child,
+      #fyReportModal table.report-table td:first-child,
+      #fyReportModal table.report-table .col-category,
+      #fyReportModal table.report-table .cat-name {
+        width: 25% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        text-align: left !important;
+      }
+
+      #fyReportModal table.report-table th:not(:first-child),
+      #fyReportModal table.report-table td:not(:first-child) {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+      }
+
+      /* Keep colours in PDF/print where supported */
+      #fyReportModal,
+      #fyReportModal * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
+
+
+@media print {
+  /* Hide ONLY the "Select FY:" text shown at the far right of the blue bar */
+  #fyReportModal .modal-header span:has(+ #reportFYSelect) {
+    display: none !important;
+  }
+
+  /* Keep the FY dropdown itself hidden in print as before */
+  #fyReportModal #reportFYSelect {
+    display: none !important;
+  }
+}
+
+
+/* =========================================================
+   DOCUMENT PREVIEW PRINT — NO GOOGLE LOGIN / ACCOUNT PICKER
+   Activated only while Print is pressed in the PDF preview.
+   Does not alter the FY Detail Report print layout.
+   ========================================================= */
+@media print {
+  body.printing-document > * {
+    display: none !important;
+  }
+
+  body.printing-document #fyReportModal {
+    display: none !important;
+  }
+
+  body.printing-document #pdfPreviewModal {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  body.printing-document #pdfPreviewModal .modal-content {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  body.printing-document #pdfPreviewModal .modal-header {
+    display: none !important;
+  }
+
+  body.printing-document #pdfPreviewModal #modalPreviewBody {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  body.printing-document #pdfPreviewModal .preview-iframe {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+}
+
+</style>
         </defs>
 
         <g transform="translate(250, 245)">
@@ -2475,13 +3148,15 @@
         <i class="fa-solid fa-wifi"></i> Online
       </span>
 
-      <button class="header-util-btn" onclick="toggleFullScreen()" title="Full Screen View">
-        <i class="fa-solid fa-expand"></i>
-      </button>
+      <div class="header-action-stack">
+        <button class="header-util-btn" onclick="toggleFullScreen()" title="Full Screen View">
+          <i class="fa-solid fa-expand"></i>
+        </button>
 
-      <button class="btn-logout" onclick="logoutPortal()" title="Lock Portal">
-        <i class="fa-solid fa-lock"></i> Logout
-      </button>
+        <button class="btn-logout" onclick="logoutPortal()" title="Lock Portal">
+          <i class="fa-solid fa-lock"></i> Logout
+        </button>
+      </div>
     </div>
   </header>
 
@@ -2809,12 +3484,9 @@
       <div class="modal-header">
         <h3 id="modalDocTitle"><i class="fa-brands fa-google-drive"></i> Document Preview</h3>
         <div class="modal-header-actions">
-          <button class="modal-btn-control" onclick="printPreviewDoc()">
-            <i class="fa-solid fa-print"></i> Print
+          <button id="modalDriveExternalLink" type="button" class="modal-btn-control" onclick="downloadPreviewDoc()">
+            <i class="fa-solid fa-download"></i> Download
           </button>
-          <a id="modalDriveExternalLink" href="#" target="_blank" class="modal-btn-control">
-            <i class="fa-solid fa-download"></i> Download / Drive
-          </a>
           <button class="modal-close-btn" onclick="closePreviewModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
@@ -2876,7 +3548,7 @@
           <div class="report-meta-bar">
             <span><b>Financial Year:</b> <span id="reportFYLabel" style="color:var(--brand-navy); font-weight:800;">2026–27</span></span>
             <span><b>Period:</b> 01 April to 31 March</span>
-            <span><b>Criterion:</b> Document Letter Issue Date / Date of Forwarding</span>
+            
             <span><b>Generated on:</b> <span id="reportGenDate"></span></span>
           </div>
 
@@ -3724,7 +4396,7 @@
               y: {
                 beginAtZero: true,
                 grid: { color: 'rgba(226, 232, 240, 0.8)' },
-                ticks: { stepSize: 1, precision: 0, font: { family: 'Plus Jakarta Sans', size: 10 } }
+                ticks: { stepSize: 1, precision: 0, font: { family: 'Plus Jakarta Sans', size: 13, weight: 600 } }
               },
               x: {
                 grid: { display: false },
@@ -3732,7 +4404,7 @@
                   autoSkip: false,
                   maxRotation: 35,
                   minRotation: 15,
-                  font: { family: 'Plus Jakarta Sans', size: 9, weight: 600 }
+                  font: { family: 'Plus Jakarta Sans', size: 12, weight: 700 }
                 }
               }
             }
@@ -3766,7 +4438,7 @@
                 position: 'bottom',
                 labels: {
                   boxWidth: 8,
-                  font: { family: 'Plus Jakarta Sans', size: 9, weight: 600 },
+                  font: { family: 'Plus Jakarta Sans', size: 12, weight: 700 },
                   padding: 8
                 }
               },
@@ -4230,7 +4902,7 @@
 
         const actionButtons = `
           <div class="actions-cell">
-            <button class="action-icon-btn" title="View Preview" onclick="openPreview('${escapeHtml(rec.work || rec.bookName || rec.wagon || rec.inspectionBy || rec.relatedTo || '')}', '${rec.driveLink || ''}')">
+            <button class="action-icon-btn" title="View Preview" onclick="openPreview('${escapeHtml(rec.work || rec.bookName || rec.wagon || rec.inspectionBy || rec.relatedTo || '')}', '${rec.driveLink || ''}', '${escapeHtml(rec.station || rec.wagon || rec.bookName || rec.tanNo || rec.relatedTo || rec.relatedEquip || rec.docNo || rec.inspectionBy || '')}')">
               <i class="fa-solid fa-eye"></i>
             </button>
             <button class="action-icon-btn edit-btn" title="Edit Record (Admin)" onclick="openEditModal('${rec.id}')">
@@ -4762,15 +5434,59 @@
     }
 
     // MODAL PREVIEW HANDLER
-    function openPreview(title, link) {
+    let currentPreviewOriginalUrl = '';
+    let currentPreviewFileId = '';
+
+    function getDriveFileId(rawUrl) {
+      if (!rawUrl) return '';
+      const patterns = [
+        /\/file\/d\/([a-zA-Z0-9_-]+)/,
+        /\/d\/([a-zA-Z0-9_-]+)/,
+        /[?&]id=([a-zA-Z0-9_-]+)/
+      ];
+      for (const pattern of patterns) {
+        const match = rawUrl.match(pattern);
+        if (match && match[1]) return match[1];
+      }
+      return '';
+    }
+
+    function getDirectDownloadUrl(rawUrl) {
+      const fileId = getDriveFileId(rawUrl);
+      if (fileId) {
+        return `https://drive.usercontent.google.com/download?id=${encodeURIComponent(fileId)}&export=download&confirm=t`;
+      }
+      return rawUrl;
+    }
+
+    function getPrintablePreviewUrl(rawUrl) {
+      const fileId = getDriveFileId(rawUrl);
+      if (fileId) {
+        return `https://drive.google.com/file/d/${encodeURIComponent(fileId)}/preview`;
+      }
+      return rawUrl;
+    }
+
+    function openPreview(title, link, column2Item = '') {
       if (!link) {
         alert("No Drive attachment link has been provided for this record.");
         return;
       }
-      document.getElementById('modalDocTitle').innerText = title || "Document Preview";
-      const embedUrl = getDrivePreviewUrl(link);
-      document.getElementById('modalPreviewBody').innerHTML = `<iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe>`;
-      document.getElementById('modalDriveExternalLink').href = link;
+
+      currentPreviewOriginalUrl = link;
+      currentPreviewFileId = getDriveFileId(link);
+
+      // Preview heading for Action > Eye: Subsection + "of" + Column-2 item.
+      // Example: "PCSTE SANCTION of BIA Ex. Yd".
+      // Existing work-description links keep their previous title because they do not pass column2Item.
+      const previewHeading = column2Item
+        ? `${currentCategory} of ${column2Item}`
+        : (title || "Document Preview");
+      document.getElementById('modalDocTitle').innerText = previewHeading;
+      const embedUrl = getPrintablePreviewUrl(link);
+      document.getElementById('modalPreviewBody').innerHTML =
+        `<iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe>`;
+
       document.getElementById('pdfPreviewModal').style.display = 'flex';
       history.pushState({ view: 'modal', modal: 'preview' }, '', '');
     }
@@ -4778,15 +5494,128 @@
     function closePreviewModal() {
       document.getElementById('modalPreviewBody').innerHTML = '';
       document.getElementById('pdfPreviewModal').style.display = 'none';
+      currentPreviewOriginalUrl = '';
+      currentPreviewFileId = '';
     }
 
-    function printPreviewDoc() {
-      const iframe = document.querySelector('.preview-iframe');
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-      } else {
-        window.print();
+    function downloadPreviewDoc() {
+      if (!currentPreviewOriginalUrl) {
+        alert("No attachment is available for download.");
+        return;
+      }
+
+      const downloadUrl = getDirectDownloadUrl(currentPreviewOriginalUrl);
+
+      // Use same-window navigation to the public file endpoint.
+      // This avoids sending the user to the Google Drive account/view page.
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    async function printPreviewDoc() {
+      if (!currentPreviewOriginalUrl) {
+        alert("No attachment is available for printing.");
+        return;
+      }
+
+      /*
+       * PRINT FIX (Android/mobile):
+       * Do not print the Google Drive preview iframe itself. A cross-origin
+       * iframe can appear correctly on screen but print as a blank page.
+       * Instead, obtain the public PDF file, turn it into a same-origin Blob
+       * URL, load that Blob in a temporary iframe, and print that iframe.
+       * This also avoids opening Google Drive's account-selection/print page.
+       */
+      const printBtn = document.querySelector('#pdfPreviewModal .btn-print');
+      const oldHtml = printBtn ? printBtn.innerHTML : '';
+
+      try {
+        if (printBtn) {
+          printBtn.disabled = true;
+          printBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Preparing...';
+        }
+
+        const pdfUrl = getDirectDownloadUrl(currentPreviewOriginalUrl);
+        const response = await fetch(pdfUrl, {
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'omit',
+          cache: 'no-store'
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const blob = await response.blob();
+        if (!blob || blob.size === 0) throw new Error('Empty PDF');
+
+        const pdfBlob = blob.type === 'application/pdf'
+          ? blob
+          : new Blob([blob], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(pdfBlob);
+
+        const frame = document.createElement('iframe');
+        frame.style.position = 'fixed';
+        frame.style.right = '0';
+        frame.style.bottom = '0';
+        frame.style.width = '1px';
+        frame.style.height = '1px';
+        frame.style.border = '0';
+        frame.style.opacity = '0';
+        frame.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(frame);
+
+        let cleaned = false;
+        const cleanup = () => {
+          if (cleaned) return;
+          cleaned = true;
+          setTimeout(() => {
+            try { frame.remove(); } catch (e) {}
+            try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+          }, 1500);
+        };
+
+        frame.onload = () => {
+          // Android PDF renderer needs a short moment after iframe load.
+          setTimeout(() => {
+            try {
+              const w = frame.contentWindow;
+              if (!w) throw new Error('Print frame unavailable');
+              w.focus();
+              w.print();
+              setTimeout(cleanup, 5000);
+            } catch (err) {
+              cleanup();
+              throw err;
+            }
+          }, 700);
+        };
+
+        frame.src = blobUrl;
+      } catch (err) {
+        console.error('Direct PDF print failed:', err);
+
+        /*
+         * Fallback: open the public direct-file endpoint, not Drive's print
+         * page. This never intentionally sends the user to Google login.
+         */
+        const fallbackUrl = getDirectDownloadUrl(currentPreviewOriginalUrl);
+        const a = document.createElement('a');
+        a.href = fallbackUrl;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } finally {
+        if (printBtn) {
+          printBtn.disabled = false;
+          printBtn.innerHTML = oldHtml;
+        }
       }
     }
 
