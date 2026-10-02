@@ -3893,8 +3893,16 @@
       // While logged in, the base entry is a guard. Back from HOME therefore
       // stays inside RailSNTGyan; Logout is the intentional way to end the session.
       sessionStorage.removeItem('railsntgyan_allow_exit');
-      history.replaceState({ view: 'guard' }, '', '');
-      history.pushState({ view: 'home' }, '', '');
+      // Keep a protected HOME history entry while the portal is logged in.
+      // Using the current URL explicitly is more reliable in Android/Chrome,
+      // including locally opened content:// pages.
+      try {
+        history.replaceState({ view: 'guard', railsntgyan: true }, '', window.location.href);
+        history.pushState({ view: 'home', railsntgyan: true }, '', window.location.href);
+      } catch (e) {
+        history.replaceState({ view: 'guard', railsntgyan: true }, '');
+        history.pushState({ view: 'home', railsntgyan: true }, '');
+      }
 
       updateMobileHeaderHeight();
       window.addEventListener('resize', () => {
@@ -3924,19 +3932,6 @@
       // recreation instead of using its Back/Forward cache.
       if (sessionStorage.getItem('importantLinksReturnState')) {
         setTimeout(restoreImportantLinksReturnState, event.persisted ? 0 : 150);
-      }
-    });
-
-    // Prevent accidental Back exit while the portal session is active.
-    // Section/category history still works normally. When the protected base
-    // entry is reached, return to HOME and recreate the HOME history entry.
-    window.addEventListener('popstate', (event) => {
-      const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
-      const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
-
-      if (isAuth && !allowExit && event.state && event.state.view === 'guard') {
-        goHome(false);
-        history.pushState({ view: 'home' }, '', '');
       }
     });
 
@@ -4050,53 +4045,83 @@
     }
 
     // ==========================================
-    // MOBILE / HARDWARE BACK BUTTON NAVIGATION (ANDROID APP & WEBVIEW SAFE)
+    // PROTECTED BACK NAVIGATION (BROWSER + ANDROID WEBVIEW)
+    // Any section -> Back -> HOME
+    // HOME -> Back -> remain on HOME and ask user to Logout
     // ==========================================
-    window.addEventListener('popstate', function (event) {
+    let backLogoutMessageVisible = false;
+    let backNavigationBusy = false;
+
+    function showBackLogoutMessage() {
+      if (backLogoutMessageVisible) return;
+      backLogoutMessageVisible = true;
+      alert('RailSNTGyan se bahar jane ke liye pehle Logout button par click karein.');
+      setTimeout(() => { backLogoutMessageVisible = false; }, 300);
+    }
+
+    function pushProtectedState(viewName) {
+      try {
+        history.pushState(
+          { view: viewName, railsntgyan: true },
+          '',
+          window.location.href
+        );
+      } catch (e) {
+        history.pushState({ view: viewName, railsntgyan: true }, '');
+      }
+    }
+
+    window.addEventListener('popstate', function () {
+      const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
+      const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
+
+      // Logout is the only intentional release of the Back lock.
+      if (!isAuth || allowExit) return;
+      if (backNavigationBusy) return;
+      backNavigationBusy = true;
+
+      const finish = () => setTimeout(() => { backNavigationBusy = false; }, 80);
+
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
         closeSidebarDrawer();
-        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
-        return;
-      }
-      if (document.getElementById('inAppWebModal').style.display === 'flex') {
-        closeInAppWebModal();
-        goHome(false);
-        history.pushState({ view: 'home' }, '', '');
-        return;
-      }
-      if (document.getElementById('pdfPreviewModal').style.display === 'flex') {
-        closePreviewModal();
-        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
-        return;
-      }
-      if (document.getElementById('fyReportModal').style.display === 'flex') {
-        closeFYReportModal();
-        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
-        return;
-      }
-      if (document.getElementById('addRecordModal').style.display === 'flex') {
-        closeAddModal();
-        history.pushState({ view: currentCategory === 'HOME' ? 'home' : 'category', category: currentCategory }, '', '');
+        pushProtectedState(currentCategory === 'HOME' ? 'home' : 'category');
+        finish();
         return;
       }
 
-      // If user is inside any category or table view, back button MUST bring them HOME
-      const tableSec = document.getElementById('tableViewSection');
-      if (tableSec && tableSec.style.display === 'flex') {
+      const modalChecks = [
+        ['inAppWebModal', closeInAppWebModal],
+        ['pdfPreviewModal', closePreviewModal],
+        ['fyReportModal', closeFYReportModal],
+        ['addRecordModal', closeAddModal]
+      ];
+
+      for (const [id, closer] of modalChecks) {
+        const el = document.getElementById(id);
+        if (el && el.style.display === 'flex') {
+          closer();
+          pushProtectedState(currentCategory === 'HOME' ? 'home' : 'category');
+          finish();
+          return;
+        }
+      }
+
+      // One Back from any subsection always returns to HOME.
+      if (currentCategory !== 'HOME') {
         goHome(false);
-        history.pushState({ view: 'home' }, '', '');
+        pushProtectedState('home');
+        finish();
         return;
       }
 
-      if (event.state && event.state.view === 'category') {
-        switchCategory(event.state.category, false);
-      } else {
-        goHome(false);
-        // Retain baseline so continuous back button won't exit webview unexpectedly
-        history.pushState({ view: 'home' }, '', '');
-      }
-    });
+      // Already on HOME: immediately restore protected HOME entry.
+      // Therefore browser/system Back cannot leave the logged-in portal.
+      goHome(false);
+      pushProtectedState('home');
+      finish();
+      setTimeout(showBackLogoutMessage, 20);
+    }, false);
 
     // MOBILE DRAWER CONTROLS
     function toggleSidebarDrawer() {
