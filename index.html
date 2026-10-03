@@ -2,6 +2,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="dark light">
+  <style>html { background:#07101d; } body.dark-theme { background:#07101d; color:#e5edf7; }</style>
+<style id="dark-first-paint-fix">
+/* DARK FIRST PAINT: these rules live in <head> so login/return never paints light first */
+html, body { background:#07101d !important; color-scheme:dark; }
+body.dark-theme { background:#07101d !important; color:#e5edf7 !important; }
+body.dark-theme #loginScreen {
+  background: radial-gradient(circle at 20% 30%, #0b5660, transparent 60%),
+              radial-gradient(circle at 80% 80%, #0b2742, transparent 60%),
+              linear-gradient(145deg, #030b14, #160707) !important;
+}
+body.dark-theme #loginScreen .login-card {
+  background: rgba(15,23,42,.97) !important;
+  color:#e5edf7 !important;
+  border-color:rgba(249,115,22,.9) !important;
+  box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(148,163,184,.18) inset !important;
+}
+body.dark-theme #loginScreen .login-logo-container { background:rgba(30,41,59,.96) !important; }
+body.dark-theme #loginScreen .login-brand-title { color:#f8fafc !important; }
+body.dark-theme #loginScreen .login-brand-title .brand-teal { color:#5ee7e7 !important; }
+body.dark-theme #loginScreen .login-brand-title .brand-orange { color:#fb923c !important; }
+body.dark-theme #loginScreen .login-brand-subtitle { color:#dbeafe !important; }
+body.dark-theme #loginScreen .login-desc { color:#b9c8d9 !important; }
+body.dark-theme #loginScreen label { color:#e2e8f0 !important; }
+body.dark-theme #loginScreen .login-input {
+  background:#111827 !important; color:#f8fafc !important; border-color:#475569 !important;
+}
+body.dark-theme #loginScreen .login-input::placeholder { color:#aebed0 !important; }
+body.dark-theme #loginScreen .login-input-wrapper i { color:#cbd5e1 !important; }
+body.dark-theme #loginScreen .login-btn, body.dark-theme #loginScreen .login-btn i { color:#fff !important; }
+body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
+</style>
   <script>
     // Prevent the login overlay from flashing while an authenticated user
     // returns from an Important Link using the browser Back button.
@@ -2516,7 +2548,7 @@ body.dark-theme .logout-required-dialog p { color: #dbe7f3; }
 body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
 </style>
 </head>
-<body>
+<body class="dark-theme">
 
   <!-- FULL PAGE LOGIN SCREEN -->
   <div id="loginScreen">
@@ -4171,12 +4203,36 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
       const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
 
-      // Returning from an external Important Link must never log the user out
-      // or route via HOME. Restore Important Links first and keep the session.
-      if (isAuth && sessionStorage.getItem('importantLinksReturnState')) {
-        // Browser Back from an external Important Link: restore the section only.
-        // Do NOT add another history entry here. The next Back must go to HOME.
+      // HISTORY STATE IS THE SOURCE OF TRUTH.
+      // If Back has already moved the browser to the protected HOME entry,
+      // render HOME immediately. This must be checked BEFORE the temporary
+      // Important-Links return flag, otherwise a stale/racing flag can wrongly
+      // keep the user on Important Links for one extra Back press.
+      if (isAuth && event.state && event.state.view === 'home') {
+        sessionStorage.removeItem('importantLinksReturnState');
+        backNavigationBusy = true;
+        goHome(false);
+        setTimeout(() => { backNavigationBusy = false; }, 80);
+        return;
+      }
+
+      // Returning from an external Important Link lands on the category entry.
+      // Restore the section only; do not create any new history entry.
+      if (isAuth && event.state && event.state.view === 'category' &&
+          event.state.category === 'IMPORTANT LINKS') {
         switchCategory('IMPORTANT LINKS', false);
+        openOnlyAccordion('grpImportantLinks');
+        if (sessionStorage.getItem('importantLinksReturnState')) {
+          restoreImportantLinksReturnState();
+        }
+        return;
+      }
+
+      // Fallback for browsers/WebViews that restore the portal without firing
+      // popstate for the external -> portal transition.
+      if (isAuth && sessionStorage.getItem('importantLinksReturnState')) {
+        switchCategory('IMPORTANT LINKS', false);
+        openOnlyAccordion('grpImportantLinks');
         restoreImportantLinksReturnState();
         return;
       }
@@ -6275,9 +6331,9 @@ document.addEventListener('click',function(e){
     else if (logout && logout.parentElement === host) host.insertBefore(btn, logout);
     else host.appendChild(btn);
 
-    let saved = 'light';
-    try { saved = localStorage.getItem('railsntgyan-theme') || 'dark'; } catch(e) {}
-    applyTheme(saved);
+    // RailSNTGyan always starts in Dark Theme. This runs after the body
+    // already has dark-theme, so there is no Light -> Dark flash on login or Back.
+    applyTheme('dark');
   }
 
   if (document.readyState === 'loading') {
