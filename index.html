@@ -1610,6 +1610,60 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
       border: none;
     }
 
+
+    /* ADVANCED DOCUMENT PREVIEW WINDOW */
+    #pdfPreviewModal { padding: 18px; align-items: center; justify-content: center; }
+    #pdfPreviewModal .modal-content {
+      width: min(92vw, 1280px); height: min(88vh, 900px);
+      max-width: none; max-height: none; position: relative;
+      resize: both; overflow: hidden; min-width: 420px; min-height: 300px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+    }
+    #pdfPreviewModal .modal-header { cursor: move; user-select: none; touch-action: none; }
+    #pdfPreviewModal .modal-header-actions { cursor: default; }
+    .preview-zoom-toolbar { display:flex; align-items:center; gap:4px; }
+    .preview-zoom-value { min-width:46px; text-align:center; font-size:11px; font-weight:700; color:#fff; }
+    #modalPreviewBody { overflow:auto; background:#111827; touch-action: pan-x pan-y pinch-zoom; padding:0 !important; margin:0 !important; line-height:0; }
+    #previewTransformHost { width:100%; height:100%; transform-origin:0 0; display:block; margin:0; padding:0; line-height:0; }
+    #previewTransformHost .preview-iframe { width:100%; height:100%; min-height:100%; display:block; background:#fff; border:0; margin:0; padding:0; vertical-align:top; }
+    /* Hide the Google Drive viewer's pop-out/open-in-new-window control. */
+    #drivePopoutMask {
+      position:absolute; top:0; right:0; width:58px; height:58px; z-index:8;
+      background:#111827; pointer-events:auto;
+    }
+    /* Activated only while Ctrl is held so normal PDF clicking/scrolling still works. */
+    #previewWheelCatcher {
+      position:absolute; inset:0; z-index:7; pointer-events:none; background:transparent;
+      cursor:zoom-in;
+    }
+    #previewWheelCatcher.active { pointer-events:auto; }
+    .preview-reset-btn { min-width:48px; font-weight:800; }
+
+    #pdfPreviewModal.preview-maximized { padding:0; }
+    #pdfPreviewModal.preview-maximized .modal-content {
+      position:fixed !important; inset:0 !important; width:100vw !important; height:100vh !important;
+      height:100dvh !important; max-width:none !important; max-height:none !important;
+      border-radius:0 !important; resize:none !important; transform:none !important;
+    }
+    #pdfPreviewModal.preview-minimized { align-items:flex-end; justify-content:flex-end; pointer-events:none; }
+    #pdfPreviewModal.preview-minimized .modal-content {
+      width:min(420px,92vw) !important; height:48px !important; min-height:48px !important;
+      position:fixed !important; right:14px !important; bottom:14px !important; left:auto !important; top:auto !important;
+      resize:none !important; pointer-events:auto; transform:none !important;
+    }
+    #pdfPreviewModal.preview-minimized .modal-body { display:none !important; }
+    @media (max-width: 768px) {
+      #pdfPreviewModal { padding:0; }
+      #pdfPreviewModal .modal-content {
+        width:100vw; height:100vh; height:100dvh; min-width:0; min-height:0;
+        border-radius:0; resize:none; position:fixed; inset:0; transform:none !important;
+      }
+      #pdfPreviewModal .modal-header { cursor:default; padding:7px 8px; }
+      #pdfPreviewModal .modal-header h3 { max-width:38vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .modal-btn-control .preview-control-text { display:none; }
+      .preview-zoom-value { min-width:38px; font-size:10px; }
+    }
+
     /* IN-APP EXTERNAL WEB BROWSER MODAL (SAFE BACK TO HOME) */
     #inAppWebModal {
       padding: 0;
@@ -2546,6 +2600,161 @@ body.dark-theme .logout-required-dialog { background: #102238; color: #f8fafc; b
 body.dark-theme .logout-required-dialog h3 { color: #f8fafc; }
 body.dark-theme .logout-required-dialog p { color: #dbe7f3; }
 body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
+</style>
+
+<style id="fy-print-v17-fix">
+/* v17: FY Report print readability + top clipping fix */
+@media print {
+  @page { size: A4 landscape; margin: 8mm 7mm 7mm 7mm; }
+
+  /* The blue on-screen modal toolbar is UI only. Hiding the ACTUAL class
+     prevents its title from being clipped at the physical top print edge. */
+  #fyReportModal > .report-modal-content > .modal-header {
+    display: none !important;
+  }
+
+  #fyReportModal .report-sheet {
+    padding: 3.5mm 4mm !important;
+    border: 1px solid #94a3b8 !important;
+  }
+
+  #fyReportModal .report-header-banner {
+    margin: 0 0 2.5mm 0 !important;
+    padding: 1mm 0 2mm 0 !important;
+  }
+  #fyReportModal .report-header-banner h2 {
+    font-size: 17pt !important;
+    line-height: 1.12 !important;
+  }
+  #fyReportModal .report-header-banner p {
+    font-size: 9.5pt !important;
+    line-height: 1.18 !important;
+  }
+  #fyReportModal .report-meta-bar {
+    margin: 0 0 2.5mm 0 !important;
+    padding: 2.2mm 3mm !important;
+    font-size: 9pt !important;
+    line-height: 1.25 !important;
+  }
+
+  #fyReportModal table.report-table {
+    font-size: 9pt !important;
+    line-height: 1.2 !important;
+  }
+  #fyReportModal table.report-table th,
+  #fyReportModal table.report-table td {
+    padding: 2.0mm 1.1mm !important;
+    font-size: 9pt !important;
+    line-height: 1.2 !important;
+    vertical-align: middle !important;
+  }
+  #fyReportModal table.report-table thead th {
+    font-size: 9pt !important;
+    font-weight: 800 !important;
+  }
+  #fyReportModal table.report-table td:not(:first-child) {
+    font-size: 9.5pt !important;
+    font-weight: 650 !important;
+  }
+  #fyReportModal table.report-table th:first-child,
+  #fyReportModal table.report-table td:first-child,
+  #fyReportModal table.report-table .col-category,
+  #fyReportModal table.report-table .cat-name {
+    width: 22% !important;
+    font-size: 8.5pt !important;
+    font-weight: 750 !important;
+  }
+  #fyReportModal table.report-table .total-row td,
+  #fyReportModal table.report-table .grand-total,
+  #fyReportModal table.report-table .col-total {
+    font-weight: 800 !important;
+  }
+}
+</style>
+
+<style id="fy-print-v18-title-and-font-fix">
+/* v18: retain FY report title in print + larger table numbers */
+@media print {
+  @page { size: A4 landscape; margin: 9mm 7mm 7mm 7mm; }
+
+  /* Keep the report title bar in print, but hide interactive controls. */
+  #fyReportModal > .report-modal-content > .modal-header {
+    display: flex !important;
+    position: static !important;
+    min-height: 0 !important;
+    margin: 0 0 2.5mm 0 !important;
+    padding: 2.2mm 3mm !important;
+    background: #0b3b60 !important;
+    border: 1px solid #0b3b60 !important;
+    border-bottom: 1.2mm solid #f97316 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    align-items: center !important;
+  }
+  #fyReportModal > .report-modal-content > .modal-header h3 {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #ffffff !important;
+    font-size: 11pt !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    white-space: normal !important;
+  }
+  #fyReportModal > .report-modal-content > .modal-header h3 i {
+    margin-right: 1.5mm !important;
+  }
+  #fyReportModal > .report-modal-content > .modal-header .modal-header-actions {
+    display: none !important;
+  }
+
+  /* Slightly tighter report body gives the larger figures room on one page. */
+  #fyReportModal .report-sheet {
+    padding: 3mm 3.5mm !important;
+  }
+  #fyReportModal .report-header-banner {
+    margin-bottom: 2mm !important;
+    padding: .7mm 0 1.5mm 0 !important;
+  }
+  #fyReportModal .report-header-banner h2 {
+    font-size: 16pt !important;
+  }
+  #fyReportModal .report-meta-bar {
+    margin-bottom: 2mm !important;
+    padding: 1.8mm 2.5mm !important;
+    font-size: 9.3pt !important;
+  }
+
+  #fyReportModal table.report-table {
+    font-size: 10pt !important;
+    line-height: 1.12 !important;
+  }
+  #fyReportModal table.report-table th,
+  #fyReportModal table.report-table td {
+    padding: 1.65mm 1mm !important;
+    line-height: 1.12 !important;
+  }
+  #fyReportModal table.report-table thead th {
+    font-size: 9.8pt !important;
+    font-weight: 800 !important;
+  }
+  #fyReportModal table.report-table td:not(:first-child) {
+    font-size: 10.5pt !important;
+    font-weight: 700 !important;
+  }
+  #fyReportModal table.report-table th:first-child,
+  #fyReportModal table.report-table td:first-child,
+  #fyReportModal table.report-table .col-category,
+  #fyReportModal table.report-table .cat-name {
+    font-size: 9pt !important;
+    font-weight: 750 !important;
+  }
+  #fyReportModal table.report-table .total-row td:not(:first-child),
+  #fyReportModal table.report-table td:last-child {
+    font-size: 10.8pt !important;
+    font-weight: 800 !important;
+  }
+}
 </style>
 </head>
 <body class="dark-theme">
@@ -3503,7 +3712,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
 
         <!-- 2. FILTER & SEARCH PANEL -->
         <div class="filter-panel sticky-filter-panel" id="mainFilterPanel">
-          <div class="filter-item">
+          <div class="filter-item" id="filterYearWrapper">
             <i class="fa-solid fa-calendar"></i>
             <span>Year:</span>
             <select id="filterYear" onchange="renderTable()">
@@ -3564,10 +3773,18 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       <div class="modal-header">
         <h3 id="modalDocTitle"><i class="fa-brands fa-google-drive"></i> Document Preview</h3>
         <div class="modal-header-actions">
+          <div class="preview-zoom-toolbar" aria-label="Preview zoom controls">
+            <button type="button" class="modal-btn-control" onclick="changePreviewZoom(-0.1)" title="Zoom out"><i class="fa-solid fa-minus"></i></button>
+            <span id="previewZoomValue" class="preview-zoom-value">100%</span>
+            <button type="button" class="modal-btn-control" onclick="changePreviewZoom(0.1)" title="Zoom in"><i class="fa-solid fa-plus"></i></button>
+            <button type="button" class="modal-btn-control preview-reset-btn" onclick="resetPreviewZoom()" title="Reset zoom to 100%"><span>100%</span></button>
+          </div>
           <button id="modalDriveExternalLink" type="button" class="modal-btn-control" onclick="downloadPreviewDoc()">
-            <i class="fa-solid fa-download"></i> Download
+            <i class="fa-solid fa-download"></i><span class="preview-control-text"> Download</span>
           </button>
-          <button class="modal-close-btn" onclick="closePreviewModal()"><i class="fa-solid fa-xmark"></i></button>
+          <button type="button" class="modal-btn-control" onclick="minimizePreviewWindow()" title="Minimize"><i class="fa-solid fa-window-minimize"></i></button>
+          <button id="previewMaxRestoreBtn" type="button" class="modal-btn-control" onclick="togglePreviewMaximize()" title="Maximize / Restore"><i class="fa-regular fa-window-maximize"></i></button>
+          <button class="modal-close-btn" onclick="closePreviewModal()" title="Close"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
       <div class="modal-body" id="modalPreviewBody"></div>
@@ -4200,44 +4417,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
       const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
 
-      // HISTORY STATE IS THE SOURCE OF TRUTH.
-      // If Back has already moved the browser to the protected HOME entry,
-      // render HOME immediately. This must be checked BEFORE the temporary
-      // Important-Links return flag, otherwise a stale/racing flag can wrongly
-      // keep the user on Important Links for one extra Back press.
-      if (isAuth && event.state && event.state.view === 'home') {
-        sessionStorage.removeItem('importantLinksReturnState');
-        backNavigationBusy = true;
-        goHome(false);
-        setTimeout(() => { backNavigationBusy = false; }, 80);
-        return;
-      }
-
-      // Returning from an external Important Link lands on the category entry.
-      // Restore the section only; do not create any new history entry.
-      if (isAuth && event.state && event.state.view === 'category' &&
-          event.state.category === 'IMPORTANT LINKS') {
-        switchCategory('IMPORTANT LINKS', false);
-        openOnlyAccordion('grpImportantLinks');
-        if (sessionStorage.getItem('importantLinksReturnState')) {
-          restoreImportantLinksReturnState();
-        }
-        return;
-      }
-
-      // Fallback for browsers/WebViews that restore the portal without firing
-      // popstate for the external -> portal transition.
-      if (isAuth && sessionStorage.getItem('importantLinksReturnState')) {
-        switchCategory('IMPORTANT LINKS', false);
-        openOnlyAccordion('grpImportantLinks');
-        restoreImportantLinksReturnState();
-        return;
-      }
-
-      // On the login screen (including immediately after Logout), Back must
-      // leave RailSNTGyan instead of exposing any previous authenticated page.
-      // A normal browser tab cannot always be programmatically closed, so the
-      // reliable browser-safe fallback is to navigate out to a blank page.
+      // Login screen / after explicit Logout: release the navigation lock.
       if (!isAuth || allowExit) {
         try {
           window.location.replace('about:blank');
@@ -4246,19 +4426,29 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         }
         return;
       }
+
       if (backNavigationBusy) return;
       backNavigationBusy = true;
-
       const finish = () => setTimeout(() => { backNavigationBusy = false; }, 80);
 
+      // PRIORITY 1: If a drawer is open, Back only closes the drawer.
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
         closeSidebarDrawer();
-        pushProtectedState(currentCategory === 'HOME' ? 'home' : 'category');
+        // Browser has already stepped back one entry. Restore a matching entry
+        // so the next Back performs the section -> HOME action.
+        history.pushState(
+          currentCategory === 'HOME'
+            ? { view: 'home', railsntgyan: true }
+            : { view: 'category', category: currentCategory, railsntgyan: true },
+          '', window.location.href
+        );
         finish();
         return;
       }
 
+      // PRIORITY 2: If any file/report/form/web preview is open, Back closes
+      // ONLY that overlay and keeps the user in the same section/subsection.
       const modalChecks = [
         ['inAppWebModal', closeInAppWebModal],
         ['pdfPreviewModal', closePreviewModal],
@@ -4268,33 +4458,61 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
 
       for (const [id, closer] of modalChecks) {
         const el = document.getElementById(id);
-        if (el && el.style.display === 'flex') {
+        if (el && window.getComputedStyle(el).display !== 'none') {
           closer();
-          pushProtectedState(currentCategory === 'HOME' ? 'home' : 'category');
+          // After Back from a modal, browser normally lands on the category
+          // history entry. Do NOT go HOME and do NOT add another history entry.
           finish();
           return;
         }
       }
 
-      // One Back from any subsection always returns to HOME.
-      if (currentCategory !== 'HOME') {
-        // IMPORTANT LINKS / any subsection -> Back -> HOME.
-        // When the browser has already moved onto our HOME history entry, do not
-        // push another HOME entry; simply render HOME on that existing entry.
-        goHome(false);
-        if (!event.state || event.state.view !== 'home') {
-          try {
-            history.replaceState({ view: 'home', railsntgyan: true }, '', window.location.href);
-          } catch (e) {
-            history.replaceState({ view: 'home', railsntgyan: true }, '');
-          }
+      // PRIORITY 3: External Important Link -> Back -> IMPORTANT LINKS.
+      if (event.state && event.state.view === 'category' &&
+          event.state.category === 'IMPORTANT LINKS') {
+        switchCategory('IMPORTANT LINKS', false);
+        if (typeof openOnlyAccordion === 'function') openOnlyAccordion('grpImportantLinks');
+        if (sessionStorage.getItem('importantLinksReturnState')) {
+          restoreImportantLinksReturnState();
         }
         finish();
         return;
       }
 
-      // Already on HOME: immediately restore protected HOME entry.
-      // Therefore browser/system Back cannot leave the logged-in portal.
+      // Fallback for WebViews/browsers restoring an external Important Link
+      // without a reliable category popstate.
+      if (sessionStorage.getItem('importantLinksReturnState')) {
+        switchCategory('IMPORTANT LINKS', false);
+        if (typeof openOnlyAccordion === 'function') openOnlyAccordion('grpImportantLinks');
+        restoreImportantLinksReturnState();
+        finish();
+        return;
+      }
+
+      // PRIORITY 4: Back from ANY section/subsection always renders HOME.
+      // This includes Files & Approval, Reference Books, Sanctions, LDCE,
+      // Important Links and every child subsection.
+      if (currentCategory !== 'HOME') {
+        sessionStorage.removeItem('importantLinksReturnState');
+        goHome(false);
+        try {
+          history.replaceState({ view: 'home', railsntgyan: true }, '', window.location.href);
+        } catch (e) {
+          history.replaceState({ view: 'home', railsntgyan: true }, '');
+        }
+        finish();
+        return;
+      }
+
+      // If browser history itself has landed on HOME, render HOME explicitly.
+      if (event.state && event.state.view === 'home') {
+        goHome(false);
+        finish();
+        return;
+      }
+
+      // PRIORITY 5: HOME -> Back while still logged in: never exit.
+      // Restore a protected HOME entry and show the Logout Required message.
       goHome(false);
       pushProtectedState('home');
       finish();
@@ -4566,6 +4784,13 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       const labels = dashTrackedCategories.map(c => c.label);
       const dataValues = dashTrackedCategories.map(c => countsMap[c.key] || 0);
 
+      // Canvas text cannot be fixed with CSS alone. Use high-contrast
+      // Chart.js colors when RailSNTGyan is in Dark Theme.
+      const isDarkChart = document.body.classList.contains('dark-theme');
+      const chartTextColor = isDarkChart ? '#e5edf7' : '#475569';
+      const chartGridColor = isDarkChart ? 'rgba(148, 163, 184, 0.42)' : 'rgba(226, 232, 240, 0.8)';
+      const chartBorderColor = isDarkChart ? '#e2e8f0' : '#ffffff';
+
       const backgroundColors = [
         '#b91c1c', '#ea580c', '#d97706', '#059669',
         '#0284c7', '#0b3b60', '#6366f1', '#9333ea', '#be185d'
@@ -4609,12 +4834,13 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
             scales: {
               y: {
                 beginAtZero: true,
-                grid: { color: 'rgba(226, 232, 240, 0.8)' },
-                ticks: { stepSize: 1, precision: 0, font: { family: 'Plus Jakarta Sans', size: 13, weight: 600 } }
+                grid: { color: chartGridColor },
+                ticks: { color: chartTextColor, stepSize: 1, precision: 0, font: { family: 'Plus Jakarta Sans', size: 13, weight: 700 } }
               },
               x: {
                 grid: { display: false },
                 ticks: {
+                  color: chartTextColor,
                   autoSkip: false,
                   maxRotation: 35,
                   minRotation: 15,
@@ -4641,7 +4867,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
               data: dataValues,
               backgroundColor: backgroundColors,
               borderWidth: 2,
-              borderColor: '#ffffff'
+              borderColor: chartBorderColor
             }]
           },
           options: {
@@ -4651,8 +4877,9 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
               legend: {
                 position: 'bottom',
                 labels: {
+                  color: chartTextColor,
                   boxWidth: 8,
-                  font: { family: 'Plus Jakarta Sans', size: 12, weight: 700 },
+                  font: { family: 'Plus Jakarta Sans', size: 12, weight: 800 },
                   padding: 8
                 }
               },
@@ -4708,6 +4935,14 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         divFilterWrapper.style.display = 'none';
       } else {
         divFilterWrapper.style.display = 'flex';
+      }
+
+
+      // IMPORTANT LINKS are permanent/reference URLs, so a Year filter is not useful.
+      // Hide it only in this section; the search field automatically uses the free space.
+      const yearFilterWrapper = document.getElementById('filterYearWrapper');
+      if (yearFilterWrapper) {
+        yearFilterWrapper.style.display = currentCategory === 'IMPORTANT LINKS' ? 'none' : 'flex';
       }
 
       const navItems = document.querySelectorAll('.nav-item');
@@ -4835,7 +5070,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       const iframe = document.getElementById('inAppWebIframe');
       if (iframe) iframe.src = 'about:blank';
       if (modal) modal.style.display = 'none';
-      goHome(true);
+      // Stay in the current section. Back again will return to HOME.
     }
 
     function renderTable() {
@@ -5167,7 +5402,16 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
                   <i class="fa-solid fa-link-slash"></i> —
                 </span>`}
               </td>
-              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+              <td style="text-align:center; white-space:nowrap;">
+                <div class="actions-cell">
+                  <button class="action-icon-btn edit-btn" title="Edit Record (Admin)" onclick="openEditModal('${rec.id}')">
+                    <i class="fa-solid fa-pen-to-square" style="color: #0b4f6c;"></i>
+                  </button>
+                  <button class="action-icon-btn delete-btn" title="Delete Record (Admin)" onclick="deleteRecord('${rec.id}')">
+                    <i class="fa-solid fa-trash-can" style="color: #e11d48;"></i>
+                  </button>
+                </div>
+              </td>
             </tr>
           `;
         } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
@@ -5704,17 +5948,140 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       document.getElementById('modalDocTitle').innerText = previewHeading;
       const embedUrl = getPrintablePreviewUrl(link);
       document.getElementById('modalPreviewBody').innerHTML =
-        `<iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe>`;
+        `<div id="previewTransformHost"><iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe></div><div id="drivePopoutMask" aria-hidden="true"></div><div id="previewWheelCatcher" title="Ctrl + mouse wheel to zoom"></div>`;
 
+      resetPreviewWindowState();
+      resetPreviewZoom();
       document.getElementById('pdfPreviewModal').style.display = 'flex';
       history.pushState({ view: 'modal', modal: 'preview' }, '', '');
     }
+
+    let previewZoom = 1;
+    let previewRestoreRect = null;
+
+    function applyPreviewZoom() {
+      const host = document.getElementById('previewTransformHost');
+      const body = document.getElementById('modalPreviewBody');
+      const label = document.getElementById('previewZoomValue');
+      if (label) label.textContent = `${Math.round(previewZoom * 100)}%`;
+      if (!host || !body) return;
+      host.style.transform = `scale(${previewZoom})`;
+      host.style.width = `${100 / previewZoom}%`;
+      host.style.height = `${100 / previewZoom}%`;
+    }
+
+    function changePreviewZoom(delta) {
+      previewZoom = Math.min(3, Math.max(0.5, Math.round((previewZoom + delta) * 10) / 10));
+      applyPreviewZoom();
+    }
+
+    function resetPreviewZoom() { previewZoom = 1; applyPreviewZoom(); }
+
+    function resetPreviewWindowState() {
+      const modal = document.getElementById('pdfPreviewModal');
+      const box = modal?.querySelector('.modal-content');
+      if (!modal || !box) return;
+      modal.classList.remove('preview-maximized', 'preview-minimized');
+      box.style.left = ''; box.style.top = ''; box.style.right = ''; box.style.bottom = '';
+      box.style.transform = '';
+      previewRestoreRect = null;
+      updatePreviewMaxIcon();
+    }
+
+    function minimizePreviewWindow() {
+      const modal = document.getElementById('pdfPreviewModal');
+      if (!modal) return;
+      modal.classList.remove('preview-maximized');
+      modal.classList.toggle('preview-minimized');
+      updatePreviewMaxIcon();
+    }
+
+    function togglePreviewMaximize() {
+      const modal = document.getElementById('pdfPreviewModal');
+      if (!modal) return;
+      if (modal.classList.contains('preview-minimized')) modal.classList.remove('preview-minimized');
+      modal.classList.toggle('preview-maximized');
+      updatePreviewMaxIcon();
+    }
+
+    function updatePreviewMaxIcon() {
+      const modal = document.getElementById('pdfPreviewModal');
+      const btn = document.getElementById('previewMaxRestoreBtn');
+      if (!modal || !btn) return;
+      btn.innerHTML = modal.classList.contains('preview-maximized')
+        ? '<i class="fa-regular fa-window-restore"></i>'
+        : '<i class="fa-regular fa-window-maximize"></i>';
+    }
+
+    // Desktop/laptop zoom: while Ctrl is held, a transparent catcher sits above
+    // the cross-origin Drive/PDF iframe. This is required because wheel events
+    // generated inside a cross-origin iframe do not bubble to the parent page.
+    function setPreviewWheelCatcher(active) {
+      const modal = document.getElementById('pdfPreviewModal');
+      const catcher = document.getElementById('previewWheelCatcher');
+      if (!catcher || !modal || modal.style.display !== 'flex') return;
+      catcher.classList.toggle('active', !!active);
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Control') setPreviewWheelCatcher(true);
+    }, true);
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'Control') setPreviewWheelCatcher(false);
+    }, true);
+    window.addEventListener('blur', function() { setPreviewWheelCatcher(false); });
+
+    document.addEventListener('wheel', function(e) {
+      const modal = document.getElementById('pdfPreviewModal');
+      const catcher = document.getElementById('previewWheelCatcher');
+      if (!modal || modal.style.display !== 'flex') return;
+      const overCatcher = catcher && catcher.classList.contains('active') && (e.target === catcher || catcher.contains(e.target));
+      const overHeader = e.target.closest && e.target.closest('#pdfPreviewModal .modal-header');
+      if (!(e.ctrlKey && (overCatcher || overHeader))) return;
+      e.preventDefault();
+      changePreviewZoom(e.deltaY < 0 ? 0.1 : -0.1);
+    }, { passive: false, capture: true });
+
+    document.addEventListener('dblclick', function(e) {
+      const body = document.getElementById('modalPreviewBody');
+      if (!body || !body.contains(e.target)) return;
+      previewZoom = previewZoom === 1 ? 1.5 : 1;
+      applyPreviewZoom();
+    });
+
+    // Drag floating preview by its title bar on desktop/laptop.
+    (function initPreviewDrag() {
+      let dragging = false, sx = 0, sy = 0, startLeft = 0, startTop = 0;
+      document.addEventListener('pointerdown', function(e) {
+        const header = e.target.closest && e.target.closest('#pdfPreviewModal .modal-header');
+        const modal = document.getElementById('pdfPreviewModal');
+        const box = modal?.querySelector('.modal-content');
+        if (!header || !box || e.target.closest('button') || window.innerWidth <= 768 || modal.classList.contains('preview-maximized') || modal.classList.contains('preview-minimized')) return;
+        const r = box.getBoundingClientRect();
+        box.style.position = 'fixed'; box.style.left = r.left + 'px'; box.style.top = r.top + 'px';
+        box.style.width = r.width + 'px'; box.style.height = r.height + 'px';
+        dragging = true; sx = e.clientX; sy = e.clientY; startLeft = r.left; startTop = r.top;
+        header.setPointerCapture?.(e.pointerId); e.preventDefault();
+      });
+      document.addEventListener('pointermove', function(e) {
+        if (!dragging) return;
+        const box = document.querySelector('#pdfPreviewModal .modal-content'); if (!box) return;
+        const maxL = Math.max(0, window.innerWidth - 120), maxT = Math.max(0, window.innerHeight - 48);
+        box.style.left = Math.min(maxL, Math.max(0, startLeft + e.clientX - sx)) + 'px';
+        box.style.top = Math.min(maxT, Math.max(0, startTop + e.clientY - sy)) + 'px';
+      });
+      document.addEventListener('pointerup', () => { dragging = false; });
+      document.addEventListener('pointercancel', () => { dragging = false; });
+    })();
 
     function closePreviewModal() {
       document.getElementById('modalPreviewBody').innerHTML = '';
       document.getElementById('pdfPreviewModal').style.display = 'none';
       currentPreviewOriginalUrl = '';
       currentPreviewFileId = '';
+      resetPreviewWindowState();
+      resetPreviewZoom();
+      setPreviewWheelCatcher(false);
     }
 
     function downloadPreviewDoc() {
@@ -6211,6 +6578,22 @@ document.addEventListener('click',function(e){
     background: rgba(30, 41, 59, .92) !important;
   }
 
+
+  /* Keep Reset clearly visible in dark theme. */
+  body.dark-theme .reset-link {
+    color: #7dd3fc !important;
+    text-decoration-color: #7dd3fc !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+  }
+  body.dark-theme .reset-link i {
+    color: #38bdf8 !important;
+  }
+  body.dark-theme .reset-link:hover {
+    color: #ffffff !important;
+    text-decoration-color: #ffffff !important;
+  }
+
   body.dark-theme .nav-item:hover,
   body.dark-theme .nav-item.active {
     background: rgba(51, 65, 85, .78) !important;
@@ -6296,6 +6679,14 @@ document.addEventListener('click',function(e){
       btn.setAttribute('aria-label', btn.title);
     }
     try { localStorage.setItem('railsntgyan-theme', theme); } catch(e) {}
+
+    // Refresh canvas labels/legend immediately because Chart.js text colors
+    // are drawn on canvas and do not respond to CSS theme changes.
+    try {
+      if (typeof updateDashboardView === 'function') {
+        requestAnimationFrame(() => updateDashboardView());
+      }
+    } catch(e) {}
   }
 
   window.toggleRailTheme = function () {
@@ -6977,5 +7368,27 @@ body.dark-theme #fyReportModal .report-table td {
 })();
 </script>
 
+
+<style id="dark-dashboard-contrast-v12">
+/* Dashboard readability in Dark Theme */
+body.dark-theme .process-step-counter,
+body.dark-theme .process-step-counter span {
+  color: #f8fafc !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+body.dark-theme .process-step-counter {
+  background: #0b1628 !important;
+  border-color: #64748b !important;
+}
+body.dark-theme .process-step-title {
+  color: #f8fafc !important;
+  opacity: 1 !important;
+}
+body.dark-theme .chart-header h3 {
+  color: #f1f5f9 !important;
+}
+</style>
 </body>
 </html>
