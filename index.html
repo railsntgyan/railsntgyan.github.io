@@ -3972,6 +3972,25 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
   }
 }
 </style>
+
+<style id="v73-irsem-irtem-description-stability">
+/* IRSEM/IRTEM Chapter Wise only — stabilize Description without changing other tables */
+#mainRecordTable.v58-chapterwise th.v58-description-col,
+#mainRecordTable.v58-chapterwise td.v58-description-col{
+    width:420px !important;
+    min-width:420px !important;
+    max-width:420px !important;
+    box-sizing:border-box !important;
+}
+@media (max-width:900px){
+  #mainRecordTable.v58-chapterwise th.v58-description-col,
+  #mainRecordTable.v58-chapterwise td.v58-description-col{
+      width:340px !important;
+      min-width:340px !important;
+      max-width:340px !important;
+  }
+}
+</style>
 </head>
 <body class="dark-theme">
 
@@ -6541,7 +6560,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
             <th style="width: var(--col-1-w);">Sr.NO</th>
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
-            <th class="work-desc-th">Work Name (EI Description)</th>
+            <th class="work-desc-th">Work Description</th>
             <th class="col-oem-make">OEM Make</th>
             <th style="width: 115px;">Sanction given by</th>
             <th style="width: 100px;">Agency</th>
@@ -9944,6 +9963,20 @@ function setExternalDriveFallbackToolbar(active){
   ]);
 
   function renameKeepingWidth(){
+    /* IMPORTANT:
+       IRSEM/IRTEM Chapter Wise intentionally use the final heading "Description".
+       Do not let this older global Work Description renamer touch those tables.
+       Previously v54 changed Description -> Work Description, while v57/v58
+       immediately changed it back to Description. Both MutationObservers then
+       triggered each other repeatedly, causing the visible column vibration. */
+    const cat = (typeof currentCategory !== 'undefined' ? currentCategory : '')
+      .replace(/\s+/g,' ').trim().toUpperCase();
+    if (
+      cat === 'IRSEM CHAPTER WISE' ||
+      cat === 'IRTEM CHAPTER WISE' ||
+      cat === 'EI TSAA'
+    ) return;
+
     const headers = Array.from(table.querySelectorAll('thead th, thead td'));
 
     headers.forEach((th, i) => {
@@ -10023,38 +10056,10 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
 </script>
 
 <script id="v57-chapterwise-description-label-only">
-(function () {
-  const table = document.getElementById('mainRecordTable');
-  if (!table) return;
-
-  function apply() {
-    const title = (document.querySelector('h1, h2, h3, .section-title, .content-header')?.textContent || '').toUpperCase();
-    const active = (document.querySelector('.nav-item.active')?.textContent || '').toUpperCase();
-    const context = title + ' ' + active;
-
-    if (!context.includes('IRSEM CHAPTER WISE') && !context.includes('IRTEM CHAPTER WISE')) return;
-
-    table.querySelectorAll('thead th, thead td').forEach(th => {
-      const label = (th.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
-      if (label === 'WORK DESCRIPTION') {
-        // Text only — width/classes/styles remain exactly as they are.
-        th.textContent = 'Description';
-      }
-    });
-  }
-
-  let pending = false;
-  new MutationObserver(() => {
-    if (pending) return;
-    pending = true;
-    requestAnimationFrame(() => {
-      pending = false;
-      apply();
-    });
-  }).observe(table, {subtree:true, childList:true, characterData:true});
-
-  apply();
-})();
+/* v74: intentionally inactive.
+   Chapter Wise headers are now rendered directly as "Description".
+   The old runtime Work Description -> Description MutationObserver was removed
+   because it conflicted with v54 and caused repeated renaming/vibration. */
 </script>
 
 <script id="v58-chapterwise-description-stable-js">
@@ -10084,7 +10089,7 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
     if(idx<0)return;
 
     const th=headers[idx];
-    th.textContent='Description';
+    /* Header is already rendered as Description; do not mutate its text. */
     th.classList.add('v58-description-col');
 
     table.querySelectorAll('tbody tr').forEach(tr=>{
