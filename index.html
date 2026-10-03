@@ -5465,19 +5465,35 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         return true;
       });
 
-      const noDateSortCategories = [
-        'IMPORTANT LINKS',
-        'IRISET E-BOOK (SIGNAL)',
-        'IRISET E-BOOK (TELECOM)',
-        'INSPECTION NOTE'
-      ];
-      if (!noDateSortCategories.includes(currentCategory)) {
+      const isEbookCategory =
+        currentCategory === 'IRISET E-BOOK (SIGNAL)' ||
+        currentCategory === 'IRISET E-BOOK (TELECOM)';
+
+      if (isEbookCategory) {
+        // E-book Sr. No. follows natural Book Name order:
+        // SIGNAL -> S1, S2, S3 ... S7, S8, S9, S10...
+        // TELECOM -> T1, T2, T3 ... T10...
         filtered.sort((a, b) => {
-          const timeA = parseDateToTime(a.date);
-          const timeB = parseDateToTime(b.date);
-          if (timeA && timeB) return timeA - timeB;
-          return (a.year || 0) - (b.year || 0);
+          const bookA = String(a.bookName || '').trim();
+          const bookB = String(b.bookName || '').trim();
+          return bookA.localeCompare(bookB, undefined, {
+            numeric: true,
+            sensitivity: 'base'
+          });
         });
+      } else {
+        const noDateSortCategories = [
+          'IMPORTANT LINKS',
+          'INSPECTION NOTE'
+        ];
+        if (!noDateSortCategories.includes(currentCategory)) {
+          filtered.sort((a, b) => {
+            const timeA = parseDateToTime(a.date);
+            const timeB = parseDateToTime(b.date);
+            if (timeA && timeB) return timeA - timeB;
+            return (a.year || 0) - (b.year || 0);
+          });
+        }
       }
 
       if (filtered.length === 0) {
