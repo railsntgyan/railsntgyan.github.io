@@ -268,7 +268,7 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
       font-size: 12px;
       font-weight: 700;
       color: #334155;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
 
     .login-input-wrapper {
@@ -1645,13 +1645,59 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
       height:100dvh !important; max-width:none !important; max-height:none !important;
       border-radius:0 !important; resize:none !important; transform:none !important;
     }
-    #pdfPreviewModal.preview-minimized { align-items:flex-end; justify-content:flex-end; pointer-events:none; }
+    /* Compact floating minimized preview.
+       Keep it safely inside the visible browser viewport and allow title-bar dragging. */
+    #pdfPreviewModal.preview-minimized {
+      align-items:flex-start;
+      justify-content:flex-start;
+      pointer-events:none;
+    }
     #pdfPreviewModal.preview-minimized .modal-content {
-      width:min(420px,92vw) !important; height:48px !important; min-height:48px !important;
-      position:fixed !important; right:14px !important; bottom:14px !important; left:auto !important; top:auto !important;
-      resize:none !important; pointer-events:auto; transform:none !important;
+      width:min(430px, calc(100vw - 32px)) !important;
+      height:56px !important;
+      min-height:56px !important;
+      min-width:280px !important;
+      position:fixed !important;
+      right:18px;
+      bottom:28px;
+      left:auto;
+      top:auto;
+      resize:none !important;
+      overflow:hidden !important;
+      pointer-events:auto;
+      transform:none !important;
+      border-radius:12px !important;
+      box-shadow:0 14px 38px rgba(0,0,0,.55) !important;
+      z-index:10020;
+    }
+    #pdfPreviewModal.preview-minimized .modal-header {
+      height:56px;
+      min-height:56px;
+      padding:8px 10px 8px 14px;
+      cursor:move !important;
+      border-bottom:0 !important;
+    }
+    #pdfPreviewModal.preview-minimized .modal-header h3 {
+      max-width:calc(100% - 92px);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
     #pdfPreviewModal.preview-minimized .modal-body { display:none !important; }
+
+    /* In minimized mode only Restore/Maximize and Close are useful.
+       Hide zoom, download and the Minimize button itself. */
+    #pdfPreviewModal.preview-minimized .preview-zoom-toolbar,
+    #pdfPreviewModal.preview-minimized .btn-download,
+    #pdfPreviewModal.preview-minimized .modal-header-actions > button[onclick="minimizePreviewWindow()"] {
+      display:none !important;
+    }
+    #pdfPreviewModal.preview-minimized .modal-header-actions {
+      display:flex !important;
+      gap:6px;
+      margin-left:auto;
+      flex:0 0 auto;
+    }
     @media (max-width: 768px) {
       #pdfPreviewModal { padding:0; }
       #pdfPreviewModal .modal-content {
@@ -2756,6 +2802,24 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
   }
 }
 </style>
+
+<style id="imp-letter-equipment-dark-fix-v21">
+/* IMP. LETTER / document sections: keep Related to Equipment badges readable in dark theme */
+html body.dark-theme #mainRecordTable .equip-badge {
+  background: #243654 !important;
+  color: #f8fbff !important;
+  border: 1px solid #6f8fbd !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge,
+html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
+  color: #f8fbff !important;
+  opacity: 1 !important;
+}
+</style>
+
 </head>
 <body class="dark-theme">
 
@@ -3890,6 +3954,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         <div class="form-group">
           <label>Category</label>
           <select id="formCategory" onchange="toggleFormFields()">
+            <option value="" selected>-- Select --</option>
             <optgroup label="FILES & APPROVALS">
               <option value="PCSTE SANCTION">PCSTE SANCTION</option>
               <option value="EI TSAA">EI TSAA</option>
@@ -3950,6 +4015,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         <div class="form-group" id="formDivisionContainer">
           <label>Division</label>
           <select id="formDivision">
+            <option value="" selected>-- Select --</option>
             <option value="Bilaspur">Bilaspur</option>
             <option value="Raipur">Raipur</option>
             <option value="Nagpur">Nagpur</option>
@@ -3980,6 +4046,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         <div class="form-group" id="formLdceTypeContainer" style="display:none;">
           <label>LDCE Exam Type</label>
           <select id="formLdceType">
+            <option value="" selected>-- Select --</option>
             <option value="30%">30% LDCE (CBT / Written)</option>
             <option value="70%">70% Departmental Quota</option>
           </select>
@@ -3993,6 +4060,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         <div class="form-group" id="formAgencyContainer" style="display:none;">
           <label>Agency</label>
           <select id="formAgency">
+            <option value="" selected>-- Select --</option>
             <option value="Project">Project</option>
             <option value="Construction">Construction</option>
             <option value="Division">Division</option>
@@ -4002,6 +4070,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         <div class="form-group" id="formGivenByContainer" style="display:none;">
           <label>Given by</label>
           <select id="formGivenBy">
+            <option value="" selected>-- Select --</option>
             <option value="PCSTE">PCSTE</option>
             <option value="PCSTE & PCEE">PCSTE & PCEE</option>
             <option value="PCOM">PCOM</option>
@@ -4075,6 +4144,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         <div class="form-group" id="formIssuedByContainer" style="display:none;">
           <label>Issued by</label>
           <select id="formIssuedBy">
+            <option value="" selected>-- Select --</option>
             <option value="RDSO">RDSO</option>
             <option value="Railway Board">Railway Board</option>
             <option value="SECR">SECR</option>
@@ -4157,6 +4227,14 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         document.documentElement.classList.add('portal-session-auth');
         document.getElementById('loginScreen').style.display = 'none';
         errorMsg.style.display = 'none';
+
+        // Every fresh login must start from HOME, irrespective of where Logout was pressed.
+        sessionStorage.removeItem('importantLinksReturnState');
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+          modal.style.display = 'none';
+        });
+        goHome(false);
+
         // Once logged in, create a protected HOME history entry so browser/app
         // Back cannot leave RailSNTGyan until the user explicitly logs out.
         try {
@@ -4180,6 +4258,13 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
     }
 
     function logoutPortal() {
+      // Reset portal state first so the next successful login always opens HOME.
+      sessionStorage.removeItem('importantLinksReturnState');
+      document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.style.display = 'none';
+      });
+      goHome(false);
+
       sessionStorage.setItem('railsntgyan_allow_exit', 'true');
       sessionStorage.removeItem('secr_portal_authorized');
       document.documentElement.classList.remove('portal-session-auth');
@@ -4636,6 +4721,43 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       return '';
     }
 
+
+    // v28: Canonical reporting date.
+    // For records having a forwarding date, FY cards/graphs/reports/monthly sheets
+    // must use that forwarding date. Otherwise fall back to the normal record date.
+    function getReportingDate(rec) {
+      if (!rec) return '';
+
+      // Support the field names used by current/older database records.
+      const forwardingDate =
+        rec.forwardingDate ||
+        rec.dateOfForwarding ||
+        rec.forwardedDate ||
+        rec.forwardDate ||
+        rec.pcsteForwardingDate ||
+        rec.officeForwardingDate ||
+        rec.forwardedByThisOfficeDate ||
+        rec.forwardedByPcsteOfficeDate ||
+        '';
+
+      return forwardingDate || rec.date || rec.sanctionDate || '';
+    }
+
+
+    function getReportingYear(rec) {
+      const d = getReportingDate(rec);
+      if (!d) return rec?.year || null;
+      const parts = String(d).split('-');
+      if (parts.length === 3) {
+        // DD-MM-YYYY database format
+        if (parts[0].length <= 2 && parts[2].length === 4) return Number(parts[2]);
+        // YYYY-MM-DD input format
+        if (parts[0].length === 4) return Number(parts[0]);
+      }
+      const dt = new Date(d);
+      return Number.isNaN(dt.getTime()) ? (rec?.year || null) : dt.getFullYear();
+    }
+
     function parseDateToTime(dateStr) {
       if (!dateStr) return 0;
       if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
@@ -4938,11 +5060,17 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       }
 
 
-      // IMPORTANT LINKS are permanent/reference URLs, so a Year filter is not useful.
-      // Hide it only in this section; the search field automatically uses the free space.
+      // Sections without a Date/Year column should not show a Year filter.
+      // Keep Year for sections where it is meaningful (including LDCE, where the table has a Year column).
+      const noYearFilterCategories = [
+        'IMPORTANT LINKS',
+        'IRISET E-BOOK (SIGNAL)',
+        'IRISET E-BOOK (TELECOM)',
+        'INSPECTION NOTE'
+      ];
       const yearFilterWrapper = document.getElementById('filterYearWrapper');
       if (yearFilterWrapper) {
-        yearFilterWrapper.style.display = currentCategory === 'IMPORTANT LINKS' ? 'none' : 'flex';
+        yearFilterWrapper.style.display = noYearFilterCategories.includes(currentCategory) ? 'none' : 'flex';
       }
 
       const navItems = document.querySelectorAll('.nav-item');
@@ -5337,12 +5465,20 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         return true;
       });
 
-      filtered.sort((a, b) => {
-        const timeA = parseDateToTime(a.date);
-        const timeB = parseDateToTime(b.date);
-        if (timeA && timeB) return timeA - timeB;
-        return (a.year || 0) - (b.year || 0);
-      });
+      const noDateSortCategories = [
+        'IMPORTANT LINKS',
+        'IRISET E-BOOK (SIGNAL)',
+        'IRISET E-BOOK (TELECOM)',
+        'INSPECTION NOTE'
+      ];
+      if (!noDateSortCategories.includes(currentCategory)) {
+        filtered.sort((a, b) => {
+          const timeA = parseDateToTime(a.date);
+          const timeB = parseDateToTime(b.date);
+          if (timeA && timeB) return timeA - timeB;
+          return (a.year || 0) - (b.year || 0);
+        });
+      }
 
       if (filtered.length === 0) {
         tbody.innerHTML = `
@@ -5456,7 +5592,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
             <tr>
               <td><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.wagon || '—'}</b></td>
-              <td><span class="dept-badge">${rec.department || 'S&T'}</span></td>
+              <td><span class="dept-badge">${rec.department || '—'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-shield-virus" style="color: #0d9488;"></i> ${rec.work}
@@ -5506,7 +5642,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
             <tr>
               <td><b>${idx + 1}</b></td>
               <td><b>${rec.year || '—'}</b></td>
-              <td><span class="type-badge">${rec.ldceType || '30%'}</span></td>
+              <td><span class="type-badge">${rec.ldceType || '—'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-circle-question" style="color: var(--accent-blue);"></i> ${rec.work}
@@ -5550,7 +5686,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
                 </a>
               </td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
-              <td><span class="authority-badge">${rec.givenBy || rec.sanctionBy || 'PCSTE'}</span></td>
+              <td><span class="authority-badge">${rec.givenBy || rec.sanctionBy || '—'}</span></td>
               <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
@@ -5570,7 +5706,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
                 </a>
               </td>
               <td class="col-oem-make"><span class="oem-badge">${rec.oem || '—'}</span></td>
-              <td><span class="authority-badge">${rec.sanctionBy || 'PCSTE'}</span></td>
+              <td><span class="authority-badge">${rec.sanctionBy || '—'}</span></td>
               <td><span class="agency-badge">${rec.agency || '—'}</span></td>
               <td style="text-align:center;"><b style="color: var(--accent-blue);">${rec.routes || '—'}</b></td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
@@ -5605,7 +5741,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
             <tr>
               <td><b>${idx + 1}</b></td>
               <td><b style="color: var(--accent-blue);">${rec.wagon || '—'}</b></td>
-              <td><span class="dept-badge">${rec.department || 'S&T'}</span></td>
+              <td><span class="dept-badge">${rec.department || '—'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
@@ -5703,7 +5839,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
-              <td><span class="authority-badge">${rec.issuedBy || 'RDSO'}</span></td>
+              <td><span class="authority-badge">${rec.issuedBy || '—'}</span></td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -5714,7 +5850,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td><b style="white-space:nowrap;">${rec.docNo || '—'}</b></td>
+              <td class="doc-no-cell"><b>${rec.docNo || '—'}</b></td>
               <td><span class="equip-badge">${rec.relatedEquip || '—'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
@@ -5990,9 +6126,37 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
 
     function minimizePreviewWindow() {
       const modal = document.getElementById('pdfPreviewModal');
-      if (!modal) return;
+      const box = modal?.querySelector('.modal-content');
+      if (!modal || !box) return;
+
+      const willMinimize = !modal.classList.contains('preview-minimized');
       modal.classList.remove('preview-maximized');
-      modal.classList.toggle('preview-minimized');
+
+      if (willMinimize) {
+        modal.classList.add('preview-minimized');
+
+        // Start in a safe bottom-right position inside the actual browser viewport.
+        // After this, the user can drag the minimized bar anywhere.
+        const w = Math.min(430, Math.max(280, window.innerWidth - 32));
+        const h = 56;
+        const margin = 18;
+        box.style.position = 'fixed';
+        box.style.width = w + 'px';
+        box.style.height = h + 'px';
+        box.style.left = Math.max(margin, window.innerWidth - w - margin) + 'px';
+        box.style.top = Math.max(margin, window.innerHeight - h - 28) + 'px';
+        box.style.right = 'auto';
+        box.style.bottom = 'auto';
+      } else {
+        modal.classList.remove('preview-minimized');
+        box.style.left = '';
+        box.style.top = '';
+        box.style.right = '';
+        box.style.bottom = '';
+        box.style.width = '';
+        box.style.height = '';
+      }
+
       updatePreviewMaxIcon();
     }
 
@@ -6056,7 +6220,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         const header = e.target.closest && e.target.closest('#pdfPreviewModal .modal-header');
         const modal = document.getElementById('pdfPreviewModal');
         const box = modal?.querySelector('.modal-content');
-        if (!header || !box || e.target.closest('button') || window.innerWidth <= 768 || modal.classList.contains('preview-maximized') || modal.classList.contains('preview-minimized')) return;
+        if (!header || !box || e.target.closest('button') || window.innerWidth <= 768 || modal.classList.contains('preview-maximized')) return;
         const r = box.getBoundingClientRect();
         box.style.position = 'fixed'; box.style.left = r.left + 'px'; box.style.top = r.top + 'px';
         box.style.width = r.width + 'px'; box.style.height = r.height + 'px';
@@ -6066,13 +6230,40 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       document.addEventListener('pointermove', function(e) {
         if (!dragging) return;
         const box = document.querySelector('#pdfPreviewModal .modal-content'); if (!box) return;
-        const maxL = Math.max(0, window.innerWidth - 120), maxT = Math.max(0, window.innerHeight - 48);
-        box.style.left = Math.min(maxL, Math.max(0, startLeft + e.clientX - sx)) + 'px';
-        box.style.top = Math.min(maxT, Math.max(0, startTop + e.clientY - sy)) + 'px';
+        const margin = 10;
+        const rect = box.getBoundingClientRect();
+        const maxL = Math.max(margin, window.innerWidth - rect.width - margin);
+        const maxT = Math.max(margin, window.innerHeight - rect.height - margin);
+        box.style.left = Math.min(maxL, Math.max(margin, startLeft + e.clientX - sx)) + 'px';
+        box.style.top = Math.min(maxT, Math.max(margin, startTop + e.clientY - sy)) + 'px';
+        box.style.right = 'auto';
+        box.style.bottom = 'auto';
       });
       document.addEventListener('pointerup', () => { dragging = false; });
       document.addEventListener('pointercancel', () => { dragging = false; });
     })();
+
+    // Keep a minimized floating preview fully visible after browser resize.
+    window.addEventListener('resize', function() {
+      const modal = document.getElementById('pdfPreviewModal');
+      const box = modal?.querySelector('.modal-content');
+      if (!modal || !box || !modal.classList.contains('preview-minimized')) return;
+
+      const margin = 10;
+      const r = box.getBoundingClientRect();
+      const left = Math.min(
+        Math.max(margin, r.left),
+        Math.max(margin, window.innerWidth - r.width - margin)
+      );
+      const top = Math.min(
+        Math.max(margin, r.top),
+        Math.max(margin, window.innerHeight - r.height - margin)
+      );
+      box.style.left = left + 'px';
+      box.style.top = top + 'px';
+      box.style.right = 'auto';
+      box.style.bottom = 'auto';
+    });
 
     function closePreviewModal() {
       document.getElementById('modalPreviewBody').innerHTML = '';
@@ -6221,8 +6412,21 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       if (!verifyAdminPassword("add a new record")) return;
       document.getElementById('formModalHeading').innerHTML = '<i class="fa-solid fa-file-circle-plus"></i> Add New Record';
       document.getElementById('formEditRecordId').value = '';
-      document.getElementById('formCategory').value = currentCategory === 'HOME' ? 'PCSTE SANCTION' : currentCategory;
       clearFormFields();
+
+      // Auto-detect Category from the section/subsection where Add New Record was clicked.
+      // Only HOME keeps Category blank because no specific section is active there.
+      const categorySelect = document.getElementById('formCategory');
+      const availableCategoryValues = Array.from(categorySelect.options).map(o => o.value);
+      categorySelect.value = (currentCategory !== 'HOME' && availableCategoryValues.includes(currentCategory))
+        ? currentCategory
+        : '';
+
+      // Other entry fields remain blank; their values must come from user input / database.
+      ['formDivision','formLdceType','formAgency','formGivenBy','formOem','formIssuedBy'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
       toggleFormFields();
       document.getElementById('addRecordModal').style.display = 'flex';
       history.pushState({ view: 'modal', modal: 'addForm' }, '', '');
@@ -6241,26 +6445,26 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       toggleFormFields();
 
       document.getElementById('formStation').value = rec.station || '';
-      document.getElementById('formDivision').value = rec.division || 'Bilaspur';
+      document.getElementById('formDivision').value = rec.division || '';
       document.getElementById('formTanNo').value = rec.tanNo || '';
       document.getElementById('formRelatedTo').value = rec.relatedTo || '';
       document.getElementById('formDirectLink').value = rec.directLink || '';
       document.getElementById('formBookName').value = rec.bookName || '';
-      document.getElementById('formLdceType').value = rec.ldceType || '30%';
+      document.getElementById('formLdceType').value = rec.ldceType || '';
       document.getElementById('formWorkName').value = rec.work || '';
-      document.getElementById('formAgency').value = rec.agency || 'Project';
-      document.getElementById('formGivenBy').value = rec.givenBy || rec.sanctionBy || 'PCSTE';
+      document.getElementById('formAgency').value = rec.agency || '';
+      document.getElementById('formGivenBy').value = rec.givenBy || rec.sanctionBy || '';
       document.getElementById('formDepartment').value = rec.department || '';
       document.getElementById('formInspectionBy').value = rec.inspectionBy || '';
       document.getElementById('formEquipment').value = rec.equipment || '';
-      document.getElementById('formEiOem').value = rec.oem || 'HITACHI';
-      document.getElementById('formEiSanctionBy').value = rec.sanctionBy || 'PCSTE';
+      document.getElementById('formEiOem').value = rec.oem || '';
+      document.getElementById('formEiSanctionBy').value = rec.sanctionBy || '';
       document.getElementById('formRoutes').value = rec.routes || '';
       document.getElementById('formOem').value = rec.oem || '';
       document.getElementById('formWagon').value = rec.wagon || '';
       document.getElementById('formDocNo').value = rec.docNo || '';
       document.getElementById('formRelatedEquip').value = rec.relatedEquip || '';
-      document.getElementById('formIssuedBy').value = rec.issuedBy || 'RDSO';
+      document.getElementById('formIssuedBy').value = rec.issuedBy || '';
       document.getElementById('formDate').value = formatDateToYYYYMMDD(rec.date);
       document.getElementById('formSecondaryDate').value = formatDateToYYYYMMDD(rec.sanctionDate);
       document.getElementById('formDriveLink').value = rec.driveLink || '';
@@ -6291,6 +6495,10 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       document.getElementById('formDate').value = '';
       document.getElementById('formSecondaryDate').value = '';
       document.getElementById('formDriveLink').value = '';
+      ['formDivision','formLdceType','formAgency','formGivenBy','formOem','formIssuedBy'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
     }
 
     function toggleFormFields() {
@@ -6328,7 +6536,9 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       document.getElementById('formBookNameContainer').style.display = isBooks ? 'flex' : 'none';
       document.getElementById('formLdceTypeContainer').style.display = isLdce ? 'flex' : 'none';
 
-      document.getElementById('formWorkContainer').style.display = isLinks ? 'none' : 'flex';
+      // Show only fields represented by the active table/schema.
+      // INSPECTION NOTE uses Station/Section + Division + Inspection Done by; it has no Work Description column.
+      document.getElementById('formWorkContainer').style.display = (isLinks || isInspection) ? 'none' : 'flex';
       document.getElementById('formAgencyContainer').style.display = 
         (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising) ? 'flex' : 'none';
       
@@ -6346,7 +6556,11 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       document.getElementById('formRelatedEquipContainer').style.display = (isImpLetter || isPolicyOrTypical) ? 'flex' : 'none';
       document.getElementById('formIssuedByContainer').style.display = isImpLetter ? 'flex' : 'none';
 
-      document.getElementById('formDateContainer').style.display = isLinks ? 'none' : 'flex';
+      // Do not ask for Date where the corresponding table has no Date/Year field.
+      // E-books are reference material, Important Links are permanent URLs,
+      // and Inspection Note currently has no Date column in its table.
+      const hasNoDateField = isLinks || isBooks || isInspection;
+      document.getElementById('formDateContainer').style.display = hasNoDateField ? 'none' : 'flex';
       document.getElementById('formSecondaryDateContainer').style.display = isGm ? 'flex' : 'none';
 
       // Field Labels Customization
@@ -6361,6 +6575,8 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         dateLbl.innerText = "Date of Forwarding from CSE/PCSTE";
       } else if (isTan || isImpLetter || isPolicyOrTypical || isStandardManual || isDocApproval) {
         dateLbl.innerText = "Date of Issue (DD-MM-YYYY)";
+      } else if (isLdce) {
+        dateLbl.innerText = "Examination Date (DD-MM-YYYY)";
       } else {
         dateLbl.innerText = "Sanctioning Date (DD-MM-YYYY)";
       }
@@ -6381,31 +6597,56 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       const dateVal = document.getElementById('formDate').value;
       const secondaryDateVal = document.getElementById('formSecondaryDate').value;
 
+      // v26: save only data that belongs to the selected table/category.
+      // Hidden fields are cleared so values from another subsection cannot leak into this record.
+      const isTan = (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)');
+      const isLinks = (cat === 'IMPORTANT LINKS');
+      const isBooks = (cat === 'IRISET E-BOOK (SIGNAL)' || cat === 'IRISET E-BOOK (TELECOM)');
+      const isLdce = ldceCategories.includes(cat);
+      const isDocApproval = docApprovalCategories.includes(cat);
+      const isStandardManual = standardManualCategories.includes(cat);
+      const isJsc = (cat === 'JOINT SAFETY CERTIFICATE (JSC)');
+      const isPcste = (cat === 'PCSTE SANCTION');
+      const isDispensation = (cat === 'DISPENSATION');
+      const isEi = (cat === 'EI TSAA');
+      const isMsdac = (cat === 'MSDAC TSAA');
+      const isSpeedCert = (cat === 'S&T SPEED CERTIFICATE');
+      const isGm = (cat === 'GM SANCTION');
+      const isGradeOrLine = (cat === 'GRADE CONDONATION' || cat === 'LINE OPENING');
+      const isSpeedRaising = (cat === 'SPEED RAISING');
+      const isInspection = (cat === 'INSPECTION NOTE');
+      const isImpLetter = (cat === 'IMP. LETTER');
+      const isPolicyOrTypical = (cat === 'SECR POLICY' || cat === 'SECR TYPICAL');
+
       const recordData = {
         category: cat,
-        station: document.getElementById('formStation').value.trim(),
-        division: document.getElementById('formDivision').value,
-        tanNo: document.getElementById('formTanNo').value.trim(),
-        relatedTo: document.getElementById('formRelatedTo').value.trim(),
-        directLink: document.getElementById('formDirectLink').value.trim(),
-        bookName: document.getElementById('formBookName').value.trim(),
-        ldceType: document.getElementById('formLdceType').value,
-        work: document.getElementById('formWorkName').value.trim(),
-        agency: document.getElementById('formAgency').value,
-        givenBy: document.getElementById('formGivenBy').value,
-        department: document.getElementById('formDepartment').value.trim(),
-        inspectionBy: document.getElementById('formInspectionBy').value.trim(),
-        equipment: document.getElementById('formEquipment').value.trim(),
-        oem: (cat === 'EI TSAA') ? document.getElementById('formEiOem').value : document.getElementById('formOem').value.trim(),
-        sanctionBy: (cat === 'DISPENSATION') ? document.getElementById('formGivenBy').value : document.getElementById('formEiSanctionBy').value,
-        routes: document.getElementById('formRoutes').value.trim(),
-        wagon: document.getElementById('formWagon').value.trim(),
-        docNo: document.getElementById('formDocNo').value.trim(),
-        relatedEquip: document.getElementById('formRelatedEquip').value.trim(),
-        issuedBy: document.getElementById('formIssuedBy').value,
-        date: formatDateToDDMMYYYY(dateVal),
-        sanctionDate: formatDateToDDMMYYYY(secondaryDateVal),
-        year: dateVal ? new Date(dateVal).getFullYear() : (new Date().getFullYear()),
+        station: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
+          ? document.getElementById('formStation').value.trim() : '',
+        division: (isPcste || isDispensation || isEi || isMsdac || isGm || isSpeedRaising || isInspection)
+          ? document.getElementById('formDivision').value : '',
+        tanNo: isTan ? document.getElementById('formTanNo').value.trim() : '',
+        relatedTo: (isTan || isLinks) ? document.getElementById('formRelatedTo').value.trim() : '',
+        directLink: isLinks ? document.getElementById('formDirectLink').value.trim() : '',
+        bookName: isBooks ? document.getElementById('formBookName').value.trim() : '',
+        ldceType: isLdce ? document.getElementById('formLdceType').value : '',
+        work: (isLinks || isInspection) ? '' : document.getElementById('formWorkName').value.trim(),
+        agency: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising)
+          ? document.getElementById('formAgency').value : '',
+        givenBy: isDispensation ? document.getElementById('formGivenBy').value : '',
+        department: (isSpeedCert || isJsc) ? document.getElementById('formDepartment').value.trim() : '',
+        inspectionBy: isInspection ? document.getElementById('formInspectionBy').value.trim() : '',
+        equipment: isPcste ? document.getElementById('formEquipment').value.trim() : '',
+        oem: isEi ? document.getElementById('formEiOem').value : (isMsdac ? document.getElementById('formOem').value.trim() : ''),
+        sanctionBy: isDispensation ? document.getElementById('formGivenBy').value : (isEi ? document.getElementById('formEiSanctionBy').value : ''),
+        routes: isEi ? document.getElementById('formRoutes').value.trim() : '',
+        wagon: (isSpeedCert || isJsc) ? document.getElementById('formWagon').value.trim() : '',
+        docNo: isPolicyOrTypical ? document.getElementById('formDocNo').value.trim() : '',
+        relatedEquip: (isImpLetter || isPolicyOrTypical) ? document.getElementById('formRelatedEquip').value.trim() : '',
+        issuedBy: isImpLetter ? document.getElementById('formIssuedBy').value : '',
+        date: (isLinks || isBooks || isInspection) ? '' : formatDateToDDMMYYYY(dateVal),
+        sanctionDate: isGm ? formatDateToDDMMYYYY(secondaryDateVal) : '',
+        // No artificial current-year value for categories that do not use Date/Year.
+        year: (isLinks || isBooks || isInspection) ? null : (dateVal ? new Date(dateVal).getFullYear() : null),
         driveLink: document.getElementById('formDriveLink').value.trim()
       };
 
@@ -7366,6 +7607,46 @@ body.dark-theme #fyReportModal .report-table td {
     new MutationObserver(forceFYGridBlack).observe(document.body, {childList:true, subtree:true});
     setTimeout(forceFYGridBlack, 300);
 })();
+
+    // v24: Book Name visibility helper for IRISET E-BOOK tables.
+    const ebookBookNameObserver = new MutationObserver(() => {
+      if (currentCategory !== 'IRISET E-BOOK (SIGNAL)' && currentCategory !== 'IRISET E-BOOK (TELECOM)') return;
+      const headers = Array.from(document.querySelectorAll('#mainRecordTable thead th'));
+      const idx = headers.findIndex(th => th.textContent.trim().toUpperCase() === 'BOOK NAME');
+      if (idx < 0) return;
+      document.querySelectorAll('#mainRecordTable tbody tr').forEach(tr => {
+        if (tr.children[idx]) tr.children[idx].classList.add('ebook-book-name-cell');
+      });
+    });
+    ebookBookNameObserver.observe(document.getElementById('mainRecordTable'), {subtree:true, childList:true});
+
+    // v27: Apply consistent width to every table column headed "Agency".
+    const agencyColumnObserver = new MutationObserver(() => {
+      const table = document.getElementById('mainRecordTable');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('thead th'));
+      const agencyIndex = headers.findIndex(th => th.textContent.trim().toUpperCase() === 'AGENCY');
+      headers.forEach(th => th.classList.remove('agency-col'));
+      table.querySelectorAll('tbody td.agency-col').forEach(td => td.classList.remove('agency-col'));
+      if (agencyIndex < 0) return;
+      headers[agencyIndex].classList.add('agency-col');
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        if (tr.children[agencyIndex]) tr.children[agencyIndex].classList.add('agency-col');
+      });
+    });
+    const agencyTable = document.getElementById('mainRecordTable');
+    if (agencyTable) {
+      agencyColumnObserver.observe(agencyTable, {subtree:true, childList:true});
+      // initial pass
+      const initialHeaders = Array.from(agencyTable.querySelectorAll('thead th'));
+      const initialAgencyIndex = initialHeaders.findIndex(th => th.textContent.trim().toUpperCase() === 'AGENCY');
+      if (initialAgencyIndex >= 0) {
+        initialHeaders[initialAgencyIndex].classList.add('agency-col');
+        agencyTable.querySelectorAll('tbody tr').forEach(tr => {
+          if (tr.children[initialAgencyIndex]) tr.children[initialAgencyIndex].classList.add('agency-col');
+        });
+      }
+    }
 </script>
 
 
@@ -7389,6 +7670,76 @@ body.dark-theme .process-step-title {
 body.dark-theme .chart-header h3 {
   color: #f1f5f9 !important;
 }
+
+    /* v24: IRISET E-BOOK Book Name visibility in dark theme */
+    body.dark-theme #mainRecordTable td.ebook-book-name-cell,
+    html.dark-theme #mainRecordTable td.ebook-book-name-cell {
+      color: #f8fafc !important;
+      font-weight: 700 !important;
+    }
+    body.dark-theme #mainRecordTable td.ebook-book-name-cell *,
+    html.dark-theme #mainRecordTable td.ebook-book-name-cell * {
+      color: #f8fafc !important;
+      opacity: 1 !important;
+    }
+
+    /* v26: Universal word wrapping for ALL main record tables/subsections.
+       Handles both normal text and long unbroken strings such as policy/typical numbers. */
+    #mainRecordTable th,
+    #mainRecordTable td {
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-wrap: break-word !important;
+      word-break: break-word !important;
+      hyphens: auto;
+      max-width: 100%;
+    }
+
+    #mainRecordTable th *,
+    #mainRecordTable td *:not(.actions-cell):not(.action-icon-btn):not(i) {
+      max-width: 100%;
+      overflow-wrap: anywhere !important;
+      word-wrap: break-word !important;
+      word-break: break-word !important;
+      white-space: normal !important;
+    }
+
+    /* Badges must also wrap instead of overflowing into the next column. */
+    #mainRecordTable .tag-badge,
+    #mainRecordTable .agency-badge,
+    #mainRecordTable .dept-badge,
+    #mainRecordTable .type-badge,
+    #mainRecordTable .oem-badge,
+    #mainRecordTable .authority-badge,
+    #mainRecordTable .equip-badge {
+      display: inline-block;
+      max-width: 100%;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+      vertical-align: middle;
+    }
+
+    /* Keep only the action controls on one line. */
+    #mainRecordTable td:last-child .actions-cell,
+    #mainRecordTable .actions-cell,
+    #mainRecordTable .action-icon-btn {
+      white-space: nowrap !important;
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+    }
+
+    /* v27: Agency column width — sized for the word "CONSTRUCTION".
+       Word wrapping from v26 remains enabled for longer agency names. */
+    #mainRecordTable th.agency-col,
+    #mainRecordTable td.agency-col {
+      width: 132px !important;
+      min-width: 132px !important;
+      max-width: 132px !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+    }
 </style>
 </body>
 </html>
