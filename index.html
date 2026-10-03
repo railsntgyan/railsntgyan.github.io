@@ -3991,6 +3991,66 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
   }
 }
 </style>
+
+<style id="v76-mobile-font-size-fix">
+@media (max-width:600px){
+  html{
+    -webkit-text-size-adjust:100% !important;
+    text-size-adjust:100% !important;
+  }
+
+  /* Main subsection tables: keep mobile text compact/readable without
+     changing column widths, padding, row height or sticky behavior. */
+  #mainRecordTable thead th,
+  #mainRecordTable thead td{
+    font-size:11px !important;
+  }
+  #mainRecordTable tbody td{
+    font-size:11px !important;
+  }
+
+  /* Sidebar / subsection navigation */
+  .sidebar,
+  .sidebar button,
+  .sidebar a,
+  .sidebar .nav-item,
+  .sidebar .sub-item{
+    font-size:12px;
+  }
+}
+</style>
+
+<style id="v77-mobile-brand-font-restore">
+@media (max-width:600px){
+  .sidebar .logo-area,
+  .sidebar .logo-area *,
+  .sidebar .brand,
+  .sidebar .brand *,
+  .sidebar .sidebar-header,
+  .sidebar .sidebar-header *{
+    font-size:revert !important;
+  }
+}
+</style>
+
+<style id="v78-mobile-brand-font-larger">
+@media (max-width:600px){
+  /* Mobile branding only */
+  .sidebar .brand h1,
+  .sidebar .logo-area h1,
+  .sidebar .sidebar-header h1{
+    font-size:20px !important;
+    line-height:1.05 !important;
+  }
+
+  .sidebar .brand p,
+  .sidebar .logo-area p,
+  .sidebar .sidebar-header p{
+    font-size:11px !important;
+    line-height:1.15 !important;
+  }
+}
+</style>
 </head>
 <body class="dark-theme">
 
