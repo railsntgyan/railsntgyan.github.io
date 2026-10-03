@@ -55,6 +55,9 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
 
   <!-- Chart.js for Dashboard Visualizations -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- v32: PDF.js renders every page into normal document flow for reliable multi-page zoom -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
@@ -2820,6 +2823,1155 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
 }
 </style>
 
+
+<style id="v30-preview-fix">
+#pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+ width:min(1050px,calc(100vw - 48px))!important;max-width:calc(100vw - 24px)!important;
+ height:auto!important;max-height:calc(100vh - 32px)!important;min-width:420px;min-height:220px;
+ resize:both!important;overflow:auto!important}
+#pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-body{
+ height:auto!important;min-height:120px!important;max-height:calc(100vh - 105px)!important;overflow:auto!important}
+#pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) #pdfPreviewFrame{
+ display:block;width:100%!important;min-height:0!important;height:min(72vh,760px)!important;border:0}
+@media(max-width:768px){
+ #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+  width:calc(100vw - 16px)!important;min-width:0!important;max-width:calc(100vw - 16px)!important;resize:none!important}}
+</style>
+
+<style id="v31-preview-fixed-viewport">
+/* Normal preview: stable viewing area. Zoom changes PDF scale only, not window height. */
+#pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+  width:min(1180px,calc(100vw - 40px))!important;
+  height:min(88vh,900px)!important;
+  max-width:calc(100vw - 20px)!important;
+  max-height:calc(100vh - 20px)!important;
+  min-width:420px;
+  min-height:360px;
+  resize:both!important;
+  overflow:hidden!important;
+}
+#pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-body{
+  height:calc(100% - 52px)!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+}
+#pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) #pdfPreviewFrame{
+  display:block;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  border:0;
+}
+/* Maximize also gives the PDF all available body height. */
+#pdfPreviewModal.preview-maximized .modal-body{height:calc(100% - 52px)!important;overflow:hidden!important}
+#pdfPreviewModal.preview-maximized #pdfPreviewFrame{width:100%!important;height:100%!important}
+/* On phones/tablets use the viewport; manual resize is desktop-only. */
+@media(max-width:768px){
+ #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+   width:calc(100vw - 12px)!important;
+   height:calc(100vh - 18px)!important;
+   min-width:0!important;min-height:0!important;
+   resize:none!important;
+ }
+}
+</style>
+
+<style id="v32-pdfjs-multipage">
+  #pdfPreviewModal:not(.preview-minimized) .modal-content {
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+  }
+
+  #pdfPreviewModal:not(.preview-minimized) #modalPreviewBody {
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:hidden !important;
+    padding:0 !important;
+    background:#111827 !important;
+    line-height:normal !important;
+  }
+
+  #pdfViewerViewport {
+    width:100%;
+    height:100%;
+    min-height:0;
+    overflow:auto;
+    overscroll-behavior:contain;
+    background:#111827;
+    touch-action:pan-x pan-y;
+    scrollbar-gutter:stable;
+  }
+
+  #pdfPagesContainer {
+    width:100%;
+    min-height:max-content;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px 20px;
+    overflow:visible !important;
+    position:static !important;
+    transform:none !important;
+  }
+
+  .pdf-page-wrap {
+    flex:0 0 auto;
+    display:block;
+    position:relative;
+    margin:0;
+    padding:0;
+    background:#fff;
+    box-shadow:0 2px 12px rgba(0,0,0,.35);
+    line-height:0;
+  }
+
+  .pdf-page-wrap canvas {
+    display:block;
+    margin:0;
+    padding:0;
+    max-width:none !important;
+    height:auto;
+    background:#fff;
+  }
+
+  .pdf-page-number {
+    position:absolute;
+    right:8px;
+    bottom:7px;
+    z-index:2;
+    padding:3px 7px;
+    border-radius:10px;
+    background:rgba(15,23,42,.76);
+    color:#fff;
+    font:600 10px/1.2 Arial,sans-serif;
+    pointer-events:none;
+  }
+
+  #pdfPreviewLoading,
+  #pdfPreviewError {
+    min-height:180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    text-align:center;
+    color:#e2e8f0;
+    font-weight:700;
+    line-height:1.5;
+  }
+
+  #pdfPreviewError { color:#fecaca; }
+
+  /* v32 explicitly disables the old transformed iframe zoom mechanism. */
+  #previewTransformHost {
+    transform:none !important;
+    width:auto !important;
+    height:auto !important;
+  }
+
+  @media (max-width:768px) {
+    #pdfPagesContainer { gap:8px; padding:8px 8px 16px; }
+  }
+</style>
+
+<style id="v34-fixes">
+/* Use word wrapping, not letter-by-letter wrapping. */
+#mainRecordTable th,#mainRecordTable td,#mainRecordTable th *,#mainRecordTable td *{
+ word-break:normal!important;overflow-wrap:break-word!important;hyphens:none!important}
+#mainRecordTable .division-badge,#mainRecordTable .agency-badge,#mainRecordTable .dept-badge,
+#mainRecordTable .authority-badge,#mainRecordTable .oem-badge,#mainRecordTable .type-badge,
+#mainRecordTable .tag-badge,#mainRecordTable .equip-badge{
+ word-break:normal!important;overflow-wrap:normal!important;white-space:normal!important}
+@media(max-width:768px){
+ .table-scroll-container,.table-responsive,#recordsTableContainer{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+ #mainRecordTable{width:max-content!important;min-width:100%!important;table-layout:auto!important}
+ #mainRecordTable th,#mainRecordTable td{min-width:92px;max-width:320px;white-space:normal!important}
+ #mainRecordTable th:first-child,#mainRecordTable td:first-child{min-width:64px!important;width:64px!important}
+ #mainRecordTable th:nth-child(2),#mainRecordTable td:nth-child(2){min-width:155px!important}
+ #mainRecordTable th:nth-child(3),#mainRecordTable td:nth-child(3){min-width:105px!important}
+ #mainRecordTable th:nth-child(n+4),#mainRecordTable td:nth-child(n+4){min-width:220px}
+ #mainRecordTable th:last-child,#mainRecordTable td:last-child{min-width:118px}
+}
+#pdfViewerViewport{width:100%!important;height:100%!important;min-height:0!important}
+#googleDrivePreviewFallback{display:block!important;width:100%!important;height:100%!important;min-height:100%!important;border:0!important;background:#111827!important}
+</style>
+
+<style id="v35-smart-table-layout">
+/* v35 — Universal SMART table wrapping.
+   Goal: readable words, sensible column widths, no letter-by-letter wrapping. */
+#mainRecordTable{
+  width:100%;
+  table-layout:auto!important;
+}
+#mainRecordTable th,
+#mainRecordTable td{
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  hyphens:none!important;
+  vertical-align:middle;
+  line-height:1.28;
+}
+
+/* Sr. No. — compact */
+#mainRecordTable th:first-child,
+#mainRecordTable td:first-child{
+  width:64px!important;
+  min-width:64px!important;
+  max-width:72px!important;
+  text-align:center;
+}
+
+/* Ordinary labels/badges should wrap only at normal word boundaries. */
+#mainRecordTable .division-badge,
+#mainRecordTable .agency-badge,
+#mainRecordTable .dept-badge,
+#mainRecordTable .authority-badge,
+#mainRecordTable .oem-badge,
+#mainRecordTable .type-badge,
+#mainRecordTable .tag-badge,
+#mainRecordTable .equip-badge{
+  display:inline-block;
+  width:auto!important;
+  max-width:100%;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+}
+
+/* Known compact columns: enough room for their normal values. */
+#mainRecordTable th.agency-col,
+#mainRecordTable td.agency-col{
+  width:140px!important;
+  min-width:140px!important;
+  max-width:160px!important;
+}
+#mainRecordTable th.agency-col *,
+#mainRecordTable td.agency-col *{
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+}
+
+/* Document/Policy/Typical numbers can contain long strings without spaces.
+   They may break when required, but never force adjacent columns to overlap. */
+#mainRecordTable .doc-no-cell,
+#mainRecordTable .doc-no-cell *{
+  min-width:150px;
+  max-width:260px;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* Descriptions/work names need a larger reading area. */
+#mainRecordTable th:nth-child(n+4),
+#mainRecordTable td:nth-child(n+4){
+  min-width:180px;
+}
+
+/* Action controls remain compact and on one line. */
+#mainRecordTable .actions-cell{
+  min-width:116px;
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+}
+
+/* On narrow screens preserve useful widths and scroll the TABLE horizontally.
+   Do not squeeze columns until words break letter-by-letter. */
+@media(max-width:900px){
+  .table-scroll-container,
+  .table-responsive,
+  #recordsTableContainer{
+    width:100%;
+    overflow-x:auto!important;
+    overflow-y:visible;
+    -webkit-overflow-scrolling:touch;
+  }
+  #mainRecordTable{
+    width:max-content!important;
+    min-width:100%!important;
+    table-layout:auto!important;
+  }
+  #mainRecordTable th,
+  #mainRecordTable td{
+    min-width:110px;
+    max-width:300px;
+  }
+  #mainRecordTable th:first-child,
+  #mainRecordTable td:first-child{
+    min-width:64px!important;
+    width:64px!important;
+  }
+  #mainRecordTable th:nth-child(2),
+  #mainRecordTable td:nth-child(2){
+    min-width:155px;
+  }
+  #mainRecordTable th:nth-child(3),
+  #mainRecordTable td:nth-child(3){
+    min-width:125px;
+  }
+  #mainRecordTable th:nth-child(n+4),
+  #mainRecordTable td:nth-child(n+4){
+    min-width:230px;
+  }
+  #mainRecordTable th.agency-col,
+  #mainRecordTable td.agency-col{
+    min-width:140px!important;
+    width:140px!important;
+  }
+}
+
+/* Very small phones: still readable, horizontal scroll handles the extra width. */
+@media(max-width:480px){
+  #mainRecordTable th,
+  #mainRecordTable td{
+    font-size:14px;
+    line-height:1.3;
+  }
+}
+</style>
+
+<style id="v37-balanced-columns">
+/* v37: content-aware table widths.
+   Long Work/Description columns are deliberately wider; short fields stay compact.
+   Table scrolls horizontally when needed instead of crushing text vertically. */
+.table-container{
+  overflow-x:auto !important;
+  overflow-y:auto !important;
+}
+
+#mainRecordTable{
+  width:max-content !important;
+  min-width:100% !important;
+  table-layout:fixed !important;
+}
+
+#mainRecordTable th,
+#mainRecordTable td{
+  box-sizing:border-box !important;
+  height:auto !important;
+  min-height:0 !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  hyphens:none !important;
+  vertical-align:middle !important;
+  line-height:1.32 !important;
+}
+
+/* Header must never become an artificial tall block. */
+#mainRecordTable thead,
+#mainRecordTable thead tr,
+#mainRecordTable thead th{
+  height:auto !important;
+  min-height:0 !important;
+}
+
+/* Long narrative fields: approximately 4–5 readable lines for typical railway descriptions. */
+#mainRecordTable th.v37-longtext,
+#mainRecordTable td.v37-longtext{
+  width:420px !important;
+  min-width:420px !important;
+  max-width:420px !important;
+}
+#mainRecordTable td.v37-longtext *,
+#mainRecordTable th.v37-longtext *{
+  max-width:100% !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+}
+
+/* Station / section */
+#mainRecordTable th.v37-station,
+#mainRecordTable td.v37-station{
+  width:180px !important;
+  min-width:180px !important;
+  max-width:180px !important;
+}
+
+/* Division */
+#mainRecordTable th.v37-division,
+#mainRecordTable td.v37-division{
+  width:110px !important;
+  min-width:110px !important;
+  max-width:110px !important;
+}
+
+/* Agency — comfortably fits Construction / Open Line */
+#mainRecordTable th.v37-agency,
+#mainRecordTable td.v37-agency{
+  width:145px !important;
+  min-width:145px !important;
+  max-width:145px !important;
+}
+#mainRecordTable td.v37-agency *,
+#mainRecordTable th.v37-agency *{
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+}
+
+/* Date columns must not collapse into one-letter-per-line headers. */
+#mainRecordTable th.v37-date,
+#mainRecordTable td.v37-date{
+  width:145px !important;
+  min-width:145px !important;
+  max-width:145px !important;
+}
+
+/* Equipment / sanction authority / given by */
+#mainRecordTable th.v37-medium,
+#mainRecordTable td.v37-medium{
+  width:170px !important;
+  min-width:170px !important;
+  max-width:170px !important;
+}
+
+/* Routes / counts / other short fields */
+#mainRecordTable th.v37-short,
+#mainRecordTable td.v37-short{
+  width:115px !important;
+  min-width:115px !important;
+  max-width:115px !important;
+}
+
+/* Action */
+#mainRecordTable th.v37-action,
+#mainRecordTable td.v37-action{
+  width:135px !important;
+  min-width:135px !important;
+  max-width:135px !important;
+  white-space:nowrap !important;
+}
+
+/* Sr. No. */
+#mainRecordTable th.v37-sr,
+#mainRecordTable td.v37-sr{
+  width:65px !important;
+  min-width:65px !important;
+  max-width:65px !important;
+  text-align:center !important;
+}
+
+/* Policy/Doc/Typical/Letter numbers: medium width and controlled emergency breaking. */
+#mainRecordTable th.v37-docno,
+#mainRecordTable td.v37-docno{
+  width:220px !important;
+  min-width:220px !important;
+  max-width:220px !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* Mobile/tablet: retain readable widths; horizontal swipe handles extra columns. */
+@media(max-width:900px){
+  #mainRecordTable th.v37-longtext,
+  #mainRecordTable td.v37-longtext{
+    width:340px !important;
+    min-width:340px !important;
+    max-width:340px !important;
+  }
+  #mainRecordTable th.v37-station,
+  #mainRecordTable td.v37-station{
+    width:155px !important;
+    min-width:155px !important;
+    max-width:155px !important;
+  }
+}
+</style>
+
+<style id="v39-pcste-work-fixed">
+/* PCSTE Work Description: exactly the same long-text width/wrapping as EI/MSDAC */
+#mainRecordTable th.v39-pcste-work,
+#mainRecordTable td.v39-pcste-work{
+  width:420px !important;
+  min-width:420px !important;
+  max-width:420px !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  hyphens:none !important;
+  line-height:1.32 !important;
+  vertical-align:middle !important;
+}
+#mainRecordTable td.v39-pcste-work *,
+#mainRecordTable th.v39-pcste-work *{
+  max-width:100% !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+}
+@media(max-width:900px){
+ #mainRecordTable th.v39-pcste-work,
+ #mainRecordTable td.v39-pcste-work{
+   width:340px !important;
+   min-width:340px !important;
+   max-width:340px !important;
+ }
+}
+</style>
+
+<style id="v40-category-column-widths">
+/* v40: category-specific compact columns while preserving proper word wrapping */
+
+/* EI TSAA */
+body.v40-ei-tsaa #mainRecordTable th.v40-oem,
+body.v40-ei-tsaa #mainRecordTable td.v40-oem{
+    width:125px !important;
+    min-width:125px !important;
+    max-width:125px !important;
+}
+body.v40-ei-tsaa #mainRecordTable th.v40-sanctionby,
+body.v40-ei-tsaa #mainRecordTable td.v40-sanctionby{
+    width:125px !important;
+    min-width:125px !important;
+    max-width:125px !important;
+}
+
+/* MSDAC TSAA */
+body.v40-msdac-tsaa #mainRecordTable th.v40-station,
+body.v40-msdac-tsaa #mainRecordTable td.v40-station{
+    width:150px !important;
+    min-width:150px !important;
+    max-width:150px !important;
+}
+body.v40-msdac-tsaa #mainRecordTable th.v40-oem,
+body.v40-msdac-tsaa #mainRecordTable td.v40-oem{
+    width:155px !important;
+    min-width:155px !important;
+    max-width:155px !important;
+}
+
+/* Proper word wrapping in all refined columns */
+#mainRecordTable .v40-oem,
+#mainRecordTable .v40-sanctionby,
+#mainRecordTable .v40-station,
+#mainRecordTable .v40-oem *,
+#mainRecordTable .v40-sanctionby *,
+#mainRecordTable .v40-station *{
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+    line-height:1.3 !important;
+}
+
+/* Do not allow badges/tags to force column expansion */
+#mainRecordTable td.v40-oem .badge,
+#mainRecordTable td.v40-oem span,
+#mainRecordTable td.v40-sanctionby .badge,
+#mainRecordTable td.v40-sanctionby span{
+    max-width:100% !important;
+    white-space:normal !important;
+    overflow-wrap:break-word !important;
+    text-align:center !important;
+}
+
+/* On small screens retain usable minimum widths + horizontal scrolling */
+@media(max-width:900px){
+  body.v40-ei-tsaa #mainRecordTable th.v40-oem,
+  body.v40-ei-tsaa #mainRecordTable td.v40-oem{width:110px!important;min-width:110px!important;max-width:110px!important;}
+  body.v40-ei-tsaa #mainRecordTable th.v40-sanctionby,
+  body.v40-ei-tsaa #mainRecordTable td.v40-sanctionby{width:110px!important;min-width:110px!important;max-width:110px!important;}
+  body.v40-msdac-tsaa #mainRecordTable th.v40-station,
+  body.v40-msdac-tsaa #mainRecordTable td.v40-station{width:135px!important;min-width:135px!important;max-width:135px!important;}
+  body.v40-msdac-tsaa #mainRecordTable th.v40-oem,
+  body.v40-msdac-tsaa #mainRecordTable td.v40-oem{width:140px!important;min-width:140px!important;max-width:140px!important;}
+}
+</style>
+
+<style id="v41-ei-sanction-header">
+body.v40-ei-tsaa #mainRecordTable th.v40-sanctionby,
+body.v40-ei-tsaa #mainRecordTable td.v40-sanctionby{
+    width:105px !important;
+    min-width:105px !important;
+    max-width:105px !important;
+}
+body.v40-ei-tsaa #mainRecordTable th.v40-sanctionby{
+    text-align:center !important;
+    line-height:1.15 !important;
+}
+</style>
+
+<style id="v42-ei-compact-columns">
+/* EI TSAA: compact short-data columns and leave more room for Work Description */
+body.v40-ei-tsaa #mainRecordTable th.v40-sanctionby,
+body.v40-ei-tsaa #mainRecordTable td.v40-sanctionby{
+    width:82px !important;
+    min-width:82px !important;
+    max-width:82px !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+body.v40-ei-tsaa #mainRecordTable th.v40-agency-v42,
+body.v40-ei-tsaa #mainRecordTable td.v40-agency-v42{
+    width:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+body.v40-ei-tsaa #mainRecordTable td.v40-sanctionby span,
+body.v40-ei-tsaa #mainRecordTable td.v40-agency-v42 span{
+    max-width:100% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+</style>
+
+<style id="v43-ei-sanction-hard-fix">
+body.v43-ei-active #mainRecordTable th.v43-sanction-col,
+body.v43-ei-active #mainRecordTable td.v43-sanction-col{
+    width:72px !important;
+    min-width:72px !important;
+    max-width:72px !important;
+    padding-left:8px !important;
+    padding-right:8px !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+    box-sizing:border-box !important;
+}
+body.v43-ei-active #mainRecordTable th.v43-sanction-col{
+    line-height:1.12 !important;
+    text-align:center !important;
+}
+body.v43-ei-active #mainRecordTable td.v43-sanction-col{
+    text-align:center !important;
+}
+body.v43-ei-active #mainRecordTable td.v43-sanction-col > *,
+body.v43-ei-active #mainRecordTable th.v43-sanction-col > *{
+    max-width:56px !important;
+    width:auto !important;
+    min-width:0 !important;
+    white-space:normal !important;
+}
+</style>
+
+<style id="v44-ei-station-width">
+/* EI TSAA: Station / Section = 150px with proper word wrapping */
+body.v43-ei-active #mainRecordTable th.v44-station-col,
+body.v43-ei-active #mainRecordTable td.v44-station-col{
+    width:150px !important;
+    min-width:150px !important;
+    max-width:150px !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+    line-height:1.3 !important;
+}
+</style>
+
+<style id="v45-global-column-widths">
+/* All subsections: standardized compact widths with proper word wrapping */
+#mainRecordTable th.v45-division,
+#mainRecordTable td.v45-division{
+    width:100px !important;
+    min-width:100px !important;
+    max-width:100px !important;
+}
+#mainRecordTable th.v45-station,
+#mainRecordTable td.v45-station{
+    width:150px !important;
+    min-width:150px !important;
+    max-width:150px !important;
+}
+#mainRecordTable th.v45-oem,
+#mainRecordTable td.v45-oem{
+    width:100px !important;
+    min-width:100px !important;
+    max-width:100px !important;
+}
+
+#mainRecordTable .v45-division,
+#mainRecordTable .v45-station,
+#mainRecordTable .v45-oem,
+#mainRecordTable .v45-division *,
+#mainRecordTable .v45-station *,
+#mainRecordTable .v45-oem *{
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+    line-height:1.3 !important;
+    box-sizing:border-box !important;
+}
+
+/* badges/tags must stay inside their assigned width */
+#mainRecordTable td.v45-division span,
+#mainRecordTable td.v45-oem span,
+#mainRecordTable td.v45-division .badge,
+#mainRecordTable td.v45-oem .badge{
+    max-width:100% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+</style>
+
+<style id="v46-ei-stable-columns">
+/* EI TSAA only: lock columns from OEM Make through Action so they do not shift
+   between records/renders. Work Description remains the flexible/wide column. */
+body.v46-ei #mainRecordTable{
+    table-layout:fixed !important;
+    width:max-content !important;
+    min-width:100% !important;
+}
+
+/* OEM Make */
+body.v46-ei #mainRecordTable th.v46-oem,
+body.v46-ei #mainRecordTable td.v46-oem{
+    width:100px !important; min-width:100px !important; max-width:100px !important;
+}
+/* Sanction / Given By */
+body.v46-ei #mainRecordTable th.v46-sanction,
+body.v46-ei #mainRecordTable td.v46-sanction{
+    width:72px !important; min-width:72px !important; max-width:72px !important;
+}
+/* Agency */
+body.v46-ei #mainRecordTable th.v46-agency,
+body.v46-ei #mainRecordTable td.v46-agency{
+    width:112px !important; min-width:112px !important; max-width:112px !important;
+}
+/* Routes */
+body.v46-ei #mainRecordTable th.v46-routes,
+body.v46-ei #mainRecordTable td.v46-routes{
+    width:80px !important; min-width:80px !important; max-width:80px !important;
+}
+/* TSAA Sanction Date */
+body.v46-ei #mainRecordTable th.v46-date,
+body.v46-ei #mainRecordTable td.v46-date{
+    width:145px !important; min-width:145px !important; max-width:145px !important;
+}
+/* Action */
+body.v46-ei #mainRecordTable th.v46-action,
+body.v46-ei #mainRecordTable td.v46-action{
+    width:135px !important; min-width:135px !important; max-width:135px !important;
+    white-space:nowrap !important;
+}
+
+body.v46-ei #mainRecordTable th.v46-oem,
+body.v46-ei #mainRecordTable td.v46-oem,
+body.v46-ei #mainRecordTable th.v46-sanction,
+body.v46-ei #mainRecordTable td.v46-sanction,
+body.v46-ei #mainRecordTable th.v46-agency,
+body.v46-ei #mainRecordTable td.v46-agency,
+body.v46-ei #mainRecordTable th.v46-routes,
+body.v46-ei #mainRecordTable td.v46-routes,
+body.v46-ei #mainRecordTable th.v46-date,
+body.v46-ei #mainRecordTable td.v46-date,
+body.v46-ei #mainRecordTable th.v46-action,
+body.v46-ei #mainRecordTable td.v46-action{
+    box-sizing:border-box !important;
+    flex:none !important;
+}
+
+/* Prevent badge/text content from changing the assigned column width. */
+body.v46-ei #mainRecordTable td.v46-oem > *,
+body.v46-ei #mainRecordTable td.v46-sanction > *,
+body.v46-ei #mainRecordTable td.v46-agency > *,
+body.v46-ei #mainRecordTable td.v46-routes > *,
+body.v46-ei #mainRecordTable td.v46-date > *{
+    max-width:100% !important;
+}
+</style>
+
+<style id="v47-msdac-agency-global-date">
+/* v47: all subsection date columns = 112px */
+#mainRecordTable th.v47-date,
+#mainRecordTable td.v47-date{
+    width:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+    line-height:1.25 !important;
+    text-align:center !important;
+}
+
+/* MSDAC TSAA Agency = 112px */
+body.v47-msdac #mainRecordTable th.v47-msdac-agency,
+body.v47-msdac #mainRecordTable td.v47-msdac-agency{
+    width:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+}
+body.v47-msdac #mainRecordTable td.v47-msdac-agency > *{
+    max-width:100% !important;
+    white-space:normal !important;
+}
+</style>
+
+<style id="v48-global-agency-pcste-equipment">
+/* All subsections: Agency column = 112px */
+#mainRecordTable th.v48-agency,
+#mainRecordTable td.v48-agency{
+    width:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+    line-height:1.28 !important;
+}
+#mainRecordTable td.v48-agency > *,
+#mainRecordTable th.v48-agency > *{
+    max-width:100% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+
+/* PCSTE SANCTION: Equipment = 112px */
+#mainRecordTable th.v48-pcste-equipment,
+#mainRecordTable td.v48-pcste-equipment{
+    width:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+    hyphens:none !important;
+    line-height:1.28 !important;
+}
+#mainRecordTable td.v48-pcste-equipment > *,
+#mainRecordTable th.v48-pcste-equipment > *{
+    max-width:100% !important;
+    white-space:normal !important;
+}
+</style>
+
+<style id="v51-pcste-equipment-112">
+/* PCSTE SANCTION: Equipment column fixed at 112px */
+body.v51-pcste #mainRecordTable th.v51-equipment,
+body.v51-pcste #mainRecordTable td.v51-equipment{
+    width:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+</style>
+
+<style id="v52-all-table-headers-center">
+/* All subsections: center-align every item in the first/header row */
+#mainRecordTable thead th,
+#mainRecordTable thead tr:first-child th,
+#mainRecordTable thead td,
+#mainRecordTable thead tr:first-child td{
+    text-align:center !important;
+    vertical-align:middle !important;
+}
+
+/* Keep header inner elements centered too */
+#mainRecordTable thead th > *,
+#mainRecordTable thead td > *{
+    text-align:center !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    justify-content:center !important;
+}
+</style>
+
+<style id="v58-chapterwise-description-stable">
+body.v58-chapterwise #mainRecordTable th.v58-description-col,
+body.v58-chapterwise #mainRecordTable td.v58-description-col{
+    width:420px !important;
+    min-width:420px !important;
+    max-width:420px !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+}
+@media (max-width:900px){
+    body.v58-chapterwise #mainRecordTable th.v58-description-col,
+    body.v58-chapterwise #mainRecordTable td.v58-description-col{
+        width:340px !important;
+        min-width:340px !important;
+        max-width:340px !important;
+    }
+}
+</style>
+
+<style id="v60-sticky-separator-fix">
+/* v60: visual isolation only — no column width/design changes */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1),
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(1),
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(2),
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(2){
+    position: sticky !important;
+    background: inherit;
+    background-clip: padding-box !important;
+}
+
+/* First frozen column always stays at the extreme left. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1),
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(1){
+    left: 0 !important;
+}
+
+/* Second frozen column uses measured first-column width via CSS variable. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(2),
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(2){
+    left: var(--v60-sticky-col2-left) !important;
+}
+
+/* Keep headers above body cells and both frozen columns above scrolling content. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1),
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(2){
+    z-index: 12 !important;
+}
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(1),
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(2){
+    z-index: 10 !important;
+}
+
+/* Continuous separator between frozen column 1 and 2.
+   Pseudo-element avoids changing width/border-box geometry. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1)::after,
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(1)::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:-1px;
+    width:2px;
+    background:var(--table-border, #701616);
+    pointer-events:none;
+    z-index:20;
+}
+</style>
+
+<style id="v61-sticky-header-separator">
+/* Keep the normal frozen-column geometry from v60.
+   Reinforce ONLY the visible separator in the header. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1){
+    overflow: visible !important;
+}
+
+/* Draw separator inside the right edge of Sr.No header so it cannot be
+   clipped/covered by the Station/Section sticky header. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1)::after{
+    content:"" !important;
+    position:absolute !important;
+    top:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:2px !important;
+    background:var(--table-border, #701616) !important;
+    pointer-events:none !important;
+    z-index:50 !important;
+    display:block !important;
+}
+
+/* Matching left-edge separator on column 2 header provides continuous
+   separation even at maximum horizontal scroll. It is an overlay only and
+   therefore does not affect either column's existing width. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(2){
+    box-shadow: inset 2px 0 0 var(--table-border, #701616) !important;
+}
+</style>
+
+<style id="v62-sticky-opaque-final-fix">
+/* No width/offset/padding/font changes. Prevent scrolled columns from showing
+   through the two frozen columns, especially in the header. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1),
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(2){
+    z-index:100 !important;
+    background-image:none !important;
+}
+
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(1),
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(2){
+    z-index:90 !important;
+    background-image:none !important;
+}
+
+/* Strong separator at the exact boundary of frozen column 1. */
+#mainRecordTable.v60-sticky-fixed thead th:nth-child(1)::after,
+#mainRecordTable.v60-sticky-fixed tbody td:nth-child(1)::after{
+    content:"" !important;
+    position:absolute !important;
+    top:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:2px !important;
+    background:var(--table-border,#701616) !important;
+    z-index:110 !important;
+    pointer-events:none !important;
+}
+</style>
+
+<style id="v63-table-body-alignment">
+/* Body data only — headers, widths, padding, heights and sticky geometry untouched */
+#mainRecordTable tbody td{
+    text-align:center !important;
+}
+#mainRecordTable tbody td.v63-left-data{
+    text-align:left !important;
+}
+</style>
+
+<style id="v64-action-width-plus10">
+#mainRecordTable th.v64-action-width,
+#mainRecordTable td.v64-action-width{
+    width:var(--v64-action-width) !important;
+    min-width:var(--v64-action-width) !important;
+    max-width:var(--v64-action-width) !important;
+}
+</style>
+
+<style id="v65-pdf-preview-reader">
+/* Compact desktop PDF-reader window. No table/page UI outside preview is changed. */
+@media (min-width:769px){
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized){
+    padding:24px !important;
+  }
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+    width:min(900px, calc(100vw - 96px)) !important;
+    max-width:900px !important;
+    height:min(90vh, 920px) !important;
+    max-height:90vh !important;
+    min-width:620px !important;
+    resize:both !important;
+  }
+}
+#pdfPreviewModal #pdfViewerViewport{
+  overflow:auto !important;
+  scroll-behavior:smooth;
+  overscroll-behavior:contain;
+}
+#pdfPreviewModal #pdfPagesContainer{
+  width:max-content !important;
+  min-width:100% !important;
+  margin:0 auto !important;
+  align-items:center !important;
+}
+#pdfPreviewModal .pdf-page-wrap{
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+#pdfPreviewModal .modal-header-actions{
+  flex-wrap:nowrap;
+}
+#pdfPreviewModal .v65-fit-btn{
+  min-width:34px;
+}
+@media (max-width:768px){
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+    width:calc(100vw - 12px) !important;
+    height:calc(100dvh - 18px) !important;
+    max-width:none !important;
+  }
+}
+</style>
+
+<style id="v66-preview-toolbar-final">
+/* Required toolbar only: zoom-, %, zoom+, fit/reset, download, close.
+   No changes outside the preview modal. */
+#pdfPreviewModal .modal-header-actions{
+    gap:6px !important;
+}
+#pdfPreviewModal .v65-fit-btn{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+}
+</style>
+
+<style id="v67-pdfjs-only-final">
+/* PDF preview is custom PDF.js only; no Drive iframe/default toolbar. */
+#pdfPreviewModal #googleDrivePreviewFallback{display:block;}
+#pdfPreviewModal .pdf-page-wrap canvas{
+  max-width:none !important;
+  image-rendering:auto;
+}
+#pdfPreviewModal #pdfViewerViewport{
+  overflow:auto !important;
+  scroll-behavior:smooth;
+}
+#pdfPreviewModal #pdfPagesContainer{
+  width:max-content !important;
+  min-width:100% !important;
+  align-items:center !important;
+}
+#pdfPreviewModal .modal-header-actions button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+</style>
+
+<style id="v69-drive-fallback-toolbar-clean">
+/* In Google Drive fallback mode, Drive itself owns zoom/fit.
+   Therefore our redundant Zoom-, %, Zoom+ and Fit controls are removed.
+   Download and Close remain available in our modal toolbar. */
+#pdfPreviewModal.v69-drive-fallback .v69-custom-zoom-control,
+#pdfPreviewModal.v69-drive-fallback .v69-custom-zoom-label{
+    display:none !important;
+}
+</style>
+
+<style id="v70-preview-height-increase">
+@media (min-width:769px){
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+    height:96vh !important;
+    max-height:96vh !important;
+  }
+}
+@media (max-width:768px){
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+    height:calc(100dvh - 8px) !important;
+    max-height:calc(100dvh - 8px) !important;
+  }
+}
+</style>
+
+<style id="v71-preview-larger">
+@media (min-width:769px){
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized){
+    padding:10px !important;
+  }
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+    width:min(1100px, calc(100vw - 40px)) !important;
+    max-width:1100px !important;
+    min-width:620px !important;
+    height:98vh !important;
+    max-height:98vh !important;
+  }
+}
+@media (max-width:768px){
+  #pdfPreviewModal:not(.preview-maximized):not(.preview-minimized) .modal-content{
+    width:calc(100vw - 6px) !important;
+    height:calc(100dvh - 6px) !important;
+    max-width:none !important;
+    max-height:calc(100dvh - 6px) !important;
+  }
+}
+</style>
 </head>
 <body class="dark-theme">
 
@@ -3562,8 +4714,16 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         <ul class="nav-list">
           <li class="nav-item" onclick="switchCategory('IMP. LETTER')"><i class="fa-solid fa-envelope-open-text" style="color: #ef4444;"></i> IMP. LETTER</li>
           <li class="nav-item" onclick="switchCategory('RDSO TAN (TECHNICAL ADVISORY NOTE)')"><i class="fa-solid fa-note-sticky" style="color: #f97316;"></i> RDSO TAN (TECHNICAL ADVISORY NOTE)</li>
-          <li class="nav-item" onclick="switchCategory('IRSEM & CORRECTION SLIP')"><i class="fa-solid fa-file-lines" style="color: #eab308;"></i> IRSEM & CORRECTION SLIP</li>
-          <li class="nav-item" onclick="switchCategory('IRTEM')"><i class="fa-solid fa-tower-broadcast" style="color: #14b8a6;"></i> IRTEM</li>
+          <li class="nav-item" onclick="toggleManualSubmenu('irsemSubmenu','IRSEM CHAPTER WISE')" style="cursor:pointer;"><i class="fa-solid fa-file-lines" style="color: #eab308;"></i> IRSEM <i class="fa-solid fa-chevron-down manual-submenu-chevron" id="irsemSubmenuChevron" style="margin-left:auto;"></i></li>
+          <div id="irsemSubmenu" class="manual-submenu" style="display:none;">
+            <li class="nav-item" onclick="switchCategory('IRSEM CHAPTER WISE')" style="padding-left:34px;"><i class="fa-solid fa-list-ol" style="color: #eab308;"></i> IRSEM Chapter Wise</li>
+            <li class="nav-item" onclick="switchCategory('IRSEM CORRECTION SLIP')" style="padding-left:34px;"><i class="fa-solid fa-file-circle-check" style="color: #eab308;"></i> IRSEM Correction Slip</li>
+          </div>
+          <li class="nav-item" onclick="toggleManualSubmenu('irtemSubmenu','IRTEM CHAPTER WISE')" style="cursor:pointer;"><i class="fa-solid fa-tower-broadcast" style="color: #14b8a6;"></i> IRTEM <i class="fa-solid fa-chevron-down manual-submenu-chevron" id="irtemSubmenuChevron" style="margin-left:auto;"></i></li>
+          <div id="irtemSubmenu" class="manual-submenu" style="display:none;">
+            <li class="nav-item" onclick="switchCategory('IRTEM CHAPTER WISE')" style="padding-left:34px;"><i class="fa-solid fa-list-ol" style="color: #14b8a6;"></i> IRTEM Chapter Wise</li>
+            <li class="nav-item" onclick="switchCategory('IRTEM CORRECTION SLIP')" style="padding-left:34px;"><i class="fa-solid fa-file-circle-check" style="color: #14b8a6;"></i> IRTEM Correction Slip</li>
+          </div>
           <li class="nav-item" onclick="switchCategory('GCC')"><i class="fa-solid fa-gavel" style="color: #8b5cf6;"></i> GCC (GENERAL CONDITIONS OF CONTRACT)</li>
           <li class="nav-item" onclick="switchCategory('IRSOD & CORRECTION SLIP')"><i class="fa-solid fa-ruler-combined" style="color: #ec4899;"></i> IRSOD & CORRECTION SLIP</li>
           <li class="nav-item" onclick="switchCategory('LINE OPENING (MANUAL)')"><i class="fa-solid fa-route" style="color: #06b6d4;"></i> LINE OPENING</li>
@@ -3838,16 +4998,14 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         <h3 id="modalDocTitle"><i class="fa-brands fa-google-drive"></i> Document Preview</h3>
         <div class="modal-header-actions">
           <div class="preview-zoom-toolbar" aria-label="Preview zoom controls">
-            <button type="button" class="modal-btn-control" onclick="changePreviewZoom(-0.1)" title="Zoom out"><i class="fa-solid fa-minus"></i></button>
-            <span id="previewZoomValue" class="preview-zoom-value">100%</span>
-            <button type="button" class="modal-btn-control" onclick="changePreviewZoom(0.1)" title="Zoom in"><i class="fa-solid fa-plus"></i></button>
-            <button type="button" class="modal-btn-control preview-reset-btn" onclick="resetPreviewZoom()" title="Reset zoom to 100%"><span>100%</span></button>
+            <button type="button" class="modal-btn-control v69-custom-zoom-control" onclick="changePreviewZoom(-0.1)" title="Zoom out"><i class="fa-solid fa-minus"></i></button>
+            <span id="previewZoomValue" class="v69-custom-zoom-label" class="preview-zoom-value">100%</span>
+            <button type="button" class="modal-btn-control v69-custom-zoom-control" onclick="changePreviewZoom(0.1)" title="Zoom in"><i class="fa-solid fa-plus"></i></button>
+            <button type="button" class="modal-btn-control preview-reset-btn v65-fit-btn v69-custom-zoom-control" onclick="fitPreviewView()" title="Fit / Reset View"><i class="fa-solid fa-expand"></i></button>
           </div>
           <button id="modalDriveExternalLink" type="button" class="modal-btn-control" onclick="downloadPreviewDoc()">
             <i class="fa-solid fa-download"></i><span class="preview-control-text"> Download</span>
           </button>
-          <button type="button" class="modal-btn-control" onclick="minimizePreviewWindow()" title="Minimize"><i class="fa-solid fa-window-minimize"></i></button>
-          <button id="previewMaxRestoreBtn" type="button" class="modal-btn-control" onclick="togglePreviewMaximize()" title="Maximize / Restore"><i class="fa-regular fa-window-maximize"></i></button>
           <button class="modal-close-btn" onclick="closePreviewModal()" title="Close"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
@@ -3973,8 +5131,10 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
             <optgroup label="REFERENCE BOOKS & DOCS">
               <option value="IMP. LETTER">IMP. LETTER</option>
               <option value="RDSO TAN (TECHNICAL ADVISORY NOTE)">RDSO TAN (TECHNICAL ADVISORY NOTE)</option>
-              <option value="IRSEM & CORRECTION SLIP">IRSEM & CORRECTION SLIP</option>
-              <option value="IRTEM">IRTEM</option>
+              <option value="IRSEM CHAPTER WISE">IRSEM Chapter Wise</option>
+              <option value="IRSEM CORRECTION SLIP">IRSEM Correction Slip</option>
+              <option value="IRTEM CHAPTER WISE">IRTEM Chapter Wise</option>
+              <option value="IRTEM CORRECTION SLIP">IRTEM Correction Slip</option>
               <option value="GCC">GCC (GENERAL CONDITIONS OF CONTRACT)</option>
               <option value="IRSOD & CORRECTION SLIP">IRSOD & CORRECTION SLIP</option>
               <option value="LINE OPENING (MANUAL)">LINE OPENING</option>
@@ -4057,6 +5217,21 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
           <input type="text" id="formWorkName" placeholder="Enter details / work description">
         </div>
 
+        <div class="form-group" id="formChapterNoContainer" style="display:none;">
+          <label>Chapter No.</label>
+          <input type="text" id="formChapterNo" placeholder="Enter chapter no.">
+        </div>
+
+        <div class="form-group" id="formCorrectionSlipNoContainer" style="display:none;">
+          <label>Correction Slip No.</label>
+          <input type="text" id="formCorrectionSlipNo" placeholder="Enter correction slip no.">
+        </div>
+
+        <div class="form-group" id="formParaChapterContainer" style="display:none;">
+          <label>Para and Chapter No.</label>
+          <input type="text" id="formParaChapter" placeholder="Enter para and chapter no.">
+        </div>
+
         <div class="form-group" id="formAgencyContainer" style="display:none;">
           <label>Agency</label>
           <select id="formAgency">
@@ -4090,7 +5265,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         </div>
 
         <div class="form-group" id="formEquipmentContainer" style="display:none;">
-          <label>Equipment for PCSTE Sanction</label>
+          <label>Equipment</label>
           <input type="text" id="formEquipment" placeholder="e.g. Electric Point Machine, IPS, HASSDAC, EI">
         </div>
 
@@ -4589,15 +5764,25 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         return;
       }
 
-      // If browser history itself has landed on HOME, render HOME explicitly.
+      // If Back lands on HOME:
+      // - from a section, the section branch above has already rendered HOME;
+      // - if the UI was ALREADY HOME, this is a duplicate/older HOME history
+      //   entry and must NOT display HOME again. Treat it as the protected
+      //   HOME boundary and show the existing Logout Required message now.
       if (event.state && event.state.view === 'home') {
-        goHome(false);
-        finish();
+        if (currentCategory === 'HOME') {
+          pushProtectedState('home');
+          finish();
+          setTimeout(showBackLogoutMessage, 20);
+        } else {
+          goHome(false);
+          finish();
+        }
         return;
       }
 
       // PRIORITY 5: HOME -> Back while still logged in: never exit.
-      // Restore a protected HOME entry and show the Logout Required message.
+      // Restore exactly one protected HOME entry and show the existing message.
       goHome(false);
       pushProtectedState('home');
       finish();
@@ -4685,7 +5870,14 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       currentCategory = 'HOME';
 
       if (pushState) {
-        history.pushState({ view: 'home' }, '', '');
+        const hs = history.state || {};
+        if (hs.view !== 'home') {
+          try {
+            history.pushState({ view: 'home', railsntgyan: true }, '', window.location.href);
+          } catch (e) {
+            history.pushState({ view: 'home', railsntgyan: true }, '');
+          }
+        }
       }
 
       updateDashboardView();
@@ -4795,8 +5987,12 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
     }
 
     const ldceCategories = ['ASTE', 'AEN', 'AMM', 'APO', 'AFA', 'AME', 'ACM', 'AOM', 'AEE'];
+    const irsemIrtemCategories = [
+      'IRSEM CHAPTER WISE', 'IRSEM CORRECTION SLIP',
+      'IRTEM CHAPTER WISE', 'IRTEM CORRECTION SLIP'
+    ];
     const standardManualCategories = [
-      'IRSEM & CORRECTION SLIP', 'IRTEM', 'GCC', 'IRSOD & CORRECTION SLIP',
+      'GCC', 'IRSOD & CORRECTION SLIP',
       'LINE OPENING (MANUAL)', 'SOP (SCHEDULE OF POWER)', 'OTHER MANUALS'
     ];
 
@@ -4831,6 +6027,8 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         const r = doc.data();
         let cat = (r.category || '').toUpperCase().trim();
         if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
+        if (cat === 'IRSEM & CORRECTION SLIP') cat = 'IRSEM CHAPTER WISE';
+        if (cat === 'IRTEM') cat = 'IRTEM CHAPTER WISE';
         records.push({
           ...r,
           id: doc.id,
@@ -5049,7 +6247,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       const noDivisionSections = [
         'S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
         'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
-        ...docApprovalCategories, ...standardManualCategories, 
+        ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, 
         'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'
       ];
 
@@ -5066,7 +6264,9 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         'IMPORTANT LINKS',
         'IRISET E-BOOK (SIGNAL)',
         'IRISET E-BOOK (TELECOM)',
-        'INSPECTION NOTE'
+        'INSPECTION NOTE',
+        'IRSEM CHAPTER WISE',
+        'IRTEM CHAPTER WISE'
       ];
       const yearFilterWrapper = document.getElementById('filterYearWrapper');
       if (yearFilterWrapper) {
@@ -5212,7 +6412,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       const searchTxt = document.getElementById('filterSearch').value.toLowerCase();
 
       // UNFREEZE ONLY FOR: Reference Books & Docs AND Documents for Various Sanction / Approval
-      const isUnfrozenSection = standardManualCategories.includes(currentCategory) || docApprovalCategories.includes(currentCategory);
+      const isUnfrozenSection = standardManualCategories.includes(currentCategory) || irsemIrtemCategories.includes(currentCategory) || docApprovalCategories.includes(currentCategory);
       if (isUnfrozenSection) {
         tableElem.classList.add('unfreeze-table');
       } else {
@@ -5261,6 +6461,26 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
+      } else if (currentCategory === 'IRSEM CHAPTER WISE' || currentCategory === 'IRTEM CHAPTER WISE') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 60px;">Sr. No.</th>
+            <th style="width: 120px;">Chapter No.</th>
+            <th class="work-desc-wide">Description</th>
+            <th style="width: 170px;">Correction Slip No. (if any)</th>
+            <th style="width: 155px; text-align:center;">Action</th>
+          </tr>
+        `;
+      } else if (currentCategory === 'IRSEM CORRECTION SLIP' || currentCategory === 'IRTEM CORRECTION SLIP') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: 60px;">Sr. No.</th>
+            <th style="width: 160px;">Correction Slip No.</th>
+            <th class="work-desc-wide">Para and Chapter No.</th>
+            <th class="col-sanction-date">Date of Issue</th>
+            <th style="width: 155px; text-align:center;">Action</th>
+          </tr>
+        `;
       } else if (standardManualCategories.includes(currentCategory)) {
         thead.innerHTML = `
           <tr>
@@ -5296,7 +6516,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
             <th class="work-desc-th">Work (hyperlinked with sanctioning letter)</th>
-            <th class="col-pcste-equipment">Equipment for PCSTE Sanction</th>
+            <th class="col-pcste-equipment">Equipment</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">Sanctioning Date</th>
             <th style="width: 155px; text-align:center;">Action</th>
@@ -5361,7 +6581,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
             <th class="work-desc-th">Work Description</th>
-            <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
+            <th class="col-sanction-date">Date of Forwarding</th>
             <th class="col-sanction-date">Date of Sanction</th>
             <th style="width: 100px;">Agency</th>
             <th style="width: 155px; text-align:center;">Action</th>
@@ -5373,7 +6593,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
             <th style="width: var(--col-1-w);">Sr.NO</th>
             <th>Station / Section</th>
             <th class="work-desc-th">Work Description</th>
-            <th class="col-sanction-date">Date of Forwarding from PCSTE Office</th>
+            <th class="col-sanction-date">Date of Forwarding</th>
             <th style="width: 100px;">Agency</th>
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
@@ -5385,7 +6605,7 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
             <th class="work-desc-th">Work Description</th>
-            <th class="col-sanction-date">Date of Forwarding from CSE/PCSTE</th>
+            <th class="col-sanction-date">Date of Forwarding</th>
             <th style="width: 100px;">Agency</th>
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
@@ -5426,12 +6646,14 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
 
       const hasDivision = !['S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
                             'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
-                            ...docApprovalCategories, ...standardManualCategories, 
+                            ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, 
                             'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'].includes(currentCategory);
 
       let filtered = records.filter(item => {
         let recCat = (item.category || '').toUpperCase().trim();
         if (recCat === 'PCSTE DISPENSATION') recCat = 'DISPENSATION';
+        if (recCat === 'IRSEM & CORRECTION SLIP') recCat = 'IRSEM CHAPTER WISE';
+        if (recCat === 'IRTEM') recCat = 'IRTEM CHAPTER WISE';
         if (recCat !== currentCategory) return false;
         if (filterYear !== 'ALL' && String(item.year) !== filterYear) return false;
         if (hasDivision && filterDiv !== 'ALL' && item.division !== filterDiv) return false;
@@ -5455,10 +6677,14 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
           const matchIssuedBy = item.issuedBy && item.issuedBy.toLowerCase().includes(searchTxt);
           const matchInspection = item.inspectionBy && item.inspectionBy.toLowerCase().includes(searchTxt);
           const matchGivenBy = item.givenBy && item.givenBy.toLowerCase().includes(searchTxt);
+          const matchChapterNo = item.chapterNo && item.chapterNo.toLowerCase().includes(searchTxt);
+          const matchCorrectionSlipNo = item.correctionSlipNo && item.correctionSlipNo.toLowerCase().includes(searchTxt);
+          const matchParaChapter = item.paraChapter && item.paraChapter.toLowerCase().includes(searchTxt);
 
           if (!matchStation && !matchWork && !matchDiv && !matchAgency && !matchDept && !matchOem && 
               !matchEquip && !matchWagon && !matchDocNo && !matchIssuedBy && !matchInspection && 
-              !matchBook && !matchType && !matchTan && !matchRelTo && !matchDirLink && !matchGivenBy) {
+              !matchBook && !matchType && !matchTan && !matchRelTo && !matchDirLink && !matchGivenBy &&
+              !matchChapterNo && !matchCorrectionSlipNo && !matchParaChapter) {
             return false;
           }
         }
@@ -5615,6 +6841,34 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate}</b></td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'IRSEM CHAPTER WISE' || currentCategory === 'IRTEM CHAPTER WISE') {
+          html += `
+            <tr>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.chapterNo || '—'}</b></td>
+              <td class="work-desc-wide">
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-book" style="color: var(--accent-blue);"></i> ${rec.work || '—'}
+                </a>
+              </td>
+              <td><b>${rec.correctionSlipNo || '—'}</b></td>
+              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+            </tr>
+          `;
+        } else if (currentCategory === 'IRSEM CORRECTION SLIP' || currentCategory === 'IRTEM CORRECTION SLIP') {
+          html += `
+            <tr>
+              <td><b>${idx + 1}</b></td>
+              <td><b>${rec.correctionSlipNo || '—'}</b></td>
+              <td class="work-desc-wide">
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.paraChapter || rec.work || '')}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-file-circle-check" style="color: var(--accent-blue);"></i> ${rec.paraChapter || rec.work || '—'}
+                </a>
+              </td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
@@ -6082,6 +7336,184 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       return rawUrl;
     }
 
+    let previewPdfDoc = null;
+    let previewPdfLoadingTask = null;
+    let previewRenderGeneration = 0;
+    let previewZoom = 1;
+    let previewRestoreRect = null;
+
+    function ensurePdfJsWorker() {
+      if (!window.pdfjsLib) throw new Error('PDF.js library could not be loaded.');
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+    }
+
+    function getPreviewScrollRatio() {
+      const viewer = document.getElementById('pdfViewerViewport');
+      if (!viewer) return 0;
+      const max = Math.max(1, viewer.scrollHeight - viewer.clientHeight);
+      return viewer.scrollTop / max;
+    }
+
+    function restorePreviewScrollRatio(ratio) {
+      const viewer = document.getElementById('pdfViewerViewport');
+      if (!viewer) return;
+      const max = Math.max(0, viewer.scrollHeight - viewer.clientHeight);
+      viewer.scrollTop = Math.max(0, Math.min(max, ratio * max));
+    }
+
+    async function renderAllPreviewPages(scale, preserveScroll = true) {
+      if (!previewPdfDoc) return;
+
+      const viewer = document.getElementById('pdfViewerViewport');
+      const pagesContainer = document.getElementById('pdfPagesContainer');
+      if (!viewer || !pagesContainer) return;
+
+      const oldRatio = preserveScroll ? getPreviewScrollRatio() : 0;
+      const generation = ++previewRenderGeneration;
+      pagesContainer.innerHTML = '';
+
+      // Render every page. Each wrapper/canvas remains in normal vertical document flow.
+      for (let pageNumber = 1; pageNumber <= previewPdfDoc.numPages; pageNumber++) {
+        if (generation !== previewRenderGeneration) return;
+
+        const page = await previewPdfDoc.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: scale });
+
+        const wrap = document.createElement('div');
+        wrap.className = 'pdf-page-wrap';
+        wrap.dataset.pageNumber = String(pageNumber);
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+
+        // Render sharply on HiDPI screens without changing CSS/layout dimensions.
+        const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.max(1, Math.floor(viewport.width * outputScale));
+        canvas.height = Math.max(1, Math.floor(viewport.height * outputScale));
+        canvas.style.width = `${viewport.width}px`;
+        canvas.style.height = `${viewport.height}px`;
+
+        const pageNo = document.createElement('div');
+        pageNo.className = 'pdf-page-number';
+        pageNo.textContent = `Page ${pageNumber} / ${previewPdfDoc.numPages}`;
+
+        wrap.appendChild(canvas);
+        wrap.appendChild(pageNo);
+        pagesContainer.appendChild(wrap);
+
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+          transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0]
+        }).promise;
+      }
+
+      if (generation !== previewRenderGeneration) return;
+
+      requestAnimationFrame(() => {
+        if (preserveScroll) restorePreviewScrollRatio(oldRatio);
+        else viewer.scrollTop = 0;
+      });
+    }
+
+    async function loadPdfPreview(rawUrl) {
+      const body = document.getElementById('modalPreviewBody');
+      if (!body) return;
+
+      body.innerHTML = `
+        <div id="pdfViewerViewport">
+          <div id="pdfPagesContainer"></div>
+          <div id="pdfPreviewLoading"><i class="fa-solid fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading PDF...</div>
+        </div>`;
+
+      ensurePdfJsWorker();
+
+      if (previewPdfLoadingTask) {
+        try { await previewPdfLoadingTask.destroy(); } catch (_) {}
+      }
+      previewPdfDoc = null;
+      previewRenderGeneration++;
+
+      const fileId = getDriveFileId(rawUrl);
+
+      /* Only attempt PDF.js against the existing downloadable representation.
+         If Google Drive/CORS/redirects prevent PDF.js from obtaining genuine
+         PDF bytes, fall back automatically to Google's supported /preview UI. */
+      const candidates = [];
+      const addCandidate = u => { if (u && !candidates.includes(u)) candidates.push(u); };
+      addCandidate(getDirectDownloadUrl(rawUrl));
+
+      let loadedByPdfJs = false;
+
+      for (const pdfUrl of candidates) {
+        try {
+          previewPdfLoadingTask = pdfjsLib.getDocument({
+            url: pdfUrl,
+            withCredentials: false
+          });
+          previewPdfDoc = await previewPdfLoadingTask.promise;
+          loadedByPdfJs = !!previewPdfDoc;
+          if (loadedByPdfJs) break;
+        } catch (_) {
+          previewPdfDoc = null;
+          try { if (previewPdfLoadingTask) await previewPdfLoadingTask.destroy(); } catch (_) {}
+          previewPdfLoadingTask = null;
+        }
+      }
+
+      if (loadedByPdfJs) {
+        const loading = document.getElementById('pdfPreviewLoading');
+        if (loading) loading.remove();
+        await fitPreviewView();
+        return;
+      }
+
+      /* Graceful Drive fallback. Do not show a sharing/CORS error and do not
+         alter the stored Drive URL. The iframe remains inside this modal.
+         Google owns the cross-origin fallback toolbar; parent CSS/JS does not
+         attempt to crop, overlay, or manipulate it. */
+      previewPdfDoc = null;
+      previewRenderGeneration++;
+
+      let previewUrl = rawUrl;
+      if (fileId) {
+        previewUrl = `https://drive.google.com/file/d/${encodeURIComponent(fileId)}/preview`;
+      } else {
+        const converted = toDrivePreviewUrl(rawUrl);
+        if (converted) previewUrl = converted;
+      }
+
+      body.innerHTML = `
+        <div id="googleDrivePreviewFallback" style="width:100%;height:100%;min-height:0;">
+          <iframe
+            id="googleDrivePreviewFrame"
+            src="${String(previewUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
+            title="Google Drive document preview"
+            style="display:block;width:100%;height:100%;border:0;background:#fff;"
+            allow="autoplay"
+            loading="eager">
+          </iframe>
+        </div>`;
+
+      /* Our outer modal toolbar remains available for Download and Close.
+         Custom PDF.js zoom controls are disabled in Drive fallback because
+         cross-origin Drive zoom cannot truthfully be controlled from here. */
+      document.getElementById('pdfPreviewModal').classList.add('v69-drive-fallback');
+      const label = document.getElementById('previewZoomValue');
+      if (label) label.textContent = 'Drive';
+
+      document.querySelectorAll('#pdfPreviewModal .modal-header-actions button').forEach(btn => {
+        const oc = btn.getAttribute('onclick') || '';
+        if (oc.includes('changePreviewZoom') || oc.includes('fitPreviewView')) {
+          btn.disabled = true;
+          btn.title = 'Zoom is controlled by Google Drive in fallback preview';
+        }
+      });
+    }
+
     function openPreview(title, link, column2Item = '') {
       if (!link) {
         alert("No Drive attachment link has been provided for this record.");
@@ -6091,43 +7523,124 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       currentPreviewOriginalUrl = link;
       currentPreviewFileId = getDriveFileId(link);
 
-      // Preview heading for Action > Eye: Subsection + "of" + Column-2 item.
-      // Example: "PCSTE SANCTION of BIA Ex. Yd".
-      // Existing work-description links keep their previous title because they do not pass column2Item.
       const previewHeading = column2Item
         ? `${currentCategory} of ${column2Item}`
         : (title || "Document Preview");
       document.getElementById('modalDocTitle').innerText = previewHeading;
-      const embedUrl = getPrintablePreviewUrl(link);
-      document.getElementById('modalPreviewBody').innerHTML =
-        `<div id="previewTransformHost"><iframe class="preview-iframe" src="${embedUrl}" allow="autoplay"></iframe></div><div id="drivePopoutMask" aria-hidden="true"></div><div id="previewWheelCatcher" title="Ctrl + mouse wheel to zoom"></div>`;
 
       resetPreviewWindowState();
-      resetPreviewZoom();
+      previewZoom = 1;
+      const label = document.getElementById('previewZoomValue');
+      if (label) label.textContent = '100%';
       document.getElementById('pdfPreviewModal').style.display = 'flex';
+      document.getElementById('pdfPreviewModal').classList.remove('v69-drive-fallback');
+      document.querySelectorAll('#pdfPreviewModal .modal-header-actions button').forEach(btn => {
+        const oc = btn.getAttribute('onclick') || '';
+        if (oc.includes('changePreviewZoom') || oc.includes('fitPreviewView')) {
+          btn.disabled = false;
+          if (oc.includes('fitPreviewView')) btn.title = 'Fit / Reset View';
+        }
+      });
+      const zoomLabel = document.getElementById('previewZoomValue');
+      if (zoomLabel) zoomLabel.textContent = '100%';
+      if (!document.body.dataset.previewPrevOverflow) {
+        document.body.dataset.previewPrevOverflow = document.body.style.overflow || '__EMPTY__';
+      }
+      document.body.style.overflow = 'hidden';
+
+      loadPdfPreview(link);
       history.pushState({ view: 'modal', modal: 'preview' }, '', '');
     }
 
-    let previewZoom = 1;
-    let previewRestoreRect = null;
-
-    function applyPreviewZoom() {
-      const host = document.getElementById('previewTransformHost');
-      const body = document.getElementById('modalPreviewBody');
+    async function applyPreviewZoom() {
       const label = document.getElementById('previewZoomValue');
       if (label) label.textContent = `${Math.round(previewZoom * 100)}%`;
-      if (!host || !body) return;
-      host.style.transform = `scale(${previewZoom})`;
-      host.style.width = `${100 / previewZoom}%`;
-      host.style.height = `${100 / previewZoom}%`;
+      updatePreviewZoomButtons();
+      if (!previewPdfDoc) return;
+      await renderAllPreviewPages(previewZoom, true);
+    }
+
+    function isDrivePreviewFallbackActive() {
+      return !!document.getElementById('googleDrivePreviewFallback');
+    }
+
+    function updatePreviewZoomButtons() {
+      const buttons = document.querySelectorAll('#pdfPreviewModal .modal-header-actions button');
+      buttons.forEach(btn => {
+        const oc = btn.getAttribute('onclick') || '';
+        if (oc.includes("changePreviewZoom") && oc.includes("+")) {
+          btn.disabled = previewZoom >= 2;
+        } else if (oc.includes("changePreviewZoom") && oc.includes("-")) {
+          btn.disabled = previewZoom <= 0.5;
+        }
+      });
     }
 
     function changePreviewZoom(delta) {
-      previewZoom = Math.min(3, Math.max(0.5, Math.round((previewZoom + delta) * 10) / 10));
+      if (!previewPdfDoc) return;
+
+      /* Manual zoom uses reader-style 25% stops: 50,75,100,...,200. */
+      const direction = delta >= 0 ? 1 : -1;
+      const currentPct = previewZoom * 100;
+      let nextPct;
+
+      if (direction > 0) {
+        nextPct = Math.ceil((currentPct + 0.001) / 25) * 25;
+        if (nextPct <= currentPct + 0.01) nextPct += 25;
+      } else {
+        nextPct = Math.floor((currentPct - 0.001) / 25) * 25;
+        if (nextPct >= currentPct - 0.01) nextPct -= 25;
+      }
+
+      nextPct = Math.max(50, Math.min(200, nextPct));
+      previewZoom = nextPct / 100;
       applyPreviewZoom();
     }
 
-    function resetPreviewZoom() { previewZoom = 1; applyPreviewZoom(); }
+    function resetPreviewZoom() {
+      fitPreviewView();
+    }
+
+    async function fitPreviewView() {
+      if (!previewPdfDoc) return;
+
+      const viewer = document.getElementById('pdfViewerViewport');
+      const pages = document.getElementById('pdfPagesContainer');
+      if (!viewer || !pages) return;
+
+      try {
+        const page = await previewPdfDoc.getPage(1);
+        const baseViewport = page.getViewport({ scale: 1 });
+
+        /* Real fit-to-width: use the actual scroll viewport, allowing for the
+           page-container's horizontal padding. */
+        const containerStyle = getComputedStyle(pages);
+        const horizontalPadding =
+          (parseFloat(containerStyle.paddingLeft) || 0) +
+          (parseFloat(containerStyle.paddingRight) || 0);
+        const availableWidth = Math.max(200, viewer.clientWidth - horizontalPadding - 4);
+
+        previewZoom = availableWidth / baseViewport.width;
+        previewZoom = Math.max(0.25, Math.min(2, previewZoom));
+        previewZoom = Math.round(previewZoom * 1000) / 1000;
+
+        const label = document.getElementById('previewZoomValue');
+        if (label) label.textContent = `${Math.round(previewZoom * 100)}%`;
+        updatePreviewZoomButtons();
+
+        /* Re-render all pages at the fitted scale — no CSS transform. */
+        await renderAllPreviewPages(previewZoom, false);
+
+        /* Remove horizontal position left over from a previous 150–200% zoom. */
+        viewer.scrollLeft = 0;
+        viewer.scrollTop = 0;
+        pages.style.marginLeft = 'auto';
+        pages.style.marginRight = 'auto';
+        pages.style.alignItems = 'center';
+      } catch (err) {
+        console.error('Fit preview failed:', err);
+      }
+    }
 
     function resetPreviewWindowState() {
       const modal = document.getElementById('pdfPreviewModal');
@@ -6193,41 +7706,62 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         : '<i class="fa-regular fa-window-maximize"></i>';
     }
 
-    // Desktop/laptop zoom: while Ctrl is held, a transparent catcher sits above
-    // the cross-origin Drive/PDF iframe. This is required because wheel events
-    // generated inside a cross-origin iframe do not bubble to the parent page.
-    function setPreviewWheelCatcher(active) {
-      const modal = document.getElementById('pdfPreviewModal');
-      const catcher = document.getElementById('previewWheelCatcher');
-      if (!catcher || !modal || modal.style.display !== 'flex') return;
-      catcher.classList.toggle('active', !!active);
-    }
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Control') setPreviewWheelCatcher(true);
-    }, true);
-    document.addEventListener('keyup', function(e) {
-      if (e.key === 'Control') setPreviewWheelCatcher(false);
-    }, true);
-    window.addEventListener('blur', function() { setPreviewWheelCatcher(false); });
+    // Desktop/laptop: Ctrl + mouse wheel changes PDF.js scale and re-renders ALL pages.
+    function setPreviewWheelCatcher(active) { /* no overlay required with PDF.js */ }
 
     document.addEventListener('wheel', function(e) {
       const modal = document.getElementById('pdfPreviewModal');
-      const catcher = document.getElementById('previewWheelCatcher');
-      if (!modal || modal.style.display !== 'flex') return;
-      const overCatcher = catcher && catcher.classList.contains('active') && (e.target === catcher || catcher.contains(e.target));
-      const overHeader = e.target.closest && e.target.closest('#pdfPreviewModal .modal-header');
-      if (!(e.ctrlKey && (overCatcher || overHeader))) return;
+      const viewer = document.getElementById('pdfViewerViewport');
+      if (!modal || modal.style.display !== 'flex' || !viewer || !viewer.contains(e.target) || !e.ctrlKey) return;
       e.preventDefault();
-      changePreviewZoom(e.deltaY < 0 ? 0.1 : -0.1);
+      changePreviewZoom(e.deltaY < 0 ? 0.25 : -0.25);
     }, { passive: false, capture: true });
 
-    document.addEventListener('dblclick', function(e) {
-      const body = document.getElementById('modalPreviewBody');
-      if (!body || !body.contains(e.target)) return;
-      previewZoom = previewZoom === 1 ? 1.5 : 1;
-      applyPreviewZoom();
-    });
+    // Touch pinch: apply the new scale after the gesture, then re-render all pages.
+    (function initPdfPinchZoom() {
+      let pinchStartDistance = 0;
+      let pinchStartZoom = 1;
+      const distance = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+
+      document.addEventListener('touchstart', function(e) {
+        const viewer = document.getElementById('pdfViewerViewport');
+        if (!viewer || !viewer.contains(e.target) || e.touches.length !== 2) return;
+        pinchStartDistance = distance(e.touches[0], e.touches[1]);
+        pinchStartZoom = previewZoom;
+      }, { passive: true });
+
+      document.addEventListener('touchend', function(e) {
+        if (!pinchStartDistance || e.touches.length !== 0) return;
+        pinchStartDistance = 0;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', function(e) {
+        const viewer = document.getElementById('pdfViewerViewport');
+        if (!viewer || !viewer.contains(e.target) || e.touches.length !== 2 || !pinchStartDistance) return;
+        e.preventDefault();
+        const ratio = distance(e.touches[0], e.touches[1]) / pinchStartDistance;
+        const target = Math.min(2, Math.max(0.5, Math.round((pinchStartZoom * ratio) * 100) / 100));
+        if (target !== previewZoom) {
+          previewZoom = target;
+          const label = document.getElementById('previewZoomValue');
+          if (label) label.textContent = `${Math.round(previewZoom * 100)}%`;
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchcancel', function() {
+        if (pinchStartDistance) {
+          pinchStartDistance = 0;
+          applyPreviewZoom();
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', function(e) {
+        if (pinchStartDistance && e.touches.length < 2) {
+          pinchStartDistance = 0;
+          applyPreviewZoom();
+        }
+      }, { passive: true });
+    })();
 
     // Drag floating preview by its title bar on desktop/laptop.
     (function initPreviewDrag() {
@@ -6282,13 +7816,25 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
     });
 
     function closePreviewModal() {
+      previewRenderGeneration++;
+      if (previewPdfLoadingTask) {
+        try { previewPdfLoadingTask.destroy(); } catch (_) {}
+      }
+      previewPdfLoadingTask = null;
+      previewPdfDoc = null;
       document.getElementById('modalPreviewBody').innerHTML = '';
       document.getElementById('pdfPreviewModal').style.display = 'none';
+      const prevOverflow = document.body.dataset.previewPrevOverflow;
+      if (prevOverflow !== undefined) {
+        document.body.style.overflow = prevOverflow === '__EMPTY__' ? '' : prevOverflow;
+        delete document.body.dataset.previewPrevOverflow;
+      }
       currentPreviewOriginalUrl = '';
       currentPreviewFileId = '';
+      previewZoom = 1;
+      const label = document.getElementById('previewZoomValue');
+      if (label) label.textContent = '100%';
       resetPreviewWindowState();
-      resetPreviewZoom();
-      setPreviewWheelCatcher(false);
     }
 
     function downloadPreviewDoc() {
@@ -6468,6 +8014,9 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       document.getElementById('formBookName').value = rec.bookName || '';
       document.getElementById('formLdceType').value = rec.ldceType || '';
       document.getElementById('formWorkName').value = rec.work || '';
+      document.getElementById('formChapterNo').value = rec.chapterNo || '';
+      document.getElementById('formCorrectionSlipNo').value = rec.correctionSlipNo || '';
+      document.getElementById('formParaChapter').value = rec.paraChapter || '';
       document.getElementById('formAgency').value = rec.agency || '';
       document.getElementById('formGivenBy').value = rec.givenBy || rec.sanctionBy || '';
       document.getElementById('formDepartment').value = rec.department || '';
@@ -6500,6 +8049,9 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       document.getElementById('formDirectLink').value = '';
       document.getElementById('formBookName').value = '';
       document.getElementById('formWorkName').value = '';
+      document.getElementById('formChapterNo').value = '';
+      document.getElementById('formCorrectionSlipNo').value = '';
+      document.getElementById('formParaChapter').value = '';
       document.getElementById('formDepartment').value = '';
       document.getElementById('formInspectionBy').value = '';
       document.getElementById('formEquipment').value = '';
@@ -6527,6 +8079,9 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       const isLdce = ldceCategories.includes(cat);
       const isDocApproval = docApprovalCategories.includes(cat);
       const isStandardManual = standardManualCategories.includes(cat);
+      const isIrsemIrtemChapter = (cat === 'IRSEM CHAPTER WISE' || cat === 'IRTEM CHAPTER WISE');
+      const isIrsemIrtemCorrection = (cat === 'IRSEM CORRECTION SLIP' || cat === 'IRTEM CORRECTION SLIP');
+      const isIrsemIrtem = isIrsemIrtemChapter || isIrsemIrtemCorrection;
       const isJsc = (cat === 'JOINT SAFETY CERTIFICATE (JSC)');
       const isPcste = (cat === 'PCSTE SANCTION');
       const isDispensation = (cat === 'DISPENSATION');
@@ -6554,7 +8109,10 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
 
       // Show only fields represented by the active table/schema.
       // INSPECTION NOTE uses Station/Section + Division + Inspection Done by; it has no Work Description column.
-      document.getElementById('formWorkContainer').style.display = (isLinks || isInspection) ? 'none' : 'flex';
+      document.getElementById('formWorkContainer').style.display = (isLinks || isInspection || isIrsemIrtemCorrection) ? 'none' : 'flex';
+      document.getElementById('formChapterNoContainer').style.display = isIrsemIrtemChapter ? 'flex' : 'none';
+      document.getElementById('formCorrectionSlipNoContainer').style.display = isIrsemIrtem ? 'flex' : 'none';
+      document.getElementById('formParaChapterContainer').style.display = isIrsemIrtemCorrection ? 'flex' : 'none';
       document.getElementById('formAgencyContainer').style.display = 
         (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising) ? 'flex' : 'none';
       
@@ -6575,21 +8133,21 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       // Do not ask for Date where the corresponding table has no Date/Year field.
       // E-books are reference material, Important Links are permanent URLs,
       // and Inspection Note currently has no Date column in its table.
-      const hasNoDateField = isLinks || isBooks || isInspection;
+      const hasNoDateField = isLinks || isBooks || isInspection || isIrsemIrtemChapter;
       document.getElementById('formDateContainer').style.display = hasNoDateField ? 'none' : 'flex';
       document.getElementById('formSecondaryDateContainer').style.display = isGm ? 'flex' : 'none';
 
       // Field Labels Customization
       const dateLbl = document.getElementById('formDateLabel');
       if (isGm || isGradeOrLine) {
-        dateLbl.innerText = "Date of Forwarding from PCSTE Office";
+        dateLbl.innerText = "Date of Forwarding";
       } else if (isJsc) {
         dateLbl.innerText = "Date of Forwarding (DD-MM-YYYY)";
       } else if (isDispensation) {
         dateLbl.innerText = "Date of Forwarding & Issuing (DD-MM-YYYY)";
       } else if (isSpeedRaising) {
-        dateLbl.innerText = "Date of Forwarding from CSE/PCSTE";
-      } else if (isTan || isImpLetter || isPolicyOrTypical || isStandardManual || isDocApproval) {
+        dateLbl.innerText = "Date of Forwarding";
+      } else if (isTan || isImpLetter || isPolicyOrTypical || isStandardManual || isDocApproval || isIrsemIrtemCorrection) {
         dateLbl.innerText = "Date of Issue (DD-MM-YYYY)";
       } else if (isLdce) {
         dateLbl.innerText = "Examination Date (DD-MM-YYYY)";
@@ -6621,6 +8179,9 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
       const isLdce = ldceCategories.includes(cat);
       const isDocApproval = docApprovalCategories.includes(cat);
       const isStandardManual = standardManualCategories.includes(cat);
+      const isIrsemIrtemChapter = (cat === 'IRSEM CHAPTER WISE' || cat === 'IRTEM CHAPTER WISE');
+      const isIrsemIrtemCorrection = (cat === 'IRSEM CORRECTION SLIP' || cat === 'IRTEM CORRECTION SLIP');
+      const isIrsemIrtem = isIrsemIrtemChapter || isIrsemIrtemCorrection;
       const isJsc = (cat === 'JOINT SAFETY CERTIFICATE (JSC)');
       const isPcste = (cat === 'PCSTE SANCTION');
       const isDispensation = (cat === 'DISPENSATION');
@@ -6645,7 +8206,10 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         directLink: isLinks ? document.getElementById('formDirectLink').value.trim() : '',
         bookName: isBooks ? document.getElementById('formBookName').value.trim() : '',
         ldceType: isLdce ? document.getElementById('formLdceType').value : '',
-        work: (isLinks || isInspection) ? '' : document.getElementById('formWorkName').value.trim(),
+        work: (isLinks || isInspection || isIrsemIrtemCorrection) ? '' : document.getElementById('formWorkName').value.trim(),
+        chapterNo: isIrsemIrtemChapter ? document.getElementById('formChapterNo').value.trim() : '',
+        correctionSlipNo: isIrsemIrtem ? document.getElementById('formCorrectionSlipNo').value.trim() : '',
+        paraChapter: isIrsemIrtemCorrection ? document.getElementById('formParaChapter').value.trim() : '',
         agency: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising)
           ? document.getElementById('formAgency').value : '',
         givenBy: isDispensation ? document.getElementById('formGivenBy').value : '',
@@ -6659,10 +8223,10 @@ html body.dark-theme #mainRecordTable td.related-dark-fix .equip-badge * {
         docNo: isPolicyOrTypical ? document.getElementById('formDocNo').value.trim() : '',
         relatedEquip: (isImpLetter || isPolicyOrTypical) ? document.getElementById('formRelatedEquip').value.trim() : '',
         issuedBy: isImpLetter ? document.getElementById('formIssuedBy').value : '',
-        date: (isLinks || isBooks || isInspection) ? '' : formatDateToDDMMYYYY(dateVal),
+        date: (isLinks || isBooks || isInspection || isIrsemIrtemChapter) ? '' : formatDateToDDMMYYYY(dateVal),
         sanctionDate: isGm ? formatDateToDDMMYYYY(secondaryDateVal) : '',
         // No artificial current-year value for categories that do not use Date/Year.
-        year: (isLinks || isBooks || isInspection) ? null : (dateVal ? new Date(dateVal).getFullYear() : null),
+        year: (isLinks || isBooks || isInspection || isIrsemIrtemChapter) ? null : (dateVal ? new Date(dateVal).getFullYear() : null),
         driveLink: document.getElementById('formDriveLink').value.trim()
       };
 
@@ -7757,5 +9321,1019 @@ body.dark-theme .chart-header h3 {
       word-break: break-word !important;
     }
 </style>
+
+
+
+<script id="v34-runtime">
+function setExternalDriveFallbackToolbar(active){
+ const modal=document.getElementById('pdfPreviewModal'); if(!modal)return;
+ modal.querySelectorAll('button').forEach(btn=>{
+  const oc=btn.getAttribute('onclick')||'';
+  if(oc.includes('changePreviewZoom')||oc.includes('resetPreviewZoom')) btn.style.display=active?'none':'';
+ });
+ const z=document.getElementById('previewZoomValue'); if(z)z.style.display=active?'none':'';
+}
+</script>
+
+<script id="v35-semantic-table-widths">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+
+  const compactHeaders=new Set([
+    'DIVISION','YEAR','MONTH','OEM MAKE','OEM','SANCTION BY','ISSUED BY',
+    'FORWARDED BY','INSPECTION DONE BY'
+  ]);
+  const wideHeaders=new Set([
+    'DESCRIPTION','WORK NAME','WORK NAME (EI DESCRIPTION)','WORK NAME (MSDAC SCHEME)',
+    'BOOK DESCRIPTION / SUBJECT','SUBJECT / DESCRIPTION','REMARKS'
+  ]);
+
+  function applySmartWidths(){
+    const headers=Array.from(table.querySelectorAll('thead th'));
+    headers.forEach((th,i)=>{
+      const label=th.textContent.replace(/\s+/g,' ').trim().toUpperCase();
+      const cells=Array.from(table.querySelectorAll('tbody tr')).map(tr=>tr.children[i]).filter(Boolean);
+
+      th.classList.remove('v35-compact-col','v35-wide-col','v35-doc-col');
+
+      if(compactHeaders.has(label)){
+        th.style.minWidth='125px';
+        cells.forEach(td=>td.style.minWidth='125px');
+      }
+      if(wideHeaders.has(label) || label.includes('DESCRIPTION')){
+        th.style.minWidth='230px';
+        cells.forEach(td=>td.style.minWidth='230px');
+      }
+      if(label.includes('POLICY / DOC') || label.includes('TYPICAL') ||
+         label.includes('LETTER NO') || label.includes('TAN NO')){
+        th.style.minWidth='155px';
+        cells.forEach(td=>{
+          td.style.minWidth='155px';
+          td.style.overflowWrap='anywhere';
+        });
+      }
+      if(label==='AGENCY'){
+        th.classList.add('agency-col');
+        cells.forEach(td=>td.classList.add('agency-col'));
+      }
+    });
+  }
+
+  new MutationObserver(applySmartWidths).observe(table,{subtree:true,childList:true});
+  applySmartWidths();
+})();
+</script>
+
+<script id="v37-balanced-column-runtime">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+
+  const classes=[
+    'v37-longtext','v37-station','v37-division','v37-agency','v37-date',
+    'v37-medium','v37-short','v37-action','v37-sr','v37-docno'
+  ];
+
+  function norm(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+  function columnClass(label,index,total){
+    if(index===0 || label==='SR.NO' || label==='SR. NO' || label==='SR NO') return 'v37-sr';
+    if(label==='ACTION' || index===total-1 && label.includes('ACTION')) return 'v37-action';
+
+    if(label.includes('WORK DESCRIPTION') ||
+       label.includes('WORK NAME') ||
+       label==='DESCRIPTION' ||
+       label.includes('DESCRIPTION / SUBJECT') ||
+       label.includes('SUBJECT / DESCRIPTION') ||
+       label.includes('BOOK DESCRIPTION') ||
+       label==='SUBJECT' ||
+       label.includes('REMARK')) return 'v37-longtext';
+
+    if(label.includes('STATION / SECTION') || label.includes('STATION/SECTION')) return 'v37-station';
+    if(label==='DIVISION') return 'v37-division';
+    if(label==='AGENCY') return 'v37-agency';
+
+    if(label.includes('DATE') || label.includes('FORWARDING')) return 'v37-date';
+
+    if(label.includes('POLICY / DOC') || label.includes('POLICY/DOC') ||
+       label.includes('TYPICAL NO') || label.includes('LETTER NO') ||
+       label.includes('TAN NO') || label.includes('DOC NO')) return 'v37-docno';
+
+    if(label.includes('EQUIPMENT') || label.includes('SANCTION') ||
+       label.includes('GIVEN BY') || label.includes('FORWARDED BY') ||
+       label.includes('OEM')) return 'v37-medium';
+
+    if(label==='ROUTES' || label==='YEAR' || label==='MONTH') return 'v37-short';
+    return '';
+  }
+
+  function apply(){
+    const headers=Array.from(table.querySelectorAll('thead th'));
+    headers.forEach((th,i)=>{
+      classes.forEach(c=>th.classList.remove(c));
+      const cls=columnClass(norm(th.textContent),i,headers.length);
+      if(cls) th.classList.add(cls);
+
+      table.querySelectorAll('tbody tr').forEach(tr=>{
+        const td=tr.children[i];
+        if(!td)return;
+        classes.forEach(c=>td.classList.remove(c));
+        if(cls)td.classList.add(cls);
+      });
+    });
+  }
+
+  new MutationObserver(apply).observe(table,{subtree:true,childList:true});
+  apply();
+})();
+</script>
+
+<script id="v38-pcste-work-description">
+(function(){
+  const table = document.getElementById('mainRecordTable');
+  if(!table) return;
+
+  function norm(s){
+    return (s || '').replace(/\s+/g,' ').trim().toUpperCase();
+  }
+
+  function applyPcsteWorkDescription(){
+    if (norm(window.currentCategory) !== 'PCSTE SANCTION') return;
+
+    const headers = Array.from(table.querySelectorAll('thead th'));
+    headers.forEach((th, index) => {
+      const label = norm(th.textContent);
+
+      if (
+        label.includes('WORK (HYPERLINKED WITH SANCTIONING LETTER)') ||
+        label === 'WORK' ||
+        label === 'WORK DESCRIPTION'
+      ) {
+        // Rename only PCSTE SANCTION's work column.
+        th.textContent = 'Work Description';
+
+        // Same v37 long-text sizing used by EI TSAA / MSDAC TSAA:
+        // desktop 420px, mobile/tablet 340px, with word wrapping.
+        th.classList.add('v37-longtext');
+
+        table.querySelectorAll('tbody tr').forEach(tr => {
+          const td = tr.children[index];
+          if (td) td.classList.add('v37-longtext');
+        });
+      }
+    });
+  }
+
+  new MutationObserver(applyPcsteWorkDescription)
+    .observe(table, {subtree:true, childList:true});
+
+  applyPcsteWorkDescription();
+})();
+</script>
+
+<script id="v39-pcste-work-fixed-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+
+ function norm(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+ function apply(){
+   const headers=Array.from(table.querySelectorAll('thead th'));
+   headers.forEach((th,index)=>{
+     const label=norm(th.textContent);
+
+     // Match the ACTUAL old PCSTE heading directly.
+     if(label.includes('WORK (HYPERLINKED WITH SANCTIONING LETTER)')){
+       th.textContent='Work Description';
+       th.classList.add('v37-longtext','v39-pcste-work');
+
+       table.querySelectorAll('tbody tr').forEach(tr=>{
+         const td=tr.children[index];
+         if(td) td.classList.add('v37-longtext','v39-pcste-work');
+       });
+     }
+
+     // Once renamed, retain sizing on later table re-renders.
+     if(label==='WORK DESCRIPTION'){
+       // Apply only when PCSTE heading is visible on the page.
+       const pageTitle=norm(document.querySelector('.content-header h2, .section-title, #sectionTitle, #categoryTitle')?.textContent);
+       if(pageTitle.includes('PCSTE SANCTION')){
+         th.classList.add('v37-longtext','v39-pcste-work');
+         table.querySelectorAll('tbody tr').forEach(tr=>{
+           const td=tr.children[index];
+           if(td) td.classList.add('v37-longtext','v39-pcste-work');
+         });
+       }
+     }
+   });
+ }
+
+ new MutationObserver(()=>requestAnimationFrame(apply))
+   .observe(table,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v40-category-column-width-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+
+ function norm(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+ function getSection(){
+   const candidates=[
+     document.querySelector('.content-header h2'),
+     document.querySelector('.section-title'),
+     document.querySelector('#sectionTitle'),
+     document.querySelector('#categoryTitle')
+   ];
+   for(const el of candidates){
+     const t=norm(el && el.textContent);
+     if(t==='EI TSAA' || t==='MSDAC TSAA') return t;
+   }
+   // fallback: active sidebar item
+   const active=Array.from(document.querySelectorAll('.active')).map(x=>norm(x.textContent));
+   if(active.includes('EI TSAA')) return 'EI TSAA';
+   if(active.includes('MSDAC TSAA')) return 'MSDAC TSAA';
+   return '';
+ }
+
+ function apply(){
+   const section=getSection();
+   document.body.classList.toggle('v40-ei-tsaa', section==='EI TSAA');
+   document.body.classList.toggle('v40-msdac-tsaa', section==='MSDAC TSAA');
+
+   const headers=Array.from(table.querySelectorAll('thead th'));
+   headers.forEach((th,i)=>{
+     ['v40-oem','v40-sanctionby','v40-station'].forEach(c=>th.classList.remove(c));
+     const label=norm(th.textContent);
+     let cls='';
+
+     if(label.includes('OEM MAKE') || label==='OEM') cls='v40-oem';
+     else if(label.includes('SANCTION GIVEN BY') || label.includes('SANCTION GIVENBY') || label==='SANCTION BY') cls='v40-sanctionby';
+     else if(label.includes('STATION / SECTION') || label.includes('STATION/SECTION')) cls='v40-station';
+
+     if(cls){
+       th.classList.add(cls);
+       table.querySelectorAll('tbody tr').forEach(tr=>{
+         const td=tr.children[i];
+         if(td) td.classList.add(cls);
+       });
+     }
+   });
+ }
+
+ new MutationObserver(()=>requestAnimationFrame(apply))
+   .observe(document.body,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v41-ei-sanction-header-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function n(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+ function apply(){
+   if(!document.body.classList.contains('v40-ei-tsaa')) return;
+   Array.from(table.querySelectorAll('thead th')).forEach(th=>{
+     const label=n(th.textContent);
+     if(label==='SANCTION GIVEN BY' || label==='SANCTION GIVENBY' || label==='SANCTION BY'){
+       th.innerHTML='Sanction<br>Given By';
+       th.classList.add('v40-sanctionby');
+     }
+   });
+ }
+ new MutationObserver(()=>requestAnimationFrame(apply))
+   .observe(table,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v42-ei-compact-columns-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function n(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+ function apply(){
+   if(!document.body.classList.contains('v40-ei-tsaa')) return;
+   const hs=Array.from(table.querySelectorAll('thead th'));
+   hs.forEach((th,i)=>{
+     const label=n(th.textContent);
+     if(label==='AGENCY'){
+       th.classList.add('v40-agency-v42');
+       table.querySelectorAll('tbody tr').forEach(tr=>{
+         const td=tr.children[i];
+         if(td)td.classList.add('v40-agency-v42');
+       });
+     }
+   });
+ }
+ new MutationObserver(()=>requestAnimationFrame(apply))
+   .observe(table,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v43-ei-sanction-hard-fix-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+
+ function N(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+ function isEI(){
+   const titleTexts=Array.from(document.querySelectorAll('h1,h2,h3,.section-title,.content-header'))
+      .map(x=>N(x.textContent));
+   if(titleTexts.some(x=>x==='EI TSAA' || x.startsWith('EI TSAA '))) return true;
+   const active=Array.from(document.querySelectorAll('.active')).map(x=>N(x.textContent));
+   return active.some(x=>x==='EI TSAA');
+ }
+
+ function apply(){
+   const ei=isEI();
+   document.body.classList.toggle('v43-ei-active',ei);
+   if(!ei)return;
+
+   const hs=Array.from(table.querySelectorAll('thead th'));
+   hs.forEach((th,i)=>{
+     const label=N(th.textContent);
+     if(label==='SANCTION GIVEN BY' || label==='SANCTION GIVENBY' ||
+        label==='SANCTION BY' || (label.includes('SANCTION') && label.includes('GIVEN BY'))){
+       th.innerHTML='Sanction<br>Given By';
+       th.classList.add('v43-sanction-col');
+       // Remove generic width classes that previously overrode compact sizing.
+       th.classList.remove('v37-medium','v37-short');
+       table.querySelectorAll('tbody tr').forEach(tr=>{
+         const td=tr.children[i];
+         if(td){
+           td.classList.add('v43-sanction-col');
+           td.classList.remove('v37-medium','v37-short');
+           td.style.setProperty('width','72px','important');
+           td.style.setProperty('min-width','72px','important');
+           td.style.setProperty('max-width','72px','important');
+         }
+       });
+       th.style.setProperty('width','72px','important');
+       th.style.setProperty('min-width','72px','important');
+       th.style.setProperty('max-width','72px','important');
+     }
+   });
+ }
+
+ let queued=false;
+ const run=()=>{ if(queued)return; queued=true; requestAnimationFrame(()=>{queued=false;apply();}); };
+ new MutationObserver(run).observe(document.body,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v44-ei-station-width-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function N(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+ function apply(){
+   if(!document.body.classList.contains('v43-ei-active')) return;
+   const hs=Array.from(table.querySelectorAll('thead th'));
+   hs.forEach((th,i)=>{
+     const label=N(th.textContent);
+     if(label==='STATION / SECTION' || label==='STATION/SECTION'){
+       th.classList.add('v44-station-col');
+       th.style.setProperty('width','150px','important');
+       th.style.setProperty('min-width','150px','important');
+       th.style.setProperty('max-width','150px','important');
+       table.querySelectorAll('tbody tr').forEach(tr=>{
+         const td=tr.children[i];
+         if(td){
+           td.classList.add('v44-station-col');
+           td.style.setProperty('width','150px','important');
+           td.style.setProperty('min-width','150px','important');
+           td.style.setProperty('max-width','150px','important');
+         }
+       });
+     }
+   });
+ }
+ new MutationObserver(()=>requestAnimationFrame(apply))
+   .observe(table,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v45-global-column-widths-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function N(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+ function setCol(th,i,cls,width){
+   th.classList.add(cls);
+   th.style.setProperty('width',width+'px','important');
+   th.style.setProperty('min-width',width+'px','important');
+   th.style.setProperty('max-width',width+'px','important');
+   table.querySelectorAll('tbody tr').forEach(tr=>{
+     const td=tr.children[i];
+     if(!td)return;
+     td.classList.add(cls);
+     td.style.setProperty('width',width+'px','important');
+     td.style.setProperty('min-width',width+'px','important');
+     td.style.setProperty('max-width',width+'px','important');
+   });
+ }
+
+ function apply(){
+   Array.from(table.querySelectorAll('thead th')).forEach((th,i)=>{
+     const label=N(th.textContent);
+     if(label==='DIVISION') setCol(th,i,'v45-division',100);
+     else if(label==='STATION / SECTION' || label==='STATION/SECTION')
+       setCol(th,i,'v45-station',150);
+     else if(label==='OEM MAKE' || label==='OEM')
+       setCol(th,i,'v45-oem',100);
+   });
+ }
+
+ let pending=false;
+ const schedule=()=>{
+   if(pending)return;
+   pending=true;
+   requestAnimationFrame(()=>{pending=false;apply();});
+ };
+ new MutationObserver(schedule).observe(table,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v46-ei-stable-columns-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function N(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+ function isEI(){
+   const titles=Array.from(document.querySelectorAll('h1,h2,h3,.section-title,.content-header'))
+     .map(x=>N(x.textContent));
+   if(titles.some(x=>x==='EI TSAA' || x.startsWith('EI TSAA '))) return true;
+   return Array.from(document.querySelectorAll('.active')).some(x=>N(x.textContent)==='EI TSAA');
+ }
+ function lock(th,i,cls,w){
+   th.classList.add(cls);
+   [th,...Array.from(table.querySelectorAll('tbody tr')).map(r=>r.children[i]).filter(Boolean)]
+     .forEach(el=>{
+       el.classList.add(cls);
+       el.style.setProperty('width',w+'px','important');
+       el.style.setProperty('min-width',w+'px','important');
+       el.style.setProperty('max-width',w+'px','important');
+     });
+ }
+ function apply(){
+   const ei=isEI();
+   document.body.classList.toggle('v46-ei',ei);
+   if(!ei)return;
+   Array.from(table.querySelectorAll('thead th')).forEach((th,i)=>{
+     const l=N(th.textContent);
+     if(l==='OEM MAKE'||l==='OEM') lock(th,i,'v46-oem',100);
+     else if(l.includes('SANCTION')&&l.includes('GIVEN BY')) lock(th,i,'v46-sanction',72);
+     else if(l==='AGENCY') lock(th,i,'v46-agency',112);
+     else if(l==='ROUTES'||l==='ROUTE') lock(th,i,'v46-routes',80);
+     else if(l.includes('TSAA SANCTION DATE')||l==='SANCTIONING DATE') lock(th,i,'v46-date',145);
+     else if(l==='ACTION') lock(th,i,'v46-action',135);
+   });
+ }
+ let q=false;
+ function schedule(){if(q)return;q=true;requestAnimationFrame(()=>{q=false;apply();});}
+ new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v47-msdac-agency-global-date-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function N(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+ function isMSDAC(){
+   const titles=Array.from(document.querySelectorAll('h1,h2,h3,.section-title,.content-header'))
+      .map(x=>N(x.textContent));
+   if(titles.some(x=>x==='MSDAC TSAA'||x.startsWith('MSDAC TSAA ')))return true;
+   return Array.from(document.querySelectorAll('.active')).some(x=>N(x.textContent)==='MSDAC TSAA');
+ }
+ function setCol(th,i,cls,w){
+   [th,...Array.from(table.querySelectorAll('tbody tr')).map(r=>r.children[i]).filter(Boolean)]
+     .forEach(el=>{
+       el.classList.add(cls);
+       el.style.setProperty('width',w+'px','important');
+       el.style.setProperty('min-width',w+'px','important');
+       el.style.setProperty('max-width',w+'px','important');
+     });
+ }
+ function isDateHeader(l){
+   return l.includes('DATE') &&
+          !l.includes('UPDATE') &&
+          !l.includes('DATA');
+ }
+ function apply(){
+   const msdac=isMSDAC();
+   document.body.classList.toggle('v47-msdac',msdac);
+
+   Array.from(table.querySelectorAll('thead th')).forEach((th,i)=>{
+     const l=N(th.textContent);
+
+     // All actual date columns across all subsections.
+     if(isDateHeader(l)) setCol(th,i,'v47-date',112);
+
+     // MSDAC TSAA only.
+     if(msdac && l==='AGENCY') setCol(th,i,'v47-msdac-agency',112);
+   });
+ }
+ let q=false;
+ function schedule(){if(q)return;q=true;requestAnimationFrame(()=>{q=false;apply();});}
+ new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v48-global-agency-pcste-equipment-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ function N(s){return (s||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+ function setCol(th,i,cls){
+   [th,...Array.from(table.querySelectorAll('tbody tr')).map(r=>r.children[i]).filter(Boolean)]
+     .forEach(el=>{
+       el.classList.add(cls);
+       el.style.setProperty('width','112px','important');
+       el.style.setProperty('min-width','112px','important');
+       el.style.setProperty('max-width','112px','important');
+     });
+ }
+
+ function apply(){
+   Array.from(table.querySelectorAll('thead th')).forEach((th,i)=>{
+     const label=N(th.textContent);
+
+     // Every subsection
+     if(label==='AGENCY') setCol(th,i,'v48-agency');
+
+     // Exact PCSTE Sanction equipment column
+     if(label==='Equipment')
+       setCol(th,i,'v48-pcste-equipment');
+   });
+ }
+
+ let pending=false;
+ function schedule(){
+   if(pending)return;
+   pending=true;
+   requestAnimationFrame(()=>{pending=false;apply();});
+ }
+ new MutationObserver(schedule).observe(table,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v51-pcste-equipment-runtime">
+(function(){
+ const table=document.getElementById('mainRecordTable');
+ if(!table)return;
+ const N=s=>(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+
+ function isPCSTE(){
+   const titles=[...document.querySelectorAll('h1,h2,h3,.section-title,.content-header,.active')]
+     .map(x=>N(x.textContent));
+   return titles.some(x=>x==='PCSTE SANCTION' || x.startsWith('PCSTE SANCTION '));
+ }
+
+ function apply(){
+   const active=isPCSTE();
+   document.body.classList.toggle('v51-pcste',active);
+   if(!active)return;
+
+   [...table.querySelectorAll('thead th')].forEach((th,i)=>{
+     if(N(th.textContent)==='EQUIPMENT'){
+       [th,...[...table.querySelectorAll('tbody tr')].map(r=>r.children[i]).filter(Boolean)]
+       .forEach(el=>{
+         el.classList.add('v51-equipment');
+         el.style.setProperty('width','112px','important');
+         el.style.setProperty('min-width','112px','important');
+         el.style.setProperty('max-width','112px','important');
+       });
+     }
+   });
+ }
+ let q=false;
+ new MutationObserver(()=>{if(!q){q=true;requestAnimationFrame(()=>{q=false;apply();});}})
+   .observe(document.body,{subtree:true,childList:true,characterData:true});
+ apply();
+})();
+</script>
+
+<script id="v54-rename-with-original-width">
+(function(){
+  const table = document.getElementById('mainRecordTable');
+  if(!table) return;
+
+  const N = s => (s||'').replace(/\s+/g,' ').trim().toUpperCase();
+  const targets = new Set([
+    'WORK NAME (EI DESCRIPTION)',
+    'WORK NAME (MSDAC SCHEME)',
+    'DESCRIPTION'
+  ]);
+
+  function renameKeepingWidth(){
+    const headers = Array.from(table.querySelectorAll('thead th, thead td'));
+
+    headers.forEach((th, i) => {
+      const oldLabel = N(th.textContent);
+      if(!targets.has(oldLabel)) return;
+
+      /* Capture the column's ORIGINAL width before changing its heading. */
+      const rectWidth = Math.round(th.getBoundingClientRect().width);
+      const cs = getComputedStyle(th);
+      const originalWidth = rectWidth || parseFloat(cs.width) || 0;
+
+      /* Rename text only. */
+      th.textContent = 'Work Description';
+
+      /* Lock this exact original rendered width so later generic
+         "Work Description" rules cannot enlarge/reduce the column. */
+      if(originalWidth > 0){
+        const w = originalWidth + 'px';
+        th.style.setProperty('width', w, 'important');
+        th.style.setProperty('min-width', w, 'important');
+        th.style.setProperty('max-width', w, 'important');
+
+        table.querySelectorAll('tbody tr').forEach(tr => {
+          const td = tr.children[i];
+          if(!td) return;
+          td.style.setProperty('width', w, 'important');
+          td.style.setProperty('min-width', w, 'important');
+          td.style.setProperty('max-width', w, 'important');
+        });
+      }
+
+      th.dataset.v54Renamed = '1';
+    });
+  }
+
+  let scheduled = false;
+  function schedule(){
+    if(scheduled) return;
+    scheduled = true;
+    /* Two frames allow the subsection's own width rules to finish first. */
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      scheduled = false;
+      renameKeepingWidth();
+    }));
+  }
+
+  new MutationObserver(schedule).observe(table, {
+    subtree:true, childList:true, characterData:true
+  });
+
+  schedule();
+})();
+</script>
+
+<script id="v56-irsem-irtem-expand">
+function toggleManualSubmenu(submenuId, defaultCategory) {
+  const submenu = document.getElementById(submenuId);
+  if (!submenu) return;
+
+  const opening = submenu.style.display === 'none' || getComputedStyle(submenu).display === 'none';
+
+  // Keep IRSEM and IRTEM as independent compact submenus.
+  submenu.style.display = opening ? 'block' : 'none';
+
+  const chevronId = submenuId === 'irsemSubmenu' ? 'irsemSubmenuChevron' : 'irtemSubmenuChevron';
+  const chevron = document.getElementById(chevronId);
+  if (chevron) {
+    chevron.classList.toggle('fa-chevron-down', !opening);
+    chevron.classList.toggle('fa-chevron-up', opening);
+  }
+
+  // On opening the parent, show its first subsection by default.
+  if (opening && defaultCategory && typeof switchCategory === 'function') {
+    switchCategory(defaultCategory);
+  }
+}
+</script>
+
+<script id="v57-chapterwise-description-label-only">
+(function () {
+  const table = document.getElementById('mainRecordTable');
+  if (!table) return;
+
+  function apply() {
+    const title = (document.querySelector('h1, h2, h3, .section-title, .content-header')?.textContent || '').toUpperCase();
+    const active = (document.querySelector('.nav-item.active')?.textContent || '').toUpperCase();
+    const context = title + ' ' + active;
+
+    if (!context.includes('IRSEM CHAPTER WISE') && !context.includes('IRTEM CHAPTER WISE')) return;
+
+    table.querySelectorAll('thead th, thead td').forEach(th => {
+      const label = (th.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
+      if (label === 'WORK DESCRIPTION') {
+        // Text only — width/classes/styles remain exactly as they are.
+        th.textContent = 'Description';
+      }
+    });
+  }
+
+  let pending = false;
+  new MutationObserver(() => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => {
+      pending = false;
+      apply();
+    });
+  }).observe(table, {subtree:true, childList:true, characterData:true});
+
+  apply();
+})();
+</script>
+
+<script id="v58-chapterwise-description-stable-js">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+
+  function activeChapterWise(){
+    const active=(document.querySelector('.nav-item.active')?.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const heads=Array.from(document.querySelectorAll('h1,h2,h3,.section-title,.content-header'))
+      .map(x=>(x.textContent||'').replace(/\s+/g,' ').trim().toUpperCase()).join(' ');
+    const s=active+' '+heads;
+    return s.includes('IRSEM CHAPTER WISE') || s.includes('IRTEM CHAPTER WISE');
+  }
+
+  function apply(){
+    const yes=activeChapterWise();
+    document.body.classList.toggle('v58-chapterwise',yes);
+    if(!yes)return;
+
+    const headers=Array.from(table.querySelectorAll('thead th,thead td'));
+    let idx=-1;
+    headers.forEach((th,i)=>{
+      const t=(th.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
+      if(t==='DESCRIPTION' || t==='WORK DESCRIPTION') idx=i;
+    });
+    if(idx<0)return;
+
+    const th=headers[idx];
+    th.textContent='Description';
+    th.classList.add('v58-description-col');
+
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      const td=tr.children[idx];
+      if(td) td.classList.add('v58-description-col');
+    });
+  }
+
+  let pending=false;
+  new MutationObserver(()=>{
+    if(pending)return;
+    pending=true;
+    requestAnimationFrame(()=>{pending=false;apply();});
+  }).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class']});
+
+  apply();
+})();
+</script>
+
+<script id="v60-sticky-separator-fix-js">
+(function(){
+  const table = document.getElementById('mainRecordTable');
+  if(!table) return;
+
+  function existingSticky(el){
+    if(!el) return false;
+    const cs = getComputedStyle(el);
+    return cs.position === 'sticky' || el.classList.contains('sticky-col') ||
+           el.classList.contains('sticky-column') || el.classList.contains('sticky');
+  }
+
+  function applyStickyFix(){
+    const headerCells = table.querySelectorAll('thead th, thead td');
+    if(headerCells.length < 2) return;
+
+    const first = headerCells[0];
+    const second = headerCells[1];
+
+    /* Apply only where the first two columns are already intended/found sticky.
+       Existing page CSS can mark either header/body cells sticky. */
+    const firstBody = table.querySelector('tbody tr td:nth-child(1)');
+    const secondBody = table.querySelector('tbody tr td:nth-child(2)');
+    const intendedSticky =
+      existingSticky(first) || existingSticky(second) ||
+      existingSticky(firstBody) || existingSticky(secondBody);
+
+    if(!intendedSticky){
+      table.classList.remove('v60-sticky-fixed');
+      return;
+    }
+
+    table.classList.add('v60-sticky-fixed');
+
+    /* Measure actual current width — never assign/change width. */
+    const w = first.getBoundingClientRect().width;
+    if(w > 0){
+      table.style.setProperty('--v60-sticky-col2-left', w + 'px');
+    }
+
+    /* Give sticky cells an opaque copy of their current row/table background
+       so horizontally scrolling cells cannot show through. */
+    const cells = table.querySelectorAll(
+      'thead th:nth-child(1), thead th:nth-child(2), tbody td:nth-child(1), tbody td:nth-child(2)'
+    );
+    cells.forEach(cell=>{
+      let bg = getComputedStyle(cell).backgroundColor;
+      if(!bg || bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent'){
+        const row = cell.closest('tr');
+        bg = row ? getComputedStyle(row).backgroundColor : '';
+      }
+      if(!bg || bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent'){
+        bg = getComputedStyle(table).backgroundColor;
+      }
+      if(bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent'){
+        cell.style.setProperty('background-color', bg, 'important');
+      }
+    });
+  }
+
+  let queued=false;
+  function schedule(){
+    if(queued) return;
+    queued=true;
+    requestAnimationFrame(()=>{
+      queued=false;
+      applyStickyFix();
+    });
+  }
+
+  new MutationObserver(schedule).observe(table,{
+    subtree:true, childList:true, attributes:true,
+    attributeFilter:['class','style']
+  });
+
+  if(window.ResizeObserver){
+    new ResizeObserver(schedule).observe(table);
+  }
+  window.addEventListener('resize', schedule, {passive:true});
+  schedule();
+})();
+</script>
+
+<script id="v62-sticky-opaque-final-fix-js">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+
+  function opaqueColor(el){
+    if(!el)return '';
+    const c=getComputedStyle(el).backgroundColor;
+    if(c && c!=='transparent' && c!=='rgba(0, 0, 0, 0)') return c;
+    return '';
+  }
+
+  function apply(){
+    if(!table.classList.contains('v60-sticky-fixed')) return;
+
+    const head=table.querySelectorAll('thead th,thead td');
+    if(head.length>=2){
+      /* Use an existing non-frozen header cell as the exact theme background.
+         This makes the frozen headers opaque without altering their design. */
+      const headerBg =
+        opaqueColor(head[2]) ||
+        opaqueColor(head[1]) ||
+        opaqueColor(head[0]) ||
+        '#0b3b60';
+
+      head[0].style.setProperty('background-color',headerBg,'important');
+      head[1].style.setProperty('background-color',headerBg,'important');
+    }
+
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      const cells=tr.children;
+      if(cells.length<2)return;
+
+      /* Copy each row's existing non-frozen cell background so zebra/theme
+         appearance is preserved while frozen cells become fully opaque. */
+      const rowBg =
+        opaqueColor(cells[2]) ||
+        opaqueColor(tr) ||
+        opaqueColor(cells[1]) ||
+        opaqueColor(cells[0]) ||
+        '#172033';
+
+      cells[0].style.setProperty('background-color',rowBg,'important');
+      cells[1].style.setProperty('background-color',rowBg,'important');
+    });
+  }
+
+  let busy=false;
+  function schedule(){
+    if(busy)return;
+    busy=true;
+    requestAnimationFrame(()=>{busy=false;apply();});
+  }
+
+  new MutationObserver(schedule).observe(table,{
+    subtree:true,childList:true,attributes:true,
+    attributeFilter:['class']
+  });
+  table.addEventListener('scroll',schedule,{passive:true});
+  window.addEventListener('resize',schedule,{passive:true});
+  schedule();
+})();
+</script>
+
+<script id="v63-table-body-alignment-js">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+
+  function apply(){
+    const headers=Array.from(table.querySelectorAll('thead th, thead td'));
+
+    /* Clear only this patch's marker; do not touch any other class/style. */
+    table.querySelectorAll('tbody td.v63-left-data').forEach(td=>{
+      td.classList.remove('v63-left-data');
+    });
+
+    headers.forEach((th,index)=>{
+      const label=(th.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
+      if(label==='WORK DESCRIPTION' || label==='DESCRIPTION'){
+        table.querySelectorAll('tbody tr').forEach(tr=>{
+          const td=tr.children[index];
+          if(td) td.classList.add('v63-left-data');
+        });
+      }
+    });
+  }
+
+  let pending=false;
+  new MutationObserver(()=>{
+    if(pending)return;
+    pending=true;
+    requestAnimationFrame(()=>{pending=false;apply();});
+  }).observe(table,{subtree:true,childList:true,characterData:true});
+
+  apply();
+})();
+</script>
+
+<script id="v64-action-width-plus10-js">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+
+  function apply(){
+    const headers=Array.from(table.querySelectorAll('thead th, thead td'));
+    let actionIndex=-1;
+
+    headers.forEach((th,i)=>{
+      const label=(th.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
+      if(label==='ACTION') actionIndex=i;
+    });
+    if(actionIndex<0)return;
+
+    const th=headers[actionIndex];
+
+    /* Capture the subsection's own existing rendered Action width once,
+       then add exactly 10px. */
+    if(!th.dataset.v64BaseWidth){
+      const base=th.getBoundingClientRect().width;
+      if(base>0) th.dataset.v64BaseWidth=String(base);
+    }
+
+    const base=parseFloat(th.dataset.v64BaseWidth||'0');
+    if(!(base>0))return;
+
+    const newWidth=(base+10)+'px';
+    th.style.setProperty('--v64-action-width',newWidth);
+    th.classList.add('v64-action-width');
+
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      const td=tr.children[actionIndex];
+      if(!td)return;
+      td.style.setProperty('--v64-action-width',newWidth);
+      td.classList.add('v64-action-width');
+    });
+  }
+
+  let pending=false;
+  new MutationObserver(()=>{
+    if(pending)return;
+    pending=true;
+    requestAnimationFrame(()=>{pending=false;apply();});
+  }).observe(table,{subtree:true,childList:true,characterData:true});
+
+  apply();
+})();
+</script>
 </body>
 </html>
