@@ -2,6 +2,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script>
+    // Prevent the login overlay from flashing while an authenticated user
+    // returns from an Important Link using the browser Back button.
+    try {
+      if (sessionStorage.getItem('secr_portal_authorized') === 'true') {
+        document.documentElement.classList.add('portal-session-auth');
+      }
+    } catch (e) {}
+  </script>
+  <style>
+    html.portal-session-auth #loginScreen { display: none !important; }
+  </style>
   <title>RailSNTGyan - Railway S&T Knowledge Portal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -2464,6 +2476,45 @@
     }
   </style>
 
+
+<style id="logout-required-responsive-popup">
+#logoutRequiredOverlay {
+  position: fixed; inset: 0; z-index: 2147483647;
+  display: none; align-items: center; justify-content: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  background: rgba(15, 23, 42, .58);
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+}
+#logoutRequiredOverlay.show { display: flex; }
+.logout-required-dialog {
+  width: min(92vw, 420px); max-height: min(80dvh, 420px); overflow: auto;
+  background: #fff; color: #1e293b; border-radius: 16px;
+  border-top: 5px solid var(--brand-orange, #f97316);
+  box-shadow: 0 24px 60px rgba(0,0,0,.30); padding: 26px 24px 22px; text-align: center;
+}
+.logout-required-icon {
+  width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(249,115,22,.12); color: var(--brand-orange, #f97316); font-size: 21px;
+}
+.logout-required-dialog h3 { margin: 0 0 8px; color: var(--brand-navy, #0b3b60); font-size: 18px; font-weight: 800; }
+.logout-required-dialog p { margin: 0 0 20px; font-size: 14px; line-height: 1.55; color: #475569; }
+#logoutRequiredOkBtn {
+  min-width: 100px; min-height: 44px; padding: 10px 22px; border: 0; border-radius: 8px; cursor: pointer;
+  background: var(--brand-navy, #0b3b60); color: #fff; font-size: 14px; font-weight: 700; touch-action: manipulation;
+}
+@media (max-width: 600px) {
+  .logout-required-dialog { width: min(90vw, 380px); padding: 22px 18px 18px; border-radius: 14px; }
+  .logout-required-dialog h3 { font-size: 17px; }
+  .logout-required-dialog p { font-size: 13.5px; }
+  #logoutRequiredOkBtn { width: 100%; }
+}
+@media (min-width: 601px) and (max-width: 1024px) { .logout-required-dialog { width: min(70vw, 420px); } }
+body.dark-theme .logout-required-dialog { background: #102238; color: #f8fafc; border-color: #f97316; }
+body.dark-theme .logout-required-dialog h3 { color: #f8fafc; }
+body.dark-theme .logout-required-dialog p { color: #dbe7f3; }
+body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
+</style>
 </head>
 <body>
 
@@ -3856,8 +3907,19 @@
 
       if (input === CLOUD_PORTAL_PASS) {
         sessionStorage.setItem('secr_portal_authorized', 'true');
+        sessionStorage.removeItem('railsntgyan_allow_exit');
+        document.documentElement.classList.add('portal-session-auth');
         document.getElementById('loginScreen').style.display = 'none';
         errorMsg.style.display = 'none';
+        // Once logged in, create a protected HOME history entry so browser/app
+        // Back cannot leave RailSNTGyan until the user explicitly logs out.
+        try {
+          history.replaceState({ view: 'guard', railsntgyan: true }, '', window.location.href);
+          history.pushState({ view: 'home', railsntgyan: true }, '', window.location.href);
+        } catch (e) {
+          history.replaceState({ view: 'guard', railsntgyan: true }, '');
+          history.pushState({ view: 'home', railsntgyan: true }, '');
+        }
       } else {
         errorMsg.style.display = 'block';
         document.getElementById('pagePasswordInput').value = '';
@@ -3874,6 +3936,7 @@
     function logoutPortal() {
       sessionStorage.setItem('railsntgyan_allow_exit', 'true');
       sessionStorage.removeItem('secr_portal_authorized');
+      document.documentElement.classList.remove('portal-session-auth');
       document.getElementById('pagePasswordInput').value = '';
       document.getElementById('loginErrorMsg').style.display = 'none';
       document.getElementById('loginScreen').style.display = 'flex';
@@ -3883,25 +3946,25 @@
     window.addEventListener('DOMContentLoaded', () => {
       const isAuth = sessionStorage.getItem('secr_portal_authorized');
       if (isAuth === 'true') {
+        document.documentElement.classList.add('portal-session-auth');
         document.getElementById('loginScreen').style.display = 'none';
       } else {
+        document.documentElement.classList.remove('portal-session-auth');
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('pagePasswordInput').focus();
       }
 
-      // Initialize protected browser/app Back navigation.
-      // While logged in, the base entry is a guard. Back from HOME therefore
-      // stays inside RailSNTGyan; Logout is the intentional way to end the session.
-      sessionStorage.removeItem('railsntgyan_allow_exit');
-      // Keep a protected HOME history entry while the portal is logged in.
-      // Using the current URL explicitly is more reliable in Android/Chrome,
-      // including locally opened content:// pages.
-      try {
-        history.replaceState({ view: 'guard', railsntgyan: true }, '', window.location.href);
-        history.pushState({ view: 'home', railsntgyan: true }, '', window.location.href);
-      } catch (e) {
-        history.replaceState({ view: 'guard', railsntgyan: true }, '');
-        history.pushState({ view: 'home', railsntgyan: true }, '');
+      // Protect Back navigation only while the user is authenticated.
+      // On the login screen, normal browser/app Back remains available.
+      if (isAuth === 'true') {
+        sessionStorage.removeItem('railsntgyan_allow_exit');
+        try {
+          history.replaceState({ view: 'guard', railsntgyan: true }, '', window.location.href);
+          history.pushState({ view: 'home', railsntgyan: true }, '', window.location.href);
+        } catch (e) {
+          history.replaceState({ view: 'guard', railsntgyan: true }, '');
+          history.pushState({ view: 'home', railsntgyan: true }, '');
+        }
       }
 
       updateMobileHeaderHeight();
@@ -3915,7 +3978,15 @@
       }, 150));
 
       initTopScrollbarSync();
-      goHome(false);
+
+      // If the user has returned from an external Important Link, restore that
+      // section immediately instead of briefly opening HOME/login-related state.
+      if (sessionStorage.getItem('importantLinksReturnState')) {
+        switchCategory('IMPORTANT LINKS', false);
+        setTimeout(restoreImportantLinksReturnState, 0);
+      } else {
+        goHome(false);
+      }
     });
 
     // Android/WebView back button restore safety trap
@@ -4055,8 +4126,33 @@
     function showBackLogoutMessage() {
       if (backLogoutMessageVisible) return;
       backLogoutMessageVisible = true;
-      alert('RailSNTGyan se bahar jane ke liye pehle Logout button par click karein.');
-      setTimeout(() => { backLogoutMessageVisible = false; }, 300);
+
+      let overlay = document.getElementById('logoutRequiredOverlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'logoutRequiredOverlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-labelledby', 'logoutRequiredTitle');
+        overlay.innerHTML = `
+          <div class="logout-required-dialog">
+            <div class="logout-required-icon"><i class="fas fa-right-from-bracket"></i></div>
+            <h3 id="logoutRequiredTitle">Logout Required</h3>
+            <p>Please log out to exit RailSNTGyan.</p>
+            <button type="button" id="logoutRequiredOkBtn">OK</button>
+          </div>`;
+        document.body.appendChild(overlay);
+
+        const closeMessage = () => {
+          overlay.classList.remove('show');
+          backLogoutMessageVisible = false;
+        };
+        overlay.querySelector('#logoutRequiredOkBtn').addEventListener('click', closeMessage);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeMessage(); });
+      }
+
+      overlay.classList.add('show');
+      setTimeout(() => overlay.querySelector('#logoutRequiredOkBtn')?.focus(), 20);
     }
 
     function pushProtectedState(viewName) {
@@ -4071,12 +4167,32 @@
       }
     }
 
-    window.addEventListener('popstate', function () {
+    window.addEventListener('popstate', function (event) {
       const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
       const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
 
-      // Logout is the only intentional release of the Back lock.
-      if (!isAuth || allowExit) return;
+      // Returning from an external Important Link must never log the user out
+      // or route via HOME. Restore Important Links first and keep the session.
+      if (isAuth && sessionStorage.getItem('importantLinksReturnState')) {
+        // Browser Back from an external Important Link: restore the section only.
+        // Do NOT add another history entry here. The next Back must go to HOME.
+        switchCategory('IMPORTANT LINKS', false);
+        restoreImportantLinksReturnState();
+        return;
+      }
+
+      // On the login screen (including immediately after Logout), Back must
+      // leave RailSNTGyan instead of exposing any previous authenticated page.
+      // A normal browser tab cannot always be programmatically closed, so the
+      // reliable browser-safe fallback is to navigate out to a blank page.
+      if (!isAuth || allowExit) {
+        try {
+          window.location.replace('about:blank');
+        } catch (e) {
+          history.back();
+        }
+        return;
+      }
       if (backNavigationBusy) return;
       backNavigationBusy = true;
 
@@ -4109,8 +4225,17 @@
 
       // One Back from any subsection always returns to HOME.
       if (currentCategory !== 'HOME') {
+        // IMPORTANT LINKS / any subsection -> Back -> HOME.
+        // When the browser has already moved onto our HOME history entry, do not
+        // push another HOME entry; simply render HOME on that existing entry.
         goHome(false);
-        pushProtectedState('home');
+        if (!event.state || event.state.view !== 'home') {
+          try {
+            history.replaceState({ view: 'home', railsntgyan: true }, '', window.location.href);
+          } catch (e) {
+            history.replaceState({ view: 'home', railsntgyan: true }, '');
+          }
+        }
         finish();
         return;
       }
@@ -4160,6 +4285,16 @@
 
       if (isCurrentlyCollapsed) {
         targetGroup.classList.remove('collapsed');
+
+        // IMPORTANT LINKS heading itself behaves exactly like its first
+        // subsection (PORTAL & REPO LINKS). This ensures a real category
+        // history entry exists even when the user does not manually click
+        // the subsection. Therefore Back works as:
+        // External -> Important Links -> Home -> Logout Required.
+        if (targetGroupId === 'grpImportantLinks' && currentCategory !== 'IMPORTANT LINKS') {
+          switchCategory('IMPORTANT LINKS', true);
+          openOnlyAccordion('grpImportantLinks');
+        }
       }
     }
 
@@ -4167,6 +4302,16 @@
       accordionGroupIds.forEach(id => {
         const grp = document.getElementById(id);
         if (grp) grp.classList.add('collapsed');
+      });
+    }
+
+    // Open exactly one sidebar accordion group and close all others.
+    function openOnlyAccordion(targetGroupId) {
+      accordionGroupIds.forEach(id => {
+        const grp = document.getElementById(id);
+        if (!grp) return;
+        if (id === targetGroupId) grp.classList.remove('collapsed');
+        else grp.classList.add('collapsed');
       });
     }
 
@@ -4493,6 +4638,12 @@
       if (normCat === 'PCSTE DISPENSATION') normCat = 'DISPENSATION';
       currentCategory = normCat;
 
+      // IMPORTANT LINKS must keep its own sidebar group expanded, including
+      // after returning from an external website with the browser/app Back key.
+      if (currentCategory === 'IMPORTANT LINKS') {
+        openOnlyAccordion('grpImportantLinks');
+      }
+
       document.getElementById('dashboardView').style.display = 'none';
       document.getElementById('tableViewSection').style.display = 'flex';
 
@@ -4536,7 +4687,12 @@
       closeSidebarDrawer();
 
       if (pushState) {
-        history.pushState({ view: 'category', category: currentCategory }, '', '');
+        // Do not create duplicate entries when the accordion heading already
+        // opened the same subsection and the user taps PORTAL & REPO LINKS too.
+        const hs = history.state || {};
+        if (!(hs.view === 'category' && hs.category === currentCategory)) {
+          history.pushState({ view: 'category', category: currentCategory }, '', '');
+        }
       }
     }
 
@@ -4558,17 +4714,28 @@
 
       sessionStorage.setItem('importantLinksReturnState', JSON.stringify(state));
 
-      // Keep the current SPA history entry intact while recording the
-      // section/scroll position for browsers that recreate the page on Back.
-      history.replaceState(
-        Object.assign({}, history.state || {}, {
+      // IMPORTANT: create the HOME -> IMPORTANT LINKS history pair BEFORE
+      // leaving for the external website. This makes the browser sequence stable:
+      // External -> Back -> Important Links -> Back -> Home.
+      // Building this pair before navigation is more reliable than trying to
+      // reconstruct browser history after the external page has already returned.
+      try {
+        history.replaceState({ view: 'home', railsntgyan: true }, '', window.location.href);
+        history.pushState({
           view: 'category',
           category: 'IMPORTANT LINKS',
+          railsntgyan: true,
           returnScroll: state
-        }),
-        '',
-        ''
-      );
+        }, '', window.location.href);
+      } catch (e) {
+        history.replaceState({ view: 'home', railsntgyan: true }, '');
+        history.pushState({
+          view: 'category',
+          category: 'IMPORTANT LINKS',
+          railsntgyan: true,
+          returnScroll: state
+        }, '');
+      }
     }
 
     function restoreImportantLinksReturnState() {
@@ -4588,9 +4755,15 @@
       if (currentCategory !== 'IMPORTANT LINKS') {
         switchCategory('IMPORTANT LINKS', false);
       }
+      openOnlyAccordion('grpImportantLinks');
 
       const main = document.querySelector('main');
       const tableContainer = document.getElementById('mainTableContainer');
+
+      // Consume this flag BEFORE the visual restore. This is important because
+      // the very next Back press must be handled as IMPORTANT LINKS -> HOME,
+      // not mistaken for another return from the external website.
+      sessionStorage.removeItem('importantLinksReturnState');
 
       requestAnimationFrame(() => {
         if (main) main.scrollTop = Number(state.mainScrollTop) || 0;
@@ -4601,8 +4774,9 @@
         updateTopScrollbarWidth();
       });
 
-      // The state is only for the return from this external navigation.
-      sessionStorage.removeItem('importantLinksReturnState');
+      // History was prepared before opening the external website.
+      // Do not push/replace history here; otherwise the next Back can skip HOME.
+
     }
 
     // Kept for compatibility with any existing callers. Important Links now
@@ -6544,6 +6718,221 @@ body.dark-theme .attachment-chain-btn.broken i {
   color:#94a3b8 !important;
 }
 </style>
+
+
+<style id="fy-report-uniform-print-friendly-light">
+/* FY report: keep the whole report sheet in the same print-friendly
+   light palette used by the Category / Scheme column, even in dark theme. */
+body.dark-theme #fyReportModal .report-sheet,
+body.dark-theme #fyReportModal .report-body {
+    color: #1e293b !important;
+}
+
+body.dark-theme #fyReportModal .report-sheet {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.dark-theme #fyReportModal .report-header-banner h2 {
+    color: #0b3b60 !important;
+}
+body.dark-theme #fyReportModal .report-header-banner p {
+    color: #334155 !important;
+}
+body.dark-theme #fyReportModal .report-meta-bar {
+    background: #f8fafc !important;
+    color: #1e293b !important;
+    border-color: #cbd5e1 !important;
+}
+body.dark-theme #fyReportModal .report-meta-bar *,
+body.dark-theme #fyReportModal #reportFYLabel {
+    color: #1e293b !important;
+}
+
+/* All FY data cells use the same light combination as Category / Scheme. */
+body.dark-theme #fyReportModal table.report-table tbody td {
+    background: #f8fafc !important;
+    color: #1e293b !important;
+    border-color: #cbd5e1 !important;
+}
+body.dark-theme #fyReportModal table.report-table tbody tr:nth-child(even) td {
+    background: #f1f5f9 !important;
+}
+body.dark-theme #fyReportModal table.report-table tbody td.cat-name {
+    color: #1e293b !important;
+    font-weight: 800 !important;
+}
+
+/* Preserve the navy table heading for clear print/readability. */
+body.dark-theme #fyReportModal table.report-table thead th {
+    background: #0b3b60 !important;
+    color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Totals stay light and readable, not dark-filled. */
+body.dark-theme #fyReportModal table.report-table tbody tr.total-row td {
+    background: #eaf0f6 !important;
+    color: #0b3b60 !important;
+    font-weight: 800 !important;
+}
+body.dark-theme #fyReportModal table.report-table td.col-total {
+    background: #f8fafc !important;
+    color: #c2410c !important;
+    font-weight: 800 !important;
+}
+body.dark-theme #fyReportModal table.report-table tr.total-row td.grand-total {
+    background: #ffedd5 !important;
+    color: #9a3412 !important;
+}
+
+/* Print exactly the same light report palette regardless of selected theme. */
+@media print {
+    #fyReportModal .report-sheet {
+        background: #ffffff !important;
+        color: #1e293b !important;
+    }
+    #fyReportModal .report-header-banner h2 { color: #0b3b60 !important; }
+    #fyReportModal .report-header-banner p { color: #334155 !important; }
+    #fyReportModal .report-meta-bar,
+    #fyReportModal .report-meta-bar * {
+        background-color: #f8fafc !important;
+        color: #1e293b !important;
+    }
+    #fyReportModal table.report-table thead th {
+        background: #0b3b60 !important;
+        color: #ffffff !important;
+    }
+    #fyReportModal table.report-table tbody td {
+        background: #f8fafc !important;
+        color: #1e293b !important;
+    }
+    #fyReportModal table.report-table tbody tr:nth-child(even) td {
+        background: #f1f5f9 !important;
+    }
+    #fyReportModal table.report-table tbody tr.total-row td {
+        background: #eaf0f6 !important;
+        color: #0b3b60 !important;
+    }
+    #fyReportModal table.report-table tr.total-row td.grand-total {
+        background: #ffedd5 !important;
+        color: #9a3412 !important;
+    }
+}
+</style>
+
+
+<style id="fy-report-black-table-borders">
+/* FY Report table: black borders on screen and print */
+#fyReportModal table.report-table,
+#fyReportModal table.report-table th,
+#fyReportModal table.report-table td {
+    border-color: #000000 !important;
+}
+@media print {
+    #fyReportModal table.report-table,
+    #fyReportModal table.report-table th,
+    #fyReportModal table.report-table td {
+        border-color: #000000 !important;
+    }
+}
+</style>
+
+
+<style id="fy-report-black-borders-force-fix">
+/* Force real black grid lines — not only border-color */
+#fyReportModal .report-table {
+    border-collapse: collapse !important;
+    border: 2px solid #000 !important;
+}
+#fyReportModal .report-table th,
+#fyReportModal .report-table td,
+body.dark-theme #fyReportModal .report-table th,
+body.dark-theme #fyReportModal .report-table td {
+    border: 1px solid #000 !important;
+    border-top: 1px solid #000 !important;
+    border-right: 1px solid #000 !important;
+    border-bottom: 1px solid #000 !important;
+    border-left: 1px solid #000 !important;
+}
+@media print {
+    #fyReportModal .report-table {
+        border-collapse: collapse !important;
+        border: 2px solid #000 !important;
+    }
+    #fyReportModal .report-table th,
+    #fyReportModal .report-table td {
+        border: 1px solid #000 !important;
+    }
+}
+</style>
+
+
+<style id="fy-report-entire-grid-black-final">
+#fyReportModal table,
+#fyReportModal table * {
+    box-sizing: border-box !important;
+}
+
+#fyReportModal table.report-table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    border: 2px solid #000000 !important;
+}
+
+#fyReportModal table.report-table > thead > tr > th,
+#fyReportModal table.report-table > thead > tr > td,
+#fyReportModal table.report-table > tbody > tr > th,
+#fyReportModal table.report-table > tbody > tr > td,
+#fyReportModal table.report-table > tfoot > tr > th,
+#fyReportModal table.report-table > tfoot > tr > td {
+    border: 1px solid #000000 !important;
+    outline: none !important;
+}
+
+/* Explicit internal vertical + horizontal grid lines */
+#fyReportModal table.report-table tr > * + * {
+    border-left: 1px solid #000000 !important;
+}
+#fyReportModal table.report-table tr + tr > * {
+    border-top: 1px solid #000000 !important;
+}
+
+@media print {
+    #fyReportModal table.report-table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        border: 2px solid #000000 !important;
+    }
+    #fyReportModal table.report-table > thead > tr > th,
+    #fyReportModal table.report-table > thead > tr > td,
+    #fyReportModal table.report-table > tbody > tr > th,
+    #fyReportModal table.report-table > tbody > tr > td,
+    #fyReportModal table.report-table > tfoot > tr > th,
+    #fyReportModal table.report-table > tfoot > tr > td {
+        border: 1px solid #000000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+
+<script id="fy-report-entire-grid-black-js-fallback">
+(function () {
+    function forceFYGridBlack() {
+        document.querySelectorAll('#fyReportModal table.report-table').forEach(function(table) {
+            table.style.setProperty('border-collapse','collapse','important');
+            table.style.setProperty('border','2px solid #000000','important');
+            table.querySelectorAll('th,td').forEach(function(cell) {
+                cell.style.setProperty('border','1px solid #000000','important');
+            });
+        });
+    }
+    document.addEventListener('click', function(){ setTimeout(forceFYGridBlack, 50); });
+    new MutationObserver(forceFYGridBlack).observe(document.body, {childList:true, subtree:true});
+    setTimeout(forceFYGridBlack, 300);
+})();
+</script>
 
 </body>
 </html>
