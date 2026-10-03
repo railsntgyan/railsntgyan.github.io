@@ -3335,15 +3335,12 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
         </ul>
       </div>
 
-      <!-- SECTION 5: IMPORTANT LINKS -->
-      <div class="collapsible-group collapsed" id="grpImportantLinks">
-        <div class="sidebar-section-title" onclick="toggleAccordion('grpImportantLinks')">
+      <!-- SECTION 5: IMPORTANT LINKS - direct opening, no subsection -->
+      <div class="collapsible-group" id="grpImportantLinks">
+        <div class="sidebar-section-title" onclick="switchCategory('IMPORTANT LINKS', true)" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault(); switchCategory('IMPORTANT LINKS', true);}">
           <span class="sidebar-section-title-left"><i class="fa-solid fa-link" style="color: #06b6d4;"></i> IMPORTANT LINKS</span>
-          <i class="fa-solid fa-chevron-down chevron-icon"></i>
         </div>
-        <ul class="nav-list">
-          <li class="nav-item" onclick="switchCategory('IMPORTANT LINKS')"><i class="fa-solid fa-arrow-up-right-from-square" style="color: #3b82f6;"></i> PORTAL & REPO LINKS</li>
-        </ul>
       </div>
     </aside>
 
@@ -4342,15 +4339,6 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       if (isCurrentlyCollapsed) {
         targetGroup.classList.remove('collapsed');
 
-        // IMPORTANT LINKS heading itself behaves exactly like its first
-        // subsection (PORTAL & REPO LINKS). This ensures a real category
-        // history entry exists even when the user does not manually click
-        // the subsection. Therefore Back works as:
-        // External -> Important Links -> Home -> Logout Required.
-        if (targetGroupId === 'grpImportantLinks' && currentCategory !== 'IMPORTANT LINKS') {
-          switchCategory('IMPORTANT LINKS', true);
-          openOnlyAccordion('grpImportantLinks');
-        }
       }
     }
 
@@ -4743,8 +4731,7 @@ body.dark-theme #logoutRequiredOkBtn { background: #f97316; color: #fff; }
       closeSidebarDrawer();
 
       if (pushState) {
-        // Do not create duplicate entries when the accordion heading already
-        // opened the same subsection and the user taps PORTAL & REPO LINKS too.
+        // Do not create duplicate category history entries.
         const hs = history.state || {};
         if (!(hs.view === 'category' && hs.category === currentCategory)) {
           history.pushState({ view: 'category', category: currentCategory }, '', '');
