@@ -1334,6 +1334,14 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
       padding: 9px 12px !important;
     }
 
+    /* IRSEM Correction Slip only: balanced Para/Chapter and Action widths for 14-inch laptop view */
+    td.irsem-correction-para-narrow,
+    th.irsem-correction-para-narrow {
+      min-width: 420px !important;
+      max-width: 560px !important;
+      width: 420px !important;
+    }
+
     .col-pcste-equipment {
       min-width: 145px;
       white-space: normal;
@@ -5526,7 +5534,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formStationContainer">
-          <label>Station / Section</label>
+          <label id="formStationLabel">Station / Section</label>
           <input type="text" id="formStation" placeholder="e.g. ROB, BSP Yard, CPH, RIG">
         </div>
 
@@ -5552,7 +5560,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formDirectLinkContainer" style="display:none;">
-          <label>Web Link (URL)</label>
+          <label id="formDirectLinkLabel">Link</label>
           <input type="url" id="formDirectLink" placeholder="https://indianrailways.gov.in">
         </div>
 
@@ -5562,7 +5570,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formLdceTypeContainer" style="display:none;">
-          <label>LDCE Exam Type</label>
+          <label id="formLdceTypeLabel">Type (30% / 70%)</label>
           <select id="formLdceType">
             <option value="" selected>-- Select --</option>
             <option value="30%">30% LDCE (CBT / Written)</option>
@@ -5581,7 +5589,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formCorrectionSlipNoContainer" style="display:none;">
-          <label>Correction Slip No.</label>
+          <label id="formCorrectionSlipNoLabel">Correction Slip No.</label>
           <input type="text" id="formCorrectionSlipNo" placeholder="Enter correction slip no.">
         </div>
 
@@ -5650,17 +5658,17 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formRoutesContainer" style="display:none;">
-          <label>No. of Routes</label>
+          <label id="formRoutesLabel">Routes</label>
           <input type="number" id="formRoutes" placeholder="e.g. 48, 64, 128">
         </div>
 
         <div class="form-group" id="formOemContainer" style="display:none;">
-          <label>OEM Make (MSDAC)</label>
+          <label id="formOemLabel">OEM Make</label>
           <input type="text" id="formOem" placeholder="e.g. Frauscher / CEL / Siemens / GG Tronics">
         </div>
 
         <div class="form-group" id="formWagonContainer" style="display:none;">
-          <label>Wagon Name / Rolling Stock Type</label>
+          <label id="formWagonLabel">Wagon Name</label>
           <input type="text" id="formWagon" placeholder="e.g. BOXNHL, BCNHL, BOBRN, WAG-12">
         </div>
 
@@ -5675,7 +5683,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formIssuedByContainer" style="display:none;">
-          <label>Issued by</label>
+          <label id="formIssuedByLabel">Issued By</label>
           <select id="formIssuedBy">
             <option value="" selected>-- Select --</option>
             <option value="RDSO">RDSO</option>
@@ -5685,6 +5693,11 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
           </select>
         </div>
 
+        <div class="form-group" id="formYearContainer" style="display:none;">
+          <label>Year</label>
+          <input type="number" id="formYear" min="1900" max="2100" step="1" placeholder="e.g. 2026">
+        </div>
+
         <div class="form-group" id="formDateContainer">
           <label id="formDateLabel">Date (DD-MM-YYYY)</label>
           <input type="date" id="formDate">
@@ -5692,7 +5705,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         </div>
 
         <div class="form-group" id="formSecondaryDateContainer" style="display:none;">
-          <label>Date of Sanction (DD-MM-YYYY)</label>
+          <label id="formSecondaryDateLabel">Date of Sanction</label>
           <input type="date" id="formSecondaryDate">
         </div>
 
@@ -6834,9 +6847,9 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
           <tr>
             <th style="width: 60px;">Sr. No.</th>
             <th style="width: 160px;">Correction Slip No.</th>
-            <th class="work-desc-wide">Para and Chapter No.</th>
+            <th class="work-desc-wide${currentCategory === 'IRSEM CORRECTION SLIP' ? ' irsem-correction-para-narrow' : ''}">Para and Chapter No.</th>
             <th class="col-sanction-date">Date of Issue</th>
-            <th style="width: 155px; text-align:center;">Action</th>
+            <th class="${currentCategory === 'IRSEM CORRECTION SLIP' ? 'irsem-correction-action-compact' : ''}" style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
       } else if (standardManualCategories.includes(currentCategory)) {
@@ -6873,7 +6886,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
             <th style="width: var(--col-1-w);">Sr.NO</th>
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
-            <th class="work-desc-th">Work (hyperlinked with sanctioning letter)</th>
+            <th class="work-desc-th">Work Description</th>
             <th class="col-pcste-equipment">Equipment</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">Sanctioning Date</th>
@@ -6914,7 +6927,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
             <th style="width: var(--col-1-w);">Sr.NO</th>
             <th>Station / Section</th>
             <th style="width: 110px;">Division</th>
-            <th class="work-desc-th">Work Name (MSDAC Scheme)</th>
+            <th class="work-desc-th">Work Description</th>
             <th class="col-oem-make">OEM Make</th>
             <th style="width: 100px;">Agency</th>
             <th class="col-sanction-date">TSAA Sanction Date</th>
@@ -7062,6 +7075,28 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
           const bookA = String(a.bookName || '').trim();
           const bookB = String(b.bookName || '').trim();
           return bookA.localeCompare(bookB, undefined, {
+            numeric: true,
+            sensitivity: 'base'
+          });
+        });
+      } else if (currentCategory === 'IRSEM CHAPTER WISE' || currentCategory === 'IRTEM CHAPTER WISE') {
+        // IRSEM/IRTEM Chapter Wise: always display in natural Chapter No. sequence,
+        // irrespective of entry/sanction date or the order in which records were added.
+        filtered.sort((a, b) => {
+          const chapterA = String(a.chapterNo || '').trim();
+          const chapterB = String(b.chapterNo || '').trim();
+          return chapterA.localeCompare(chapterB, undefined, {
+            numeric: true,
+            sensitivity: 'base'
+          });
+        });
+      } else if (currentCategory === 'IRSEM CORRECTION SLIP' || currentCategory === 'IRTEM CORRECTION SLIP') {
+        // IRSEM/IRTEM Correction Slip: always display in natural Correction Slip No. sequence,
+        // irrespective of issue date or the order in which records were added.
+        filtered.sort((a, b) => {
+          const slipA = String(a.correctionSlipNo || '').trim();
+          const slipB = String(b.correctionSlipNo || '').trim();
+          return slipA.localeCompare(slipB, undefined, {
             numeric: true,
             sensitivity: 'base'
           });
@@ -7222,13 +7257,13 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
             <tr>
               <td><b>${idx + 1}</b></td>
               <td><b>${rec.correctionSlipNo || '—'}</b></td>
-              <td class="work-desc-wide">
+              <td class="work-desc-wide${currentCategory === 'IRSEM CORRECTION SLIP' ? ' irsem-correction-para-narrow' : ''}">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.paraChapter || rec.work || '')}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-circle-check" style="color: var(--accent-blue);"></i> ${rec.paraChapter || rec.work || '—'}
                 </a>
               </td>
               <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
-              <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
+              <td class="${currentCategory === 'IRSEM CORRECTION SLIP' ? 'irsem-correction-action-compact' : ''}" style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
           `;
         } else if (standardManualCategories.includes(currentCategory)) {
@@ -8390,6 +8425,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
       document.getElementById('formDocNo').value = rec.docNo || '';
       document.getElementById('formRelatedEquip').value = rec.relatedEquip || '';
       document.getElementById('formIssuedBy').value = rec.issuedBy || '';
+      document.getElementById('formYear').value = rec.year || '';
       document.getElementById('formDate').value = formatDateToYYYYMMDD(rec.date);
       document.getElementById('formSecondaryDate').value = formatDateToYYYYMMDD(rec.sanctionDate);
       document.getElementById('formDriveLink').value = rec.driveLink || '';
@@ -8420,6 +8456,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
       document.getElementById('formWagon').value = '';
       document.getElementById('formDocNo').value = '';
       document.getElementById('formRelatedEquip').value = '';
+      document.getElementById('formYear').value = '';
       document.getElementById('formDate').value = '';
       document.getElementById('formSecondaryDate').value = '';
       document.getElementById('formDriveLink').value = '';
@@ -8493,35 +8530,70 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
       // Do not ask for Date where the corresponding table has no Date/Year field.
       // E-books are reference material, Important Links are permanent URLs,
       // and Inspection Note currently has no Date column in its table.
-      const hasNoDateField = isLinks || isBooks || isInspection || isIrsemIrtemChapter;
+      const hasNoDateField = isLinks || isBooks || isInspection || isIrsemIrtemChapter || isLdce;
+      document.getElementById('formYearContainer').style.display = isLdce ? 'flex' : 'none';
       document.getElementById('formDateContainer').style.display = hasNoDateField ? 'none' : 'flex';
       document.getElementById('formSecondaryDateContainer').style.display = isGm ? 'flex' : 'none';
 
-      // Field Labels Customization
+      // Field labels must match the corresponding table column headings exactly.
       const dateLbl = document.getElementById('formDateLabel');
-      if (isGm || isGradeOrLine) {
+      if (isGm || isGradeOrLine || isSpeedRaising) {
         dateLbl.innerText = "Date of Forwarding";
       } else if (isJsc) {
-        dateLbl.innerText = "Date of Forwarding (DD-MM-YYYY)";
-      } else if (isDispensation) {
-        dateLbl.innerText = "Date of Forwarding & Issuing (DD-MM-YYYY)";
-      } else if (isSpeedRaising) {
         dateLbl.innerText = "Date of Forwarding";
-      } else if (isTan || isImpLetter || isPolicyOrTypical || isStandardManual || isDocApproval || isIrsemIrtemCorrection) {
-        dateLbl.innerText = "Date of Issue (DD-MM-YYYY)";
-      } else if (isLdce) {
-        dateLbl.innerText = "Examination Date (DD-MM-YYYY)";
+      } else if (isDispensation) {
+        dateLbl.innerText = "Date of Forwarding & Issuing";
+      } else if (isTan || isDocApproval) {
+        dateLbl.innerText = "Issue Date";
+      } else if (isImpLetter || isPolicyOrTypical || isStandardManual || isIrsemIrtemCorrection) {
+        dateLbl.innerText = "Date of Issue";
+      } else if (isEi || isMsdac) {
+        dateLbl.innerText = "TSAA Sanction Date";
+      } else if (isSpeedCert) {
+        dateLbl.innerText = "Sanction Date";
       } else {
-        dateLbl.innerText = "Sanctioning Date (DD-MM-YYYY)";
+        dateLbl.innerText = "Sanctioning Date";
       }
 
       const workLbl = document.getElementById('formWorkLabel');
-      if (isEi) workLbl.innerText = "Work Name (EI Description)";
-      else if (isMsdac) workLbl.innerText = "Work Name (MSDAC Scheme)";
-      else if (isBooks) workLbl.innerText = "Book Description / Subject";
-      else if (isLdce) workLbl.innerText = "Question Paper Details";
-      else if (isDispensation) workLbl.innerText = "Work Description";
-      else workLbl.innerText = "Work Description";
+      if (isPcste) {
+        workLbl.innerText = "Work Description";
+      } else if (isMsdac) {
+        workLbl.innerText = "Work Description";
+      } else if (isEi || isDispensation || isGm || isGradeOrLine || isSpeedRaising) {
+        workLbl.innerText = "Work Description";
+      } else {
+        workLbl.innerText = "Description";
+      }
+
+      // Keep labels character-for-character aligned with the active table header.
+      const stationLbl = document.getElementById('formStationLabel');
+      if (stationLbl) stationLbl.innerText = isDispensation ? "Station/Section" : "Station / Section";
+
+      const correctionSlipLbl = document.getElementById('formCorrectionSlipNoLabel');
+      if (correctionSlipLbl) {
+        correctionSlipLbl.innerText = isIrsemIrtemChapter
+          ? "Correction Slip No. (if any)"
+          : "Correction Slip No.";
+      }
+
+      // Other shared form controls also use the exact wording of their table headers.
+      const directLinkLbl = document.getElementById('formDirectLinkLabel');
+      if (directLinkLbl) directLinkLbl.innerText = "Link";
+      const ldceTypeLbl = document.getElementById('formLdceTypeLabel');
+      if (ldceTypeLbl) ldceTypeLbl.innerText = "Type (30% / 70%)";
+      const routesLbl = document.getElementById('formRoutesLabel');
+      if (routesLbl) routesLbl.innerText = "Routes";
+      const oemLbl = document.getElementById('formOemLabel');
+      if (oemLbl) oemLbl.innerText = "OEM Make";
+      const wagonLbl = document.getElementById('formWagonLabel');
+      if (wagonLbl) wagonLbl.innerText = "Wagon Name";
+      const docNoLbl = document.getElementById('formDocNoLabel');
+      if (docNoLbl) docNoLbl.innerText = "Policy / Doc No";
+      const issuedByLbl = document.getElementById('formIssuedByLabel');
+      if (issuedByLbl) issuedByLbl.innerText = "Issued By";
+      const secondaryDateLbl = document.getElementById('formSecondaryDateLabel');
+      if (secondaryDateLbl) secondaryDateLbl.innerText = "Date of Sanction";
     }
 
     async function saveRecord() {
@@ -8583,10 +8655,10 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         docNo: isPolicyOrTypical ? document.getElementById('formDocNo').value.trim() : '',
         relatedEquip: (isImpLetter || isPolicyOrTypical) ? document.getElementById('formRelatedEquip').value.trim() : '',
         issuedBy: isImpLetter ? document.getElementById('formIssuedBy').value : '',
-        date: (isLinks || isBooks || isInspection || isIrsemIrtemChapter) ? '' : formatDateToDDMMYYYY(dateVal),
+        date: (isLinks || isBooks || isInspection || isIrsemIrtemChapter || isLdce) ? '' : formatDateToDDMMYYYY(dateVal),
         sanctionDate: isGm ? formatDateToDDMMYYYY(secondaryDateVal) : '',
         // No artificial current-year value for categories that do not use Date/Year.
-        year: (isLinks || isBooks || isInspection || isIrsemIrtemChapter) ? null : (dateVal ? new Date(dateVal).getFullYear() : null),
+        year: isLdce ? (document.getElementById('formYear').value ? Number(document.getElementById('formYear').value) : null) : ((isLinks || isBooks || isInspection || isIrsemIrtemChapter) ? null : (dateVal ? new Date(dateVal).getFullYear() : null)),
         driveLink: document.getElementById('formDriveLink').value.trim()
       };
 
@@ -10727,14 +10799,13 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
 </script>
 
 <style id="v81-action-column-fit-final">
-/* v81: Keep every existing Action control fully inside the Action column on all viewports. */
+/* v81: Use the PCSTE Sanction Action-column width (155px) as the exact standard for every subsection. */
 #mainRecordTable th.v81-action-fit,
 #mainRecordTable td.v81-action-fit{
-  width:var(--v81-action-width) !important;
-  min-width:var(--v81-action-width) !important;
-  max-width:var(--v81-action-width) !important;
+  width:155px !important;
+  min-width:155px !important;
+  max-width:155px !important;
   white-space:nowrap !important;
-  overflow:visible !important;
 }
 #mainRecordTable td.v81-action-fit .actions-cell{
   width:100% !important;
@@ -10749,54 +10820,91 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
   const table=document.getElementById('mainRecordTable');
   if(!table)return;
   let queued=false;
-
   function norm(v){return (v||'').replace(/\s+/g,' ').trim().toUpperCase();}
-
   function apply(){
     queued=false;
     const headers=Array.from(table.querySelectorAll('thead th, thead td'));
     const actionIndex=headers.findIndex(th=>norm(th.textContent)==='ACTION');
     if(actionIndex<0)return;
-
     const th=headers[actionIndex];
-    const cells=[];
+    th.classList.add('v81-action-fit');
     table.querySelectorAll('tbody tr').forEach(tr=>{
       const td=tr.children[actionIndex];
-      if(td)cells.push(td);
-    });
-
-    /* Measure the actual one-row controls, including gaps and cell padding. */
-    let required=0;
-    cells.forEach(td=>{
-      const controls=td.querySelector('.actions-cell') || td;
-      const cs=getComputedStyle(td);
-      const pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0);
-      const need=Math.ceil(controls.scrollWidth+pad+2);
-      if(need>required)required=need;
-    });
-
-    /* Never make Action narrower than its current designed width. */
-    const current=Math.ceil(th.getBoundingClientRect().width);
-    const width=Math.max(required,current,118);
-    const px=width+'px';
-
-    [th,...cells].forEach(cell=>{
-      cell.style.setProperty('--v81-action-width',px);
-      cell.classList.add('v81-action-fit');
+      if(td)td.classList.add('v81-action-fit');
     });
   }
+  function schedule(){if(queued)return;queued=true;requestAnimationFrame(apply);}
+  new MutationObserver(schedule).observe(table,{subtree:true,childList:true,characterData:true});
+  schedule();
+})();
+</script>
 
-  function schedule(){
-    if(queued)return;
-    queued=true;
-    requestAnimationFrame(apply);
+<style id="v82-action-column-pcste-exact-final">
+/* v82: PCSTE SANCTION Action column is the single width reference for every subsection. */
+#mainRecordTable th.v82-action-pcste-standard,
+#mainRecordTable td.v82-action-pcste-standard{
+  width:155px !important;
+  min-width:155px !important;
+  max-width:155px !important;
+  inline-size:155px !important;
+  min-inline-size:155px !important;
+  max-inline-size:155px !important;
+  box-sizing:border-box !important;
+  white-space:nowrap !important;
+}
+#mainRecordTable td.v82-action-pcste-standard{
+  padding-left:6px !important;
+  padding-right:6px !important;
+}
+#mainRecordTable td.v82-action-pcste-standard .actions-cell{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  justify-content:center !important;
+  white-space:nowrap !important;
+}
+#mainRecordTable td.v82-action-pcste-standard .action-icon-btn{
+  flex:0 0 auto !important;
+}
+</style>
+<script id="v82-action-column-pcste-exact-final-js">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+  let queued=false;
+  const WIDTH='155px';
+  function norm(v){return (v||'').replace(/\s+/g,' ').trim().toUpperCase();}
+  function setExact(cell){
+    if(!cell)return;
+    cell.classList.add('v82-action-pcste-standard');
+    cell.style.setProperty('width',WIDTH,'important');
+    cell.style.setProperty('min-width',WIDTH,'important');
+    cell.style.setProperty('max-width',WIDTH,'important');
+    cell.style.setProperty('inline-size',WIDTH,'important');
+    cell.style.setProperty('min-inline-size',WIDTH,'important');
+    cell.style.setProperty('max-inline-size',WIDTH,'important');
+    cell.style.setProperty('box-sizing','border-box','important');
   }
-
+  function apply(){
+    queued=false;
+    const headerRow=table.tHead && table.tHead.rows && table.tHead.rows[0];
+    if(!headerRow)return;
+    const headers=Array.from(headerRow.cells);
+    const actionIndex=headers.findIndex(c=>norm(c.textContent)==='ACTION');
+    if(actionIndex<0)return;
+    setExact(headers[actionIndex]);
+    Array.from(table.tBodies).forEach(tb=>Array.from(tb.rows).forEach(row=>setExact(row.cells[actionIndex])));
+  }
+  function schedule(){if(queued)return;queued=true;requestAnimationFrame(apply);}
   new MutationObserver(schedule).observe(table,{subtree:true,childList:true,characterData:true});
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener('orientationchange',schedule,{passive:true});
   schedule();
 })();
 </script>
+
 </body>
 </html>
