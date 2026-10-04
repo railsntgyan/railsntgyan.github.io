@@ -2,11 +2,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#07101d">
+  <!-- v83: Dark theme is the default from the very first paint, including BFCache/back navigation. -->
+  <script id="v83-dark-first-paint-script">
+    (function () {
+      document.documentElement.classList.add('dark-theme');
+      document.documentElement.style.backgroundColor = '#07101d';
+      try { localStorage.setItem('railsntgyan-theme', 'dark'); } catch (e) {}
+    })();
+  </script>
+  <style id="v83-dark-first-paint-style">
+    html, html.dark-theme { background:#07101d !important; color-scheme:dark; }
+    html.dark-theme body { background-color:#07101d; }
+  </style>
   <style>html { background:#07101d; } body.dark-theme { background:#07101d; color:#e5edf7; }</style>
 <style id="dark-first-paint-fix">
 /* DARK FIRST PAINT: these rules live in <head> so login/return never paints light first */
 html, body { background:#07101d !important; color-scheme:dark; }
+html { background-color:#07101d !important; }
+body { background-color:#07101d !important; }
 body.dark-theme { background:#07101d !important; color:#e5edf7 !important; }
 body.dark-theme #loginScreen {
   background: radial-gradient(circle at 20% 30%, #0b5660, transparent 60%),
@@ -100,9 +115,8 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
     }
 
     body {
-      background: radial-gradient(circle at 10% 20%, rgba(241, 245, 249, 0.95), transparent 45%),
-                  radial-gradient(circle at 90% 80%, rgba(224, 242, 254, 0.65), transparent 45%),
-                  linear-gradient(135deg, #eef2f6 0%, #f8fafc 100%);
+      /* v84: dark baseline prevents any light canvas between navigation restore and theme CSS. */
+      background: #07101d;
       color: var(--text-main);
       display: flex;
       flex-direction: column;
@@ -4051,6 +4065,271 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
   }
 }
 </style>
+
+<style id="v79-professional-responsive-table-final">
+/* ============================================================
+   v79 FINAL RESPONSIVE PASS
+   Mobile/tablet sizing only. Desktop (>1024px) remains untouched.
+   No alignment rules are changed here.
+   ============================================================ */
+
+/* Proper word-boundary wrapping for normal table text. */
+@media (max-width:1024px){
+  html, body { max-width:100%; }
+  main, #tableViewSection, .table-container { min-width:0; max-width:100%; }
+  .table-container{
+    overflow-x:auto !important;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-gutter:stable;
+  }
+
+  #mainRecordTable,
+  #mainRecordTable th,
+  #mainRecordTable td,
+  #mainRecordTable th *,
+  #mainRecordTable td *{
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+    hyphens:none !important;
+  }
+
+  /* Keep genuinely unbroken technical strings from enlarging controls. */
+  #mainRecordTable a,
+  #mainRecordTable code{
+    max-width:100%;
+  }
+
+  /* Frozen columns: explicit responsive geometry.
+     Column 2 left is also measured by the existing v60 JS, so its sticky
+     offset always follows the actual rendered width of Column 1. */
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(1),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(1){
+    width:48px !important; min-width:48px !important; max-width:48px !important;
+    left:0 !important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(2){
+    width:140px !important; min-width:140px !important; max-width:140px !important;
+  }
+
+  /* Proportional reduction from desktop reference widths. */
+  #mainRecordTable th.v37-longtext, #mainRecordTable td.v37-longtext,
+  #mainRecordTable th.v39-pcste-work, #mainRecordTable td.v39-pcste-work,
+  #mainRecordTable.v58-chapterwise th.v58-description-col,
+  #mainRecordTable.v58-chapterwise td.v58-description-col{
+    width:344px !important; min-width:344px !important; max-width:344px !important;
+  }
+  #mainRecordTable th.v37-division, #mainRecordTable td.v37-division{
+    width:90px !important; min-width:90px !important; max-width:90px !important;
+  }
+  #mainRecordTable th.v37-agency, #mainRecordTable td.v37-agency{
+    width:119px !important; min-width:119px !important; max-width:119px !important;
+  }
+  #mainRecordTable th.v37-date, #mainRecordTable td.v37-date{
+    width:119px !important; min-width:119px !important; max-width:119px !important;
+  }
+  #mainRecordTable th.v37-medium, #mainRecordTable td.v37-medium{
+    width:139px !important; min-width:139px !important; max-width:139px !important;
+  }
+  #mainRecordTable th.v37-short, #mainRecordTable td.v37-short{
+    width:94px !important; min-width:94px !important; max-width:94px !important;
+  }
+  #mainRecordTable th.v37-action, #mainRecordTable td.v37-action{
+    width:111px !important; min-width:111px !important; max-width:111px !important;
+  }
+  #mainRecordTable th.v37-docno, #mainRecordTable td.v37-docno{
+    width:180px !important; min-width:180px !important; max-width:180px !important;
+  }
+
+  /* Later category-specific width classes use the same tablet ratio. */
+  body.v40-ei-tsaa #mainRecordTable .v40-oem{width:103px!important;min-width:103px!important;max-width:103px!important;}
+  body.v40-ei-tsaa #mainRecordTable .v40-sanctionby{width:86px!important;min-width:86px!important;max-width:86px!important;}
+  #mainRecordTable .v47-date,
+  body.v47-msdac #mainRecordTable .v47-msdac-agency,
+  #mainRecordTable .v48-agency,
+  #mainRecordTable .v48-pcste-equipment,
+  body.v51-pcste #mainRecordTable .v51-equipment{
+    width:92px!important;min-width:92px!important;max-width:92px!important;
+  }
+
+  #mainRecordTable th, #mainRecordTable td{
+    padding-top:5px;
+    padding-bottom:5px;
+  }
+
+  /* Branding remains prominent but fits tablet viewport. */
+  #mainHeader{height:auto!important;}
+  #mainHeader .portal-logo-svg{width:72px!important;height:72px!important;min-width:72px!important;}
+  #mainHeader .brand-main-title{font-size:28px!important;line-height:1.05!important;}
+  #mainHeader .brand-subline{font-size:13px!important;}
+  #mainHeader .brand-tagline-motto{font-size:10.5px!important;}
+}
+
+/* Small tablet / large mobile */
+@media (min-width:600px) and (max-width:767px){
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(1),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(1){
+    width:42px!important;min-width:42px!important;max-width:42px!important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(2){
+    width:118px!important;min-width:118px!important;max-width:118px!important;
+  }
+  #mainRecordTable th.v37-longtext, #mainRecordTable td.v37-longtext,
+  #mainRecordTable th.v39-pcste-work, #mainRecordTable td.v39-pcste-work,
+  #mainRecordTable.v58-chapterwise th.v58-description-col,
+  #mainRecordTable.v58-chapterwise td.v58-description-col{
+    width:302px!important;min-width:302px!important;max-width:302px!important;
+  }
+  #mainRecordTable th.v37-division,#mainRecordTable td.v37-division{width:79px!important;min-width:79px!important;max-width:79px!important;}
+  #mainRecordTable th.v37-agency,#mainRecordTable td.v37-agency{width:104px!important;min-width:104px!important;max-width:104px!important;}
+  #mainRecordTable th.v37-date,#mainRecordTable td.v37-date{width:104px!important;min-width:104px!important;max-width:104px!important;}
+  #mainRecordTable th.v37-medium,#mainRecordTable td.v37-medium{width:122px!important;min-width:122px!important;max-width:122px!important;}
+  #mainRecordTable th.v37-short,#mainRecordTable td.v37-short{width:83px!important;min-width:83px!important;max-width:83px!important;}
+  #mainRecordTable th.v37-action,#mainRecordTable td.v37-action{width:97px!important;min-width:97px!important;max-width:97px!important;}
+  #mainRecordTable th.v37-docno,#mainRecordTable td.v37-docno{width:158px!important;min-width:158px!important;max-width:158px!important;}
+  #mainRecordTable thead th,#mainRecordTable tbody td{font-size:10.8px!important;padding-top:4px;padding-bottom:4px;}
+}
+
+/* Mobile */
+@media (max-width:599px){
+  body{overflow-x:hidden!important;}
+  main{overflow-x:hidden!important;}
+
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(1),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(1){
+    width:38px!important;min-width:38px!important;max-width:38px!important;
+    padding-left:2px!important;padding-right:2px!important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(2){
+    width:68px!important;min-width:68px!important;max-width:68px!important;
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+    hyphens:none!important;
+  }
+
+  /* Mobile only: show Station/Section header on exactly two intact lines. */
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2){
+    font-size:0!important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2)::before{
+    content:"Station/\A Section";
+    white-space:pre-line;
+    font-size:10.5px;
+    line-height:1.2;
+    font-weight:inherit;
+  }
+
+  #mainRecordTable th.v37-longtext, #mainRecordTable td.v37-longtext,
+  #mainRecordTable th.v39-pcste-work, #mainRecordTable td.v39-pcste-work,
+  #mainRecordTable.v58-chapterwise th.v58-description-col,
+  #mainRecordTable.v58-chapterwise td.v58-description-col{
+    width:260px!important;min-width:260px!important;max-width:260px!important;
+  }
+  #mainRecordTable th.v37-division,#mainRecordTable td.v37-division{width:68px!important;min-width:68px!important;max-width:68px!important;}
+  #mainRecordTable th.v37-agency,#mainRecordTable td.v37-agency{width:90px!important;min-width:90px!important;max-width:90px!important;}
+  #mainRecordTable th.v37-date,#mainRecordTable td.v37-date{width:90px!important;min-width:90px!important;max-width:90px!important;}
+  #mainRecordTable th.v37-medium,#mainRecordTable td.v37-medium{width:105px!important;min-width:105px!important;max-width:105px!important;}
+  #mainRecordTable th.v37-short,#mainRecordTable td.v37-short{width:72px!important;min-width:72px!important;max-width:72px!important;}
+  #mainRecordTable th.v37-action,#mainRecordTable td.v37-action{width:84px!important;min-width:84px!important;max-width:84px!important;}
+  #mainRecordTable th.v37-docno,#mainRecordTable td.v37-docno{width:136px!important;min-width:136px!important;max-width:136px!important;}
+
+  body.v40-ei-tsaa #mainRecordTable .v40-oem{width:78px!important;min-width:78px!important;max-width:78px!important;}
+  body.v40-ei-tsaa #mainRecordTable .v40-sanctionby{width:72px!important;min-width:72px!important;max-width:72px!important;}
+  #mainRecordTable .v47-date,
+  body.v47-msdac #mainRecordTable .v47-msdac-agency,
+  #mainRecordTable .v48-agency,
+  #mainRecordTable .v48-pcste-equipment,
+  body.v51-pcste #mainRecordTable .v51-equipment{
+    width:78px!important;min-width:78px!important;max-width:78px!important;
+  }
+
+  #mainRecordTable thead th,#mainRecordTable tbody td{
+    font-size:10.5px!important;
+    line-height:1.25!important;
+    padding-top:3px;
+    padding-bottom:3px;
+  }
+  #mainRecordTable .action-buttons button,
+  #mainRecordTable .action-btn{
+    min-width:26px;
+    min-height:26px;
+    padding:3px 5px;
+    font-size:10px;
+  }
+
+  .content-header-card.sticky-header-card{padding:5px 7px!important;}
+  .view-title-group h2{font-size:12px!important;}
+  .filter-item,.filter-item select,.filter-item input{font-size:10.5px!important;}
+
+  /* Preserve the RailSNTGyan identity on phones. */
+  #mainHeader{min-height:96px!important;padding:8px 9px!important;gap:7px!important;}
+  #mainHeader .header-left{gap:8px!important;}
+  #mainHeader .portal-logo-svg{width:64px!important;height:64px!important;min-width:64px!important;}
+  #mainHeader .brand-main-title{font-size:24px!important;white-space:nowrap!important;}
+  #mainHeader .brand-subline{font-size:12px!important;line-height:1.15!important;white-space:normal!important;}
+}
+
+/* Very small phones: only the extra reduction necessary to prevent clipping. */
+@media (max-width:399px){
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(1),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(1){
+    width:34px!important;min-width:34px!important;max-width:34px!important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) tbody td:nth-child(2){
+    width:68px!important;min-width:68px!important;max-width:68px!important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2)::before{
+    font-size:10px;
+  }
+  #mainRecordTable thead th,#mainRecordTable tbody td{font-size:10px!important;}
+  #mainHeader .portal-logo-svg{width:58px!important;height:58px!important;min-width:58px!important;}
+  #mainHeader .brand-main-title{font-size:21px!important;}
+  #mainHeader .brand-subline{font-size:11px!important;}
+}
+</style>
+
+
+<style id="v82-mobile-tablet-header-tagline-visible">
+/* v82: Keep the existing Learn | Explore | Apply | Excel tagline visible on mobile/tablet only. */
+@media (max-width: 1024px) {
+  #mainHeader .brand-tagline-motto {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #mainHeader .brand-tagline-motto {
+    font-size: 8.5px !important;
+    letter-spacing: 0.35px !important;
+    line-height: 1.1 !important;
+    margin-top: 2px !important;
+  }
+  #mainHeader .brand-tagline-motto span.tag-item {
+    font-size: 8.5px !important;
+    white-space: nowrap !important;
+  }
+  #mainHeader .brand-tagline-motto span.divider {
+    margin: 0 3px !important;
+  }
+}
+
+@media (max-width: 399px) {
+  #mainHeader .brand-tagline-motto,
+  #mainHeader .brand-tagline-motto span.tag-item {
+    font-size: 7.5px !important;
+  }
+  #mainHeader .brand-tagline-motto span.divider {
+    margin: 0 2px !important;
+  }
+}
+</style>
 </head>
 <body class="dark-theme">
 
@@ -6324,7 +6603,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
 
       const divFilterWrapper = document.getElementById('filterDivisionWrapper');
       const noDivisionSections = [
-        'S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
+        'S&T SPEED CERTIFICATE', 'JOINT SAFETY CERTIFICATE (JSC)',
         'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
         ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, 
         'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'
@@ -6671,6 +6950,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
           <tr>
             <th style="width: var(--col-1-w);">Sr.NO</th>
             <th>Station / Section</th>
+            <th style="width: 110px;">Division</th>
             <th class="work-desc-th">Work Description</th>
             <th class="col-sanction-date">Date of Forwarding</th>
             <th style="width: 100px;">Agency</th>
@@ -7128,6 +7408,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
             <tr>
               <td><b>${idx + 1}</b></td>
               <td><b>${rec.station || '—'}</b></td>
+              <td><span class="tag-badge">${rec.division || '—'}</span></td>
               <td class="work-desc-cell">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-file-pdf" style="color: #e11d48;"></i> ${rec.work}
@@ -8178,7 +8459,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
 
       document.getElementById('formDivisionContainer').style.display = 
-        (isPcste || isDispensation || isEi || isMsdac || isGm || isSpeedRaising || isInspection) ? 'flex' : 'none';
+        (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
 
       document.getElementById('formTanNoContainer').style.display = isTan ? 'flex' : 'none';
       document.getElementById('formRelatedToContainer').style.display = (isTan || isLinks) ? 'flex' : 'none';
@@ -8278,7 +8559,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
         category: cat,
         station: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
           ? document.getElementById('formStation').value.trim() : '',
-        division: (isPcste || isDispensation || isEi || isMsdac || isGm || isSpeedRaising || isInspection)
+        division: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
           ? document.getElementById('formDivision').value : '',
         tanNo: isTan ? document.getElementById('formTanNo').value.trim() : '',
         relatedTo: (isTan || isLinks) ? document.getElementById('formRelatedTo').value.trim() : '',
@@ -8571,6 +8852,7 @@ document.addEventListener('click',function(e){
 (function () {
   function applyTheme(theme) {
     const dark = theme === 'dark';
+    document.documentElement.classList.toggle('dark-theme', dark);
     document.body.classList.toggle('dark-theme', dark);
     const btn = document.getElementById('themeToggleBtn');
     if (btn) {
@@ -8592,6 +8874,11 @@ document.addEventListener('click',function(e){
   window.toggleRailTheme = function () {
     applyTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark');
   };
+
+  // Re-assert the default dark theme when returning from an external page via Back/BFCache.
+  window.addEventListener('pageshow', function () {
+    applyTheme('dark');
+  });
 
   function installThemeButton() {
     if (document.getElementById('themeToggleBtn')) return;
@@ -9681,7 +9968,7 @@ function setExternalDriveFallbackToolbar(active){
    Array.from(table.querySelectorAll('thead th')).forEach(th=>{
      const label=n(th.textContent);
      if(label==='SANCTION GIVEN BY' || label==='SANCTION GIVENBY' || label==='SANCTION BY'){
-       th.innerHTML='Sanction<br>Given By';
+       if(th.innerHTML !== 'Sanction<br>Given By') th.innerHTML='Sanction<br>Given By';
        th.classList.add('v40-sanctionby');
      }
    });
@@ -9742,7 +10029,7 @@ function setExternalDriveFallbackToolbar(active){
      const label=N(th.textContent);
      if(label==='SANCTION GIVEN BY' || label==='SANCTION GIVENBY' ||
         label==='SANCTION BY' || (label.includes('SANCTION') && label.includes('GIVEN BY'))){
-       th.innerHTML='Sanction<br>Given By';
+       if(th.innerHTML !== 'Sanction<br>Given By') th.innerHTML='Sanction<br>Given By';
        th.classList.add('v43-sanction-col');
        // Remove generic width classes that previously overrode compact sizing.
        th.classList.remove('v37-medium','v37-short');
@@ -9782,16 +10069,18 @@ function setExternalDriveFallbackToolbar(active){
      const label=N(th.textContent);
      if(label==='STATION / SECTION' || label==='STATION/SECTION'){
        th.classList.add('v44-station-col');
-       th.style.setProperty('width','150px','important');
-       th.style.setProperty('min-width','150px','important');
-       th.style.setProperty('max-width','150px','important');
+       const vw = window.innerWidth || document.documentElement.clientWidth;
+       const stationW = vw <= 599 ? '68px' : (vw <= 767 ? '79px' : (vw <= 1024 ? '90px' : '150px'));
+       th.style.setProperty('width',stationW,'important');
+       th.style.setProperty('min-width',stationW,'important');
+       th.style.setProperty('max-width',stationW,'important');
        table.querySelectorAll('tbody tr').forEach(tr=>{
          const td=tr.children[i];
          if(td){
            td.classList.add('v44-station-col');
-           td.style.setProperty('width','150px','important');
-           td.style.setProperty('min-width','150px','important');
-           td.style.setProperty('max-width','150px','important');
+           td.style.setProperty('width',stationW,'important');
+           td.style.setProperty('min-width',stationW,'important');
+           td.style.setProperty('max-width',stationW,'important');
          }
        });
      }
@@ -9799,6 +10088,7 @@ function setExternalDriveFallbackToolbar(active){
  }
  new MutationObserver(()=>requestAnimationFrame(apply))
    .observe(table,{subtree:true,childList:true,characterData:true});
+ window.addEventListener('resize',()=>requestAnimationFrame(apply),{passive:true});
  apply();
 })();
 </script>
@@ -10398,6 +10688,114 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
   }).observe(table,{subtree:true,childList:true,characterData:true});
 
   apply();
+})();
+</script>
+
+<script id="v80-station-section-match-division-runtime">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+  let queued=false;
+  function norm(v){return (v||'').replace(/\s+/g,' ').trim().toUpperCase();}
+  function apply(){
+    queued=false;
+    if(window.innerWidth>1024)return;
+    const heads=Array.from(table.querySelectorAll('thead th'));
+    const stationIndex=heads.findIndex(h=>/STATION\s*\/\s*SECTION/.test(norm(h.textContent)));
+    const divisionIndex=heads.findIndex(h=>norm(h.textContent)==='DIVISION');
+    if(stationIndex<0||divisionIndex<0)return;
+    const w=heads[divisionIndex].getBoundingClientRect().width;
+    if(!(w>0))return;
+    const px=w+'px';
+    Array.from(table.rows).forEach(row=>{
+      const cell=row.cells&&row.cells[stationIndex];
+      if(!cell)return;
+      cell.style.setProperty('width',px,'important');
+      cell.style.setProperty('min-width',px,'important');
+      cell.style.setProperty('max-width',px,'important');
+      cell.style.setProperty('word-break','normal','important');
+      cell.style.setProperty('overflow-wrap','normal','important');
+      cell.style.setProperty('hyphens','none','important');
+    });
+  }
+  function schedule(){if(queued)return;queued=true;requestAnimationFrame(apply);}
+  new MutationObserver(schedule).observe(table,{subtree:true,childList:true});
+  window.addEventListener('resize',schedule,{passive:true});
+  window.addEventListener('orientationchange',schedule,{passive:true});
+  schedule();
+})();
+</script>
+
+<style id="v81-action-column-fit-final">
+/* v81: Keep every existing Action control fully inside the Action column on all viewports. */
+#mainRecordTable th.v81-action-fit,
+#mainRecordTable td.v81-action-fit{
+  width:var(--v81-action-width) !important;
+  min-width:var(--v81-action-width) !important;
+  max-width:var(--v81-action-width) !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+}
+#mainRecordTable td.v81-action-fit .actions-cell{
+  width:100% !important;
+  max-width:100% !important;
+  flex-wrap:nowrap !important;
+  justify-content:center !important;
+  white-space:nowrap !important;
+}
+</style>
+<script id="v81-action-column-fit-final-js">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+  let queued=false;
+
+  function norm(v){return (v||'').replace(/\s+/g,' ').trim().toUpperCase();}
+
+  function apply(){
+    queued=false;
+    const headers=Array.from(table.querySelectorAll('thead th, thead td'));
+    const actionIndex=headers.findIndex(th=>norm(th.textContent)==='ACTION');
+    if(actionIndex<0)return;
+
+    const th=headers[actionIndex];
+    const cells=[];
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      const td=tr.children[actionIndex];
+      if(td)cells.push(td);
+    });
+
+    /* Measure the actual one-row controls, including gaps and cell padding. */
+    let required=0;
+    cells.forEach(td=>{
+      const controls=td.querySelector('.actions-cell') || td;
+      const cs=getComputedStyle(td);
+      const pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0);
+      const need=Math.ceil(controls.scrollWidth+pad+2);
+      if(need>required)required=need;
+    });
+
+    /* Never make Action narrower than its current designed width. */
+    const current=Math.ceil(th.getBoundingClientRect().width);
+    const width=Math.max(required,current,118);
+    const px=width+'px';
+
+    [th,...cells].forEach(cell=>{
+      cell.style.setProperty('--v81-action-width',px);
+      cell.classList.add('v81-action-fit');
+    });
+  }
+
+  function schedule(){
+    if(queued)return;
+    queued=true;
+    requestAnimationFrame(apply);
+  }
+
+  new MutationObserver(schedule).observe(table,{subtree:true,childList:true,characterData:true});
+  window.addEventListener('resize',schedule,{passive:true});
+  window.addEventListener('orientationchange',schedule,{passive:true});
+  schedule();
 })();
 </script>
 </body>
