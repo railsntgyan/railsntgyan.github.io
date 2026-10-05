@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta id="railsViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#07101d">
   <!-- v83: Dark theme is the default from the very first paint, including BFCache/back navigation. -->
@@ -4223,7 +4223,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
     font-size:0!important;
   }
   #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2)::before{
-    content:"Station/\A Section";
+    content:none;
     white-space:pre-line;
     font-size:10.5px;
     line-height:1.2;
@@ -4769,6 +4769,875 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
   body.printing-fy-report header,
   body.printing-fy-report .app-container,
   body.printing-fy-report aside { display: none !important; }
+}
+</style>
+
+<style id="v-tablet-home-full-width-fix">
+/* Tablet-only Home/dashboard width correction.
+   Scope: 769px–1024px only. No table, data, Firebase, navigation or desktop/mobile logic changed. */
+@media (min-width: 769px) and (max-width: 1024px) {
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .app-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  .app-container > main {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+  }
+
+  #dashboardView {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+  }
+
+  #dashboardView > *,
+  #dashboardView .dash-hero,
+  #dashboardView .infographic-controls-bar,
+  #dashboardView .process-infographic-card,
+  #dashboardView .dash-charts-grid,
+  #dashboardView .chart-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #dashboardView .process-track-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  #dashboardView .process-step-item {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Sidebar remains an overlay on tablet and must not reserve blank space. */
+  #appSidebar {
+    position: fixed !important;
+    flex: none !important;
+    margin: 0 !important;
+  }
+}
+</style>
+
+
+<style id="v-tablet-sidebar-accordion-flow-fix">
+/* Mobile/tablet drawer only:
+   Expanded subsection list stays below its parent without consuming the entire
+   remaining sidebar height, so the following main section headers remain nearby. */
+@media (max-width: 1024px) {
+  #appSidebar {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+  }
+
+  #appSidebar > .collapsible-group,
+  #appSidebar > .collapsible-group.collapsed,
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    position: static !important;
+    display: block !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 52dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+  }
+
+  #appSidebar > .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+}
+</style>
+
+
+<style id="v-tablet-sidebar-scroll-match-fix">
+/* Tablet: make sidebar scrolling behave like the existing mobile/desktop drawer.
+   No app logic, data, tables, navigation, Firebase or visual content changed. */
+@media (min-width: 769px) and (max-width: 1024px) {
+  #appSidebar {
+    height: calc(100dvh - var(--mobile-header-h, 0px)) !important;
+    max-height: calc(100dvh - var(--mobile-header-h, 0px)) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    scrollbar-gutter: stable !important;
+  }
+
+  /* Do not create a separate scroll area inside an opened main section.
+     The complete sidebar itself scrolls, matching the normal drawer behaviour. */
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    touch-action: auto !important;
+  }
+
+  #appSidebar > .collapsible-group {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+  }
+
+  #appSidebar .home-btn-container {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1005 !important;
+  }
+}
+</style>
+
+
+<style id="v-tablet-home-layout-reference-fix">
+/* Tablet HOME layout only — matches the approved reference screenshot.
+   Desktop/mobile and all application logic/data remain unchanged. */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Home uses the complete tablet content width. */
+  #dashboardView {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 9 workflow cards = clean 3 x 3 grid. */
+  #dashboardView .process-track-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  #dashboardView .process-step-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Charts stack vertically at full width, as in the reference image. */
+  #dashboardView .dash-charts-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  #dashboardView .chart-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: hidden !important;
+  }
+
+  /* Keep the existing Chart.js chart type/labels/data; only give it tablet-fit space. */
+  #dashboardView .chart-wrapper {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 190px !important;
+    min-height: 190px !important;
+    max-height: 190px !important;
+    overflow: hidden !important;
+  }
+
+  #dashboardView .chart-wrapper canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+}
+</style>
+
+
+<style id="v-samsung-tablet-landscape-responsive-fix">
+/*
+  Tablet landscape extension:
+  Apply the already-approved tablet behaviour on touch/coarse-pointer tablets
+  whose CSS viewport is wider than 1024px (e.g. Samsung Galaxy Tab A9+ landscape).
+  Desktop/laptop mouse layout remains unchanged.
+*/
+@media (min-width: 1025px) and (max-width: 1366px) and (pointer: coarse),
+       (min-width: 1025px) and (max-width: 1366px) and (hover: none) {
+
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Use the same hamburger + overlay drawer behaviour as tablet portrait/mobile. */
+  .menu-toggle-btn {
+    display: inline-flex !important;
+  }
+
+  .app-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  #appSidebar {
+    position: fixed !important;
+    top: var(--mobile-header-h, 0px) !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: min(330px, 84vw) !important;
+    height: auto !important;
+    max-height: none !important;
+    flex: none !important;
+    margin: 0 !important;
+    transform: translateX(-105%) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    z-index: 999 !important;
+  }
+
+  #appSidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-overlay.active {
+    display: block !important;
+  }
+
+  #appSidebar > .collapsible-group,
+  #appSidebar > .collapsible-group.collapsed,
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    position: static !important;
+    display: block !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  #appSidebar > .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+
+  #appSidebar .home-btn-container {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1005 !important;
+  }
+
+  .app-container > main {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+  }
+
+  #dashboardView {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+  }
+
+  #dashboardView > *,
+  #dashboardView .dash-hero,
+  #dashboardView .infographic-controls-bar,
+  #dashboardView .process-infographic-card,
+  #dashboardView .dash-charts-grid,
+  #dashboardView .chart-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Approved tablet HOME layout: 3 x 3 workflow cards. */
+  #dashboardView .process-track-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  #dashboardView .process-step-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Approved tablet graph layout: full-width cards, one below another. */
+  #dashboardView .dash-charts-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  #dashboardView .chart-card {
+    height: auto !important;
+    overflow: hidden !important;
+  }
+
+  #dashboardView .chart-wrapper {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 190px !important;
+    min-height: 190px !important;
+    max-height: 190px !important;
+    overflow: hidden !important;
+  }
+
+  #dashboardView .chart-wrapper canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+}
+</style>
+
+
+<style id="v-samsung-tablet-landscape-sidebar-scroll-fix">
+/* Samsung/large-tablet landscape:
+   same single smooth sidebar scrolling behaviour used in the other responsive views. */
+@media (min-width: 1025px) and (max-width: 1366px) and (pointer: coarse),
+       (min-width: 1025px) and (max-width: 1366px) and (hover: none) {
+
+  #appSidebar {
+    top: var(--mobile-header-h, 0px) !important;
+    bottom: 0 !important;
+    height: calc(100dvh - var(--mobile-header-h, 0px)) !important;
+    max-height: calc(100dvh - var(--mobile-header-h, 0px)) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    scrollbar-gutter: stable !important;
+  }
+
+  /* Entire drawer scrolls as one area; opened section does not create
+     a second/internal scrollbar. */
+  #appSidebar > .collapsible-group,
+  #appSidebar > .collapsible-group.collapsed,
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    position: static !important;
+    display: block !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    touch-action: auto !important;
+  }
+
+  #appSidebar > .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+
+  #appSidebar .home-btn-container {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1005 !important;
+  }
+}
+</style>
+
+
+<style id="v-samsung-tablet-match-existing-section-scroll">
+/*
+  Large tablet landscape only.
+  Restore the SAME sidebar model already used by the working responsive view:
+  HOME fixed at top, main section headers remain visible, and ONLY the opened
+  section's subsection list gets the available scroll area.
+*/
+@media (min-width: 1025px) and (max-width: 1366px) and (pointer: coarse),
+       (min-width: 1025px) and (max-width: 1366px) and (hover: none) {
+
+  #appSidebar {
+    height: calc(100dvh - var(--mobile-header-h, 0px)) !important;
+    max-height: calc(100dvh - var(--mobile-header-h, 0px)) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    touch-action: auto !important;
+  }
+
+  #appSidebar > .home-btn-container {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1010 !important;
+    flex: 0 0 auto !important;
+  }
+
+  #appSidebar > .collapsible-group {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  #appSidebar > .collapsible-group > .sidebar-section-title {
+    position: relative !important;
+    z-index: 1006 !important;
+    flex: 0 0 auto !important;
+  }
+
+  #appSidebar > .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+
+  /* Opened parent consumes ONLY the free space left after HOME and the
+     other parent section headers. This keeps all parent sections visible. */
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Scroll only the submenu of the opened parent section. */
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    flex: 1 1 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 3px 0 10px !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    scrollbar-gutter: stable !important;
+  }
+}
+</style>
+
+
+<style id="v-preview-mobile-pinch-final-fix">
+/* Preview only: allow the custom two-finger handler to own pinch gestures,
+   while preserving normal one-finger horizontal/vertical document panning. */
+#pdfPreviewModal #pdfViewerViewport {
+  touch-action: pan-x pan-y !important;
+  -webkit-user-select: none;
+  user-select: none;
+}
+</style>
+
+
+<style id="v-preview-mobile-pinch-v2">
+/* Custom PDF preview owns gestures on touch devices:
+   1 finger pans the PDF; 2 fingers pinch-zoom it.
+   Nothing outside the preview is affected. */
+@media (hover:none), (pointer:coarse) {
+  #pdfPreviewModal #pdfViewerViewport {
+    touch-action: none !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+}
+</style>
+
+
+<style id="v-preview-native-pinch-drive-fallback-final">
+/*
+  Google Drive fallback is cross-origin. Parent JS cannot receive the iframe's
+  touch events. Native browser pinch is therefore enabled dynamically while
+  the preview is open. Keep the iframe itself fully touchable.
+*/
+#pdfPreviewModal.v69-drive-fallback #googleDrivePreviewFallback,
+#pdfPreviewModal.v69-drive-fallback #googleDrivePreviewFrame {
+  touch-action: auto !important;
+  pointer-events: auto !important;
+}
+</style>
+
+
+<style id="v-hq-letter-jpo-uniform-layout">
+.jpo-department-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;width:100%}
+.jpo-department-grid label{display:flex;align-items:center;gap:8px;min-height:38px;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-card);cursor:pointer;font-size:12px;font-weight:700}
+.jpo-department-grid input[type="checkbox"]{width:17px;height:17px;margin:0;flex:0 0 auto;accent-color:var(--accent-blue)}
+#formAddressedTo{width:100%;min-height:76px;resize:vertical;box-sizing:border-box}
+#mainRecordTable.hq-letter-table .hq-subject-th,#mainRecordTable.hq-letter-table .hq-subject-cell,
+#mainRecordTable.jpo-table .jpo-subject-th,#mainRecordTable.jpo-table .jpo-subject-cell{min-width:420px!important;width:420px!important}
+#mainRecordTable.hq-letter-table .hq-addressed-th,#mainRecordTable.hq-letter-table .hq-addressed-cell{min-width:250px!important;width:250px!important}
+#mainRecordTable.hq-letter-table .hq-related-th,#mainRecordTable.hq-letter-table .hq-related-cell{min-width:190px!important;width:190px!important}
+#mainRecordTable.jpo-table .jpo-number-th,#mainRecordTable.jpo-table .jpo-number-cell{min-width:150px!important;width:150px!important}
+#mainRecordTable.jpo-table .jpo-department-th,#mainRecordTable.jpo-table .jpo-department-cell{min-width:260px!important;width:260px!important}
+.jpo-dept-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.jpo-dept-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(37,99,235,.10);border:1px solid rgba(37,99,235,.22);font-size:10.5px;font-weight:800;white-space:nowrap}
+@media(max-width:768px){.jpo-department-grid{grid-template-columns:1fr 1fr}}
+</style>
+
+
+<style id="v90-main-section-color-border-only">
+/*
+  Main sidebar section headers only.
+  No layout, spacing, table, Firebase, navigation or responsive behavior changed.
+  Light theme = clear colored border + restrained shadow.
+  Dark theme = same border identity + slightly stronger neon glow.
+*/
+#grpFilesApprovals > .sidebar-section-title,
+#grpRefBooks > .sidebar-section-title,
+#grpSanctionDocs > .sidebar-section-title,
+#grpHqLetters > .sidebar-section-title,
+#grpJpo > .sidebar-section-title,
+#grpLdcePapers > .sidebar-section-title,
+#grpImportantLinks > .sidebar-section-title {
+  position: relative;
+  margin: 3px 5px;
+  border: 1px solid var(--section-accent) !important;
+  border-radius: 7px;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--section-accent) 12%, transparent),
+    0 2px 7px color-mix(in srgb, var(--section-accent) 16%, transparent);
+}
+
+/* Individual section identities */
+#grpFilesApprovals     { --section-accent: #2563eb; }
+#grpRefBooks           { --section-accent: #0891b2; }
+#grpSanctionDocs       { --section-accent: #7c3aed; }
+#grpHqLetters          { --section-accent: #059669; }
+#grpJpo                { --section-accent: #d97706; }
+#grpLdcePapers         { --section-accent: #db2777; }
+#grpImportantLinks     { --section-accent: #0284c7; }
+
+/* Light theme: border remains clearly visible without excessive glow. */
+body:not(.dark-theme) #grpFilesApprovals > .sidebar-section-title,
+body:not(.dark-theme) #grpRefBooks > .sidebar-section-title,
+body:not(.dark-theme) #grpSanctionDocs > .sidebar-section-title,
+body:not(.dark-theme) #grpHqLetters > .sidebar-section-title,
+body:not(.dark-theme) #grpJpo > .sidebar-section-title,
+body:not(.dark-theme) #grpLdcePapers > .sidebar-section-title,
+body:not(.dark-theme) #grpImportantLinks > .sidebar-section-title {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--section-accent) 10%, transparent),
+    0 2px 6px color-mix(in srgb, var(--section-accent) 14%, transparent);
+}
+
+/* Dark theme: subtle neon edge, deliberately not a heavy gaming glow. */
+body.dark-theme #grpFilesApprovals > .sidebar-section-title,
+body.dark-theme #grpRefBooks > .sidebar-section-title,
+body.dark-theme #grpSanctionDocs > .sidebar-section-title,
+body.dark-theme #grpHqLetters > .sidebar-section-title,
+body.dark-theme #grpJpo > .sidebar-section-title,
+body.dark-theme #grpLdcePapers > .sidebar-section-title,
+body.dark-theme #grpImportantLinks > .sidebar-section-title {
+  border-color: var(--section-accent) !important;
+  box-shadow:
+    0 0 5px color-mix(in srgb, var(--section-accent) 48%, transparent),
+    inset 0 0 4px color-mix(in srgb, var(--section-accent) 12%, transparent);
+}
+
+/* Open/active parent gets only a modest emphasis. */
+#grpFilesApprovals:not(.collapsed) > .sidebar-section-title,
+#grpRefBooks:not(.collapsed) > .sidebar-section-title,
+#grpSanctionDocs:not(.collapsed) > .sidebar-section-title,
+#grpLdcePapers:not(.collapsed) > .sidebar-section-title {
+  box-shadow:
+    0 0 7px color-mix(in srgb, var(--section-accent) 42%, transparent),
+    inset 0 0 4px color-mix(in srgb, var(--section-accent) 10%, transparent);
+}
+</style>
+
+
+<style id="v91-all-table-header-single-source-fix">
+/*
+  FINAL TABLE HEADER RULE — ALL SECTIONS / SUBSECTIONS
+  The actual rendered <th> is the only header source on desktop, tablet and mobile.
+  No ::before/::after pseudo-element is allowed to recreate header wording.
+  This prevents duplicate labels and guarantees identical names/order across views.
+*/
+@media (max-width: 1024px) {
+  #mainRecordTable thead th,
+  #mainRecordTable thead td {
+    text-transform: none !important;
+  }
+
+  #mainRecordTable thead th::before,
+  #mainRecordTable thead td::before {
+    content: none !important;
+    display: none !important;
+  }
+}
+
+/* Legacy mobile rules previously set the second heading to font-size:0 and
+   generated "Station/Section" with ::before. Restore the real desktop heading. */
+@media (max-width: 599px) {
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) thead td:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) thead th.v89-real-station-section,
+  #mainRecordTable:not(.unfreeze-table) thead td.v89-real-station-section,
+  #mainRecordTable.v85-reference-books:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable.v86-desktop-header-master:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) thead th.ebook-book-name-th {
+    font-size: 10.5px !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+}
+
+@media (max-width: 399px) {
+  #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) thead td:nth-child(2),
+  #mainRecordTable:not(.unfreeze-table) thead th.v89-real-station-section,
+  #mainRecordTable:not(.unfreeze-table) thead td.v89-real-station-section {
+    font-size: 10px !important;
+  }
+}
+</style>
+
+
+<style id="v92-home-neon-visual-only">
+/*
+  VISUAL-ONLY enhancement:
+  HOME button + Home dashboard workflow cards + graph containers.
+  No dimensions, layout, data, JS, Firebase, navigation or responsive behavior changed.
+*/
+
+/* HOME button */
+#appSidebar > .home-btn-container .home-btn,
+#appSidebar > .home-btn-container button,
+#appSidebar > .home-btn-container a {
+  border-color: #06b6d4 !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #06b6d4 12%, transparent),
+    0 2px 7px color-mix(in srgb, #06b6d4 18%, transparent);
+}
+
+/* Workflow/status cards: use one restrained neon system without altering geometry. */
+#dashboardView .process-track-container > * {
+  border-color: #2563eb !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #2563eb 10%, transparent),
+    0 2px 7px color-mix(in srgb, #2563eb 16%, transparent);
+}
+
+/* Give adjacent workflow cards subtle individual accent identities. */
+#dashboardView .process-track-container > *:nth-child(3n+1) { border-color:#2563eb !important; }
+#dashboardView .process-track-container > *:nth-child(3n+2) { border-color:#0891b2 !important; }
+#dashboardView .process-track-container > *:nth-child(3n)   { border-color:#7c3aed !important; }
+
+/* Graph/card containers */
+#dashboardView .dash-charts-grid > * {
+  border-color: #0891b2 !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #0891b2 10%, transparent),
+    0 2px 8px color-mix(in srgb, #0891b2 17%, transparent);
+}
+#dashboardView .dash-charts-grid > *:nth-child(2) {
+  border-color: #a855f7 !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #a855f7 10%, transparent),
+    0 2px 8px color-mix(in srgb, #a855f7 17%, transparent);
+}
+
+/* Dark theme: slightly stronger glow, still restrained. */
+body.dark-theme #appSidebar > .home-btn-container .home-btn,
+body.dark-theme #appSidebar > .home-btn-container button,
+body.dark-theme #appSidebar > .home-btn-container a {
+  box-shadow:
+    0 0 6px color-mix(in srgb, #06b6d4 50%, transparent),
+    inset 0 0 4px color-mix(in srgb, #06b6d4 12%, transparent);
+}
+body.dark-theme #dashboardView .process-track-container > * {
+  box-shadow:
+    0 0 6px color-mix(in srgb, currentColor 18%, transparent),
+    inset 0 0 4px rgba(37,99,235,.10);
+}
+body.dark-theme #dashboardView .dash-charts-grid > * {
+  box-shadow:
+    0 0 7px rgba(8,145,178,.30),
+    inset 0 0 4px rgba(8,145,178,.09);
+}
+body.dark-theme #dashboardView .dash-charts-grid > *:nth-child(2) {
+  box-shadow:
+    0 0 7px rgba(168,85,247,.30),
+    inset 0 0 4px rgba(168,85,247,.09);
+}
+
+/* Light theme: keep borders visible, with minimal glow. */
+body:not(.dark-theme) #dashboardView .process-track-container > *,
+body:not(.dark-theme) #dashboardView .dash-charts-grid > * {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, currentColor 7%, transparent),
+    0 2px 6px rgba(15,23,42,.08);
+}
+</style>
+
+
+<style id="v93-translucent-hover-selected-tiles">
+/*
+  VISUAL ONLY:
+  Semi-transparent hover/selected tile treatment.
+  No layout, dimensions, navigation, table, Firebase or responsive logic changed.
+*/
+
+/* Smooth visual transition only */
+#appSidebar .home-btn,
+#appSidebar .sidebar-section-title,
+#appSidebar .nav-item {
+  transition:
+    background-color .20s ease,
+    border-color .20s ease,
+    box-shadow .20s ease,
+    color .20s ease !important;
+}
+
+/* HOME — cyan/blue glass tint */
+#appSidebar .home-btn:hover {
+  background-color: rgba(6,182,212,.10) !important;
+  box-shadow: 0 0 8px rgba(6,182,212,.28) !important;
+}
+#appSidebar .home-btn.active-home {
+  background-color: rgba(6,182,212,.16) !important;
+  box-shadow:
+    0 0 9px rgba(6,182,212,.34),
+    inset 0 0 8px rgba(6,182,212,.07) !important;
+}
+
+/* Main section headers inherit their existing individual accent color */
+#appSidebar > .collapsible-group > .sidebar-section-title:hover {
+  background-color: color-mix(in srgb, var(--section-accent, #06b6d4) 10%, transparent) !important;
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--section-accent, #06b6d4) 30%, transparent),
+    inset 0 0 7px color-mix(in srgb, var(--section-accent, #06b6d4) 6%, transparent) !important;
+}
+
+/* Open/selected parent section */
+#appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
+  background-color: color-mix(in srgb, var(--section-accent, #06b6d4) 15%, transparent) !important;
+  box-shadow:
+    0 0 9px color-mix(in srgb, var(--section-accent, #06b6d4) 38%, transparent),
+    inset 0 0 8px color-mix(in srgb, var(--section-accent, #06b6d4) 8%, transparent) !important;
+}
+
+/* Direct/non-collapsible main sections: hover tint only; selection remains governed by existing app state. */
+#grpHqLetters > .sidebar-section-title:hover,
+#grpJpo > .sidebar-section-title:hover,
+#grpImportantLinks > .sidebar-section-title:hover {
+  background-color: color-mix(in srgb, var(--section-accent, #06b6d4) 11%, transparent) !important;
+}
+
+/* Subsections — restrained neutral cyan/blue glass tint */
+#appSidebar .nav-item:hover {
+  background-color: rgba(14,165,233,.09) !important;
+  box-shadow: inset 3px 0 0 rgba(14,165,233,.55) !important;
+}
+#appSidebar .nav-item.active,
+#appSidebar .nav-item.active-subsection,
+#appSidebar .nav-item.selected {
+  background-color: rgba(14,165,233,.15) !important;
+  box-shadow:
+    inset 3px 0 0 rgba(14,165,233,.82),
+    0 0 7px rgba(14,165,233,.13) !important;
+}
+
+/* Dark theme: slightly brighter translucent glass */
+body.dark-theme #appSidebar .home-btn:hover {
+  background-color: rgba(6,182,212,.13) !important;
+}
+body.dark-theme #appSidebar .home-btn.active-home {
+  background-color: rgba(6,182,212,.19) !important;
+}
+body.dark-theme #appSidebar > .collapsible-group > .sidebar-section-title:hover {
+  background-color: color-mix(in srgb, var(--section-accent, #06b6d4) 13%, transparent) !important;
+}
+body.dark-theme #appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
+  background-color: color-mix(in srgb, var(--section-accent, #06b6d4) 18%, transparent) !important;
+}
+body.dark-theme #appSidebar .nav-item:hover {
+  background-color: rgba(14,165,233,.12) !important;
+}
+body.dark-theme #appSidebar .nav-item.active,
+body.dark-theme #appSidebar .nav-item.active-subsection,
+body.dark-theme #appSidebar .nav-item.selected {
+  background-color: rgba(14,165,233,.18) !important;
+}
+
+/* Touch devices have no true hover: avoid sticky hover paint after taps.
+   Existing selected/open states still show their tint. */
+@media (hover: none) {
+  #appSidebar .nav-item:hover {
+    box-shadow: none !important;
+  }
 }
 </style>
 </head>
@@ -5548,7 +6417,21 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
         </ul>
       </div>
 
-      <!-- SECTION 4: LDCE GR. B QUESTION PAPER -->
+      <!-- SECTION 4: LETTER ISSUED BY HQ -->
+      <div class="collapsible-group" id="grpHqLetters">
+        <div class="sidebar-section-title" onclick="switchCategory('LETTER ISSUED BY HQ', true)" role="button" tabindex="0">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-paper-plane" style="color:#2563eb;"></i> LETTER ISSUED BY HQ</span>
+        </div>
+      </div>
+
+      <!-- SECTION 5: JPO (JOINT PROCEDURE ORDER) -->
+      <div class="collapsible-group" id="grpJpo">
+        <div class="sidebar-section-title" onclick="switchCategory('JPO (JOINT PROCEDURE ORDER)', true)" role="button" tabindex="0">
+          <span class="sidebar-section-title-left"><i class="fa-solid fa-people-group" style="color:#7c3aed;"></i> JPO (JOINT PROCEDURE ORDER)</span>
+        </div>
+      </div>
+
+      <!-- SECTION 6: LDCE GR. B QUESTION PAPER -->
       <div class="collapsible-group collapsed" id="grpLdcePapers">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpLdcePapers')">
           <span class="sidebar-section-title-left"><i class="fa-solid fa-graduation-cap" style="color: #10b981;"></i> LDCE GR. B QUESTION PAPER</span>
@@ -5567,7 +6450,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
         </ul>
       </div>
 
-      <!-- SECTION 5: IMPORTANT LINKS - direct opening, no subsection -->
+      <!-- SECTION 7: IMPORTANT LINKS - direct opening, no subsection -->
       <div class="collapsible-group" id="grpImportantLinks">
         <div class="sidebar-section-title" onclick="switchCategory('IMPORTANT LINKS', true)" role="button" tabindex="0"
              onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault(); switchCategory('IMPORTANT LINKS', true);}">
@@ -5940,6 +6823,10 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
               <option value="DOCUMENTS FOR GM SANCTION">DOCUMENTS FOR GM SANCTION</option>
               <option value="DOCUMENTS FOR OTHER APPROVALS">DOCUMENTS FOR OTHER APPROVALS</option>
             </optgroup>
+            <optgroup label="HQ CORRESPONDENCE / JPO">
+              <option value="LETTER ISSUED BY HQ">LETTER ISSUED BY HQ</option>
+              <option value="JPO (JOINT PROCEDURE ORDER)">JPO (JOINT PROCEDURE ORDER)</option>
+            </optgroup>
             <optgroup label="LDCE GR. B QUESTION PAPER">
               <option value="ASTE">ASTE</option>
               <option value="AEN">AEN</option>
@@ -5971,6 +6858,31 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
             <option value="Nagpur">Nagpur</option>
             <option value="HQ">HQ / SECR</option>
           </select>
+        </div>
+
+        <div class="form-group" id="formJpoNoContainer" style="display:none;">
+          <label>JPO No.</label>
+          <input type="text" id="formJpoNo" placeholder="Enter JPO number">
+        </div>
+
+        <div class="form-group" id="formAddressedToContainer" style="display:none;">
+          <label>Addressed To</label>
+          <textarea id="formAddressedTo" rows="3" placeholder="e.g. All Divisions / Project / Construction / RDSO / Railway Board / IRCON"></textarea>
+        </div>
+
+        <div class="form-group" id="formJpoDepartmentsContainer" style="display:none;">
+          <label>Department</label>
+          <div class="jpo-department-grid">
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="S&T"> <span>S&amp;T</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Electrical"> <span>Electrical</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Engineering"> <span>Engineering</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Operating"> <span>Operating</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Mechanical"> <span>Mechanical</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Commercial"> <span>Commercial</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Security"> <span>Security</span></label>
+            <label><input type="checkbox" class="jpo-dept-checkbox" value="Other" onchange="toggleJpoOtherDepartment()"> <span>Other</span></label>
+          </div>
+          <input type="text" id="formJpoOtherDepartment" placeholder="Specify other department" style="display:none; margin-top:8px;">
         </div>
 
         <div class="form-group" id="formTanNoContainer" style="display:none;">
@@ -6119,7 +7031,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
 
         <div class="form-group" id="formYearContainer" style="display:none;">
           <label>Year</label>
-          <input type="number" id="formYear" min="1900" max="2100" step="1" placeholder="e.g. 2026">
+          <select id="formYear"><option value="" selected>-- Select Year --</option></select>
         </div>
 
         <div class="form-group" id="formDateContainer">
@@ -6137,6 +7049,12 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
           <label><i class="fa-brands fa-google-drive" style="color: #0f9d58;"></i> Google Drive PDF Link</label>
           <input type="url" id="formDriveLink" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
           <span class="help-hint">Paste Google Drive link for 200MB+ PDF. Set permission to 'Anyone with link can view'.</span>
+        </div>
+
+        <div class="form-group" id="formPracticeLinkContainer" style="display:none;">
+          <label><i class="fa-solid fa-laptop-file" style="color:#0b3b60;"></i> Practice Paper Link</label>
+          <input type="url" id="formPracticeLink" placeholder="https://your-site.example/practice-paper.html">
+          <span class="help-hint">Paste any public practice-paper URL (GitHub Pages or any other website/server).</span>
         </div>
       </div>
       <div class="form-footer">
@@ -6820,6 +7738,8 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       'DOCUMENTS FOR OTHER APPROVALS'
     ];
 
+    const hqCorrespondenceCategories = ['LETTER ISSUED BY HQ', 'JPO (JOINT PROCEDURE ORDER)'];
+
     const reportCategories = [
       'PCSTE SANCTION',
       'EI TSAA',
@@ -7049,6 +7969,10 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       // after returning from an external website with the browser/app Back key.
       if (currentCategory === 'IMPORTANT LINKS') {
         openOnlyAccordion('grpImportantLinks');
+      } else if (currentCategory === 'LETTER ISSUED BY HQ') {
+        openOnlyAccordion('grpHqLetters');
+      } else if (currentCategory === 'JPO (JOINT PROCEDURE ORDER)') {
+        openOnlyAccordion('grpJpo');
       }
 
       document.getElementById('dashboardView').style.display = 'none';
@@ -7063,7 +7987,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       const noDivisionSections = [
         'S&T SPEED CERTIFICATE', 'JOINT SAFETY CERTIFICATE (JSC)',
         'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
-        ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, 
+        ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, ...hqCorrespondenceCategories,
         'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'
       ];
 
@@ -7228,15 +8152,37 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       const searchTxt = document.getElementById('filterSearch').value.toLowerCase();
 
       // UNFREEZE ONLY FOR: Reference Books & Docs AND Documents for Various Sanction / Approval
-      const isUnfrozenSection = standardManualCategories.includes(currentCategory) || irsemIrtemCategories.includes(currentCategory) || docApprovalCategories.includes(currentCategory);
+      const isUnfrozenSection = standardManualCategories.includes(currentCategory) || irsemIrtemCategories.includes(currentCategory) || docApprovalCategories.includes(currentCategory) || hqCorrespondenceCategories.includes(currentCategory);
       if (isUnfrozenSection) {
         tableElem.classList.add('unfreeze-table');
       } else {
         tableElem.classList.remove('unfreeze-table');
       }
-      tableElem.classList.remove('rdso-tan-table');
+      tableElem.classList.remove('rdso-tan-table', 'hq-letter-table', 'jpo-table');
+      if (currentCategory === 'LETTER ISSUED BY HQ') tableElem.classList.add('hq-letter-table');
+      if (currentCategory === 'JPO (JOINT PROCEDURE ORDER)') tableElem.classList.add('jpo-table');
 
-      if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
+      if (currentCategory === 'LETTER ISSUED BY HQ') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width:60px;">Sr. No.</th>
+            <th class="col-sanction-date">Date</th>
+            <th class="work-desc-wide hq-subject-th">Subject</th>
+            <th class="hq-addressed-th">Addressed To</th>
+            <th class="hq-related-th">Related To</th>
+            <th style="width:155px;text-align:center;">Action</th>
+          </tr>`;
+      } else if (currentCategory === 'JPO (JOINT PROCEDURE ORDER)') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width:60px;">Sr. No.</th>
+            <th class="jpo-number-th">JPO No.</th>
+            <th class="work-desc-wide jpo-subject-th">Subject</th>
+            <th class="jpo-department-th">Department</th>
+            <th class="col-sanction-date">Date of Issue</th>
+            <th style="width:155px;text-align:center;">Action</th>
+          </tr>`;
+      } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
         tableElem.classList.add('rdso-tan-table');
         thead.innerHTML = `
           <tr>
@@ -7320,8 +8266,9 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
           <tr>
             <th style="width: var(--col-1-w);">Sr. no</th>
             <th style="width: var(--col-2-min-w);">Year</th>
-            <th style="width: 120px;">Type (30% / 70%)</th>
-            <th class="work-desc-th">Description</th>
+            <th style="width: 120px;">30% / 70%</th>
+            <th style="min-width:170px; text-align:center;">Question Paper</th>
+            <th style="min-width:180px; text-align:center;">Practice Paper</th>
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
@@ -7448,6 +8395,17 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
+      } else if (currentCategory === 'SECR TYPICAL') {
+        thead.innerHTML = `
+          <tr>
+            <th style="width: var(--col-1-w);">Sr.NO</th>
+            <th>Typical No.</th>
+            <th>Related to Equipment</th>
+            <th class="work-desc-th">Description</th>
+            <th class="col-sanction-date">Date of Issue</th>
+            <th style="width: 155px; text-align:center;">Action</th>
+          </tr>
+        `;
       } else {
         thead.innerHTML = `
           <tr>
@@ -7463,7 +8421,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
 
       const hasDivision = !['S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
                             'SECR POLICY', 'SECR TYPICAL', 'IMP. LETTER', 'RDSO TAN (TECHNICAL ADVISORY NOTE)',
-                            ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, 
+                            ...docApprovalCategories, ...standardManualCategories, ...irsemIrtemCategories, ...hqCorrespondenceCategories,
                             'IRISET E-BOOK (SIGNAL)', 'IRISET E-BOOK (TELECOM)', ...ldceCategories, 'IMPORTANT LINKS'].includes(currentCategory);
 
       let filtered = records.filter(item => {
@@ -7497,11 +8455,13 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
           const matchChapterNo = item.chapterNo && item.chapterNo.toLowerCase().includes(searchTxt);
           const matchCorrectionSlipNo = item.correctionSlipNo && item.correctionSlipNo.toLowerCase().includes(searchTxt);
           const matchParaChapter = item.paraChapter && item.paraChapter.toLowerCase().includes(searchTxt);
+          const matchAddressedTo = item.addressedTo && item.addressedTo.toLowerCase().includes(searchTxt);
+          const matchJpoNo = item.jpoNo && item.jpoNo.toLowerCase().includes(searchTxt);
 
           if (!matchStation && !matchWork && !matchDiv && !matchAgency && !matchDept && !matchOem && 
               !matchEquip && !matchWagon && !matchDocNo && !matchIssuedBy && !matchInspection && 
               !matchBook && !matchType && !matchTan && !matchRelTo && !matchDirLink && !matchGivenBy &&
-              !matchChapterNo && !matchCorrectionSlipNo && !matchParaChapter) {
+              !matchChapterNo && !matchCorrectionSlipNo && !matchParaChapter && !matchAddressedTo && !matchJpoNo) {
             return false;
           }
         }
@@ -7631,6 +8591,34 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
               </td>
             </tr>
           `;
+        } else if (currentCategory === 'LETTER ISSUED BY HQ') {
+          html += `
+            <tr>
+              <td><b>${idx + 1}</b></td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
+              <td class="work-desc-wide hq-subject-cell">
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work || '')}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-envelope-open-text" style="color:#2563eb;"></i> ${rec.work || '—'}
+                </a>
+              </td>
+              <td class="hq-addressed-cell">${rec.addressedTo || '—'}</td>
+              <td class="hq-related-cell">${rec.relatedTo || '—'}</td>
+              <td style="text-align:center;white-space:nowrap;">${actionButtons}</td>
+            </tr>`;
+        } else if (currentCategory === 'JPO (JOINT PROCEDURE ORDER)') {
+          html += `
+            <tr>
+              <td><b>${idx + 1}</b></td>
+              <td class="jpo-number-cell"><b>${rec.jpoNo || '—'}</b></td>
+              <td class="work-desc-wide jpo-subject-cell">
+                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work || '')}', '${rec.driveLink || ''}')">
+                  <i class="fa-solid fa-people-group" style="color:#7c3aed;"></i> ${rec.work || '—'}
+                </a>
+              </td>
+              <td class="jpo-department-cell">${renderJpoDepartmentBadges(rec.department)}</td>
+              <td class="col-sanction-date"><b>${displayDate || '—'}</b></td>
+              <td style="text-align:center;white-space:nowrap;">${actionButtons}</td>
+            </tr>`;
         } else if (currentCategory === 'RDSO TAN (TECHNICAL ADVISORY NOTE)') {
           const driveIndicator = rec.driveLink 
             ? `<span class="drive-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>` 
@@ -7752,10 +8740,11 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
               <td><b>${idx + 1}</b></td>
               <td><b>${rec.year || '—'}</b></td>
               <td><span class="type-badge">${rec.ldceType || '—'}</span></td>
-              <td class="work-desc-cell">
-                <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
-                  <i class="fa-solid fa-file-circle-question" style="color: var(--accent-blue);"></i> ${rec.work}
-                </a>
+              <td style="text-align:center; white-space:nowrap;">
+                ${rec.driveLink ? `<a class="work-link" href="${escapeHtml(rec.driveLink)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pdf" style="color:#e11d48;"></i> View Question Paper</a>` : '<span style="color:#94a3b8;">—</span>'}
+              </td>
+              <td style="text-align:center; white-space:nowrap;">
+                ${rec.practiceLink ? `<a class="work-link" href="${escapeHtml(rec.practiceLink)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-circle-play" style="color:#059669;"></i> Click Here to Practice</a>` : '<span style="color:#94a3b8;">—</span>'}
               </td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
@@ -8363,7 +9352,40 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       });
     }
 
+
+    // Native mobile pinch is required for the Google Drive fallback iframe.
+    // Touch events inside a cross-origin Drive iframe do not bubble to the
+    // parent page, so the custom PDF.js pinch handler cannot control that mode.
+    // Temporarily allow browser pinch only while the preview modal is open,
+    // then restore the site's original locked viewport on close.
+    let previewViewportOriginalContent = null;
+
+    function enableNativePinchForPreview() {
+      const meta = document.getElementById('railsViewportMeta') ||
+                   document.querySelector('meta[name="viewport"]');
+      if (!meta) return;
+
+      if (previewViewportOriginalContent === null) {
+        previewViewportOriginalContent = meta.getAttribute('content') || '';
+      }
+
+      meta.setAttribute(
+        'content',
+        'width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes'
+      );
+    }
+
+    function restoreNativePinchAfterPreview() {
+      const meta = document.getElementById('railsViewportMeta') ||
+                   document.querySelector('meta[name="viewport"]');
+      if (!meta || previewViewportOriginalContent === null) return;
+
+      meta.setAttribute('content', previewViewportOriginalContent);
+      previewViewportOriginalContent = null;
+    }
+
     function openPreview(title, link, column2Item = '') {
+      enableNativePinchForPreview();
       if (!link) {
         alert("No Drive attachment link has been provided for this record.");
         return;
@@ -8566,50 +9588,130 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       changePreviewZoom(e.deltaY < 0 ? 0.25 : -0.25);
     }, { passive: false, capture: true });
 
-    // Touch pinch: apply the new scale after the gesture, then re-render all pages.
+    // Mobile preview touch controller:
+    // one finger = pan/scroll PDF, two fingers = pinch zoom PDF only.
+    // This is deliberately scoped to #pdfViewerViewport so page/sidebar/table
+    // touch behaviour is not changed.
     (function initPdfPinchZoom() {
-      let pinchStartDistance = 0;
-      let pinchStartZoom = 1;
-      const distance = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      let mode = '';
+      let startDistance = 0;
+      let startZoom = 1;
+      let panX = 0, panY = 0, panLeft = 0, panTop = 0;
+      let pinchChanged = false;
+
+      const distance = (a, b) =>
+        Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+
+      function getViewerForEvent(e) {
+        const viewer = document.getElementById('pdfViewerViewport');
+        const modal = document.getElementById('pdfPreviewModal');
+        if (!viewer || !modal || modal.style.display !== 'flex') return null;
+        if (!viewer.contains(e.target)) return null;
+        return viewer;
+      }
 
       document.addEventListener('touchstart', function(e) {
-        const viewer = document.getElementById('pdfViewerViewport');
-        if (!viewer || !viewer.contains(e.target) || e.touches.length !== 2) return;
-        pinchStartDistance = distance(e.touches[0], e.touches[1]);
-        pinchStartZoom = previewZoom;
-      }, { passive: true });
+        const viewer = getViewerForEvent(e);
+        if (!viewer) return;
 
-      document.addEventListener('touchend', function(e) {
-        if (!pinchStartDistance || e.touches.length !== 0) return;
-        pinchStartDistance = 0;
-      }, { passive: true });
+        if (e.touches.length === 2) {
+          mode = 'pinch';
+          startDistance = distance(e.touches[0], e.touches[1]);
+          startZoom = previewZoom;
+          pinchChanged = false;
+          e.preventDefault();
+        } else if (e.touches.length === 1) {
+          mode = 'pan';
+          panX = e.touches[0].clientX;
+          panY = e.touches[0].clientY;
+          panLeft = viewer.scrollLeft;
+          panTop = viewer.scrollTop;
+          e.preventDefault();
+        }
+      }, { passive: false, capture: true });
 
       document.addEventListener('touchmove', function(e) {
-        const viewer = document.getElementById('pdfViewerViewport');
-        if (!viewer || !viewer.contains(e.target) || e.touches.length !== 2 || !pinchStartDistance) return;
-        e.preventDefault();
-        const ratio = distance(e.touches[0], e.touches[1]) / pinchStartDistance;
-        const target = Math.min(2, Math.max(0.5, Math.round((pinchStartZoom * ratio) * 100) / 100));
-        if (target !== previewZoom) {
-          previewZoom = target;
-          const label = document.getElementById('previewZoomValue');
-          if (label) label.textContent = `${Math.round(previewZoom * 100)}%`;
-        }
-      }, { passive: false });
+        const viewer = getViewerForEvent(e);
+        if (!viewer) return;
 
-      document.addEventListener('touchcancel', function() {
-        if (pinchStartDistance) {
-          pinchStartDistance = 0;
-          applyPreviewZoom();
+        if (e.touches.length === 2 && startDistance > 0) {
+          mode = 'pinch';
+          e.preventDefault();
+
+          const ratio = distance(e.touches[0], e.touches[1]) / startDistance;
+          const target = Math.max(0.5, Math.min(2, startZoom * ratio));
+          const rounded = Math.round(target * 100) / 100;
+
+          if (rounded !== previewZoom) {
+            previewZoom = rounded;
+            pinchChanged = true;
+            const label = document.getElementById('previewZoomValue');
+            if (label) label.textContent = `${Math.round(previewZoom * 100)}%`;
+            updatePreviewZoomButtons();
+
+            // Lightweight live feedback while fingers are moving.
+            const pages = document.getElementById('pdfPagesContainer');
+            if (pages) {
+              const liveRatio = previewZoom / startZoom;
+              pages.style.transformOrigin = 'center top';
+              pages.style.transform = `scale(${liveRatio})`;
+            }
+          }
+        } else if (e.touches.length === 1 && mode === 'pan') {
+          e.preventDefault();
+          viewer.scrollLeft = panLeft - (e.touches[0].clientX - panX);
+          viewer.scrollTop  = panTop  - (e.touches[0].clientY - panY);
         }
-      }, { passive: true });
+      }, { passive: false, capture: true });
+
+      async function finishTouch() {
+        const pages = document.getElementById('pdfPagesContainer');
+        if (pages) {
+          pages.style.transform = '';
+          pages.style.transformOrigin = '';
+        }
+
+        if (mode === 'pinch' && pinchChanged && previewPdfDoc) {
+          await applyPreviewZoom();
+        }
+
+        mode = '';
+        startDistance = 0;
+        pinchChanged = false;
+      }
 
       document.addEventListener('touchend', function(e) {
-        if (pinchStartDistance && e.touches.length < 2) {
-          pinchStartDistance = 0;
-          applyPreviewZoom();
+        if (!mode) return;
+
+        // If one finger remains after a pinch, begin a fresh pan from that point.
+        if (mode === 'pinch' && e.touches.length === 1) {
+          const viewer = document.getElementById('pdfViewerViewport');
+          const pages = document.getElementById('pdfPagesContainer');
+          if (pages) {
+            pages.style.transform = '';
+            pages.style.transformOrigin = '';
+          }
+
+          if (pinchChanged && previewPdfDoc) applyPreviewZoom();
+
+          startDistance = 0;
+          pinchChanged = false;
+          mode = 'pan';
+          if (viewer) {
+            panX = e.touches[0].clientX;
+            panY = e.touches[0].clientY;
+            panLeft = viewer.scrollLeft;
+            panTop = viewer.scrollTop;
+          }
+          return;
         }
-      }, { passive: true });
+
+        if (e.touches.length === 0) finishTouch();
+      }, { passive: true, capture: true });
+
+      document.addEventListener('touchcancel', function() {
+        if (mode) finishTouch();
+      }, { passive: true, capture: true });
     })();
 
     // Drag floating preview by its title bar on desktop/laptop.
@@ -8665,6 +9767,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
     });
 
     function closePreviewModal() {
+      restoreNativePinchAfterPreview();
       previewRenderGeneration++;
       if (previewPdfLoadingTask) {
         try { previewPdfLoadingTask.destroy(); } catch (_) {}
@@ -8857,6 +9960,9 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
 
       document.getElementById('formStation').value = rec.station || '';
       document.getElementById('formDivision').value = rec.division || '';
+      document.getElementById('formJpoNo').value = rec.jpoNo || '';
+      document.getElementById('formAddressedTo').value = rec.addressedTo || '';
+      setSelectedJpoDepartments(rec.department || '');
       document.getElementById('formTanNo').value = rec.tanNo || '';
       document.getElementById('formRelatedTo').value = rec.relatedTo || '';
       document.getElementById('formDirectLink').value = rec.directLink || '';
@@ -8883,6 +9989,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       document.getElementById('formDate').value = formatDateToYYYYMMDD(rec.date);
       document.getElementById('formSecondaryDate').value = formatDateToYYYYMMDD(rec.sanctionDate);
       document.getElementById('formDriveLink').value = rec.driveLink || '';
+      document.getElementById('formPracticeLink').value = rec.practiceLink || '';
 
       document.getElementById('addRecordModal').style.display = 'flex';
       history.pushState({ view: 'modal', modal: 'editForm' }, '', '');
@@ -8894,6 +10001,11 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
 
     function clearFormFields() {
       document.getElementById('formStation').value = '';
+      document.getElementById('formJpoNo').value = '';
+      document.getElementById('formAddressedTo').value = '';
+      document.querySelectorAll('.jpo-dept-checkbox').forEach(cb => cb.checked = false);
+      document.getElementById('formJpoOtherDepartment').value = '';
+      document.getElementById('formJpoOtherDepartment').style.display = 'none';
       document.getElementById('formTanNo').value = '';
       document.getElementById('formRelatedTo').value = '';
       document.getElementById('formDirectLink').value = '';
@@ -8914,16 +10026,56 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       document.getElementById('formDate').value = '';
       document.getElementById('formSecondaryDate').value = '';
       document.getElementById('formDriveLink').value = '';
+      document.getElementById('formPracticeLink').value = '';
       ['formDivision','formLdceType','formAgency','formGivenBy','formOem','formIssuedBy'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
     }
 
+    function toggleJpoOtherDepartment() {
+      const other = Array.from(document.querySelectorAll('.jpo-dept-checkbox')).find(cb => cb.value === 'Other');
+      const input = document.getElementById('formJpoOtherDepartment');
+      if (!input) return;
+      input.style.display = (other && other.checked) ? 'block' : 'none';
+      if (!other || !other.checked) input.value = '';
+    }
+
+    function getSelectedJpoDepartments() {
+      const selected = Array.from(document.querySelectorAll('.jpo-dept-checkbox:checked')).map(cb => cb.value).filter(v => v !== 'Other');
+      const other = Array.from(document.querySelectorAll('.jpo-dept-checkbox')).find(cb => cb.value === 'Other');
+      const otherText = (document.getElementById('formJpoOtherDepartment')?.value || '').trim();
+      if (other && other.checked) selected.push(otherText || 'Other');
+      return selected.join(', ');
+    }
+
+    function setSelectedJpoDepartments(value) {
+      const known = ['S&T','Electrical','Engineering','Operating','Mechanical','Commercial','Security'];
+      const vals = String(value || '').split(',').map(v => v.trim()).filter(Boolean);
+      document.querySelectorAll('.jpo-dept-checkbox').forEach(cb => cb.checked = false);
+      const others = [];
+      vals.forEach(v => {
+        const cb = Array.from(document.querySelectorAll('.jpo-dept-checkbox')).find(x => x.value === v);
+        if (cb && known.includes(v)) cb.checked = true; else others.push(v);
+      });
+      const otherCb = Array.from(document.querySelectorAll('.jpo-dept-checkbox')).find(x => x.value === 'Other');
+      if (others.length && otherCb) otherCb.checked = true;
+      document.getElementById('formJpoOtherDepartment').value = others.join(', ');
+      toggleJpoOtherDepartment();
+    }
+
+    function renderJpoDepartmentBadges(value) {
+      const deps = String(value || '').split(',').map(v => v.trim()).filter(Boolean);
+      if (!deps.length) return '—';
+      return `<div class="jpo-dept-badges">${deps.map(d => `<span class="jpo-dept-badge">${escapeHtml(d)}</span>`).join('')}</div>`;
+    }
+
     function toggleFormFields() {
       let cat = document.getElementById('formCategory').value;
       if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
 
+      const isHqLetter = (cat === 'LETTER ISSUED BY HQ');
+      const isJpo = (cat === 'JPO (JOINT PROCEDURE ORDER)');
       const isTan = (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)');
       const isLinks = (cat === 'IMPORTANT LINKS');
       const isBooks = (cat === 'IRISET E-BOOK (SIGNAL)' || cat === 'IRISET E-BOOK (TELECOM)');
@@ -8952,8 +10104,11 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       document.getElementById('formDivisionContainer').style.display = 
         (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
 
+      document.getElementById('formJpoNoContainer').style.display = isJpo ? 'flex' : 'none';
+      document.getElementById('formAddressedToContainer').style.display = isHqLetter ? 'flex' : 'none';
+      document.getElementById('formJpoDepartmentsContainer').style.display = isJpo ? 'flex' : 'none';
       document.getElementById('formTanNoContainer').style.display = isTan ? 'flex' : 'none';
-      document.getElementById('formRelatedToContainer').style.display = (isTan || isLinks) ? 'flex' : 'none';
+      document.getElementById('formRelatedToContainer').style.display = (isTan || isLinks || isHqLetter) ? 'flex' : 'none';
       document.getElementById('formDirectLinkContainer').style.display = isLinks ? 'flex' : 'none';
       document.getElementById('formBookNameContainer').style.display = isBooks ? 'flex' : 'none';
       document.getElementById('formLdceTypeContainer').style.display = isLdce ? 'flex' : 'none';
@@ -8986,6 +10141,8 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       // and Inspection Note currently has no Date column in its table.
       const hasNoDateField = isLinks || isBooks || isInspection || isIrsemIrtemChapter || isLdce;
       document.getElementById('formYearContainer').style.display = isLdce ? 'flex' : 'none';
+      document.getElementById('formPracticeLinkContainer').style.display = isLdce ? 'flex' : 'none';
+      document.getElementById('formWorkContainer').style.display = isLdce ? 'none' : document.getElementById('formWorkContainer').style.display;
       document.getElementById('formDateContainer').style.display = hasNoDateField ? 'none' : 'flex';
       document.getElementById('formSecondaryDateContainer').style.display = isGm ? 'flex' : 'none';
 
@@ -8997,6 +10154,10 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
         dateLbl.innerText = "Date of Forwarding";
       } else if (isDispensation) {
         dateLbl.innerText = "Date of Forwarding & Issuing";
+      } else if (isJpo) {
+        dateLbl.innerText = "Date of Issue";
+      } else if (isHqLetter) {
+        dateLbl.innerText = "Date";
       } else if (isTan || isDocApproval) {
         dateLbl.innerText = "Issue Date";
       } else if (isImpLetter || isPolicyOrTypical || isStandardManual || isIrsemIrtemCorrection) {
@@ -9010,7 +10171,9 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       }
 
       const workLbl = document.getElementById('formWorkLabel');
-      if (isPcste) {
+      if (isHqLetter || isJpo) {
+        workLbl.innerText = "Subject";
+      } else if (isPcste) {
         workLbl.innerText = "Work Description";
       } else if (isMsdac) {
         workLbl.innerText = "Work Description";
@@ -9032,6 +10195,8 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
       }
 
       // Other shared form controls also use the exact wording of their table headers.
+      const relatedToLbl = document.getElementById('formRelatedToLabel');
+      if (relatedToLbl) relatedToLbl.innerText = isHqLetter ? "Related To" : "Related to";
       const directLinkLbl = document.getElementById('formDirectLinkLabel');
       if (directLinkLbl) directLinkLbl.innerText = "Link";
       const ldceTypeLbl = document.getElementById('formLdceTypeLabel');
@@ -9059,6 +10224,8 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
 
       // v26: save only data that belongs to the selected table/category.
       // Hidden fields are cleared so values from another subsection cannot leak into this record.
+      const isHqLetter = (cat === 'LETTER ISSUED BY HQ');
+      const isJpo = (cat === 'JPO (JOINT PROCEDURE ORDER)');
       const isTan = (cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)');
       const isLinks = (cat === 'IMPORTANT LINKS');
       const isBooks = (cat === 'IRISET E-BOOK (SIGNAL)' || cat === 'IRISET E-BOOK (TELECOM)');
@@ -9087,8 +10254,10 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
           ? document.getElementById('formStation').value.trim() : '',
         division: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
           ? document.getElementById('formDivision').value : '',
+        jpoNo: isJpo ? document.getElementById('formJpoNo').value.trim() : '',
+        addressedTo: isHqLetter ? document.getElementById('formAddressedTo').value.trim() : '',
         tanNo: isTan ? document.getElementById('formTanNo').value.trim() : '',
-        relatedTo: (isTan || isLinks) ? document.getElementById('formRelatedTo').value.trim() : '',
+        relatedTo: (isTan || isLinks || isHqLetter) ? document.getElementById('formRelatedTo').value.trim() : '',
         directLink: isLinks ? document.getElementById('formDirectLink').value.trim() : '',
         bookName: isBooks ? document.getElementById('formBookName').value.trim() : '',
         ldceType: isLdce ? document.getElementById('formLdceType').value : '',
@@ -9099,7 +10268,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
         agency: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising)
           ? document.getElementById('formAgency').value : '',
         givenBy: isDispensation ? document.getElementById('formGivenBy').value : '',
-        department: (isSpeedCert || isJsc) ? document.getElementById('formDepartment').value.trim() : '',
+        department: isJpo ? getSelectedJpoDepartments() : ((isSpeedCert || isJsc) ? document.getElementById('formDepartment').value.trim() : ''),
         inspectionBy: isInspection ? document.getElementById('formInspectionBy').value.trim() : '',
         equipment: isPcste ? document.getElementById('formEquipment').value.trim() : '',
         oem: isEi ? document.getElementById('formEiOem').value : (isMsdac ? document.getElementById('formOem').value.trim() : ''),
@@ -9113,7 +10282,8 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
         sanctionDate: isGm ? formatDateToDDMMYYYY(secondaryDateVal) : '',
         // No artificial current-year value for categories that do not use Date/Year.
         year: isLdce ? (document.getElementById('formYear').value ? Number(document.getElementById('formYear').value) : null) : ((isLinks || isBooks || isInspection || isIrsemIrtemChapter) ? null : (dateVal ? new Date(dateVal).getFullYear() : null)),
-        driveLink: document.getElementById('formDriveLink').value.trim()
+        driveLink: document.getElementById('formDriveLink').value.trim(),
+        practiceLink: isLdce ? document.getElementById('formPracticeLink').value.trim() : ''
       };
 
       try {
@@ -9144,9 +10314,9 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
         alert("No records to export.");
         return;
       }
-      let csv = "Category,Station,Division,Work/Description,Date,Agency,OEM,Drive Link\n";
+      let csv = "Category,JPO No,Station,Division,Subject/Description,Addressed To,Related To,Department,Date,Agency,OEM,Drive Link\n";
       records.filter(r => r.category === currentCategory).forEach(r => {
-        csv += `"${r.category}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${r.date || ''}","${r.agency || ''}","${r.oem || ''}","${r.driveLink || ''}"\n`;
+        csv += `"${r.category}","${r.jpoNo || ''}","${r.station || ''}","${r.division || ''}","${(r.work || '').replace(/"/g, '""')}","${(r.addressedTo || '').replace(/"/g, '""')}","${(r.relatedTo || '').replace(/"/g, '""')}","${(r.department || '').replace(/"/g, '""')}","${r.date || ''}","${r.agency || ''}","${r.oem || ''}","${r.driveLink || ''}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -11470,5 +12640,155 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
     })();
   </script>
 
+
+
+<!-- v107: FINAL touch-tablet landscape accordion = mobile master -->
+
+<!-- v110: CLEAN REWRITE — tablet landscape navigation drawer. Mobile behaviour is the master. -->
+<style id="v110-tablet-landscape-navigation-rewrite">
+/*
+  Tablet LANDSCAPE only (Samsung Galaxy Tab A9+ and similar touch tablets).
+  This block intentionally replaces the old tablet-landscape sidebar patches.
+  Behaviour: overlay drawer + compact 5–6-row subsection scroller + following
+  main-section headers remain directly below the opened subsection container.
+*/
+@media (min-width:769px) and (max-width:1366px) and (orientation:landscape) and (pointer:coarse),
+       (min-width:769px) and (max-width:1366px) and (orientation:landscape) and (hover:none) {
+
+  .menu-toggle-btn { display:inline-flex !important; }
+
+  .app-container {
+    position:relative !important;
+    overflow:hidden !important;
+  }
+  .app-container > main {
+    flex:1 1 0% !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    margin:0 !important;
+  }
+
+  #appSidebar {
+    position:fixed !important;
+    top:0 !important;
+    bottom:0 !important;
+    left:0 !important;
+    right:auto !important;
+    width:min(82vw,330px) !important;
+    max-width:82vw !important;
+    height:100vh !important;
+    height:100dvh !important;
+    min-height:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    flex:none !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+    background:var(--bg-card) !important;
+    z-index:999 !important;
+    transform:translate3d(-100%,0,0) !important;
+    transition:transform .3s cubic-bezier(.16,1,.3,1) !important;
+  }
+  #appSidebar.mobile-open { transform:translate3d(0,0,0) !important; }
+
+  #sidebarOverlay {
+    position:fixed !important;
+    inset:0 !important;
+    z-index:998 !important;
+  }
+  #sidebarOverlay.active { display:block !important; }
+
+  /* HOME and every parent group stay in normal document flow. */
+  #appSidebar > .home-btn-container,
+  #appSidebar > .collapsible-group,
+  #appSidebar > .collapsible-group.collapsed,
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    flex:0 0 auto !important;
+    overflow:visible !important;
+    transform:none !important;
+  }
+  #appSidebar > .home-btn-container {
+    position:sticky !important;
+    top:0 !important;
+    z-index:1005 !important;
+  }
+  #appSidebar > .collapsible-group > .sidebar-section-title {
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    flex:0 0 auto !important;
+    z-index:2 !important;
+  }
+
+  /* Closed accordion: no child list consumes any space. */
+  #appSidebar > .collapsible-group.collapsed > .nav-list {
+    display:none !important;
+  }
+
+  /* Open accordion: ONLY this child list scrolls.
+     248px is roughly six existing tablet nav rows; it is capped by viewport
+     height so short landscape screens remain usable. */
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    position:relative !important;
+    inset:auto !important;
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:min(248px,42dvh) !important;
+    flex:0 0 auto !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    padding:3px 0 !important;
+    margin:0 !important;
+    background:var(--bg-card) !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+    touch-action:pan-y !important;
+    scrollbar-gutter:stable !important;
+  }
+
+  /* If a section has <= 6 children, don't manufacture empty scroll space. */
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list:has(> .nav-item:nth-child(-n+6):last-child) {
+    max-height:none !important;
+    overflow-y:visible !important;
+  }
+
+  #appSidebar .nav-item {
+    flex:0 0 auto !important;
+  }
+}
+</style>
+
+<script id="v11-ldce-year-picker">
+(function(){
+  function populateLdceYears(){
+    const select=document.getElementById('formYear');
+    if(!select || select.dataset.yearPickerReady==='1') return;
+    const current=new Date().getFullYear();
+    for(let y=current+1;y>=1950;y--){
+      const o=document.createElement('option'); o.value=String(y); o.textContent=String(y); select.appendChild(o);
+    }
+    select.dataset.yearPickerReady='1';
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',populateLdceYears); else populateLdceYears();
+})();
+</script>
 </body>
 </html>
+<!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
+<!-- v104: FINAL tablet-landscape drawer flow fix — mobile behavior is master -->
+<!-- v105: Samsung A9+ landscape — force OUTER drawer as the only vertical scroller -->
+<!-- v106: Samsung/tablet landscape — MOBILE-MASTER compact subsection scroller -->
