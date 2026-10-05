@@ -4230,6 +4230,15 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
     font-weight:inherit;
   }
 
+  /* IRISET E-BOOK: keep the actual second-column header text on mobile.
+     Width and all existing responsive sizing remain unchanged. */
+  #mainRecordTable:not(.unfreeze-table) thead th.ebook-book-name-th{
+    font-size:10.5px!important;
+  }
+  #mainRecordTable:not(.unfreeze-table) thead th.ebook-book-name-th::before{
+    content:none!important;
+  }
+
   #mainRecordTable th.v37-longtext, #mainRecordTable td.v37-longtext,
   #mainRecordTable th.v39-pcste-work, #mainRecordTable td.v39-pcste-work,
   #mainRecordTable.v58-chapterwise th.v58-description-col,
@@ -5150,8 +5159,7 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
       <div id="dashboardView">
         <div class="dash-hero">
           <div class="dash-hero-title">
-            <h2>Railway S&T Approvals & Sanctions Dashboard</h2>
-            <p>RailSNTGyan Real-Time Knowledge Repository & Analytics Hub</p>
+
           </div>
           <div class="dash-fy-badge-wrapper">
             <div class="dash-fy-badge">
@@ -6864,8 +6872,8 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
       } else if (currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)') {
         thead.innerHTML = `
           <tr>
-            <th style="width: var(--col-1-w);">Sr. No</th>
-            <th style="width: var(--col-2-min-w);">Book Name</th>
+            <th style="width: var(--col-1-w);">Sr.No</th>
+            <th class="ebook-book-name-th" style="width: var(--col-2-min-w);">Book Name</th>
             <th class="work-desc-th">Description</th>
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
@@ -10396,7 +10404,26 @@ function setExternalDriveFallbackToolbar(active){
     if (
       cat === 'IRSEM CHAPTER WISE' ||
       cat === 'IRTEM CHAPTER WISE' ||
-      cat === 'EI TSAA'
+      cat === 'EI TSAA' ||
+      cat === 'IMP. LETTER' ||
+      cat === 'RDSO TAN (TECHNICAL ADVISORY NOTE)' ||
+      cat === 'IRSEM CORRECTION SLIP' ||
+      cat === 'IRTEM CORRECTION SLIP' ||
+      cat === 'GCC' ||
+      cat === 'IRSOD & CORRECTION SLIP' ||
+      cat === 'LINE OPENING (MANUAL)' ||
+      cat === 'SOP (SCHEDULE OF POWER)' ||
+      cat === 'OTHER MANUALS' ||
+      cat === 'IRISET E-BOOK (SIGNAL)' ||
+      cat === 'IRISET E-BOOK (TELECOM)' ||
+      cat === 'DOCUMENTS FOR EI TSAA' ||
+      cat === 'DOCUMENTS FOR MSDAC TSAA' ||
+      cat === 'DOCUMENTS FOR PCSTE SANCTION' ||
+      cat === 'DOCUMENTS FOR GM SANCTION' ||
+      cat === 'DOCUMENTS FOR OTHER APPROVALS' ||
+      cat === 'ASTE' || cat === 'AEN' || cat === 'AMM' ||
+      cat === 'APO' || cat === 'AFA' || cat === 'AME' ||
+      cat === 'ACM' || cat === 'AOM' || cat === 'AEE'
     ) return;
 
     const headers = Array.from(table.querySelectorAll('thead th, thead td'));
@@ -10903,6 +10930,73 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener('orientationchange',schedule,{passive:true});
   schedule();
+})();
+</script>
+
+
+<style id="v85-reference-books-mobile-header-match">
+/* Reference Books & Docs: on mobile, show the real desktop second-column heading.
+   Widths and all existing responsive sizing remain unchanged. */
+@media (max-width:599px){
+  #mainRecordTable.v85-reference-books:not(.unfreeze-table) thead th:nth-child(2){
+    font-size:10.5px!important;
+  }
+  #mainRecordTable.v85-reference-books:not(.unfreeze-table) thead th:nth-child(2)::before{
+    content:none!important;
+  }
+}
+</style>
+<script id="v85-reference-books-header-match">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+  const refCats=new Set([
+    'IMP. LETTER','RDSO TAN (TECHNICAL ADVISORY NOTE)',
+    'IRSEM CHAPTER WISE','IRSEM CORRECTION SLIP',
+    'IRTEM CHAPTER WISE','IRTEM CORRECTION SLIP',
+    'GCC','IRSOD & CORRECTION SLIP','LINE OPENING (MANUAL)',
+    'SOP (SCHEDULE OF POWER)','OTHER MANUALS',
+    'IRISET E-BOOK (SIGNAL)','IRISET E-BOOK (TELECOM)'
+  ]);
+  function apply(){
+    const cat=(typeof currentCategory!=='undefined'?currentCategory:'').replace(/\s+/g,' ').trim().toUpperCase();
+    table.classList.toggle('v85-reference-books',refCats.has(cat));
+  }
+  new MutationObserver(apply).observe(table,{subtree:true,childList:true});
+  apply();
+})();
+</script>
+
+
+<style id="v86-sanction-ldce-mobile-header-master">
+/* Documents for Various Sanction/Approval + LDCE Gr. B:
+   mobile/tablet header text must remain identical to the rendered desktop header.
+   No column sizing/alignment rules are changed here. */
+@media (max-width:599px){
+  #mainRecordTable.v86-desktop-header-master:not(.unfreeze-table) thead th:nth-child(2){
+    font-size:10.5px!important;
+  }
+  #mainRecordTable.v86-desktop-header-master:not(.unfreeze-table) thead th:nth-child(2)::before{
+    content:none!important;
+  }
+}
+</style>
+<script id="v86-sanction-ldce-header-master">
+(function(){
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+  const cats=new Set([
+    'DOCUMENTS FOR EI TSAA','DOCUMENTS FOR MSDAC TSAA',
+    'DOCUMENTS FOR PCSTE SANCTION','DOCUMENTS FOR GM SANCTION',
+    'DOCUMENTS FOR OTHER APPROVALS',
+    'ASTE','AEN','AMM','APO','AFA','AME','ACM','AOM','AEE'
+  ]);
+  function apply(){
+    const cat=(typeof currentCategory!=='undefined'?currentCategory:'').replace(/\s+/g,' ').trim().toUpperCase();
+    table.classList.toggle('v86-desktop-header-master',cats.has(cat));
+  }
+  new MutationObserver(apply).observe(table,{subtree:true,childList:true});
+  apply();
 })();
 </script>
 
