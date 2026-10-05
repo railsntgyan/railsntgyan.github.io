@@ -4387,6 +4387,241 @@ body:not(.dark-theme) #dashboardView .infographic-title-tag {
   opacity: 1 !important;
 }
 </style>
+
+  <!-- v88: Keep all five parent headers visible. The opened group's subsection list
+       stays directly below its own parent and alone uses the remaining sidebar height. -->
+  <style id="v88-parent-subsection-scroll-fix">
+    #appSidebar {
+      position: relative;
+      overflow: hidden !important;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    #appSidebar > .home-btn-container {
+      flex: 0 0 auto;
+    }
+    #appSidebar > .collapsible-group {
+      flex: 0 0 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #appSidebar > .collapsible-group > .sidebar-section-title {
+      position: relative;
+      z-index: 1006;
+      flex: 0 0 auto;
+    }
+    #appSidebar > .collapsible-group.collapsed > .nav-list {
+      display: none !important;
+    }
+    #appSidebar > .collapsible-group:not(.collapsed) {
+      flex: 1 1 0;
+      min-height: 0;
+    }
+    #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+      position: static !important;
+      inset: auto !important;
+      display: block;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 3px 0 10px;
+      background: var(--bg-card);
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+      scrollbar-gutter: stable;
+    }
+    @media (max-width: 1024px) {
+      #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+      }
+    }
+  </style>
+
+
+<style id="v89-mobile-viewport-width-containment-fix">
+/* v89: Mobile/WebView only — keep Home/dashboard inside the visible viewport.
+   Does not alter desktop, tables, sidebar navigation, data or functionality. */
+@media (max-width: 768px) {
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  .app-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow-x: hidden !important;
+  }
+  #dashboardView,
+  #dashboardView > *,
+  .dash-hero,
+  .infographic-controls-bar,
+  .process-infographic-card,
+  .dash-charts-grid,
+  .chart-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .process-track-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .process-step-item {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .dash-hero > *,
+  .infographic-controls-bar > *,
+  .chart-card > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+</style>
+
+
+
+<style id="v90-mobile-layout-drawer-hard-fix">
+/* v90 MOBILE/WEBVIEW ONLY.
+   Keep the dashboard at the viewport width and make the sidebar a true overlay.
+   No desktop/table/data/functionality rules are changed. */
+@media (max-width: 768px) {
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .app-container {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .app-container > main {
+    flex: 1 1 0% !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  #dashboardView {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+  }
+
+  #dashboardView > *,
+  .dash-hero,
+  .infographic-controls-bar,
+  .process-infographic-card,
+  .dash-charts-grid,
+  .chart-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .process-track-container {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .process-step-item {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* True overlay drawer: it must never consume or shrink main-content width. */
+  #appSidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    width: min(82vw, 330px) !important;
+    min-width: 0 !important;
+    max-width: 82vw !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    flex: none !important;
+    transform: translate3d(-100%,0,0) !important;
+    transition: transform .3s cubic-bezier(.16,1,.3,1) !important;
+    z-index: 999 !important;
+    overflow: hidden !important;
+  }
+  #appSidebar.mobile-open {
+    transform: translate3d(0,0,0) !important;
+  }
+
+  #sidebarOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 998 !important;
+  }
+
+  /* Parent stays where it belongs; only the selected parent's children scroll. */
+  #appSidebar > .home-btn-container,
+  #appSidebar > .collapsible-group {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #appSidebar > .collapsible-group.collapsed {
+    flex: 0 0 auto !important;
+  }
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+  }
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+  }
+}
+</style>
+
 </head>
 <body class="dark-theme">
 
@@ -6216,6 +6451,14 @@ body:not(.dark-theme) #dashboardView .infographic-title-tag {
         sidebar.classList.toggle('mobile-open');
         overlay.classList.toggle('active');
         if (sidebar.classList.contains('mobile-open')) {
+          // Mobile/Tablet drawer must always open in the clean parent-only state.
+          // Subsections then expand directly below only the parent selected by the user.
+          if (window.innerWidth <= 1024) {
+            accordionGroupIds.forEach(id => {
+              const grp = document.getElementById(id);
+              if (grp) grp.classList.add('collapsed');
+            });
+          }
           history.pushState({ view: 'drawer' }, '', '');
         }
       }
@@ -11039,6 +11282,22 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
   apply();
 })();
 </script>
+
+
+  <script id="v88-parent-subsection-scroll-script">
+    (function(){
+      function keepActiveVisible(){
+        var sidebar=document.getElementById('appSidebar');
+        if(!sidebar)return;
+        var active=sidebar.querySelector(':scope > .collapsible-group:not(.collapsed) > .nav-list .nav-item.active');
+        if(active) requestAnimationFrame(function(){ active.scrollIntoView({block:'nearest',inline:'nearest'}); });
+      }
+      document.addEventListener('DOMContentLoaded',keepActiveVisible);
+      document.addEventListener('click',function(e){
+        if(e.target.closest('#appSidebar .sidebar-section-title, #appSidebar .nav-item')) keepActiveVisible();
+      },true);
+    })();
+  </script>
 
 </body>
 </html>
