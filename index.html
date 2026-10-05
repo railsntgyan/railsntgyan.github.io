@@ -4347,6 +4347,46 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
   }
 }
 </style>
+
+<style id="light-mode-visibility-only-fix">
+/* Light-mode visibility fix only. Dark-theme colours remain untouched. */
+body:not(.dark-theme) .sidebar-section-title,
+body:not(.dark-theme) .nav-item,
+body:not(.dark-theme) .view-title-group h2,
+body:not(.dark-theme) .view-title-group p,
+body:not(.dark-theme) .dash-hero-title h2,
+body:not(.dark-theme) .dash-hero-title p,
+body:not(.dark-theme) .infographic-title-tag,
+body:not(.dark-theme) .chart-header h3,
+body:not(.dark-theme) .filter-item,
+body:not(.dark-theme) .process-step-title,
+body:not(.dark-theme) .work-link {
+  color:#334155 !important;
+  opacity:1 !important;
+}
+body:not(.dark-theme) .view-title-group h2,
+body:not(.dark-theme) .dash-hero-title h2,
+body:not(.dark-theme) .infographic-title-tag,
+body:not(.dark-theme) .chart-header h3 { color:#0b3b60 !important; }
+body:not(.dark-theme) .view-title-group p,
+body:not(.dark-theme) .dash-hero-title p { color:#64748b !important; }
+body:not(.dark-theme) #mainRecordTable tbody td,
+body:not(.dark-theme) #mainRecordTable tbody td * { opacity:1; }
+body:not(.dark-theme) .modal-body,
+body:not(.dark-theme) .modal-body label,
+body:not(.dark-theme) .form-group label { color:#334155; }
+body:not(.dark-theme) input,
+body:not(.dark-theme) select,
+body:not(.dark-theme) textarea { color:#1e293b; }
+</style>
+
+<style id="light-mode-workflow-title-visibility-fix">
+/* Light theme only: keep the Home workflow heading readable on the existing dark dashboard canvas. */
+body:not(.dark-theme) #dashboardView .infographic-title-tag {
+  color: #e8f1ff !important;
+  opacity: 1 !important;
+}
+</style>
 </head>
 <body class="dark-theme">
 
@@ -7842,6 +7882,35 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
 
       const fileId = getDriveFileId(rawUrl);
 
+      /* v87 MOBILE/TABLET ONLY: Google Drive direct-download requests can remain
+         pending inside PDF.js on mobile browsers. Use Google's supported embedded
+         /preview directly on <=1024px instead of starting PDF.js at all. This keeps
+         desktop behaviour unchanged and prevents an indefinite Loading PDF screen. */
+      if (window.matchMedia('(max-width: 1024px)').matches && fileId) {
+        previewPdfDoc = null;
+        previewPdfLoadingTask = null;
+        previewRenderGeneration++;
+        const previewUrl = `https://drive.google.com/file/d/${encodeURIComponent(fileId)}/preview`;
+        body.innerHTML = `
+          <div id="googleDrivePreviewFallback" style="width:100%;height:100%;min-height:0;">
+            <iframe
+              id="googleDrivePreviewFrame"
+              src="${String(previewUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
+              title="Google Drive document preview"
+              style="display:block;width:100%;height:100%;border:0;background:#fff;"
+              allow="autoplay"
+              loading="eager">
+            </iframe>
+          </div>`;
+        document.getElementById('pdfPreviewModal').classList.add('v69-drive-fallback');
+        const label = document.getElementById('previewZoomValue');
+        if (label) label.textContent = Math.round((previewZoom || 1) * 100) + '%';
+        document.querySelectorAll('#pdfPreviewModal .v69-custom-zoom-control').forEach(btn => {
+          btn.disabled = false;
+        });
+        return;
+      }
+
       /* Only attempt PDF.js against the existing downloadable representation.
          If Google Drive/CORS/redirects prevent PDF.js from obtaining genuine
          PDF bytes, fall back automatically to Google's supported /preview UI. */
@@ -7857,13 +7926,32 @@ body.v58-chapterwise #mainRecordTable td.v58-description-col{
             url: pdfUrl,
             withCredentials: false
           });
-          previewPdfDoc = await previewPdfLoadingTask.promise;
+          /* Mobile/tablet safeguard: some Google Drive direct-download requests can
+             remain pending indefinitely in mobile browsers. In that case, stop only
+             the PDF.js attempt and continue to the existing Google Drive /preview
+             fallback instead of leaving the modal stuck on “Loading PDF...”.
+             Desktop keeps the original PDF.js loading behaviour unchanged. */
+          if (window.matchMedia('(max-width: 1024px)').matches) {
+            previewPdfDoc = await Promise.race([
+              previewPdfLoadingTask.promise,
+              new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Mobile PDF.js load timeout')), 7000)
+              )
+            ]);
+          } else {
+            previewPdfDoc = await previewPdfLoadingTask.promise;
+          }
           loadedByPdfJs = !!previewPdfDoc;
           if (loadedByPdfJs) break;
         } catch (_) {
           previewPdfDoc = null;
-          try { if (previewPdfLoadingTask) await previewPdfLoadingTask.destroy(); } catch (_) {}
+          /* Do not await destroy here. On some mobile browsers a stalled Google
+             Drive request can make destroy() wait as well, which leaves the UI
+             permanently on "Loading PDF...". Detach the task immediately so
+             the existing Drive preview fallback can be shown without delay. */
+          const stalledTask = previewPdfLoadingTask;
           previewPdfLoadingTask = null;
+          try { if (stalledTask) stalledTask.destroy(); } catch (_) {}
         }
       }
 
@@ -11000,5 +11088,91 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
 })();
 </script>
 
+
+
+<!-- v85: Mobile/tablet Drive-fallback preview zoom fix only. -->
+<style id="v85-mobile-tablet-preview-zoom-fix">
+@media (max-width: 1024px) {
+  /* Keep the custom zoom controls available on mobile/tablet even when the
+     preview has fallen back to the Google Drive iframe. Desktop behaviour is unchanged. */
+  #pdfPreviewModal.v69-drive-fallback .preview-zoom-toolbar {
+    display:flex !important;
+  }
+  #pdfPreviewModal.v69-drive-fallback .v69-custom-zoom-control,
+  #pdfPreviewModal.v69-drive-fallback .v69-custom-zoom-label {
+    display:inline-flex !important;
+  }
+  #pdfPreviewModal.v69-drive-fallback .v69-custom-zoom-label {
+    align-items:center;
+    justify-content:center;
+  }
+  #pdfPreviewModal.v69-drive-fallback #googleDrivePreviewFallback {
+    overflow:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #pdfPreviewModal.v69-drive-fallback #googleDrivePreviewFrame {
+    transform-origin:top left;
+  }
+}
+</style>
+<script id="v85-mobile-tablet-preview-zoom-fix-script">
+(function(){
+  const originalChange = window.changePreviewZoom;
+  const originalFit = window.fitPreviewView;
+
+  function isMobileTabletDriveFallback(){
+    return window.matchMedia('(max-width: 1024px)').matches &&
+      document.getElementById('pdfPreviewModal')?.classList.contains('v69-drive-fallback') &&
+      !!document.getElementById('googleDrivePreviewFrame');
+  }
+
+  function applyDriveFallbackZoom(){
+    const frame = document.getElementById('googleDrivePreviewFrame');
+    const label = document.getElementById('previewZoomValue');
+    if (!frame) return;
+    const z = Math.max(0.5, Math.min(2, previewZoom || 1));
+    frame.style.transform = 'scale(' + z + ')';
+    frame.style.width = (100 / z) + '%';
+    frame.style.height = (100 / z) + '%';
+    if (label) label.textContent = Math.round(z * 100) + '%';
+    if (typeof updatePreviewZoomButtons === 'function') updatePreviewZoomButtons();
+  }
+
+  window.changePreviewZoom = function(delta){
+    if (!isMobileTabletDriveFallback()) return originalChange(delta);
+    const direction = delta >= 0 ? 1 : -1;
+    const currentPct = (previewZoom || 1) * 100;
+    let nextPct = direction > 0
+      ? Math.ceil((currentPct + 0.001) / 25) * 25
+      : Math.floor((currentPct - 0.001) / 25) * 25;
+    if (direction > 0 && nextPct <= currentPct + 0.01) nextPct += 25;
+    if (direction < 0 && nextPct >= currentPct - 0.01) nextPct -= 25;
+    previewZoom = Math.max(50, Math.min(200, nextPct)) / 100;
+    applyDriveFallbackZoom();
+  };
+
+  window.fitPreviewView = function(){
+    if (!isMobileTabletDriveFallback()) return originalFit();
+    previewZoom = 1;
+    applyDriveFallbackZoom();
+    const host = document.getElementById('googleDrivePreviewFallback');
+    if (host) { host.scrollLeft = 0; host.scrollTop = 0; }
+  };
+
+  /* Existing fallback code disables the custom buttons. Re-enable only on
+     mobile/tablet after the fallback iframe is created. */
+  const observer = new MutationObserver(function(){
+    if (!isMobileTabletDriveFallback()) return;
+    document.querySelectorAll('#pdfPreviewModal .v69-custom-zoom-control').forEach(function(btn){
+      btn.disabled = false;
+    });
+    const label = document.getElementById('previewZoomValue');
+    if (label && label.textContent === 'Drive') label.textContent = Math.round((previewZoom || 1) * 100) + '%';
+    applyDriveFallbackZoom();
+  });
+  const modal = document.getElementById('pdfPreviewModal');
+  if (modal) observer.observe(modal, {subtree:true, childList:true, attributes:true, attributeFilter:['class']});
+})();
+</script>
 </body>
 </html>
