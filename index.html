@@ -13265,6 +13265,56 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
 }
 </style>
 
+
+<!-- v24b: exact Add/Edit Record modal light-theme fix -->
+<style id="v24b-add-record-light-controls">
+/* Actual theme implementation: body.dark-theme = dark; absence = light. */
+body:not(.dark-theme) #addRecordModal #formAddressedTo{
+  background:#fff !important;
+  background-color:#fff !important;
+  color:#1e293b !important;
+  -webkit-text-fill-color:#1e293b !important;
+  border-color:#cbd5e1 !important;
+  caret-color:#1e293b !important;
+  color-scheme:light !important;
+}
+body:not(.dark-theme) #addRecordModal #formAddressedTo::placeholder{
+  color:#8a8f98 !important;
+  -webkit-text-fill-color:#8a8f98 !important;
+  opacity:1 !important;
+}
+
+/* All date fields in this Add/Edit modal use the native LIGHT date UI. */
+body:not(.dark-theme) #addRecordModal input[type="date"]{
+  background:#fff !important;
+  background-color:#fff !important;
+  color:#1e293b !important;
+  -webkit-text-fill-color:#1e293b !important;
+  border-color:#cbd5e1 !important;
+  color-scheme:light !important;
+  padding-right:42px !important;
+}
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-calendar-picker-indicator{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
+  filter:none !important;
+  width:20px !important;
+  height:20px !important;
+}
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit,
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit-text,
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit-day-field,
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit-month-field,
+body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit-year-field{
+  color:#1e293b !important;
+  -webkit-text-fill-color:#1e293b !important;
+}
+</style>
+
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
