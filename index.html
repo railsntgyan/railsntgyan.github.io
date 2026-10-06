@@ -5640,6 +5640,218 @@ body.dark-theme #appSidebar .nav-item.selected {
   }
 }
 </style>
+
+<!-- v12: Adaptive sidebar accordion:
+     mobile/tablet + laptop/compact desktop = 5–6 visible subsection rows with internal scroll;
+     large desktop with sufficient viewport = use available height / show all where possible. -->
+<style id="v12-adaptive-sidebar-accordion">
+/* Compact desktop/laptop behavior. Mobile/tablet rules already present in the file remain untouched. */
+@media (min-width: 1025px) and (max-width: 1799px) {
+  aside {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+  }
+
+  aside .collapsible-group:not(.collapsed) > .nav-list {
+    display: block !important;
+    max-height: 222px !important; /* approx. 5–6 existing nav rows */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+
+  aside .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+}
+
+/* Large desktop: take advantage of the additional screen space.
+   Do not impose the compact 5–6-row cap. */
+@media (min-width: 1800px) and (min-height: 850px) {
+  aside {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+  }
+
+  aside .collapsible-group:not(.collapsed) > .nav-list {
+    display: block !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  aside .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+}
+
+/* If a wide monitor is vertically short, retain compact behavior rather
+   than allowing an expanded group to push later main sections off-screen. */
+@media (min-width: 1800px) and (max-height: 849px) {
+  aside {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+  }
+
+  aside .collapsible-group:not(.collapsed) > .nav-list {
+    display: block !important;
+    max-height: 222px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+
+  aside .collapsible-group.collapsed > .nav-list {
+    display: none !important;
+  }
+}
+</style>
+
+
+<!-- v13: HOME responsive desktop scaling — preserve tablet/mobile; use large screens instead of leaving empty space -->
+<style id="v13-home-large-screen-responsive-fix">
+/* Normal laptop / Full-HD desktop: stable 9-card row and balanced charts. */
+@media (min-width:1367px) {
+  #dashboardView{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    overflow-x:hidden !important;
+  }
+  #dashboardView .process-infographic-card,
+  #dashboardView .dash-charts-grid,
+  #dashboardView .chart-card{
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+  #dashboardView .process-track-container{
+    display:grid !important;
+    grid-template-columns:repeat(9,minmax(0,1fr)) !important;
+    width:100% !important;
+    min-width:0 !important;
+    gap:clamp(7px,.55vw,14px) !important;
+  }
+  #dashboardView .process-step-item{
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+  }
+  #dashboardView .dash-charts-grid{
+    display:grid !important;
+    grid-template-columns:minmax(0,2fr) minmax(280px,1fr) !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    align-items:stretch !important;
+  }
+  #dashboardView .chart-card{height:auto !important;}
+}
+
+/* QHD / large desktop: scale UI with the screen and use more vertical space. */
+@media (min-width:2200px) {
+  #appSidebar{width:clamp(320px,14vw,390px) !important;}
+  main{padding:clamp(16px,1vw,26px) !important;gap:clamp(12px,.8vw,20px) !important;}
+
+  #dashboardView{gap:clamp(14px,.85vw,22px) !important;}
+  #dashboardView .dash-hero{padding:clamp(13px,.8vw,22px) clamp(18px,1.1vw,30px) !important;}
+  #dashboardView .home-workflow-title{font-size:clamp(16px,.82vw,22px) !important;}
+  #dashboardView .dash-fy-badge,
+  #dashboardView .dash-total-badge{font-size:clamp(12px,.68vw,18px) !important;padding:clamp(7px,.42vw,11px) clamp(14px,.8vw,22px) !important;}
+
+  #dashboardView .process-infographic-card{padding:clamp(15px,.9vw,24px) !important;}
+  #dashboardView .process-step-item{padding:clamp(10px,.62vw,18px) clamp(7px,.45vw,13px) !important;min-height:clamp(112px,8.2vh,155px) !important;}
+  #dashboardView .process-step-badge{width:clamp(25px,1.45vw,38px) !important;height:clamp(25px,1.45vw,38px) !important;font-size:clamp(10px,.62vw,16px) !important;}
+  #dashboardView .process-step-icon{font-size:clamp(18px,1vw,27px) !important;}
+  #dashboardView .process-step-title{font-size:clamp(9px,.55vw,14px) !important;height:auto !important;min-height:2.3em !important;}
+  #dashboardView .process-step-counter{font-size:clamp(10px,.58vw,15px) !important;padding:clamp(3px,.25vw,6px) 7px !important;}
+
+  #dashboardView .dash-charts-grid{gap:clamp(14px,.8vw,24px) !important;}
+  #dashboardView .chart-card{padding:clamp(14px,.8vw,24px) !important;}
+  #dashboardView .chart-header h3{font-size:clamp(12px,.68vw,18px) !important;}
+  #dashboardView .chart-wrapper{
+    min-height:clamp(250px,27vh,460px) !important;
+    max-height:none !important;
+    height:clamp(250px,27vh,460px) !important;
+  }
+
+  #appSidebar .home-btn{font-size:clamp(12px,.62vw,16px) !important;padding:clamp(10px,.58vw,15px) 14px !important;}
+  #appSidebar .sidebar-section-title{font-size:clamp(10.5px,.54vw,14px) !important;padding:clamp(9px,.52vw,14px) 12px !important;}
+  #appSidebar .nav-item{font-size:clamp(11px,.54vw,14px) !important;padding:clamp(7px,.44vw,12px) 14px !important;}
+}
+
+/* 4K / very large desktop: continue scaling, but cap it so the dashboard does not look oversized. */
+@media (min-width:3200px) {
+  #appSidebar{width:clamp(390px,13vw,500px) !important;}
+  #dashboardView .process-step-item{min-height:clamp(145px,9vh,195px) !important;}
+  #dashboardView .chart-wrapper{
+    min-height:clamp(380px,30vh,650px) !important;
+    height:clamp(380px,30vh,650px) !important;
+  }
+}
+</style>
+
+
+<!-- v14: QHD/4K use available height: taller HOME cards + fully expanded accordion groups -->
+<style id="v14-qhd-4k-height-and-full-accordion">
+/* QHD and larger desktop screens with ample vertical space */
+@media (min-width: 2200px) and (min-height: 1200px) {
+  /* HOME workflow cards: use more of the available vertical space */
+  #dashboardView .process-step-item{
+    min-height: clamp(145px, 11.5vh, 205px) !important;
+    padding-top: clamp(15px, .9vw, 24px) !important;
+    padding-bottom: clamp(15px, .9vw, 24px) !important;
+  }
+  #dashboardView .process-step-badge{
+    width: clamp(30px, 1.55vw, 44px) !important;
+    height: clamp(30px, 1.55vw, 44px) !important;
+  }
+  #dashboardView .process-step-icon{
+    margin-top: clamp(5px, .35vw, 10px) !important;
+    margin-bottom: clamp(5px, .35vw, 10px) !important;
+  }
+
+  /* Enough height is available: opened section shows its complete subsection list. */
+  #appSidebar,
+  aside{
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+  }
+  #appSidebar .collapsible-group:not(.collapsed) > .nav-list,
+  aside .collapsible-group:not(.collapsed) > .nav-list{
+    display: block !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+  }
+  #appSidebar .collapsible-group.collapsed > .nav-list,
+  aside .collapsible-group.collapsed > .nav-list{
+    display: none !important;
+  }
+}
+
+/* 4K: cards can be taller still without making the dashboard sparse. */
+@media (min-width: 3200px) and (min-height: 1800px) {
+  #dashboardView .process-step-item{
+    min-height: clamp(185px, 12vh, 265px) !important;
+    padding-top: clamp(20px, 1vw, 32px) !important;
+    padding-bottom: clamp(20px, 1vw, 32px) !important;
+  }
+  #dashboardView .process-step-badge{
+    width: clamp(38px, 1.45vw, 54px) !important;
+    height: clamp(38px, 1.45vw, 54px) !important;
+  }
+}
+</style>
+
 </head>
 <body class="dark-theme">
 
@@ -12786,6 +12998,273 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',populateLdceYears); else populateLdceYears();
 })();
 </script>
+
+
+<!-- v112: DESKTOP/LAPTOP sidebar accordion follows tablet compact-container behaviour -->
+<style id="v112-desktop-tablet-style-accordion">
+/*
+   Laptop/desktop only. Mobile/tablet rules remain untouched.
+   Open parent shows ~5–6 subsection rows in its own scroll area; following
+   parent sections stay immediately below. The outer sidebar may also scroll.
+*/
+@media (min-width:1025px) and (pointer:fine),
+       (min-width:1367px) {
+  #appSidebar {
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    min-height:0 !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+  }
+
+  #appSidebar > .home-btn-container,
+  #appSidebar > .collapsible-group,
+  #appSidebar > .collapsible-group.collapsed,
+  #appSidebar > .collapsible-group:not(.collapsed) {
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    flex:0 0 auto !important;
+    overflow:visible !important;
+    transform:none !important;
+  }
+
+  #appSidebar > .home-btn-container {
+    position:sticky !important;
+    top:0 !important;
+    z-index:1005 !important;
+  }
+
+  #appSidebar > .collapsible-group > .sidebar-section-title {
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    flex:0 0 auto !important;
+    z-index:2 !important;
+  }
+
+  #appSidebar > .collapsible-group.collapsed > .nav-list {
+    display:none !important;
+  }
+
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    position:relative !important;
+    inset:auto !important;
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:248px !important; /* approx. 5–6 current subsection rows */
+    flex:0 0 auto !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    padding:3px 0 !important;
+    margin:0 !important;
+    background:var(--bg-card) !important;
+    overscroll-behavior-y:contain !important;
+    scrollbar-gutter:stable !important;
+  }
+
+  /* Short groups use only the height they actually need. */
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list:has(> .nav-item:nth-child(-n+6):last-child) {
+    max-height:none !important;
+    overflow-y:visible !important;
+  }
+
+  #appSidebar .nav-item { flex:0 0 auto !important; }
+
+  /* Keep all 9 dashboard cards inside the available laptop content width. */
+  #dashboardView .process-track-container {
+    grid-template-columns:repeat(9,minmax(0,1fr)) !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  #dashboardView .process-step-item {
+    min-width:0 !important;
+    width:auto !important;
+  }
+}
+</style>
+
+<!-- v15 FINAL CASCADE OVERRIDE: must stay after v112 desktop accordion rules -->
+<style id="v15-qhd-4k-final-cascade-override">
+/* QHD 2560x1440 and larger: enough space exists, so do NOT use the
+   laptop/tablet 248px subsection cap.  Keep accordion logic, but let the
+   currently opened group's complete list participate in normal sidebar flow. */
+@media (min-width:2200px) and (min-height:1200px) {
+  #appSidebar{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    min-height:0 !important;
+  }
+
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list{
+    position:relative !important;
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    overflow:visible !important;
+    padding:3px 0 !important;
+    margin:0 !important;
+  }
+
+  #appSidebar > .collapsible-group.collapsed > .nav-list{
+    display:none !important;
+  }
+
+  /* Make the nine HOME cards visibly taller on QHD screens. */
+  #dashboardView .process-step-item{
+    height:auto !important;
+    min-height:180px !important;
+    padding-top:20px !important;
+    padding-bottom:20px !important;
+  }
+  #dashboardView .process-step-badge{
+    width:42px !important;
+    height:42px !important;
+  }
+  #dashboardView .process-step-icon{
+    font-size:28px !important;
+    margin-top:8px !important;
+    margin-bottom:8px !important;
+  }
+  #dashboardView .process-step-title{
+    min-height:2.5em !important;
+    font-size:15px !important;
+  }
+  #dashboardView .process-step-counter{
+    font-size:14px !important;
+    min-height:28px !important;
+  }
+}
+
+/* 4K: use the additional height instead of retaining QHD-sized cards. */
+@media (min-width:3200px) and (min-height:1800px) {
+  #dashboardView .process-step-item{
+    min-height:250px !important;
+    padding-top:30px !important;
+    padding-bottom:30px !important;
+  }
+  #dashboardView .process-step-badge{
+    width:54px !important;
+    height:54px !important;
+    font-size:19px !important;
+  }
+  #dashboardView .process-step-icon{
+    font-size:36px !important;
+    margin-top:12px !important;
+    margin-bottom:12px !important;
+  }
+  #dashboardView .process-step-title{
+    font-size:19px !important;
+  }
+  #dashboardView .process-step-counter{
+    font-size:18px !important;
+    min-height:36px !important;
+  }
+}
+</style>
+
+
+<!-- v16: reserve a clean gutter between HOME content and the main vertical scrollbar -->
+<style id="v16-home-scrollbar-right-gutter">
+/* Desktop/laptop and larger screens only. Mobile/tablet layout remains untouched. */
+@media (min-width:1025px) {
+  main{
+    /* The right padding keeps the chart-card border visually separated
+       from the main vertical scrollbar. */
+    padding-right:24px !important;
+    box-sizing:border-box !important;
+  }
+
+  #dashboardView{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+
+  #dashboardView .dash-charts-grid{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+
+  #dashboardView .chart-card{
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Explicitly preserve a visible right edge around the proportion chart. */
+  #dashboardView .dash-charts-grid > .chart-card:last-child{
+    margin-right:2px !important;
+  }
+}
+
+/* QHD and 4K can afford a slightly wider breathing space. */
+@media (min-width:2200px) {
+  main{padding-right:32px !important;}
+}
+@media (min-width:3200px) {
+  main{padding-right:40px !important;}
+}
+</style>
+
+
+<!-- v17: clearer visual gutter between rightmost HOME card and vertical scrollbar -->
+<style id="v17-home-scrollbar-clear-gutter">
+/* Keep a deliberate empty gutter to the right of the entire HOME dashboard.
+   This makes the right border of the Proportion Share card fully visible and
+   prevents the vertical scrollbar from appearing attached to the card. */
+@media (min-width:1025px) {
+  main{
+    padding-right:34px !important;
+  }
+  #dashboardView{
+    padding-right:6px !important;
+    box-sizing:border-box !important;
+  }
+  #dashboardView .dash-charts-grid > .chart-card:last-child{
+    margin-right:4px !important;
+  }
+}
+
+/* QHD */
+@media (min-width:2200px) and (min-height:1200px) {
+  main{
+    padding-right:46px !important;
+  }
+  #dashboardView{
+    padding-right:8px !important;
+  }
+  #dashboardView .dash-charts-grid > .chart-card:last-child{
+    margin-right:5px !important;
+  }
+}
+
+/* 4K */
+@media (min-width:3200px) and (min-height:1800px) {
+  main{
+    padding-right:60px !important;
+  }
+  #dashboardView{
+    padding-right:10px !important;
+  }
+  #dashboardView .dash-charts-grid > .chart-card:last-child{
+    margin-right:6px !important;
+  }
+}
+</style>
+
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
