@@ -859,7 +859,7 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
 
     .process-track-container {
       display: grid;
-      grid-template-columns: repeat(9, 1fr);
+      grid-template-columns: repeat(10, 1fr);
       gap: 8px;
     }
 
@@ -940,6 +940,7 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
     .step-7 { --step-accent: #6366f1; }
     .step-8 { --step-accent: #9333ea; }
     .step-9 { --step-accent: #be185d; }
+    .step-10 { --step-accent: #10b981; }
 
     /* Charts Container */
     .dash-charts-grid {
@@ -4661,7 +4662,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
   #appSidebar{width:300px!important;padding:8px!important;gap:4px!important;}
   #appSidebar>.collapsible-group{border:1px solid rgba(96,165,250,.12)!important;border-radius:9px!important;overflow:hidden!important;}
   main{padding:14px 16px!important;gap:10px!important;}
-  .process-track-container{grid-template-columns:repeat(9,minmax(105px,1fr))!important;}
+  .process-track-container{grid-template-columns:repeat(10,minmax(105px,1fr))!important;}
 }
 @media (max-width:768px){
   header{padding:8px 12px!important;}
@@ -5733,7 +5734,7 @@ body.dark-theme #appSidebar .nav-item.selected {
   }
   #dashboardView .process-track-container{
     display:grid !important;
-    grid-template-columns:repeat(9,minmax(0,1fr)) !important;
+    grid-template-columns:repeat(10,minmax(0,1fr)) !important;
     width:100% !important;
     min-width:0 !important;
     gap:clamp(7px,.55vw,14px) !important;
@@ -5852,6 +5853,13 @@ body.dark-theme #appSidebar .nav-item.selected {
 }
 </style>
 
+<style id="frozen-columns-instant-theme-fix">
+/* Theme switch: frozen first two body columns must change instantly like the rest of the table. */
+#mainRecordTable:not(.unfreeze-table) tbody td:nth-child(1),
+#mainRecordTable:not(.unfreeze-table) tbody td:nth-child(2) {
+  transition: none !important;
+}
+</style>
 </head>
 <body class="dark-theme">
 
@@ -6765,6 +6773,14 @@ body.dark-theme #appSidebar .nav-item.selected {
               <div class="process-step-icon"><i class="fa-solid fa-scale-balanced"></i></div>
               <div class="process-step-title">DISPENSATION</div>
               <div class="process-step-counter"><span id="nodeCount-PCSTE_DISPENSATION">0</span> Rec</div>
+            </div>
+
+            <!-- STEP 10 -->
+            <div class="process-step-item step-10" onclick="switchCategory('SPEED RAISING')">
+              <div class="process-step-badge">10</div>
+              <div class="process-step-icon"><i class="fa-solid fa-gauge"></i></div>
+              <div class="process-step-title">SPEED RAISING</div>
+              <div class="process-step-counter"><span id="nodeCount-SPEED_RAISING">0</span> Rec</div>
             </div>
           </div>
         </div>
@@ -8008,7 +8024,8 @@ body.dark-theme #appSidebar .nav-item.selected {
       { key: 'JOINT SAFETY CERTIFICATE (JSC)', label: 'JSC', domId: 'kpi-JSC', nodeCountId: 'nodeCount-JSC', color: '#0b3b60' },
       { key: 'GRADE CONDONATION', label: 'GRADE CONDONATION', domId: 'kpi-GRADE_CONDONATION', nodeCountId: 'nodeCount-GRADE_CONDONATION', color: '#6366f1' },
       { key: 'LINE OPENING', label: 'LINE OPENING', domId: 'kpi-LINE_OPENING', nodeCountId: 'nodeCount-LINE_OPENING', color: '#9333ea' },
-      { key: 'DISPENSATION', label: 'DISPENSATION', domId: 'kpi-PCSTE_DISPENSATION', nodeCountId: 'nodeCount-PCSTE_DISPENSATION', color: '#be185d' }
+      { key: 'DISPENSATION', label: 'DISPENSATION', domId: 'kpi-PCSTE_DISPENSATION', nodeCountId: 'nodeCount-PCSTE_DISPENSATION', color: '#be185d' },
+      { key: 'SPEED RAISING', label: 'SPEED RAISING', domId: 'kpi-SPEED_RAISING', nodeCountId: 'nodeCount-SPEED_RAISING', color: '#10b981' }
     ];
 
     function updateDashboardView() {
@@ -8061,7 +8078,7 @@ body.dark-theme #appSidebar .nav-item.selected {
 
       const backgroundColors = [
         '#b91c1c', '#ea580c', '#d97706', '#059669',
-        '#0284c7', '#0b3b60', '#6366f1', '#9333ea', '#be185d'
+        '#0284c7', '#0b3b60', '#6366f1', '#9333ea', '#be185d', '#10b981'
       ];
 
       // 1. BAR CHART
@@ -8080,7 +8097,9 @@ body.dark-theme #appSidebar .nav-item.selected {
               data: dataValues,
               backgroundColor: backgroundColors,
               borderRadius: 5,
-              borderWidth: 0
+              borderWidth: 0,
+              categoryPercentage: 0.72,
+              barPercentage: 0.68
             }]
           },
           options: {
@@ -13078,9 +13097,9 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
 
   #appSidebar .nav-item { flex:0 0 auto !important; }
 
-  /* Keep all 9 dashboard cards inside the available laptop content width. */
+  /* Keep all 10 dashboard cards inside the available laptop content width. */
   #dashboardView .process-track-container {
-    grid-template-columns:repeat(9,minmax(0,1fr)) !important;
+    grid-template-columns:repeat(10,minmax(0,1fr)) !important;
     width:100% !important;
     min-width:0 !important;
   }
