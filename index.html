@@ -2305,7 +2305,7 @@ body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
 
       /* TOP SYNCHRONIZED SCROLLBAR FLUSH WITH TABLE */
       .top-scrollbar-wrapper {
-        display: block !important;
+        /* Visibility is controlled by updateTopScrollbarWidth(): show only on real horizontal overflow. */
         height: 12px !important;
         min-height: 12px !important;
         background: #e2e8f0 !important;
@@ -5860,6 +5860,239 @@ body.dark-theme #appSidebar .nav-item.selected {
   transition: none !important;
 }
 </style>
+<style id="v91-description-second-freeze-fix">
+
+/* v91: DESCRIPTION-AS-SECOND-COLUMN — freeze only Sr. No.; Description scrolls normally. */
+#mainRecordTable.unfreeze-table.description-second-first-freeze thead th:nth-child(1),
+#mainRecordTable.unfreeze-table.description-second-first-freeze tbody td:nth-child(1) {
+  position: sticky !important;
+  left: 0 !important;
+  width: var(--col-1-w) !important;
+  min-width: var(--col-1-w) !important;
+  max-width: var(--col-1-w) !important;
+  text-align: center;
+  z-index: 31 !important;
+  border-right: 1px solid var(--table-border) !important;
+  box-shadow: none !important;
+}
+#mainRecordTable.unfreeze-table.description-second-first-freeze thead th:nth-child(1) {
+  top: 0 !important;
+  z-index: 46 !important;
+  background: var(--brand-navy) !important;
+}
+/* Description must scroll horizontally, but its HEADER must still stay at the top during vertical scrolling. */
+#mainRecordTable.unfreeze-table.description-second-first-freeze thead th:nth-child(2) {
+  position: sticky !important;
+  top: 0 !important;
+  left: auto !important;
+  z-index: 20 !important;
+  background: var(--brand-navy) !important;
+  box-shadow: none !important;
+}
+#mainRecordTable.unfreeze-table.description-second-first-freeze tbody td:nth-child(2) {
+  position: static !important;
+  left: auto !important;
+  z-index: auto !important;
+  box-shadow: none !important;
+}
+@media (max-width:1024px) {
+  #mainRecordTable.unfreeze-table.description-second-first-freeze thead th:nth-child(1),
+  #mainRecordTable.unfreeze-table.description-second-first-freeze tbody td:nth-child(1) {
+    width: 48px !important; min-width: 48px !important; max-width: 48px !important;
+  }
+}
+@media (min-width:600px) and (max-width:767px) {
+  #mainRecordTable.unfreeze-table.description-second-first-freeze thead th:nth-child(1),
+  #mainRecordTable.unfreeze-table.description-second-first-freeze tbody td:nth-child(1) {
+    width: 42px !important; min-width: 42px !important; max-width: 42px !important;
+  }
+}
+@media (max-width:599px) {
+  #mainRecordTable.unfreeze-table.description-second-first-freeze thead th:nth-child(1),
+  #mainRecordTable.unfreeze-table.description-second-first-freeze tbody td:nth-child(1) {
+    width: 38px !important; min-width: 38px !important; max-width: 38px !important;
+    padding-left: 2px !important; padding-right: 2px !important;
+  }
+}
+</style>
+
+
+
+<style id="v97-tablet-zero-sidebar-reserve-final">
+/* FINAL <=1024px layout lock: closed drawer occupies ZERO layout width.
+   Main is pinned to the app-container edges, so no inherited flex/sidebar
+   basis, margin or width can leave a blank strip on the left. */
+@media (max-width:1024px) {
+  html, body {
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+  .app-container {
+    position:relative !important;
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+  }
+  .app-container > main {
+    position:absolute !important;
+    inset:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    width:auto !important;
+    height:auto !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin:0 !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+  }
+  #dashboardView, #tableViewSection {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+  }
+  #appSidebar {
+    position:fixed !important;
+    top:0 !important;
+    bottom:0 !important;
+    left:0 !important;
+    right:auto !important;
+    width:min(82vw,330px) !important;
+    max-width:82vw !important;
+    min-width:0 !important;
+    margin:0 !important;
+    flex:none !important;
+    z-index:999 !important;
+    box-sizing:border-box !important;
+  }
+  #appSidebar:not(.mobile-open) { transform:translate3d(-105%,0,0) !important; }
+  #appSidebar.mobile-open { transform:translate3d(0,0,0) !important; }
+  #sidebarOverlay { position:fixed !important; inset:0 !important; z-index:998 !important; }
+  .menu-toggle-btn { display:inline-flex !important; }
+}
+</style>
+
+
+<style id="mobile-sidebar-font-subtle-reduction">
+/* Mobile only: subtle ~6% sidebar navigation font reduction. No geometry/layout changes. */
+@media (max-width: 480px) {
+  aside .sidebar-section-title { font-size: 9.9px !important; }
+  aside .nav-item { font-size: 10.35px !important; }
+}
+</style>
+
+<style id="v-mobile-light-drawer-paint-fix">
+/* Mobile/tablet LIGHT-THEME drawer paint fix only.
+   Geometry, font sizing, accordion behaviour and dark theme are untouched. */
+@media (max-width:1024px) {
+  body:not(.dark-theme) #appSidebar {
+    background:#f8fafc !important;
+    background-color:#f8fafc !important;
+    color:#334155 !important;
+    border-right-color:#cbd5e1 !important;
+    box-shadow:4px 0 18px rgba(15,23,42,.14) !important;
+  }
+  body:not(.dark-theme) #appSidebar > .home-btn-container {
+    background:#ffffff !important;
+    background-color:#ffffff !important;
+  }
+  body:not(.dark-theme) #appSidebar > .collapsible-group {
+    background:transparent !important;
+  }
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:#f8fafc !important;
+    background-color:#f8fafc !important;
+    color:#334155 !important;
+  }
+  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
+    background:color-mix(in srgb, var(--section-accent, #06b6d4) 8%, #f8fafc) !important;
+    color:#334155 !important;
+  }
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title:hover {
+    background:color-mix(in srgb, var(--section-accent, #06b6d4) 6%, #f8fafc) !important;
+    color:#334155 !important;
+  }
+  body:not(.dark-theme) #appSidebar .nav-list,
+  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    background:#ffffff !important;
+    background-color:#ffffff !important;
+  }
+  body:not(.dark-theme) #appSidebar .nav-item {
+    color:#475569 !important;
+    background-color:transparent !important;
+  }
+  body:not(.dark-theme) #appSidebar .nav-item.active,
+  body:not(.dark-theme) #appSidebar .nav-item.active-subsection,
+  body:not(.dark-theme) #appSidebar .nav-item.selected {
+    color:#0b3b60 !important;
+    background-color:#eaf4fb !important;
+  }
+  body:not(.dark-theme) #appSidebar .nav-item:hover {
+    color:#0b3b60 !important;
+    background-color:#f0f7fb !important;
+  }
+  /* The backdrop dims only the page behind the drawer; the drawer stays above it. */
+  body:not(.dark-theme) #sidebarOverlay {
+    background:rgba(15,23,42,.42) !important;
+    z-index:998 !important;
+  }
+  body:not(.dark-theme) #appSidebar { z-index:999 !important; }
+}
+</style>
+
+<style id="drawer-full-transparent-tail-final">
+/* Mobile/tablet drawer: panel ends visually at the last navigation item.
+   The area below remains fully transparent so the HOME page is directly visible. */
+@media (max-width: 1024px) {
+  aside.sidebar,
+  .sidebar {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Keep only the menu controls/cards themselves visually solid. */
+  .home-btn-container,
+  .sidebar .home-btn,
+  .sidebar-section-title,
+  .sidebar .nav-list,
+  .sidebar .nav-item,
+  .sidebar .nav-link {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+</style>
+
+<style id="v114-global-light-workspace-background-fix">
+/* Light theme only: remove exposed dark canvas around cards on all viewports.
+   Preserve dark theme, table styling, drawer and scrolling behavior. */
+html:not(.dark-theme):has(body:not(.dark-theme)),
+body:not(.dark-theme),
+body:not(.dark-theme) .app-container,
+body:not(.dark-theme) #mainContent {
+  background-color:#f3f6f9 !important;
+}
+body:not(.dark-theme) .app-container,
+body:not(.dark-theme) #mainContent {
+  background-image:none !important;
+}
+</style>
+
 </head>
 <body class="dark-theme">
 
@@ -6590,6 +6823,7 @@ body.dark-theme #appSidebar .nav-item.selected {
           <li class="nav-item" onclick="switchCategory('INSPECTION NOTE')"><i class="fa-solid fa-clipboard-check" style="color: #2563eb;"></i> INSPECTION NOTE</li>
           <li class="nav-item" onclick="switchCategory('SECR POLICY')"><i class="fa-solid fa-book" style="color: #4f46e5;"></i> SECR POLICY</li>
           <li class="nav-item" onclick="switchCategory('SECR TYPICAL')"><i class="fa-solid fa-diagram-project" style="color: #c026d3;"></i> SECR TYPICAL</li>
+          <li class="nav-item" onclick="switchCategory('FILE MOVEMENT REGISTER')"><i class="fa-solid fa-folder-tree" style="color: #475569;"></i> FILE MOVEMENT REGISTER</li>
         </ul>
       </div>
 
@@ -8389,6 +8623,12 @@ body.dark-theme #appSidebar .nav-item.selected {
       } else {
         tableElem.classList.remove('unfreeze-table');
       }
+
+      // Targeted freeze rule: when Description is the 2nd column, keep only Sr. No. frozen.
+      // All other table freeze/unfreeze behaviour remains unchanged.
+      const isDescriptionSecondColumn = standardManualCategories.includes(currentCategory) || docApprovalCategories.includes(currentCategory);
+      tableElem.classList.toggle('description-second-first-freeze', isDescriptionSecondColumn);
+
       tableElem.classList.remove('rdso-tan-table', 'hq-letter-table', 'jpo-table');
       if (currentCategory === 'LETTER ISSUED BY HQ') tableElem.classList.add('hq-letter-table');
       if (currentCategory === 'JPO (JOINT PROCEDURE ORDER)') tableElem.classList.add('jpo-table');
@@ -9508,6 +9748,41 @@ body.dark-theme #appSidebar .nav-item.selected {
 
       const fileId = getDriveFileId(rawUrl);
 
+      /* Direct external PDF links must bypass PDF.js completely. Many public
+         Railway/RDSO servers do not allow cross-origin PDF.js fetching, which
+         can leave the custom viewer waiting on Loading PDF. Google Drive links
+         keep the existing PDF.js -> Drive-preview flow unchanged. */
+      const isDirectExternalPdf = !fileId && /\.pdf(?:$|[?#])/i.test(String(rawUrl));
+      if (isDirectExternalPdf) {
+        previewPdfDoc = null;
+        previewRenderGeneration++;
+
+        const previewUrl = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(rawUrl);
+        body.innerHTML = `
+          <div id="googleDrivePreviewFallback" style="width:100%;height:100%;min-height:0;">
+            <iframe
+              id="googleDrivePreviewFrame"
+              src="${String(previewUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
+              title="PDF document preview"
+              style="display:block;width:100%;height:100%;border:0;background:#fff;"
+              allow="autoplay"
+              loading="eager">
+            </iframe>
+          </div>`;
+
+        document.getElementById('pdfPreviewModal').classList.add('v69-drive-fallback');
+        const directLabel = document.getElementById('previewZoomValue');
+        if (directLabel) directLabel.textContent = 'PDF';
+        document.querySelectorAll('#pdfPreviewModal .modal-header-actions button').forEach(btn => {
+          const oc = btn.getAttribute('onclick') || '';
+          if (oc.includes('changePreviewZoom') || oc.includes('fitPreviewView')) {
+            btn.disabled = true;
+            btn.title = 'Zoom is controlled by the embedded PDF viewer';
+          }
+        });
+        return;
+      }
+
       /* Only attempt PDF.js against the existing downloadable representation.
          If Google Drive/CORS/redirects prevent PDF.js from obtaining genuine
          PDF bytes, fall back automatically to Google's supported /preview UI. */
@@ -9523,7 +9798,11 @@ body.dark-theme #appSidebar .nav-item.selected {
             url: pdfUrl,
             withCredentials: false
           });
-          previewPdfDoc = await previewPdfLoadingTask.promise;
+          // Do not let a cross-origin PDF keep the modal on “Loading PDF…” forever.
+          previewPdfDoc = await Promise.race([
+            previewPdfLoadingTask.promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error('PDF.js load timeout')), 5000))
+          ]);
           loadedByPdfJs = !!previewPdfDoc;
           if (loadedByPdfJs) break;
         } catch (_) {
@@ -9555,12 +9834,28 @@ body.dark-theme #appSidebar .nav-item.selected {
         if (converted) previewUrl = converted;
       }
 
+      // Direct PDF links (for example Indian Railways/RDSO PDFs) are also
+      // allowed in the existing preview modal. PDF.js is tried first above;
+      // this iframe is only the graceful fallback when the source server
+      // does not permit PDF.js cross-origin fetching.
+      const isDriveFallback = !!fileId || /drive\.google\.com/i.test(String(previewUrl));
+
+      // A direct external PDF can reject both PDF.js fetches (CORS) and direct
+      // iframe embedding (X-Frame-Options/CSP). For that case use Google's
+      // document viewer as the iframe source while keeping the original PDF URL
+      // untouched for Download. Google Drive links continue to use Drive preview.
+      if (!isDriveFallback) {
+        previewUrl = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(rawUrl);
+      }
+
+      const fallbackTitle = isDriveFallback ? 'Google Drive document preview' : 'PDF document preview';
+
       body.innerHTML = `
         <div id="googleDrivePreviewFallback" style="width:100%;height:100%;min-height:0;">
           <iframe
             id="googleDrivePreviewFrame"
             src="${String(previewUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
-            title="Google Drive document preview"
+            title="${fallbackTitle}"
             style="display:block;width:100%;height:100%;border:0;background:#fff;"
             allow="autoplay"
             loading="eager">
@@ -9572,13 +9867,15 @@ body.dark-theme #appSidebar .nav-item.selected {
          cross-origin Drive zoom cannot truthfully be controlled from here. */
       document.getElementById('pdfPreviewModal').classList.add('v69-drive-fallback');
       const label = document.getElementById('previewZoomValue');
-      if (label) label.textContent = 'Drive';
+      if (label) label.textContent = isDriveFallback ? 'Drive' : 'PDF';
 
       document.querySelectorAll('#pdfPreviewModal .modal-header-actions button').forEach(btn => {
         const oc = btn.getAttribute('onclick') || '';
         if (oc.includes('changePreviewZoom') || oc.includes('fitPreviewView')) {
           btn.disabled = true;
-          btn.title = 'Zoom is controlled by Google Drive in fallback preview';
+          btn.title = isDriveFallback
+            ? 'Zoom is controlled by Google Drive in fallback preview'
+            : 'Zoom is controlled by the browser PDF viewer in fallback preview';
         }
       });
     }
@@ -9616,12 +9913,21 @@ body.dark-theme #appSidebar .nav-item.selected {
     }
 
     function openPreview(title, link, column2Item = '') {
-      enableNativePinchForPreview();
       if (!link) {
         alert("No Drive attachment link has been provided for this record.");
         return;
       }
 
+      // Direct external PDF URLs (e.g. Indian Railways/RDSO) may block both
+      // PDF.js cross-origin fetches and iframe/Google Viewer embedding. Open
+      // the original PDF URL directly instead of showing a broken preview.
+      const directExternalPdf = !getDriveFileId(link) && /\.pdf(?:$|[?#])/i.test(String(link));
+      if (directExternalPdf) {
+        window.open(link, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      enableNativePinchForPreview();
       currentPreviewOriginalUrl = link;
       currentPreviewFileId = getDriveFileId(link);
 
@@ -10639,6 +10945,17 @@ document.addEventListener('click',function(e){
 </style>
 
 
+<style id="uniform-theme-switch-fix">
+/* Theme-switch synchronization fix: theme-dependent surfaces change in the same frame.
+   This is scoped only to the brief theme toggle operation so normal hover/menu animations remain unchanged. */
+html.rail-theme-switching *,
+html.rail-theme-switching *::before,
+html.rail-theme-switching *::after {
+  transition: none !important;
+  animation-duration: 0s !important;
+}
+</style>
+
 <style id="light-dark-theme">
   /* Smooth theme transition */
   body, header, aside, main, .dash-hero, .process-infographic-card, .chart-card,
@@ -10780,6 +11097,12 @@ document.addEventListener('click',function(e){
 (function () {
   function applyTheme(theme) {
     const dark = theme === 'dark';
+
+    // Apply every theme-dependent CSS rule in one visual frame.  Some portal
+    // components have their own hover/layout transitions; temporarily disabling
+    // those transitions prevents sticky cells, cards and sidebar sections from
+    // visually changing before/after the rest of the page.
+    document.documentElement.classList.add('rail-theme-switching');
     document.documentElement.classList.toggle('dark-theme', dark);
     document.body.classList.toggle('dark-theme', dark);
     const btn = document.getElementById('themeToggleBtn');
@@ -10789,6 +11112,15 @@ document.addEventListener('click',function(e){
       btn.setAttribute('aria-label', btn.title);
     }
     try { localStorage.setItem('railsntgyan-theme', theme); } catch(e) {}
+
+    // Force style resolution while transitions are suppressed, then restore the
+    // portal's normal hover/menu animations immediately after the theme has landed.
+    void document.documentElement.offsetWidth;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove('rail-theme-switching');
+      });
+    });
 
     // Refresh canvas labels/legend immediately because Chart.js text colors
     // are drawn on canvas and do not respond to CSS theme changes.
@@ -13335,9 +13667,1868 @@ body:not(.dark-theme) #addRecordModal input[type="date"]::-webkit-datetime-edit-
 }
 </style>
 
+
+<style id="v95-final-theme-geometry-lock">
+/* FINAL THEME GEOMETRY LOCK
+   Dark/light may change paint only. Geometry is kept identical so theme
+   switching cannot move HOME, sidebar parents/subsections, header or dashboard cards. */
+
+/* Header separator must occupy the same space in both themes. */
+body.dark-theme header { border-bottom-width:3px !important; }
+
+/* Sidebar: match the normal/light geometry exactly. */
+body.dark-theme .home-btn-container { padding:10px 12px !important; }
+body.dark-theme .home-btn {
+  min-height:0 !important;
+  padding:11px 14px !important;
+  font-size:14px !important;
+  border-width:0 !important; /* dark visual edge remains via existing glow/shadow */
+}
+body.dark-theme .sidebar-section-title {
+  min-height:0 !important;
+  padding:11px 13px !important;
+  font-size:12.5px !important;
+  line-height:1.3 !important;
+}
+body.dark-theme .nav-list { padding:3px 0 !important; }
+body.dark-theme .nav-item {
+  margin:1px 4px !important;
+  padding:9px 14px !important;
+  font-size:12.5px !important;
+  line-height:1.3 !important;
+}
+
+/* Dashboard spacing: same as base/light desktop geometry. */
+body.dark-theme .process-track-container { gap:8px !important; }
+
+/* Existing mobile readability rules are the geometry master below 768px. */
+@media (max-width:768px) {
+  body.dark-theme .home-btn { font-size:15px !important; }
+  body.dark-theme .sidebar-section-title {
+    font-size:13.5px !important;
+    padding:12px 14px !important;
+  }
+  body.dark-theme .nav-item {
+    font-size:13.5px !important;
+    padding:10px 15px !important;
+    gap:10px !important;
+  }
+  body.dark-theme .process-track-container { gap:10px !important; }
+}
+
+/* Large-display responsive clamp is also shared by both themes. */
+@media (min-width:1920px) {
+  body.dark-theme #appSidebar .home-btn {
+    font-size:clamp(12px,.62vw,16px) !important;
+    padding:clamp(10px,.58vw,15px) 14px !important;
+  }
+  body.dark-theme #appSidebar .sidebar-section-title {
+    font-size:clamp(10.5px,.54vw,14px) !important;
+    padding:clamp(9px,.52vw,14px) 12px !important;
+  }
+  body.dark-theme #appSidebar .nav-item {
+    font-size:clamp(11px,.54vw,14px) !important;
+    padding:clamp(7px,.44vw,12px) 14px !important;
+  }
+}
+</style>
+
+<style id="v-mobile-tablet-transparent-drawer-unused-area">
+/* Mobile/tablet overlay drawer: keep navigation surfaces readable, but make
+   the unused area below the last navigation group transparent so the dimmed
+   page/backdrop remains visible. Desktop sidebar is intentionally unchanged. */
+@media (max-width:1024px) {
+  #appSidebar,
+  body.dark-theme #appSidebar,
+  body:not(.dark-theme) #appSidebar {
+    background:transparent !important;
+    background-color:transparent !important;
+    border-right-color:transparent !important;
+    box-shadow:none !important;
+  }
+
+  /* Preserve the existing painted navigation surfaces themselves. */
+  body:not(.dark-theme) #appSidebar > .home-btn-container {
+    background:#ffffff !important;
+    background-color:#ffffff !important;
+  }
+  body.dark-theme #appSidebar > .home-btn-container {
+    background:rgba(7,16,29,.98) !important;
+    background-color:rgba(7,16,29,.98) !important;
+  }
+
+  /* Parent groups remain transparent; their title cards already carry their
+     own theme-specific backgrounds/borders. */
+  #appSidebar > .collapsible-group {
+    background:transparent !important;
+    background-color:transparent !important;
+  }
+
+  /* An expanded subsection list still needs an opaque reading surface. */
+  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    background:#ffffff !important;
+    background-color:#ffffff !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    background:#07101d !important;
+    background-color:#07101d !important;
+  }
+}
+</style>
+
+<style id="v-mobile-tablet-drawer-no-background-blur">
+/* Responsive drawer: keep the underlying HOME/table page sharp while the
+   drawer is open. The overlay may dim the page, but must never blur it. */
+@media (max-width:1024px) {
+  .sidebar-overlay,
+  .sidebar-overlay.active,
+  .sidebar-overlay.show {
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    filter:none !important;
+  }
+
+  /* The drawer shell itself must not create a frosted/blurred transparent tail. */
+  #appSidebar,
+  body.dark-theme #appSidebar,
+  body:not(.dark-theme) #appSidebar {
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    filter:none !important;
+  }
+}
+</style>
+
+<style id="v-mobile-tablet-floating-menu-cards-final">
+/*
+  Mobile/tablet drawer final visual structure:
+  - actual HOME page remains fully visible in every gap and below IMPORTANT LINKS
+  - no continuous sidebar panel/background
+  - HOME button and every parent section title remain solid, using existing portal colors
+  - expanded subsection list remains readable
+  - no blur/dim overlay
+  Desktop is untouched.
+*/
+@media (max-width:1024px) {
+  /* Drawer is only a positioning shell; it must not paint a panel. */
+  #appSidebar,
+  body:not(.dark-theme) #appSidebar,
+  body.dark-theme #appSidebar {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-right: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  /* HOME wrapper must also be transparent: only the HOME button itself is solid. */
+  #appSidebar > .home-btn-container,
+  body:not(.dark-theme) #appSidebar > .home-btn-container,
+  body.dark-theme #appSidebar > .home-btn-container {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  /* No continuous background behind parent groups or in the gaps between cards. */
+  #appSidebar > .collapsible-group,
+  body:not(.dark-theme) #appSidebar > .collapsible-group,
+  body.dark-theme #appSidebar > .collapsible-group {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* IMPORTANT: section strips themselves stay solid/readable.
+     Keep the portal's existing light/dark theme colors; do not make these transparent. */
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+    background: rgba(241,245,249,.97) !important;
+    background-color: rgba(241,245,249,.97) !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group > .sidebar-section-title {
+    background: rgba(30,41,59,.97) !important;
+    background-color: rgba(30,41,59,.97) !important;
+  }
+
+  /* Expanded child list is a real reading surface, so it remains solid. */
+  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    background: rgba(255,255,255,.98) !important;
+    background-color: rgba(255,255,255,.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    background: rgba(7,16,29,.98) !important;
+    background-color: rgba(7,16,29,.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* The HOME page itself must be normal/clear, not blurred or dimmed. */
+  #sidebarOverlay,
+  #sidebarOverlay.active,
+  .sidebar-overlay,
+  .sidebar-overlay.active,
+  .sidebar-overlay.show {
+    background: transparent !important;
+    background-color: transparent !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+}
+</style>
+
+
+<style id="v-mobile-tablet-floating-subsection-cards-final">
+/*
+  Extend the floating-card treatment to expanded subsections on mobile/tablet.
+  Parent section cards and child subsection items remain readable/solid.
+  Only the nav-list canvas and the gaps between subsection items are transparent,
+  so the actual HOME page shows through clearly.
+*/
+@media (max-width:1024px) {
+  /* Expanded subsection container itself must paint nothing. */
+  #appSidebar > .collapsible-group > .nav-list,
+  #appSidebar > .collapsible-group:not(.collapsed) > .nav-list,
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list,
+  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list,
+  body.dark-theme #appSidebar > .collapsible-group > .nav-list,
+  body.dark-theme #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  /* Each child/subsection is its own solid floating strip. */
+  body:not(.dark-theme) #appSidebar .nav-list > li,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-item {
+    background-color: rgba(255,255,255,.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.dark-theme #appSidebar .nav-list > li,
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-item {
+    background-color: rgba(15,30,49,.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Keep real transparent space between child cards.
+     Do not alter typography or widths. */
+  #appSidebar .nav-list > li,
+  #appSidebar .nav-list > a,
+  #appSidebar .nav-list > .nav-item {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Do not let pseudo-elements recreate a continuous panel. */
+  #appSidebar .nav-list::before,
+  #appSidebar .nav-list::after {
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+</style>
+
+
+<style id="v-mobile-tablet-subsection-distinct-colors-final">
+/* Distinguish expanded subsection cards from the HOME page on mobile/tablet.
+   Main section cards, icons, layout, transparency gaps and desktop remain unchanged. */
+@media (max-width:1024px) {
+  /* LIGHT: soft blue-grey subsection surface */
+  body:not(.dark-theme) #appSidebar .nav-list > li,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+    background: #e8eef5 !important;
+    background-color: #e8eef5 !important;
+  }
+
+  /* DARK: slightly lighter slate/blue than the underlying HOME/dashboard */
+  body.dark-theme #appSidebar .nav-list > li,
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-list > .nav-item {
+    background: #1e3047 !important;
+    background-color: #1e3047 !important;
+  }
+
+  /* Preserve the transparent canvas/gaps around the subsection cards. */
+  #appSidebar .nav-list,
+  body:not(.dark-theme) #appSidebar .nav-list,
+  body.dark-theme #appSidebar .nav-list {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+</style>
+
+
+<style id="v-mobile-tablet-modern-subsection-cards-final">
+/* Modern, sophisticated subsection palette for responsive drawer only.
+   Keeps parent section colors, icon colors, transparent gaps, and desktop unchanged. */
+@media (max-width:1024px) {
+  /* LIGHT — cool mist/slate surface, visibly distinct from white dashboard */
+  body:not(.dark-theme) #appSidebar .nav-list > li,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+    background: #dbe5ef !important;
+    background-color: #dbe5ef !important;
+    color: #24364b !important;
+    border-color: rgba(100,116,139,.34) !important;
+    box-shadow: 0 1px 2px rgba(15,23,42,.08) !important;
+  }
+
+  /* DARK — refined desaturated steel-blue, distinct from navy HOME/dashboard */
+  body.dark-theme #appSidebar .nav-list > li,
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-list > .nav-item {
+    background: #263b52 !important;
+    background-color: #263b52 !important;
+    color: #edf4fb !important;
+    border-color: rgba(148,163,184,.24) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.20) !important;
+  }
+
+  /* Ensure text inherits the sophisticated high-contrast surface color,
+     while existing colored icons keep their own colors. */
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-list .nav-item {
+    color: #24364b !important;
+  }
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-list .nav-item {
+    color: #edf4fb !important;
+  }
+
+  /* Canvas/gaps remain fully transparent so HOME is visible between strips. */
+  #appSidebar .nav-list,
+  body:not(.dark-theme) #appSidebar .nav-list,
+  body.dark-theme #appSidebar .nav-list {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+</style>
+
+
+<style id="v-mobile-tablet-subsection-teal-palette-final">
+/* Teal/cyan subsection palette inspired by the selected reference palette.
+   Responsive drawer only; parent cards, icon colors, transparent gaps and desktop unchanged. */
+@media (max-width:1024px) {
+  /* LIGHT THEME — soft cyan/teal surface */
+  body:not(.dark-theme) #appSidebar .nav-list > li,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+    background: #D7F0F4 !important;
+    background-color: #D7F0F4 !important;
+    color: #173A46 !important;
+    border-color: rgba(41,145,169,.30) !important;
+    box-shadow: 0 1px 2px rgba(15,23,42,.08) !important;
+  }
+
+  /* DARK THEME — deep muted teal */
+  body.dark-theme #appSidebar .nav-list > li,
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-list > .nav-item {
+    background: #174A59 !important;
+    background-color: #174A59 !important;
+    color: #F0FBFC !important;
+    border-color: rgba(49,183,209,.28) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.22) !important;
+  }
+
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-list .nav-item {
+    color: #173A46 !important;
+  }
+
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-list .nav-item {
+    color: #F0FBFC !important;
+  }
+
+  /* Keep the canvas and the spaces between subsection strips fully transparent. */
+  #appSidebar .nav-list,
+  body:not(.dark-theme) #appSidebar .nav-list,
+  body.dark-theme #appSidebar .nav-list {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+</style>
+
+
+<style id="v-responsive-subsection-subtle-neon-glow-final">
+/*
+  Subtle premium neon treatment for SUBSECTION cards only (<=1024px).
+  Main section cards, layout, transparent gaps, icons and desktop remain unchanged.
+*/
+@media (max-width:1024px) {
+
+  /* LIGHT THEME: crisp teal edge with a very restrained glow */
+  body:not(.dark-theme) #appSidebar .nav-list > li,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a,
+  body:not(.dark-theme) #appSidebar .nav-list > a,
+  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+    border: 1px solid rgba(18, 177, 196, .62) !important;
+    box-shadow:
+      0 0 0 1px rgba(18, 177, 196, .06),
+      0 2px 5px rgba(15, 23, 42, .08) !important;
+  }
+
+  /* DARK THEME: cyan/teal neon edge + soft outer aura */
+  body.dark-theme #appSidebar .nav-list > li,
+  body.dark-theme #appSidebar .nav-list > li > a,
+  body.dark-theme #appSidebar .nav-list > a,
+  body.dark-theme #appSidebar .nav-list > .nav-item {
+    border: 1px solid rgba(34, 211, 238, .78) !important;
+    box-shadow:
+      0 0 4px rgba(34, 211, 238, .28),
+      0 0 9px rgba(20, 184, 166, .14),
+      0 2px 4px rgba(0, 0, 0, .22) !important;
+  }
+
+  /* Hover/focus: slightly stronger, never an aggressive gaming-style glow */
+  body:not(.dark-theme) #appSidebar .nav-list > li:hover,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a:hover,
+  body:not(.dark-theme) #appSidebar .nav-list > a:hover,
+  body:not(.dark-theme) #appSidebar .nav-list > .nav-item:hover,
+  body:not(.dark-theme) #appSidebar .nav-list > li > a:focus-visible,
+  body:not(.dark-theme) #appSidebar .nav-list > a:focus-visible {
+    border-color: rgba(6, 182, 212, .88) !important;
+    box-shadow:
+      0 0 4px rgba(6, 182, 212, .18),
+      0 3px 7px rgba(15, 23, 42, .10) !important;
+  }
+
+  body.dark-theme #appSidebar .nav-list > li:hover,
+  body.dark-theme #appSidebar .nav-list > li > a:hover,
+  body.dark-theme #appSidebar .nav-list > a:hover,
+  body.dark-theme #appSidebar .nav-list > .nav-item:hover,
+  body.dark-theme #appSidebar .nav-list > li > a:focus-visible,
+  body.dark-theme #appSidebar .nav-list > a:focus-visible {
+    border-color: rgba(103, 232, 249, .96) !important;
+    box-shadow:
+      0 0 6px rgba(34, 211, 238, .44),
+      0 0 12px rgba(20, 184, 166, .22),
+      0 3px 6px rgba(0, 0, 0, .24) !important;
+  }
+
+  /* Preserve transparent space around cards. */
+  #appSidebar .nav-list,
+  body:not(.dark-theme) #appSidebar .nav-list,
+  body.dark-theme #appSidebar .nav-list {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+}
+</style>
+
+
+<style id="v-responsive-parent-section-opaque-both-themes-final">
+/* Final requested treatment: parent SECTION strips are fully opaque on mobile/tablet.
+   Subsection palette/neon treatment, transparent gaps, layout and desktop remain unchanged. */
+@media (max-width:1024px) {
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:#f8fafc !important;
+    background-color:#f8fafc !important;
+    opacity:1 !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:#1e293b !important;
+    background-color:#1e293b !important;
+    opacity:1 !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+}
+</style>
+
+<!-- v131: FILE MOVEMENT REGISTER first three columns intentionally have NO category-specific width rules.
+     Sr. No., Station/Section and Division inherit the same existing v37/v79 rules used by PCSTE Sanction. -->
+
+<!-- v132: All subsection tables grow only with their actual content. -->
+<style id="v132-all-subsections-content-auto-height">
+/* Override the older full-viewport table-view sizing.
+   Applies uniformly to every subsection using the common table view. */
+#tableViewSection{
+  flex:0 0 auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+
+#tableViewSection .table-container,
+#mainTableContainer.table-container{
+  flex:0 0 auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Keep the table itself content-driven: its rows determine container height. */
+#mainRecordTable{
+  height:auto !important;
+  min-height:0 !important;
+}
+
+/* Neutralize the earlier mobile/tablet viewport-height rule too. */
+@media (max-width:1024px){
+  #tableViewSection{
+    flex:0 0 auto !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+  #tableViewSection .table-container,
+  #mainTableContainer.table-container{
+    flex:0 0 auto !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+  }
+}
+</style>
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
 <!-- v104: FINAL tablet-landscape drawer flow fix — mobile behavior is master -->
 <!-- v105: Samsung A9+ landscape — force OUTER drawer as the only vertical scroller -->
 <!-- v106: Samsung/tablet landscape — MOBILE-MASTER compact subsection scroller -->
+
+<style id="v-final-section-subsection-visual-match-107">
+/* v107 FINAL VISUAL OVERRIDE — responsive drawer only.
+   Restores clear neon borders on subsection strips and reference-style parent cards. */
+@media (max-width:1024px) {
+  /* Parent/main section cards: opaque fill + individual accent border. */
+  #appSidebar > .collapsible-group > .sidebar-section-title {
+    margin:3px 5px !important;
+    border:1px solid var(--section-accent) !important;
+    border-radius:7px !important;
+    opacity:1 !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:#f8fafc !important;
+    color:#334155 !important;
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--section-accent) 10%,transparent),
+               0 2px 6px color-mix(in srgb,var(--section-accent) 18%,transparent) !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:#1e293b !important;
+    color:#f1f5f9 !important;
+    box-shadow:0 0 5px color-mix(in srgb,var(--section-accent) 48%,transparent),
+               inset 0 0 4px color-mix(in srgb,var(--section-accent) 12%,transparent) !important;
+  }
+
+  /* Subsection list remains transparent between strips. */
+  #appSidebar > .collapsible-group > .nav-list {
+    background:transparent !important;
+    box-shadow:none !important;
+  }
+
+  /* Actual subsection strip — target .nav-item directly, regardless of LI/A markup. */
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item {
+    background:#d7f0f4 !important;
+    color:#173a46 !important;
+    border:1px solid #12b1c4 !important;
+    border-left:1px solid #12b1c4 !important;
+    border-radius:7px !important;
+    box-shadow:0 0 0 1px rgba(18,177,196,.08),
+               0 2px 5px rgba(15,23,42,.09) !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group > .nav-list .nav-item {
+    background:#174a59 !important;
+    color:#f0fbfc !important;
+    border:1px solid #22d3ee !important;
+    border-left:1px solid #22d3ee !important;
+    border-radius:7px !important;
+    box-shadow:0 0 5px rgba(34,211,238,.34),
+               0 0 10px rgba(20,184,166,.16),
+               0 2px 4px rgba(0,0,0,.22) !important;
+  }
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item:hover {
+    border-color:#06b6d4 !important;
+    box-shadow:0 0 5px rgba(6,182,212,.22),0 3px 7px rgba(15,23,42,.10) !important;
+  }
+  body.dark-theme #appSidebar > .collapsible-group > .nav-list .nav-item:hover {
+    border-color:#67e8f9 !important;
+    box-shadow:0 0 7px rgba(34,211,238,.48),0 0 13px rgba(20,184,166,.22) !important;
+  }
+}
+</style>
+
+
+<style id="v108-reference-photo-card-colours">
+/* v108 — Match the supplied reference image.
+   Responsive drawer only. No layout, data, table, Firebase or desktop changes. */
+@media (max-width:1024px) {
+
+  /* ---------- MAIN SECTION CARDS ---------- */
+  #appSidebar > .collapsible-group > .sidebar-section-title {
+    opacity:1 !important;
+    border-width:2px !important;
+    border-style:solid !important;
+    border-color:var(--section-accent) !important;
+    border-radius:11px !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+
+  /* LIGHT: pastel opaque tint of each section's own accent colour */
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:color-mix(in srgb, var(--section-accent) 10%, #ffffff) !important;
+    color:#10234a !important;
+    box-shadow:
+      0 2px 7px rgba(15,23,42,.10),
+      inset 0 0 14px color-mix(in srgb,var(--section-accent) 5%,transparent) !important;
+  }
+
+  /* DARK: saturated opaque colour wash, like the reference image */
+  body.dark-theme #appSidebar > .collapsible-group > .sidebar-section-title {
+    background:linear-gradient(
+      100deg,
+      color-mix(in srgb,var(--section-accent) 34%,#071a31),
+      color-mix(in srgb,var(--section-accent) 18%,#10213a)
+    ) !important;
+    color:#f8fbff !important;
+    box-shadow:
+      0 0 7px color-mix(in srgb,var(--section-accent) 48%,transparent),
+      inset 0 0 14px color-mix(in srgb,var(--section-accent) 13%,transparent) !important;
+  }
+
+  /* FILES & APPROVALS is royal blue in the supplied reference */
+  #grpFilesApprovals { --section-accent:#1478ff !important; }
+  body:not(.dark-theme) #grpFilesApprovals > .sidebar-section-title {
+    background:#f3f6ff !important;
+  }
+  body.dark-theme #grpFilesApprovals > .sidebar-section-title {
+    background:linear-gradient(100deg,#123e91,#142b59) !important;
+  }
+
+  /* Reference Books — cyan */
+  #grpRefBooks { --section-accent:#08b8d8 !important; }
+  /* Documents — violet */
+  #grpSanctionDocs { --section-accent:#8b35f4 !important; }
+  /* Letter — emerald */
+  #grpHqLetters { --section-accent:#00bd7e !important; }
+  /* JPO — orange */
+  #grpJpo { --section-accent:#ff7800 !important; }
+  /* LDCE — pink */
+  #grpLdcePapers { --section-accent:#f0187a !important; }
+  /* Important Links — sky blue */
+  #grpImportantLinks { --section-accent:#08a9df !important; }
+
+  /* ---------- SUBSECTION CARDS ---------- */
+  #appSidebar > .collapsible-group > .nav-list {
+    background:transparent !important;
+    background-color:transparent !important;
+    box-shadow:none !important;
+  }
+
+  /* Subsections use the SAME family as their parent section, with a clear border. */
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item {
+    background:color-mix(in srgb,var(--section-accent) 9%,#ffffff) !important;
+    color:#17304e !important;
+    border:1.5px solid color-mix(in srgb,var(--section-accent) 88%,#ffffff) !important;
+    border-radius:8px !important;
+    box-shadow:
+      0 1px 4px rgba(15,23,42,.08),
+      inset 0 0 10px color-mix(in srgb,var(--section-accent) 4%,transparent) !important;
+  }
+
+  body.dark-theme #appSidebar > .collapsible-group > .nav-list .nav-item {
+    background:color-mix(in srgb,var(--section-accent) 23%,#102238) !important;
+    color:#f5f9ff !important;
+    border:1.5px solid color-mix(in srgb,var(--section-accent) 90%,#ffffff) !important;
+    border-radius:8px !important;
+    box-shadow:
+      0 0 5px color-mix(in srgb,var(--section-accent) 38%,transparent),
+      inset 0 0 9px color-mix(in srgb,var(--section-accent) 8%,transparent) !important;
+  }
+
+  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item:hover {
+    background:color-mix(in srgb,var(--section-accent) 14%,#ffffff) !important;
+    border-color:var(--section-accent) !important;
+    box-shadow:0 0 6px color-mix(in srgb,var(--section-accent) 25%,transparent) !important;
+  }
+
+  body.dark-theme #appSidebar > .collapsible-group > .nav-list .nav-item:hover {
+    background:color-mix(in srgb,var(--section-accent) 30%,#102238) !important;
+    border-color:color-mix(in srgb,var(--section-accent) 82%,#ffffff) !important;
+    box-shadow:0 0 8px color-mix(in srgb,var(--section-accent) 52%,transparent) !important;
+  }
+
+  /* Keep icon colours already present in the original HTML. */
+  #appSidebar .sidebar-section-title i,
+  #appSidebar .nav-item i {
+    filter:none !important;
+  }
+}
+</style>
+
+
+<style id="v109-reference-photo-colours-actual-open-drawer-fix">
+/*
+  FIX: the earlier reference-photo styling was limited to max-width:1024px.
+  The portal also opens the mobile/tablet drawer at wider responsive/tablet
+  widths (e.g. 1280px), so those rules never ran there.
+  These selectors target the ACTUAL open drawer (.mobile-open), independent
+  of CSS viewport width. Desktop sidebar behavior remains untouched.
+*/
+
+/* Parent colour identities */
+#appSidebar.mobile-open #grpFilesApprovals { --section-accent:#1478ff !important; }
+#appSidebar.mobile-open #grpRefBooks       { --section-accent:#08b8d8 !important; }
+#appSidebar.mobile-open #grpSanctionDocs  { --section-accent:#8b35f4 !important; }
+#appSidebar.mobile-open #grpHqLetters     { --section-accent:#00bd7e !important; }
+#appSidebar.mobile-open #grpJpo           { --section-accent:#ff7800 !important; }
+#appSidebar.mobile-open #grpLdcePapers    { --section-accent:#f0187a !important; }
+#appSidebar.mobile-open #grpImportantLinks{ --section-accent:#08a9df !important; }
+
+/* MAIN SECTION STRIPS */
+#appSidebar.mobile-open > .collapsible-group > .sidebar-section-title {
+  opacity:1 !important;
+  border:2px solid var(--section-accent) !important;
+  border-radius:11px !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Light reference look: opaque pastel colour wash */
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .sidebar-section-title {
+  background:color-mix(in srgb,var(--section-accent) 10%,#fff) !important;
+  color:#10234a !important;
+  box-shadow:
+    0 2px 7px rgba(15,23,42,.10),
+    inset 0 0 14px color-mix(in srgb,var(--section-accent) 6%,transparent) !important;
+}
+
+/* Dark reference look: opaque saturated colour wash */
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .sidebar-section-title {
+  background:linear-gradient(
+    100deg,
+    color-mix(in srgb,var(--section-accent) 36%,#071a31),
+    color-mix(in srgb,var(--section-accent) 19%,#10213a)
+  ) !important;
+  color:#f8fbff !important;
+  box-shadow:
+    0 0 7px color-mix(in srgb,var(--section-accent) 48%,transparent),
+    inset 0 0 14px color-mix(in srgb,var(--section-accent) 13%,transparent) !important;
+}
+
+/* Files & Approvals is deliberately royal blue like the reference. */
+body:not(.dark-theme) #appSidebar.mobile-open #grpFilesApprovals > .sidebar-section-title {
+  background:#f1f5ff !important;
+}
+body.dark-theme #appSidebar.mobile-open #grpFilesApprovals > .sidebar-section-title {
+  background:linear-gradient(100deg,#123e91,#142b59) !important;
+}
+
+/* Remove the old solid list panel so individual subsection cards are visible. */
+#appSidebar.mobile-open > .collapsible-group > .nav-list {
+  background:transparent !important;
+  background-color:transparent !important;
+  box-shadow:none !important;
+}
+
+/* SUBSECTION STRIPS — bordered cards, same family as parent. */
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .nav-list > .nav-item,
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .nav-list > .manual-submenu > .nav-item {
+  background:color-mix(in srgb,var(--section-accent) 9%,#fff) !important;
+  color:#17304e !important;
+  border:1.5px solid color-mix(in srgb,var(--section-accent) 86%,#fff) !important;
+  border-radius:8px !important;
+  margin:4px 5px !important;
+  box-shadow:
+    0 1px 4px rgba(15,23,42,.08),
+    inset 0 0 9px color-mix(in srgb,var(--section-accent) 5%,transparent) !important;
+}
+
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .nav-list > .nav-item,
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .nav-list > .manual-submenu > .nav-item {
+  background:color-mix(in srgb,var(--section-accent) 24%,#102238) !important;
+  color:#f5f9ff !important;
+  border:1.5px solid color-mix(in srgb,var(--section-accent) 88%,#fff) !important;
+  border-radius:8px !important;
+  margin:4px 5px !important;
+  box-shadow:
+    0 0 5px color-mix(in srgb,var(--section-accent) 38%,transparent),
+    inset 0 0 9px color-mix(in srgb,var(--section-accent) 8%,transparent) !important;
+}
+
+/* Preserve each original icon colour. */
+#appSidebar.mobile-open .sidebar-section-title i,
+#appSidebar.mobile-open .nav-item i {
+  filter:none !important;
+}
+</style>
+
+
+<style id="v110-open-drawer-clear-home-no-tail-panel">
+/*
+  FINAL OPEN-DRAWER FIX
+  1) HOME/table behind the drawer stays completely sharp.
+  2) No white/dark continuous strip below or between menu cards.
+  3) Only HOME, main-section cards and subsection cards paint a background.
+  4) Applies whenever the responsive drawer is actually open, even at 1280px.
+*/
+
+/* Do not dim or blur the underlying page. */
+#sidebarOverlay,
+#sidebarOverlay.active,
+.sidebar-overlay,
+.sidebar-overlay.active,
+.sidebar-overlay.show {
+  background: transparent !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Drawer itself is only a positioning layer — no white/navy tail panel. */
+#appSidebar.mobile-open,
+body:not(.dark-theme) #appSidebar.mobile-open,
+body.dark-theme #appSidebar.mobile-open {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-right: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* HOME wrapper must not paint a panel. */
+#appSidebar.mobile-open > .home-btn-container,
+body:not(.dark-theme) #appSidebar.mobile-open > .home-btn-container,
+body.dark-theme #appSidebar.mobile-open > .home-btn-container {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Parent group wrappers and all unused drawer space stay transparent. */
+#appSidebar.mobile-open > .collapsible-group,
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group,
+body.dark-theme #appSidebar.mobile-open > .collapsible-group {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Expanded subsection CANVAS is transparent as well. */
+#appSidebar.mobile-open > .collapsible-group > .nav-list,
+#appSidebar.mobile-open > .collapsible-group:not(.collapsed) > .nav-list,
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group:not(.collapsed) > .nav-list,
+body.dark-theme #appSidebar.mobile-open > .collapsible-group:not(.collapsed) > .nav-list {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Some builds use pseudo-elements to paint/frost the drawer. Disable them. */
+#appSidebar.mobile-open::before,
+#appSidebar.mobile-open::after,
+#appSidebar.mobile-open > .collapsible-group::before,
+#appSidebar.mobile-open > .collapsible-group::after,
+#appSidebar.mobile-open > .collapsible-group > .nav-list::before,
+#appSidebar.mobile-open > .collapsible-group > .nav-list::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Keep the actual cards opaque/readable. Existing v109 colour rules remain master. */
+#appSidebar.mobile-open .home-btn,
+#appSidebar.mobile-open > .collapsible-group > .sidebar-section-title,
+#appSidebar.mobile-open > .collapsible-group > .nav-list > .nav-item,
+#appSidebar.mobile-open > .collapsible-group > .nav-list > li > a,
+#appSidebar.mobile-open > .collapsible-group > .nav-list > a {
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+</style>
+
+
+<style id="v111-subsection-distinct-but-related-colours">
+/*
+  Subsections now use a deliberately DIFFERENT shade from their parent section:
+  same visual family, but clearly distinguishable.
+*/
+
+/* Files & Approvals: parent royal blue -> subsection blue-cyan */
+#appSidebar.mobile-open #grpFilesApprovals {
+  --sub-bg-light:#e8f6ff !important;
+  --sub-border:#38bdf8 !important;
+  --sub-bg-dark:#123b52 !important;
+}
+
+/* Reference Books: parent cyan -> subsection teal */
+#appSidebar.mobile-open #grpRefBooks {
+  --sub-bg-light:#e6faf6 !important;
+  --sub-border:#14b8a6 !important;
+  --sub-bg-dark:#123f3d !important;
+}
+
+/* Sanction Documents: parent violet -> subsection indigo */
+#appSidebar.mobile-open #grpSanctionDocs {
+  --sub-bg-light:#eef0ff !important;
+  --sub-border:#6366f1 !important;
+  --sub-bg-dark:#292b5b !important;
+}
+
+/* HQ Letters: parent emerald -> subsection aqua */
+#appSidebar.mobile-open #grpHqLetters {
+  --sub-bg-light:#e8fbfb !important;
+  --sub-border:#06b6d4 !important;
+  --sub-bg-dark:#123d49 !important;
+}
+
+/* JPO: parent orange -> subsection amber */
+#appSidebar.mobile-open #grpJpo {
+  --sub-bg-light:#fff7dc !important;
+  --sub-border:#f59e0b !important;
+  --sub-bg-dark:#4b3515 !important;
+}
+
+/* LDCE: parent pink -> subsection rose-purple */
+#appSidebar.mobile-open #grpLdcePapers {
+  --sub-bg-light:#f9eaff !important;
+  --sub-border:#c026d3 !important;
+  --sub-bg-dark:#48204f !important;
+}
+
+/* Important Links: parent sky -> subsection blue */
+#appSidebar.mobile-open #grpImportantLinks {
+  --sub-bg-light:#eaf2ff !important;
+  --sub-border:#3b82f6 !important;
+  --sub-bg-dark:#18355c !important;
+}
+
+/* Apply to actual subsection rows only. */
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .nav-list > .nav-item,
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .nav-list > li > a,
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .nav-list > a,
+body:not(.dark-theme) #appSidebar.mobile-open > .collapsible-group > .nav-list > .manual-submenu > .nav-item {
+  background:var(--sub-bg-light) !important;
+  border:1.5px solid var(--sub-border) !important;
+  color:#17304e !important;
+  box-shadow:0 1px 4px rgba(15,23,42,.08) !important;
+}
+
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .nav-list > .nav-item,
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .nav-list > li > a,
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .nav-list > a,
+body.dark-theme #appSidebar.mobile-open > .collapsible-group > .nav-list > .manual-submenu > .nav-item {
+  background:var(--sub-bg-dark) !important;
+  border:1.5px solid var(--sub-border) !important;
+  color:#f7fbff !important;
+  box-shadow:0 0 4px color-mix(in srgb,var(--sub-border) 32%,transparent) !important;
+}
+</style>
+
+
+<style id="v112-subsection-parent-contrast-hierarchy">
+/*
+  Visual hierarchy correction:
+  Files & Approvals subsections previously used cyan/teal, which visually
+  merged with the next parent section (Reference Books & Docs).
+  Keep Files parent royal blue, but make its subsection cards a neutral
+  slate-blue family so the next cyan parent remains clearly separate.
+*/
+
+/* FILES & APPROVALS — subsection palette only */
+#appSidebar.mobile-open #grpFilesApprovals {
+  --sub-bg-light:#eef2f7 !important;   /* cool neutral slate */
+  --sub-border:#7c8da5 !important;
+  --sub-bg-dark:#26364a !important;    /* dark slate, NOT cyan */
+}
+
+/* Ensure Files subsection rows use the neutral palette. */
+body:not(.dark-theme) #appSidebar.mobile-open #grpFilesApprovals > .nav-list > .nav-item,
+body:not(.dark-theme) #appSidebar.mobile-open #grpFilesApprovals > .nav-list > li > a,
+body:not(.dark-theme) #appSidebar.mobile-open #grpFilesApprovals > .nav-list > a,
+body:not(.dark-theme) #appSidebar.mobile-open #grpFilesApprovals > .nav-list > .manual-submenu > .nav-item {
+  background:#eef2f7 !important;
+  border:1.5px solid #7c8da5 !important;
+  color:#26384f !important;
+  box-shadow:0 1px 4px rgba(15,23,42,.08) !important;
+}
+
+body.dark-theme #appSidebar.mobile-open #grpFilesApprovals > .nav-list > .nav-item,
+body.dark-theme #appSidebar.mobile-open #grpFilesApprovals > .nav-list > li > a,
+body.dark-theme #appSidebar.mobile-open #grpFilesApprovals > .nav-list > a,
+body.dark-theme #appSidebar.mobile-open #grpFilesApprovals > .nav-list > .manual-submenu > .nav-item {
+  background:#26364a !important;
+  border:1.5px solid #6f829b !important;
+  color:#f7fbff !important;
+  box-shadow:0 0 3px rgba(111,130,155,.28) !important;
+}
+
+/* Give the next parent section a little separation from an expanded list. */
+#appSidebar.mobile-open #grpRefBooks > .sidebar-section-title {
+  margin-top:7px !important;
+}
+</style>
+
+
+<style id="v113-sanction-docs-neutral-subsections">
+/*
+  Documents for Various Sanction/Approval:
+  Keep the PARENT violet identity.
+  Make its SUBSECTIONS neutral graphite/slate so they cannot visually merge
+  with the violet parent or the green next parent.
+*/
+
+/* Light theme — clean cool-grey/slate subsection cards */
+body:not(.dark-theme) #appSidebar.mobile-open #grpSanctionDocs > .nav-list > .nav-item,
+body:not(.dark-theme) #appSidebar.mobile-open #grpSanctionDocs > .nav-list > li > a,
+body:not(.dark-theme) #appSidebar.mobile-open #grpSanctionDocs > .nav-list > a,
+body:not(.dark-theme) #appSidebar.mobile-open #grpSanctionDocs > .nav-list > .manual-submenu > .nav-item {
+  background:#f0f2f5 !important;
+  background-image:none !important;
+  border:1.5px solid #8a96a8 !important;
+  color:#26364a !important;
+  box-shadow:0 1px 4px rgba(15,23,42,.08) !important;
+}
+
+/* Dark theme — graphite/slate, deliberately NOT purple/blue */
+body.dark-theme #appSidebar.mobile-open #grpSanctionDocs > .nav-list > .nav-item,
+body.dark-theme #appSidebar.mobile-open #grpSanctionDocs > .nav-list > li > a,
+body.dark-theme #appSidebar.mobile-open #grpSanctionDocs > .nav-list > a,
+body.dark-theme #appSidebar.mobile-open #grpSanctionDocs > .nav-list > .manual-submenu > .nav-item {
+  background:#28323f !important;
+  background-image:none !important;
+  border:1.5px solid #738196 !important;
+  color:#f7f9fc !important;
+  box-shadow:0 0 3px rgba(115,129,150,.24) !important;
+}
+
+/* Preserve each subsection icon's own existing colour. */
+#appSidebar.mobile-open #grpSanctionDocs > .nav-list .nav-item i,
+#appSidebar.mobile-open #grpSanctionDocs > .nav-list li > a i,
+#appSidebar.mobile-open #grpSanctionDocs > .nav-list > a i {
+  filter:none !important;
+}
+
+/* Small hierarchy gap before the next green parent section. */
+#appSidebar.mobile-open #grpHqLetters > .sidebar-section-title {
+  margin-top:7px !important;
+}
+</style>
+
+
+<style id="v115-light-theme-warm-background-E5D3AF">
+/* Light theme exposed/workspace background only.
+   Dark theme, cards, tables, sidebar and all functionality remain unchanged. */
+body:not(.dark-theme),
+body:not(.dark-theme) .app-container,
+body:not(.dark-theme) #mainContent {
+  background-color: #E5D3AF !important;
+}
+
+body:not(.dark-theme) .app-container,
+body:not(.dark-theme) #mainContent {
+  background-image: none !important;
+}
+</style>
+
+
+<style id="v116-light-sidebar-empty-area-E5D3AF">
+/* Light theme: continue the warm page colour through the unused sidebar area. */
+body:not(.dark-theme) #appSidebar {
+    background-color: #E5D3AF !important;
+}
+
+/* Preserve the existing transparent overlay/drawer behaviour on mobile/tablet. */
+body:not(.dark-theme) #appSidebar.mobile-open {
+    background: transparent !important;
+}
+</style>
+
+
+<style id="v117-file-movement-register">
+/* FILE MOVEMENT REGISTER - isolated styling; existing sections remain untouched */
+#fileMovementModal .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+#fileMovementModal .form-group.full { grid-column:1/-1; }
+#fileMovementModal .form-group label { display:block; margin-bottom:6px; font-weight:800; font-size:12px; color:var(--text-main); }
+#fileMovementModal input,
+#fileMovementModal select,
+#fileMovementModal textarea {
+  width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:10px 11px;
+  background:#fff; color:#1e293b; font:inherit; outline:none;
+}
+#fileMovementModal textarea { min-height:82px; resize:vertical; }
+#fileMovementModal .movement-other { display:none; margin-top:8px; }
+body.dark-theme #fileMovementModal .form-group label { color:#f1f5f9; }
+body.dark-theme #fileMovementModal input,
+body.dark-theme #fileMovementModal select,
+body.dark-theme #fileMovementModal textarea {
+  background:#111827; color:#f8fafc; border-color:#475569;
+}
+#mainRecordTable.file-movement-table th:nth-child(4),
+#mainRecordTable.file-movement-table td:nth-child(4){width:100px;min-width:100px}
+#mainRecordTable.file-movement-table th:nth-child(5),
+#mainRecordTable.file-movement-table td:nth-child(5){min-width:150px}
+#mainRecordTable.file-movement-table th:nth-child(6),
+#mainRecordTable.file-movement-table td:nth-child(6){min-width:260px;text-align:left}
+#mainRecordTable.file-movement-table th:nth-child(7),
+#mainRecordTable.file-movement-table td:nth-child(7){min-width:130px}
+#mainRecordTable.file-movement-table th:nth-child(8),
+#mainRecordTable.file-movement-table td:nth-child(8){min-width:180px}
+#mainRecordTable.file-movement-table th:nth-child(9),
+#mainRecordTable.file-movement-table td:nth-child(9){width:155px;min-width:155px}
+@media(max-width:768px){
+  #fileMovementModal .form-grid{grid-template-columns:1fr}
+  #fileMovementModal .form-group.full{grid-column:auto}
+}
+</style>
+
+<script id="v117-file-movement-register-script">
+(function(){
+  const CAT = 'FILE MOVEMENT REGISTER';
+  const oldRenderTable = window.renderTable;
+  const oldOpenAddModal = window.openAddModal;
+  const oldOpenEditModal = window.openEditModal;
+
+  function esc(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  function toISO(ddmmyyyy){
+    if(!ddmmyyyy) return '';
+    if(/^\d{4}-\d{2}-\d{2}$/.test(ddmmyyyy)) return ddmmyyyy;
+    const m=String(ddmmyyyy).match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+    return m ? `${m[3]}-${m[2]}-${m[1]}` : '';
+  }
+  function toDDMMYYYY(iso){
+    if(!iso) return '';
+    if(/^\d{2}[-/]\d{2}[-/]\d{4}$/.test(iso)) return iso.replace(/\//g,'-');
+    const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}-${m[2]}-${m[1]}` : iso;
+  }
+
+  function ensureModal(){
+    if(document.getElementById('fileMovementModal')) return;
+    const modal=document.createElement('div');
+    modal.id='fileMovementModal';
+    modal.className='modal-overlay';
+    modal.style.display='none';
+    modal.innerHTML=`
+      <div class="modal-content" style="max-width:850px;">
+        <div class="modal-header">
+          <h2 id="fmHeading"><i class="fa-solid fa-folder-tree"></i> Add File Movement Record</h2>
+          <button class="modal-close-btn" type="button" onclick="closeFileMovementModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="fmEditId">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Received Date</label>
+              <input type="date" id="fmDate" required>
+            </div>
+            <div class="form-group">
+              <label>File Type</label>
+              <select id="fmFileType" onchange="toggleFileMovementOther('fileType')" required>
+                <option value="">Select File Type</option>
+                <option>PCSTE Sanction</option><option>EI TSAA</option><option>MSDAC TSAA</option>
+                <option>Grade Condonation</option><option>Line Opening</option>
+                <option>Joint Safety Certificate</option><option>Speed Raising</option>
+                <option>S&T Speed Certificate</option><option>Other</option>
+              </select>
+              <input class="movement-other" id="fmFileTypeOther" placeholder="Specify File Type">
+            </div>
+            <div class="form-group">
+              <label>Division</label>
+              <select id="fmDivision" required>
+                <option value="">Select Division</option>
+                <option>Bilaspur</option><option>Raipur</option><option>Nagpur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Station/Section</label>
+              <input type="text" id="fmStation" placeholder="Enter Station/Section">
+            </div>
+            <div class="form-group full">
+              <label>Description</label>
+              <textarea id="fmDescription" placeholder="Enter Description"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Received From</label>
+              <select id="fmReceivedFrom" onchange="toggleFileMovementOther('receivedFrom')" required>
+                <option value="">Select Received From</option>
+                <option>Project</option><option>Construction</option><option>Division</option><option>Other</option>
+              </select>
+              <input class="movement-other" id="fmReceivedFromOther" placeholder="Specify Received From">
+            </div>
+            <div class="form-group">
+              <label>Present Status</label>
+              <select id="fmStatus" onchange="toggleFileMovementOther('status')" required>
+                <option value="">Select Present Status</option>
+                <option>Under Examination</option>
+                <option>Put up to Dy.CSTE/Signal</option>
+                <option>Put up to Dy.CSTE/D&D</option>
+                <option>Put up to PCSTE</option>
+                <option>Put up to CSE</option>
+                <option>Put up to CSTE/Planning</option>
+                <option>Put up to CCE</option>
+                <option>Returned for Compliance</option>
+                <option>Resubmitted</option>
+                <option>Approved/Signed</option>
+                <option>Sent Back/Disposed</option>
+                <option>Other</option>
+              </select>
+              <input class="movement-other" id="fmStatusOther" placeholder="Specify Present Status">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeFileMovementModal()">Cancel</button>
+          <button type="button" class="btn-primary" onclick="saveFileMovementRecord()"><i class="fa-solid fa-floppy-disk"></i> Save Record</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  window.toggleFileMovementOther=function(kind){
+    const map={
+      fileType:['fmFileType','fmFileTypeOther'],
+      receivedFrom:['fmReceivedFrom','fmReceivedFromOther'],
+      status:['fmStatus','fmStatusOther']
+    };
+    const pair=map[kind]; if(!pair) return;
+    const sel=document.getElementById(pair[0]), inp=document.getElementById(pair[1]);
+    const show=sel && sel.value==='Other';
+    inp.style.display=show?'block':'none';
+    if(!show) inp.value='';
+  };
+
+  function openFM(rec){
+    ensureModal();
+    document.getElementById('fmHeading').innerHTML = rec
+      ? '<i class="fa-solid fa-pen-to-square"></i> Edit File Movement Record'
+      : '<i class="fa-solid fa-folder-tree"></i> Add File Movement Record';
+    document.getElementById('fmEditId').value=rec?.id||'';
+    document.getElementById('fmDate').value=toISO(rec?.receivedDate||rec?.date||'');
+    document.getElementById('fmDivision').value=rec?.division||'';
+    document.getElementById('fmStation').value=rec?.station||'';
+    document.getElementById('fmDescription').value=rec?.work||'';
+
+    const setOther=(selectId,otherId,value,base)=>{
+      const sel=document.getElementById(selectId), inp=document.getElementById(otherId);
+      const known=Array.from(sel.options).map(o=>o.value);
+      if(value && known.includes(value) && value!=='Other'){ sel.value=value; inp.value=''; }
+      else if(value){ sel.value='Other'; inp.value=value; }
+      else { sel.value=''; inp.value=''; }
+      inp.style.display=sel.value==='Other'?'block':'none';
+    };
+    setOther('fmFileType','fmFileTypeOther',rec?.movementFileType||'',[]);
+    setOther('fmReceivedFrom','fmReceivedFromOther',rec?.receivedFrom||'',[]);
+    setOther('fmStatus','fmStatusOther',rec?.presentStatus||'',[]);
+
+    document.getElementById('fileMovementModal').style.display='flex';
+    try{ history.pushState({view:'modal',modal:'fileMovement'},'', ''); }catch(e){}
+  }
+
+  window.closeFileMovementModal=function(){
+    const m=document.getElementById('fileMovementModal'); if(m) m.style.display='none';
+  };
+
+  window.openAddModal=function(){
+    if(currentCategory!==CAT) return oldOpenAddModal.apply(this,arguments);
+    if(typeof verifyAdminPassword==='function' && !verifyAdminPassword("add a new record")) return;
+    openFM(null);
+  };
+
+  window.openEditModal=function(id){
+    const rec=(window.records||records||[]).find(r=>r.id===id);
+    if(currentCategory!==CAT && rec?.category!==CAT) return oldOpenEditModal.apply(this,arguments);
+    if(typeof verifyAdminPassword==='function' && !verifyAdminPassword("edit this record")) return;
+    openFM(rec);
+  };
+
+  window.saveFileMovementRecord=async function(){
+    const editId=document.getElementById('fmEditId').value;
+    const date=document.getElementById('fmDate').value;
+    const division=document.getElementById('fmDivision').value;
+    const station=document.getElementById('fmStation').value.trim();
+    const work=document.getElementById('fmDescription').value.trim();
+
+    const pick=(selId,otherId)=>{
+      const v=document.getElementById(selId).value;
+      return v==='Other' ? document.getElementById(otherId).value.trim() : v;
+    };
+    const movementFileType=pick('fmFileType','fmFileTypeOther');
+    const receivedFrom=pick('fmReceivedFrom','fmReceivedFromOther');
+    const presentStatus=pick('fmStatus','fmStatusOther');
+
+    if(!date || !movementFileType || !division || !receivedFrom || !presentStatus){
+      alert('Please fill all required fields.');
+      return;
+    }
+    const data={
+      category:CAT,
+      receivedDate:toDDMMYYYY(date),
+      date:toDDMMYYYY(date),
+      year:Number(date.slice(0,4)),
+      movementFileType, division, station, work, receivedFrom, presentStatus
+    };
+    try{
+      if(editId) await recordsCol.doc(editId).update(data);
+      else await recordsCol.add(data);
+      closeFileMovementModal();
+    }catch(err){ alert('Firestore save error: '+err.message); }
+  };
+
+  function renderFM(){
+    const thead=document.getElementById('tableHead');
+    const tbody=document.getElementById('tableBody');
+    const table=document.getElementById('mainRecordTable');
+    if(!thead||!tbody||!table) return;
+
+    table.classList.add('file-movement-table');
+    table.classList.remove('unfreeze-table','description-second-first-freeze','rdso-tan-table','hq-letter-table','jpo-table');
+    thead.innerHTML=`<tr>
+      <th>Sr.NO</th><th>Station / Section</th><th>Division</th><th>Received Date</th>
+      <th>File Type</th><th>Description</th><th>Received From</th>
+      <th>Present Status</th><th style="text-align:center;">Action</th>
+    </tr>`;
+
+    const fy=document.getElementById('filterYear')?.value||'ALL';
+    const fd=document.getElementById('filterDivision')?.value||'ALL';
+    const q=(document.getElementById('filterSearch')?.value||'').toLowerCase();
+
+    let rows=(window.records||records||[]).filter(r=>r.category===CAT);
+    rows=rows.filter(r=>{
+      const year=String(r.year||'');
+      if(fy!=='ALL' && year!==String(fy)) return false;
+      if(fd!=='ALL' && String(r.division||'').toUpperCase()!==String(fd).toUpperCase()) return false;
+      if(q){
+        const hay=[r.receivedDate,r.movementFileType,r.division,r.station,r.work,r.receivedFrom,r.presentStatus].join(' ').toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    rows.sort((a,b)=>toISO(b.receivedDate||b.date||'').localeCompare(toISO(a.receivedDate||a.date||'')));
+
+    if(!rows.length){
+      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:28px;">No records found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML=rows.map((r,i)=>`<tr>
+      <td>${i+1}</td>
+      <td>${esc(r.station||'')}</td>
+      <td>${esc(r.division||'')}</td>
+      <td>${esc(r.receivedDate||r.date||'')}</td>
+      <td>${esc(r.movementFileType||'')}</td>
+      <td>${esc(r.work||'')}</td>
+      <td>${esc(r.receivedFrom||'')}</td>
+      <td>${esc(r.presentStatus||'')}</td>
+      <td><div class="actions-cell">
+        <button class="action-icon-btn edit-btn" title="Edit" onclick="openEditModal('${esc(r.id)}')"><i class="fa-solid fa-pen-to-square"></i></button>
+        <button class="action-icon-btn delete-btn" title="Delete" onclick="deleteRecord('${esc(r.id)}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+  }
+
+  window.renderTable=function(){
+    const table=document.getElementById('mainRecordTable');
+    if(currentCategory===CAT) return renderFM();
+    if(table) table.classList.remove('file-movement-table');
+    return oldRenderTable.apply(this,arguments);
+  };
+
+  // Keep Division and Year filters meaningful for this register.
+  const oldSwitchCategory=window.switchCategory;
+  window.switchCategory=function(catName,pushState=true){
+    const result=oldSwitchCategory.apply(this,arguments);
+    if(String(catName).toUpperCase().trim()===CAT){
+      const divWrap=document.getElementById('filterDivisionWrapper');
+      const yearWrap=document.getElementById('filterYearWrapper');
+      if(divWrap) divWrap.style.display='flex';
+      if(yearWrap) yearWrap.style.display='flex';
+      renderTable();
+    }
+    return result;
+  };
+
+  ensureModal();
+})();
+</script>
+
+
+<style id="v118-file-movement-uniform-scroll">
+/* FILE MOVEMENT REGISTER: match the visual/table scrolling pattern of other long tables */
+#mainRecordTable.file-movement-table{
+  min-width:1420px !important;
+  width:max-content !important;
+}
+#mainRecordTable.file-movement-table th:nth-child(4),
+#mainRecordTable.file-movement-table td:nth-child(4){width:112px!important;min-width:112px!important;max-width:112px!important;}
+#mainRecordTable.file-movement-table th:nth-child(5),
+#mainRecordTable.file-movement-table td:nth-child(5){width:165px!important;min-width:165px!important;max-width:165px!important;}
+#mainRecordTable.file-movement-table th:nth-child(6),
+#mainRecordTable.file-movement-table td:nth-child(6){width:300px!important;min-width:300px!important;text-align:left!important;}
+#mainRecordTable.file-movement-table th:nth-child(7),
+#mainRecordTable.file-movement-table td:nth-child(7){width:140px!important;min-width:140px!important;}
+#mainRecordTable.file-movement-table th:nth-child(8),
+#mainRecordTable.file-movement-table td:nth-child(8){width:210px!important;min-width:210px!important;}
+#mainRecordTable.file-movement-table th:nth-child(9),
+#mainRecordTable.file-movement-table td:nth-child(9){width:112px!important;min-width:112px!important;max-width:112px!important;}
+
+/* keep the existing table wrapper horizontally scrollable and make scrollbar clearly available */
+#mainRecordTable.file-movement-table{
+  table-layout:fixed !important;
+}
+body:has(#mainRecordTable.file-movement-table) .table-container,
+body:has(#mainRecordTable.file-movement-table) .table-responsive,
+body:has(#mainRecordTable.file-movement-table) .table-wrapper{
+  overflow-x:auto !important;
+  overflow-y:visible;
+  scrollbar-gutter:stable;
+}
+</style>
+
+<script id="v118-file-movement-column-order">
+(function(){
+  const previousRenderTable = window.renderTable;
+  window.renderTable = function(){
+    if(window.currentCategory !== 'FILE MOVEMENT REGISTER'){
+      return previousRenderTable.apply(this, arguments);
+    }
+
+    const thead=document.getElementById('tableHead');
+    const tbody=document.getElementById('tableBody');
+    const table=document.getElementById('mainRecordTable');
+    if(!thead||!tbody||!table) return;
+
+    table.classList.add('file-movement-table');
+    table.classList.remove('unfreeze-table','description-second-first-freeze','rdso-tan-table','hq-letter-table','jpo-table');
+
+    thead.innerHTML=`<tr>
+      <th>Sr.NO</th>
+      <th>Station / Section</th>
+      <th>Division</th>
+      <th>Received Date</th>
+      <th>File Type</th>
+      <th>Description</th>
+      <th>Received From</th>
+      <th>Present Status</th>
+      <th style="text-align:center;">Action</th>
+    </tr>`;
+
+    const fy=document.getElementById('filterYear')?.value||'ALL';
+    const fd=document.getElementById('filterDivision')?.value||'ALL';
+    const q=(document.getElementById('filterSearch')?.value||'').toLowerCase();
+
+    let rows=(window.records||[]).filter(r=>r.category==='FILE MOVEMENT REGISTER');
+    rows=rows.filter(r=>{
+      const year=String(r.year||'');
+      if(fy!=='ALL' && year!==String(fy)) return false;
+      if(fd!=='ALL' && String(r.division||'').toUpperCase()!==String(fd).toUpperCase()) return false;
+      if(q){
+        const hay=[r.station,r.division,r.receivedDate,r.date,r.movementFileType,r.work,r.receivedFrom,r.presentStatus].join(' ').toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    function iso(v){
+      if(!v) return '';
+      if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+      const m=String(v).match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+      return m ? `${m[3]}-${m[2]}-${m[1]}` : '';
+    }
+    function esc(v){
+      return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    rows.sort((a,b)=>iso(b.receivedDate||b.date||'').localeCompare(iso(a.receivedDate||a.date||'')));
+
+    if(!rows.length){
+      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:28px;">No records found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML=rows.map((r,i)=>`<tr>
+      <td>${i+1}</td>
+      <td>${esc(r.station||'')}</td>
+      <td>${esc(r.division||'')}</td>
+      <td>${esc(r.receivedDate||r.date||'')}</td>
+      <td>${esc(r.movementFileType||'')}</td>
+      <td>${esc(r.work||'')}</td>
+      <td>${esc(r.receivedFrom||'')}</td>
+      <td>${esc(r.presentStatus||'')}</td>
+      <td><div class="actions-cell">
+        <button class="action-icon-btn edit-btn" title="Edit" onclick="openEditModal('${esc(r.id)}')"><i class="fa-solid fa-pen-to-square"></i></button>
+        <button class="action-icon-btn delete-btn" title="Delete" onclick="deleteRecord('${esc(r.id)}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+  };
+})();
+</script>
+
+
+<style id="v119-file-movement-uniform-entry-form">
+/* File Movement Register entry form: visually match the portal's standard Add New Record modal */
+#fileMovementModal .modal-content{
+  width:min(696px, calc(100vw - 32px)) !important;
+  max-width:696px !important;
+  max-height:calc(100vh - 28px) !important;
+  height:auto !important;
+  border-radius:14px !important;
+  overflow:hidden !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+#fileMovementModal .modal-header{
+  flex:0 0 auto !important;
+  min-height:52px !important;
+  padding:10px 20px !important;
+}
+#fileMovementModal .modal-header h2{
+  font-size:17px !important;
+  margin:0 !important;
+}
+#fileMovementModal .modal-body{
+  flex:1 1 auto !important;
+  overflow-y:auto !important;
+  padding:18px 22px 10px !important;
+}
+#fileMovementModal .form-grid{
+  display:block !important;
+}
+#fileMovementModal .form-group,
+#fileMovementModal .form-group.full{
+  display:block !important;
+  margin:0 0 12px !important;
+}
+#fileMovementModal .form-group label{
+  display:block !important;
+  margin:0 0 6px !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+}
+#fileMovementModal input,
+#fileMovementModal select,
+#fileMovementModal textarea{
+  box-sizing:border-box !important;
+  width:100% !important;
+  min-height:39px !important;
+  border-radius:7px !important;
+  padding:8px 12px !important;
+  font-size:14px !important;
+}
+#fileMovementModal textarea{
+  min-height:64px !important;
+  max-height:110px !important;
+  resize:vertical !important;
+}
+#fileMovementModal .movement-other{
+  margin-top:7px !important;
+}
+#fileMovementModal .modal-footer{
+  flex:0 0 auto !important;
+  display:flex !important;
+  justify-content:flex-end !important;
+  align-items:center !important;
+  gap:10px !important;
+  padding:11px 22px 13px !important;
+}
+#fileMovementModal .modal-footer button{
+  width:auto !important;
+  min-width:90px !important;
+  min-height:40px !important;
+  border-radius:8px !important;
+  padding:8px 16px !important;
+  font-weight:700 !important;
+}
+
+/* Make native calendar indicator clearly visible in both themes */
+#fileMovementModal input[type="date"]{
+  position:relative !important;
+  padding-right:42px !important;
+  color-scheme:light !important;
+}
+#fileMovementModal input[type="date"]::-webkit-calendar-picker-indicator{
+  display:block !important;
+  opacity:1 !important;
+  cursor:pointer !important;
+  width:20px !important;
+  height:20px !important;
+  filter:none !important;
+}
+body.dark-theme #fileMovementModal input[type="date"]{
+  color-scheme:dark !important;
+}
+body.dark-theme #fileMovementModal input[type="date"]::-webkit-calendar-picker-indicator{
+  filter:none !important;
+  opacity:1 !important;
+}
+
+@media(max-width:600px){
+  #fileMovementModal .modal-content{
+    width:calc(100vw - 20px) !important;
+    max-height:calc(100vh - 20px) !important;
+  }
+  #fileMovementModal .modal-body{padding:14px 16px 8px !important;}
+  #fileMovementModal .modal-footer{padding:10px 16px 12px !important;}
+}
+</style>
+
+<script id="v119-file-movement-uniform-entry-form-script">
+(function(){
+  function rebuildFileMovementForm(){
+    const modal=document.getElementById('fileMovementModal');
+    if(!modal) return;
+    const body=modal.querySelector('.modal-body');
+    if(!body) return;
+
+    /* No Google Drive/PDF field is intentionally included in this register. */
+    body.innerHTML=`
+      <input type="hidden" id="fmEditId">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fmStation">Station / Section</label>
+          <input type="text" id="fmStation" placeholder="Enter Station/Section">
+        </div>
+
+        <div class="form-group">
+          <label for="fmDivision">Division</label>
+          <select id="fmDivision" required>
+            <option value="">-- Select --</option>
+            <option>Bilaspur</option>
+            <option>Raipur</option>
+            <option>Nagpur</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fmDate">Received Date</label>
+          <input type="date" id="fmDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="fmFileType">File Type</label>
+          <select id="fmFileType" onchange="toggleFileMovementOther('fileType')" required>
+            <option value="">-- Select --</option>
+            <option>PCSTE Sanction</option>
+            <option>EI TSAA</option>
+            <option>MSDAC TSAA</option>
+            <option>Grade Condonation</option>
+            <option>Line Opening</option>
+            <option>Joint Safety Certificate</option>
+            <option>Speed Raising</option>
+            <option>S&T Speed Certificate</option>
+            <option>Other</option>
+          </select>
+          <input class="movement-other" id="fmFileTypeOther" placeholder="Specify File Type">
+        </div>
+
+        <div class="form-group">
+          <label for="fmDescription">Description</label>
+          <textarea id="fmDescription" placeholder="Enter Description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="fmReceivedFrom">Received From</label>
+          <select id="fmReceivedFrom" onchange="toggleFileMovementOther('receivedFrom')" required>
+            <option value="">-- Select --</option>
+            <option>Project</option>
+            <option>Construction</option>
+            <option>Division</option>
+            <option>Other</option>
+          </select>
+          <input class="movement-other" id="fmReceivedFromOther" placeholder="Specify Received From">
+        </div>
+
+        <div class="form-group">
+          <label for="fmStatus">Present Status</label>
+          <select id="fmStatus" onchange="toggleFileMovementOther('status')" required>
+            <option value="">-- Select --</option>
+            <option>Under Examination</option>
+            <option>Put up to Dy.CSTE/Signal</option>
+            <option>Put up to Dy.CSTE/D&D</option>
+            <option>Put up to PCSTE</option>
+            <option>Put up to CSE</option>
+            <option>Put up to CSTE/Planning</option>
+            <option>Put up to CCE</option>
+            <option>Returned for Compliance</option>
+            <option>Resubmitted</option>
+            <option>Approved/Signed</option>
+            <option>Sent Back/Disposed</option>
+            <option>Other</option>
+          </select>
+          <input class="movement-other" id="fmStatusOther" placeholder="Specify Present Status">
+        </div>
+      </div>`;
+
+    const heading=document.getElementById('fmHeading');
+    if(heading) heading.innerHTML='<i class="fa-solid fa-folder-plus"></i> Add New Record';
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', rebuildFileMovementForm);
+  }else{
+    rebuildFileMovementForm();
+  }
+
+  /* The earlier script creates the modal immediately; retry once after all scripts have initialized. */
+  setTimeout(rebuildFileMovementForm,0);
+})();
+</script>
+
+
+<style id="v120-file-movement-only-top-slider">
+/* ONLY FILE MOVEMENT REGISTER:
+   force real horizontal overflow so the portal's existing orange
+   synchronized top scrollbar appears immediately above the table header. */
+
+</style>
+
+<script id="v120-file-movement-only-top-slider-script">
+(function () {
+    const previousRenderTable = window.renderTable;
+
+    window.renderTable = function () {
+        const result = previousRenderTable.apply(this, arguments);
+
+        if (window.currentCategory === 'FILE MOVEMENT REGISTER') {
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    if (typeof updateTopScrollbarWidth === 'function') {
+                        updateTopScrollbarWidth();
+                    }
+                });
+            });
+        }
+        return result;
+    };
+
+    window.addEventListener('resize', function () {
+        if (window.currentCategory === 'FILE MOVEMENT REGISTER' &&
+            typeof updateTopScrollbarWidth === 'function') {
+            updateTopScrollbarWidth();
+        }
+    });
+})();
+</script>
+
+
+<style id="v121-file-movement-top-slider-hard-fix">
+/* Only File Movement Register: top scrollbar directly above table header */
+
+body:has(#mainRecordTable.file-movement-table) #topScrollbarWrapper{
+  display:block !important;
+}
+</style>
+
+<script id="v121-file-movement-top-slider-hard-fix-script">
+(function(){
+  function refreshFileMovementTopBar(){
+    const table = document.getElementById('mainRecordTable');
+    const wrap = document.getElementById('topScrollbarWrapper');
+    const content = document.getElementById('topScrollbarContent');
+    const container = document.getElementById('mainTableContainer');
+
+    if(!table || !wrap || !content || !container) return;
+
+    if(table.classList.contains('file-movement-table')){
+      const width = Math.max(table.scrollWidth, table.offsetWidth);
+      content.style.width = width + 'px';
+      wrap.style.display = 'block';
+      wrap.scrollLeft = container.scrollLeft;
+    }
+  }
+
+  const table = document.getElementById('mainRecordTable');
+  if(table){
+    new MutationObserver(function(){
+      requestAnimationFrame(refreshFileMovementTopBar);
+    }).observe(table,{attributes:true, attributeFilter:['class'], childList:true, subtree:true});
+  }
+
+  const tbody = document.getElementById('tableBody');
+  if(tbody){
+    new MutationObserver(function(){
+      requestAnimationFrame(refreshFileMovementTopBar);
+    }).observe(tbody,{childList:true, subtree:true});
+  }
+
+  document.addEventListener('click', function(){
+    setTimeout(refreshFileMovementTopBar, 0);
+    setTimeout(refreshFileMovementTopBar, 80);
+  }, true);
+
+  window.addEventListener('resize', refreshFileMovementTopBar);
+  setTimeout(refreshFileMovementTopBar, 100);
+})();
+</script>
+
+
