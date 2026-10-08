@@ -66,13 +66,11 @@ html.rail-saved-light body:not(.dark-theme) {
   <script>
     // Prevent the login overlay from flashing while an authenticated user
     // returns from an Important Link using the browser Back button.
-    try {
-      if (sessionStorage.getItem('secr_portal_authorized') === 'true') {
-        document.documentElement.classList.add('portal-session-auth');
-      }
-    } catch (e) {}
+    // Keep the entire interface hidden until Firebase resolves the saved session.
+    document.documentElement.classList.add('rail-auth-pending');
   </script>
   <style>
+    html.rail-auth-pending body { visibility: hidden !important; }
     html.portal-session-auth #loginScreen { display: none !important; }
   </style>
   <title>RailSNTGyan - Railway S&T Knowledge Portal</title>
@@ -81,6 +79,7 @@ html.rail-saved-light body:not(.dark-theme) {
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <!-- Chart.js for Dashboard Visualizations -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -6385,13 +6384,20 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
           <div class="login-brand-subtitle">Railway S&T Knowledge Portal</div>
         </div>
       </div>
-      <p class="login-desc">Empowering Railway S&T Professionals • Enter official password</p>
+      <p class="login-desc">Empowering Railway S&T Professionals • Secure Firebase Login</p>
       
       <div class="login-form-group">
-        <label for="pagePasswordInput">Security Password</label>
+        <label for="pageEmailInput">Email Address</label>
+        <div class="login-input-wrapper">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="pageEmailInput" class="login-input" placeholder="Enter registered email" autocomplete="username" onkeydown="handleLoginKeyPress(event)">
+        </div>
+      </div>
+      <div class="login-form-group">
+        <label for="pagePasswordInput">Password</label>
         <div class="login-input-wrapper">
           <i class="fa-solid fa-lock"></i>
-          <input type="password" id="pagePasswordInput" class="login-input" placeholder="Enter security password" autofocus onkeydown="handleLoginKeyPress(event)">
+          <input type="password" id="pagePasswordInput" class="login-input" placeholder="Enter account password" autocomplete="current-password" onkeydown="handleLoginKeyPress(event)">
         </div>
       </div>
 
@@ -6400,7 +6406,7 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
       </button>
 
       <div id="loginErrorMsg" class="login-error-msg">
-        <i class="fa-solid fa-triangle-exclamation"></i> Incorrect password! Please enter valid authorization key.
+        <i class="fa-solid fa-triangle-exclamation"></i> Unable to sign in. Please check your email and password.
       </div>
     </div>
   </div>
@@ -7706,98 +7712,113 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
     const db = firebase.firestore();
     const recordsCol = db.collection('secr_records');
 
-    const settingsDoc = db.collection('secr_records').doc('1').collection('settings').doc('passwords');
+    // Firebase Authentication is the sole authority for login and roles.
+    // No password or service-account credential is read from Firestore.
+    const auth = firebase.auth();
+    // Keep Firebase login only for the current browser session (not local persistence).
+    const railSessionPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    let railAdmin = false;
+    let railAuthReady = false;
+    let railRecordsUnsubscribe = null;
 
-    // ===================================================
-    // DYNAMIC PASSWORD VERIFICATION
-    // ===================================================
-    let CLOUD_PORTAL_PASS = null;
-    let CLOUD_ADMIN_PASS = null;
+    function railSetLoginVisible(visible) {
+      const screen = document.getElementById('loginScreen');
+      if (!screen) return;
+      document.documentElement.classList.toggle('portal-session-auth', !visible);
+      screen.style.display = visible ? 'flex' : 'none';
+      document.documentElement.classList.remove('rail-auth-pending');
+    }
 
-    settingsDoc.onSnapshot(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        CLOUD_PORTAL_PASS = data.portalPass ? String(data.portalPass).trim() : null;
-        CLOUD_ADMIN_PASS = data.adminPass ? String(data.adminPass).trim() : null;
-      }
-    }, error => {
-      console.error("Firestore Password read error:", error);
-    });
-
-    function checkPortalPassword() {
-      const input = document.getElementById('pagePasswordInput').value.trim();
-      const errorMsg = document.getElementById('loginErrorMsg');
-
-      if (!CLOUD_PORTAL_PASS) {
-        alert("Connecting to Cloud Security Server... Please wait 2 seconds and try again.");
+    async function railApplyUser(user) {
+      railAuthReady = true;
+      if (!user) {
+        railAdmin = false;
+        sessionStorage.removeItem('secr_portal_authorized');
+        if (railRecordsUnsubscribe) { railRecordsUnsubscribe(); railRecordsUnsubscribe = null; }
+        if (typeof records !== 'undefined') {
+          records = [];
+          try { renderTable(); updateDashboardView(); } catch(e) {}
+        }
+        railSetLoginVisible(true);
         return;
       }
-
-      if (input === CLOUD_PORTAL_PASS) {
+      try {
+        const token = await user.getIdTokenResult();
+        // Ignore an obsolete async result if sign-out occurred in the meantime.
+        if (auth.currentUser !== user) return;
+        railAdmin = token.claims.admin === true;
         sessionStorage.setItem('secr_portal_authorized', 'true');
         sessionStorage.removeItem('railsntgyan_allow_exit');
-        document.documentElement.classList.add('portal-session-auth');
-        document.getElementById('loginScreen').style.display = 'none';
-        errorMsg.style.display = 'none';
+        railSetLoginVisible(false);
+        if (typeof railStartRecordsListener === 'function') railStartRecordsListener();
+      } catch (error) {
+        console.error('Firebase authorization error:', error);
+        railAdmin = false;
+        sessionStorage.removeItem('secr_portal_authorized');
+        railSetLoginVisible(true);
+      }
+    }
+    railSessionPersistenceReady.then(() => {
+      auth.onAuthStateChanged(railApplyUser);
+    }).catch(error => {
+      console.error('Firebase session persistence initialization failed:', error);
+      railSetLoginVisible(true);
+    });
 
-        // Every fresh login must start from HOME, irrespective of where Logout was pressed.
+    async function checkPortalPassword() {
+      const email = document.getElementById('pageEmailInput').value.trim();
+      const password = document.getElementById('pagePasswordInput').value;
+      const errorMsg = document.getElementById('loginErrorMsg');
+      errorMsg.style.display = 'none';
+      if (!email || !password) { errorMsg.textContent = 'Please enter email and password.'; errorMsg.style.display = 'block'; return; }
+      try {
+        await railSessionPersistenceReady;
+        const credential = await auth.signInWithEmailAndPassword(email, password);
+        const result = await credential.user.getIdTokenResult(true);
+        railAdmin = result.claims.admin === true;
+        await railApplyUser(credential.user);
+        if (!sessionStorage.getItem('secr_portal_authorized')) throw new Error('Authorization not completed');
+        document.getElementById('pagePasswordInput').value = '';
         sessionStorage.removeItem('importantLinksReturnState');
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-          modal.style.display = 'none';
-        });
+        document.querySelectorAll('.modal-overlay').forEach(modal => { modal.style.display = 'none'; });
         goHome(false);
-
-        // Once logged in, create a protected HOME history entry so browser/app
-        // Back cannot leave RailSNTGyan until the user explicitly logs out.
         try {
           history.replaceState({ view: 'guard', railsntgyan: true }, '', window.location.href);
           history.pushState({ view: 'home', railsntgyan: true }, '', window.location.href);
-        } catch (e) {
-          history.replaceState({ view: 'guard', railsntgyan: true }, '');
-          history.pushState({ view: 'home', railsntgyan: true }, '');
-        }
-      } else {
+        } catch(e) {}
+      } catch(error) {
+        console.error('Firebase sign-in failed:', error.code || error.message);
+        errorMsg.textContent = 'Login failed. Check email/password and your connection.';
         errorMsg.style.display = 'block';
-        document.getElementById('pagePasswordInput').value = '';
-        document.getElementById('pagePasswordInput').focus();
       }
     }
 
     function handleLoginKeyPress(event) {
-      if (event.key === 'Enter') {
-        checkPortalPassword();
-      }
+      if (event.key === 'Enter') checkPortalPassword();
     }
 
-    function logoutPortal() {
-      // Reset portal state first so the next successful login always opens HOME.
+    async function logoutPortal() {
+      // Hide the portal immediately; only Firebase sign-out ends the session.
+      railSetLoginVisible(true);
+      try { await auth.signOut(); } catch(error) { console.error('Logout error:', error); alert('Unable to sign out. Please retry.'); return; }
       sessionStorage.removeItem('importantLinksReturnState');
-      document.querySelectorAll('.modal-overlay').forEach(modal => {
-        modal.style.display = 'none';
-      });
+      document.querySelectorAll('.modal-overlay').forEach(modal => { modal.style.display = 'none'; });
       goHome(false);
-      // Logout always resets the next login to the fixed DARK default.
       sessionStorage.removeItem('railsntgyan-theme');
       if (typeof window.railApplyTheme === 'function') window.railApplyTheme('dark');
       sessionStorage.setItem('railsntgyan_allow_exit', 'true');
       sessionStorage.removeItem('secr_portal_authorized');
-      document.documentElement.classList.remove('portal-session-auth');
       document.getElementById('pagePasswordInput').value = '';
       document.getElementById('loginErrorMsg').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('pagePasswordInput').focus();
+      railSetLoginVisible(true);
+      document.getElementById('pageEmailInput').focus();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      const isAuth = sessionStorage.getItem('secr_portal_authorized');
-      if (isAuth === 'true') {
-        document.documentElement.classList.add('portal-session-auth');
-        document.getElementById('loginScreen').style.display = 'none';
-      } else {
-        document.documentElement.classList.remove('portal-session-auth');
-        document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('pagePasswordInput').focus();
-      }
+      // Session flags are navigation hints, never proof of authentication.
+      const isAuth = auth.currentUser ? 'true' : null;
+      // Do not show login here: Firebase may still be restoring the session.
+      // The auth-state callback alone decides which screen to reveal.
 
       // Protect Back navigation only while the user is authenticated.
       // On the login screen, normal browser/app Back remains available.
@@ -7887,19 +7908,9 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
     }
 
     function verifyAdminPassword(actionName) {
-      if (!CLOUD_ADMIN_PASS) {
-        alert("Security server is initializing, please try after 2 seconds.");
-        return false;
-      }
-
-      const enteredPassword = prompt(`Admin Authentication Required!\n\nPlease enter the Admin Password to ${actionName}:`);
-      if (enteredPassword === null) return false;
-      if (enteredPassword.trim() === CLOUD_ADMIN_PASS) {
-        return true;
-      } else {
-        alert("Galat admin password! Access denied.");
-        return false;
-      }
+      if (auth.currentUser && railAdmin === true) return true;
+      alert('Admin access required to ' + actionName + '.');
+      return false;
     }
 
     // TOGGLE MOBILE FILTER PANEL FUNCTION
@@ -8382,7 +8393,9 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
     let records = [];
 
     // REAL-TIME CLOUD LISTENER
-    recordsCol.onSnapshot((snapshot) => {
+    function railStartRecordsListener() {
+      if (!auth.currentUser || railRecordsUnsubscribe) return;
+      railRecordsUnsubscribe = recordsCol.onSnapshot((snapshot) => {
       records = [];
       snapshot.forEach(doc => {
         if (doc.id === '1') return;
@@ -8407,7 +8420,9 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
       restoreImportantLinksReturnState();
     }, (error) => {
       console.error("Firestore sync error: ", error);
+      if (error.code === 'permission-denied') alert('Firestore access denied. Check deployed Security Rules.');
     });
+    }
 
     // DASHBOARD LIVE CALCULATION & CHART LOGIC
     let dashBarChartInstance = null;
