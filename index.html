@@ -7,9 +7,11 @@
   <!-- v83: Dark theme is the default from the very first paint, including BFCache/back navigation. -->
   <script id="v83-dark-first-paint-script">
     (function () {
-      document.documentElement.classList.add('dark-theme');
-      document.documentElement.style.backgroundColor = '#07101d';
-      try { localStorage.setItem('railsntgyan-theme', 'dark'); } catch (e) {}
+      var savedTheme = 'dark';
+      try { savedTheme = sessionStorage.getItem('railsntgyan-theme') === 'light' ? 'light' : 'dark'; } catch(e) {}
+      document.documentElement.classList.toggle('dark-theme', savedTheme === 'dark');
+      document.documentElement.classList.toggle('rail-saved-light', savedTheme === 'light');
+      document.documentElement.style.backgroundColor = savedTheme === 'light' ? '#f1f5f9' : '#07101d';
     })();
   </script>
   <style id="v83-dark-first-paint-style">
@@ -17,6 +19,13 @@
     html.dark-theme body { background-color:#07101d; }
   </style>
   <style>html { background:#07101d; } body.dark-theme { background:#07101d; color:#e5edf7; }</style>
+<style id="rn-light-first-paint-v33">
+html.rail-saved-light,html.rail-saved-light body,
+html.rail-saved-light body:not(.dark-theme) {
+ background:#f1f5f9!important;color-scheme:light!important;
+}
+html.rail-saved-light body:not(.dark-theme) #loginScreen {color-scheme:light!important}
+</style>
 <style id="dark-first-paint-fix">
 /* DARK FIRST PAINT: these rules live in <head> so login/return never paints light first */
 html, body { background:#07101d !important; color-scheme:dark; }
@@ -48,6 +57,11 @@ body.dark-theme #loginScreen .login-input::placeholder { color:#aebed0 !importan
 body.dark-theme #loginScreen .login-input-wrapper i { color:#cbd5e1 !important; }
 body.dark-theme #loginScreen .login-btn, body.dark-theme #loginScreen .login-btn i { color:#fff !important; }
 body.dark-theme #loginScreen .login-error-msg { color:#fda4af !important; }
+
+html.rail-saved-light,html.rail-saved-light body,
+html.rail-saved-light body:not(.dark-theme) {
+ background:#f1f5f9!important;color-scheme:light!important;
+}
 </style>
   <script>
     // Prevent the login overlay from flashing while an authenticated user
@@ -6093,8 +6107,62 @@ body:not(.dark-theme) #mainContent {
 }
 </style>
 
-</head>
+
+<style id="rails-v10-theme-and-url-fix">
+/* Preserve the last chosen theme on return from an external URL. */
+html.rail-saved-light,html.rail-saved-light body,
+html.rail-saved-light body:not(.dark-theme) {
+  background-color:#f1f5f9!important;color-scheme:light!important;
+}
+html.rail-saved-light body:not(.dark-theme) #loginScreen {color-scheme:light;}
+/* URL wrapping only in Important Links; all other tables retain their widths. */
+th.important-link-url-header,
+td.important-link-url-cell {
+  width:380px!important;min-width:200px!important;max-width:480px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;
+}
+td.important-link-url-cell a.important-link-url-anchor {
+  display:inline!important;white-space:normal!important;overflow-wrap:anywhere!important;
+  word-break:break-word!important;line-height:1.55!important;
+}
+td.important-link-url-cell a.important-link-url-anchor i {display:inline!important;margin-right:5px;}
+@media(max-width:767px) {
+ th.important-link-url-header,td.important-link-url-cell {
+  width:240px!important;min-width:180px!important;max-width:280px!important;
+ }
+}
+</style>
+<style id="rn-v18-reliable-hover">
+@keyframes rnV18Nod{0%,100%{transform:rotate(0deg) translateY(0)}25%{transform:rotate(-2deg) translateY(-2px)}55%{transform:rotate(2deg) translateY(-3px)}80%{transform:rotate(-1deg) translateY(-1px)}}
+html body #appSidebar#appSidebar#appSidebar#appSidebar .home-btn:hover,
+html body #appSidebar#appSidebar#appSidebar#appSidebar .sidebar-section-title:hover,
+html body #appSidebar#appSidebar#appSidebar#appSidebar .nav-item:hover,
+html body #appSidebar#appSidebar#appSidebar#appSidebar .rn-v18-hovered {
+ animation:rnV18Nod 750ms ease-in-out 1!important;transform-origin:center!important;
+ filter:brightness(1.15)!important;outline:1px solid rgba(56,189,248,.5)!important;
+}
+@media(prefers-reduced-motion:reduce){html body #appSidebar .rn-v18-hovered{animation:none!important}}
+</style><script id="rn-v18-mouse-support">(function(){var last=null,sel='#appSidebar .home-btn,#appSidebar .sidebar-section-title,#appSidebar .nav-item';document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var x=e.target.closest&&e.target.closest(sel);if(x===last)return;if(last)last.classList.remove('rn-v18-hovered');last=x;if(x){x.classList.remove('rn-v18-hovered');void x.offsetWidth;x.classList.add('rn-v18-hovered')}},true);document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse')return;if(last&&!last.contains(e.relatedTarget)){last.classList.remove('rn-v18-hovered');last=null}},true)})();</script></head>
+<script id="rn-theme-prebody-v33">
+(function(){
+  var selected='dark';
+  try {
+    if(sessionStorage.getItem('secr_portal_authorized')==='true' &&
+       sessionStorage.getItem('railsntgyan-theme')==='light')selected='light';
+  }catch(e){}
+  document.documentElement.classList.toggle('dark-theme',selected==='dark');
+  document.documentElement.classList.toggle('rail-saved-light',selected==='light');
+  document.documentElement.style.backgroundColor=selected==='dark'?'#07101d':'#f1f5f9';
+})();
+</script>
 <body class="dark-theme">
+<script id="rn-theme-body-first-v33">
+(function(){
+ var dark=!document.documentElement.classList.contains('rail-saved-light');
+ document.body.classList.toggle('dark-theme',dark);
+})();
+</script>
+
 
   <!-- FULL PAGE LOGIN SCREEN -->
   <div id="loginScreen">
@@ -7614,7 +7682,9 @@ body:not(.dark-theme) #mainContent {
         modal.style.display = 'none';
       });
       goHome(false);
-
+      // Logout always resets the next login to the fixed DARK default.
+      sessionStorage.removeItem('railsntgyan-theme');
+      if (typeof window.railApplyTheme === 'function') window.railApplyTheme('dark');
       sessionStorage.setItem('railsntgyan_allow_exit', 'true');
       sessionStorage.removeItem('secr_portal_authorized');
       document.documentElement.classList.remove('portal-session-auth');
@@ -8426,6 +8496,20 @@ body:not(.dark-theme) #mainContent {
     }
 
     function switchCategory(catName, pushState = true) {
+      // Close IRSEM / IRTEM nested menus whenever another category is selected.
+      // Keep the matching nested menu open when its own chapter/correction page is selected.
+      const selectedManualCategory = String(catName || '').toUpperCase().trim();
+      [['irsemSubmenu','irsemSubmenuChevron','IRSEM '],
+       ['irtemSubmenu','irtemSubmenuChevron','IRTEM ']].forEach(([submenuId, chevronId, prefix]) => {
+        if (selectedManualCategory.startsWith(prefix)) return;
+        const submenu = document.getElementById(submenuId);
+        if (submenu) submenu.style.display = 'none';
+        const chevron = document.getElementById(chevronId);
+        if (chevron) {
+          chevron.classList.remove('fa-chevron-up');
+          chevron.classList.add('fa-chevron-down');
+        }
+      });
       let normCat = catName.toUpperCase().trim();
       if (normCat === 'PCSTE DISPENSATION') normCat = 'DISPENSATION';
       currentCategory = normCat;
@@ -8678,8 +8762,7 @@ body:not(.dark-theme) #mainContent {
         thead.innerHTML = `
           <tr>
             <th style="width: var(--col-1-w);">Sr. NO</th>
-            <th style="width: 320px;">Related to</th>
-            <th class="work-desc-th">Link</th>
+            <th class="important-website-heading" style="width: 320px;">Imp. website</th>
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
@@ -8698,7 +8781,7 @@ body:not(.dark-theme) #mainContent {
         thead.innerHTML = `
           <tr>
             <th style="width: 60px;">Sr. No.</th>
-            <th style="width: 120px;">Chapter No.</th>
+            <th class="chapter-book-width">Chapter No.</th>
             <th class="work-desc-wide">Description</th>
             <th style="width: 170px;">Correction Slip No. (if any)</th>
             <th style="width: 155px; text-align:center;">Action</th>
@@ -9037,18 +9120,16 @@ body:not(.dark-theme) #mainContent {
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td><b style="color: var(--accent-blue);">${rec.relatedTo || '—'}</b></td>
-              <td class="work-desc-cell">
+              <td class="important-website-cell">
                 ${rec.directLink ? `
-                <a href="${escapeHtml(rec.directLink)}"
-                   onclick="saveImportantLinksReturnState()"
-                   class="work-link"
-                   style="color:#15803d;">
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(rec.directLink)}
-                </a>` : `
-                <span class="work-link" style="color:#94a3b8; cursor:default;">
-                  <i class="fa-solid fa-link-slash"></i> —
-                </span>`}
+                  <a href="${escapeHtml(rec.directLink)}"
+                     onclick="saveImportantLinksReturnState()"
+                     class="important-website-link"
+                     title="${escapeHtml(rec.directLink)}">
+                    <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                    ${escapeHtml(rec.relatedTo || 'Open website')}
+                  </a>` : `
+                  <span class="important-website-no-link">${escapeHtml(rec.relatedTo || '—')}</span>`}
               </td>
               <td style="text-align:center; white-space:nowrap;">
                 <div class="actions-cell">
@@ -9146,7 +9227,7 @@ body:not(.dark-theme) #mainContent {
           html += `
             <tr>
               <td><b>${idx + 1}</b></td>
-              <td><b>${rec.chapterNo || '—'}</b></td>
+              <td class="chapter-book-width"><b>${rec.chapterNo || '—'}</b></td>
               <td class="work-desc-wide">
                 <a class="work-link" onclick="openPreview('${escapeHtml(rec.work)}', '${rec.driveLink || ''}')">
                   <i class="fa-solid fa-book" style="color: var(--accent-blue);"></i> ${rec.work || '—'}
@@ -11104,6 +11185,8 @@ html.rail-theme-switching *::after {
     // visually changing before/after the rest of the page.
     document.documentElement.classList.add('rail-theme-switching');
     document.documentElement.classList.toggle('dark-theme', dark);
+    document.documentElement.classList.toggle('rail-saved-light', !dark);
+    document.documentElement.style.backgroundColor = dark ? '#07101d' : '#f1f5f9';
     document.body.classList.toggle('dark-theme', dark);
     const btn = document.getElementById('themeToggleBtn');
     if (btn) {
@@ -11111,7 +11194,7 @@ html.rail-theme-switching *::after {
       btn.title = dark ? 'Switch to Light Theme' : 'Switch to Dark Theme';
       btn.setAttribute('aria-label', btn.title);
     }
-    try { localStorage.setItem('railsntgyan-theme', theme); } catch(e) {}
+    try { sessionStorage.setItem('railsntgyan-theme', theme); } catch(e) {}
 
     // Force style resolution while transitions are suppressed, then restore the
     // portal's normal hover/menu animations immediately after the theme has landed.
@@ -11131,13 +11214,16 @@ html.rail-theme-switching *::after {
     } catch(e) {}
   }
 
+  window.railApplyTheme = applyTheme;
   window.toggleRailTheme = function () {
     applyTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark');
   };
 
   // Re-assert the default dark theme when returning from an external page via Back/BFCache.
   window.addEventListener('pageshow', function () {
-    applyTheme('dark');
+    var remembered = 'dark';
+    try { remembered = sessionStorage.getItem('railsntgyan-theme') === 'light' ? 'light' : 'dark'; } catch(e) {}
+    if(document.body.classList.contains('dark-theme') !== (remembered==='dark')) applyTheme(remembered);
   });
 
   function installThemeButton() {
@@ -11158,7 +11244,9 @@ html.rail-theme-switching *::after {
 
     // RailSNTGyan always starts in Dark Theme. This runs after the body
     // already has dark-theme, so there is no Light -> Dark flash on login or Back.
-    applyTheme('dark');
+    var remembered = 'dark';
+    try { remembered = sessionStorage.getItem('railsntgyan-theme') === 'light' ? 'light' : 'dark'; } catch(e) {}
+    applyTheme(remembered);
   }
 
   if (document.readyState === 'loading') {
@@ -12667,7 +12755,17 @@ function toggleManualSubmenu(submenuId, defaultCategory) {
 
   const opening = submenu.style.display === 'none' || getComputedStyle(submenu).display === 'none';
 
-  // Keep IRSEM and IRTEM as independent compact submenus.
+  // Only one nested manual submenu may remain expanded at a time.
+  if (opening) {
+    const otherId = submenuId === 'irsemSubmenu' ? 'irtemSubmenu' : 'irsemSubmenu';
+    const other = document.getElementById(otherId);
+    if (other) other.style.display = 'none';
+    const otherChevron = document.getElementById(otherId === 'irsemSubmenu' ? 'irsemSubmenuChevron' : 'irtemSubmenuChevron');
+    if (otherChevron) {
+      otherChevron.classList.remove('fa-chevron-up');
+      otherChevron.classList.add('fa-chevron-down');
+    }
+  }
   submenu.style.display = opening ? 'block' : 'none';
 
   const chevronId = submenuId === 'irsemSubmenu' ? 'irsemSubmenuChevron' : 'irtemSubmenuChevron';
@@ -14236,6 +14334,238 @@ body.dark-theme .process-track-container { gap:8px !important; }
   }
 }
 </style>
+
+<style id="rn-rebuilt-navigation-v4">
+
+/* RAILSNTGYAN REBUILT SIDEBAR - reference image matching */
+html body #appSidebar#appSidebar#appSidebar#appSidebar,
+html body.dark-theme #appSidebar#appSidebar#appSidebar#appSidebar,
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar,
+html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open {
+  --rn-bg:#07172c;--rn-card:#112844;--rn-fg:#f4f8ff;--rn-border:#244765;
+  background:var(--rn-bg)!important;background-image:none!important;
+  border-right:1px solid #244765!important;box-shadow:8px 0 26px #0005!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding:0 8px 14px!important;overflow-y:auto!important;overflow-x:hidden!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar {--rn-bg:#f0f4ff;--rn-card:#fff;--rn-fg:#0a2b70;--rn-border:#e1e8fa;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .home-btn-container {
+  position:sticky!important;top:0!important;z-index:20!important;
+  background:var(--rn-bg)!important;background-image:none!important;
+  padding:10px 0 9px!important;border:0!important;box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar .home-btn {
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  min-height:47px!important;width:100%!important;border-radius:11px!important;
+  border:1px solid #1684bf!important;background:linear-gradient(110deg,#102940,#104e78)!important;
+  color:#fff!important;box-shadow:0 4px 13px #001c3655!important;
+  font-size:13px!important;font-weight:800!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar .home-btn {background:#fff!important;color:#0b2d70!important;border-color:#e2e9f8!important;box-shadow:0 3px 12px #6279a01c!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar .home-btn i {color:#16bffa!important;}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar .home-btn i {color:#287bff!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group,
+html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open > .collapsible-group {
+  display:block!important;position:relative!important;margin:3px 0 5px!important;
+  padding:0!important;border:0!important;background:transparent!important;
+  background-image:none!important;box-shadow:none!important;transform:none!important;
+  min-height:0!important;height:auto!important;max-height:none!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title,
+html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open > .collapsible-group > .sidebar-section-title {
+  position:relative!important;display:flex!important;align-items:center!important;
+  width:100%!important;min-height:44px!important;height:auto!important;
+  margin:0!important;padding:10px 12px!important;
+  border-radius:10px!important;border:1px solid #235b80!important;
+  border-left:1px solid #235b80!important;
+  background:linear-gradient(110deg,#0d2a46,#142c4b)!important;
+  background-image:linear-gradient(110deg,#0d2a46,#142c4b)!important;
+  color:#f5f9ff!important;box-shadow:0 2px 7px #0003!important;
+  text-transform:uppercase!important;font-size:11px!important;font-weight:800!important;
+  letter-spacing:0!important;line-height:1.3!important;
+  transform:none!important;opacity:1!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
+  background:linear-gradient(105deg,#0c3774,#2261c1)!important;
+  border-color:#3bb4ff!important;box-shadow:0 0 0 1px #2c9fff88,0 3px 13px #1586ff55!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title {
+  background:linear-gradient(105deg,#fff,#f5f7ff)!important;
+  color:#0a2d75!important;border-color:#dce5fa!important;box-shadow:0 3px 10px #657db01c!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
+  background:linear-gradient(105deg,#e8efff,#d2dfff)!important;
+  color:#103eb3!important;border-color:#5479ff!important;box-shadow:0 3px 10px #5679ff33!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar .sidebar-section-title-left {display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;flex:1!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar .sidebar-section-title-left > i {flex:0 0 22px!important;width:22px!important;font-size:17px!important;text-align:center!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar .sidebar-section-title .chevron-icon {margin-left:auto!important;transition:transform .24s ease!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group.collapsed > .nav-list {display:none!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+  display:block!important;position:relative!important;overflow:visible!important;
+  height:auto!important;max-height:none!important;min-height:0!important;
+  margin:0 0 5px 16px!important;padding:7px 0 6px 18px!important;
+  background:transparent!important;background-image:none!important;
+  border:0!important;box-shadow:none!important;transform:none!important;
+  animation:rnReveal .22s ease-out both!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list::before {
+  content:""!important;display:block!important;position:absolute!important;
+  left:5px!important;top:0!important;bottom:16px!important;width:1.5px!important;
+  background:#5595d6!important;opacity:1!important;pointer-events:none!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list::before {background:#a1b9fa!important;}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item,
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .manual-submenu .nav-item {
+  position:relative!important;display:flex!important;align-items:center!important;
+  gap:9px!important;min-height:35px!important;height:auto!important;
+  margin:2px 0!important;padding:8px 22px 8px 10px!important;
+  border-radius:8px!important;border:1px solid #254461!important;
+  border-left:3px solid transparent!important;
+  background:linear-gradient(105deg,#102640,#122a49)!important;
+  color:#f0f5ff!important;box-shadow:0 1px 3px #0004!important;
+  font-size:10.5px!important;font-weight:700!important;line-height:1.3!important;
+  text-transform:uppercase!important;white-space:normal!important;
+  transform:none!important;opacity:1!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item::before {
+  content:""!important;display:block!important;position:absolute!important;
+  left:-17px!important;top:50%!important;width:5px!important;height:5px!important;
+  border-radius:50%!important;background:#70b5fa!important;transform:translateY(-50%)!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item::after {
+  content:"\f054"!important;display:block!important;position:absolute!important;
+  right:9px!important;top:50%!important;transform:translateY(-50%)!important;
+  font-family:"Font Awesome 6 Free"!important;font-weight:900!important;
+  font-size:9px!important;color:inherit!important;opacity:.9!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item > i:first-child {
+  flex:0 0 20px!important;width:20px!important;font-size:15px!important;text-align:center!important;
+}
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item.active,
+html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item:hover {
+  background:linear-gradient(105deg,#153e70,#214d8a)!important;
+  border-color:#378ee5!important;border-left:3px solid #23c6ff!important;
+  color:#fff!important;box-shadow:0 2px 9px #148fff44!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item {
+  background:linear-gradient(105deg,#fff,#f8faff)!important;
+  color:#092c74!important;border-color:#e1e8f8!important;
+  border-left:3px solid transparent!important;box-shadow:0 2px 6px #637caf18!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item.active,
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item:hover {
+  background:#dbe7ff!important;color:#0b3aa8!important;
+  border-color:#c9d9ff!important;border-left:3px solid #2969f5!important;
+}
+@keyframes rnReveal {from{opacity:.5;translate:0 -5px}to{opacity:1;translate:0 0}}
+@media(max-width:1024px) {
+  html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open {width:min(370px,92vw)!important;max-width:92vw!important;}
+  html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open > .collapsible-group {margin:3px 0 5px!important;}
+  html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open > .collapsible-group > .sidebar-section-title {margin:0!important;}
+  html body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open > .collapsible-group:not(.collapsed) > .nav-list {margin:0 0 5px 16px!important;padding:7px 0 6px 18px!important;}
+}
+@media(prefers-reduced-motion:reduce){html body #appSidebar#appSidebar#appSidebar#appSidebar *{animation:none!important;transition:none!important;}}
+
+
+/* final high-specificity mobile reset */
+body.dark-theme #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open, body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open {background-color:var(--rn-bg)!important;background-image:none!important;}
+body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group > .sidebar-section-title {background-image:linear-gradient(110deg,#0d2a46,#142c4b)!important;background-color:#102940!important;border-color:#235b80!important;box-shadow:0 2px 7px #0003!important;}
+body.dark-theme #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group:not(.collapsed) > .sidebar-section-title {background-image:linear-gradient(105deg,#0c3774,#2261c1)!important;border-color:#3bb4ff!important;}
+body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group > .sidebar-section-title {background-image:linear-gradient(105deg,#fff,#f5f7ff)!important;background-color:#fff!important;color:#0a2d75!important;border-color:#dce5fa!important;}
+body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group:not(.collapsed) > .sidebar-section-title {background-image:linear-gradient(105deg,#e8efff,#d2dfff)!important;background-color:#e8efff!important;color:#103eb3!important;border-color:#5479ff!important;}
+body.dark-theme #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group > .nav-list > .nav-item {background:linear-gradient(105deg,#102640,#122a49)!important;border:1px solid #254461!important;border-left:3px solid transparent!important;color:#f0f5ff!important;}
+body.dark-theme #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group > .nav-list > .nav-item.active {background:#214d8a!important;border-left:3px solid #23c6ff!important;}
+body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group > .nav-list > .nav-item {background:#fff!important;border:1px solid #e1e8f8!important;border-left:3px solid transparent!important;color:#092c74!important;}
+body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .collapsible-group > .nav-list > .nav-item.active {background:#dbe7ff!important;border-left:3px solid #2969f5!important;}
+
+body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .sidebar-section-title,body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .nav-item {text-align:left!important;justify-content:flex-start!important;}
+body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .nav-item > i:first-child,body #appSidebar#appSidebar#appSidebar#appSidebar.mobile-open .sidebar-section-title-left > i:first-child {display:inline-block!important;visibility:visible!important;opacity:1!important;}
+</style>
+
+<style id="rn-sidebar-no-empty-bottom-v5">
+/* Mobile/tablet: the drawer ends directly after the last visible menu item.
+   If expanded content exceeds the viewport, it remains independently scrollable. */
+@media (max-width:1024px) {
+  html body #appSidebar,
+  html body #appSidebar.mobile-open,
+  html body.dark-theme #appSidebar.mobile-open,
+  html body:not(.dark-theme) #appSidebar.mobile-open {
+    bottom:auto !important;
+    height:max-content !important;
+    max-height:100vh !important;
+    max-height:100dvh !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    align-self:flex-start !important;
+    padding-bottom:8px !important;
+    overscroll-behavior:contain;
+  }
+}
+</style>
+
+<style id="rn-rounded-content-fit-sidebar-v6">
+/* Rounded, content-sized responsive navigation drawer; no blank tail. */
+@media (max-width: 1024px) {
+  html body #appSidebar.mobile-open,
+  html body.dark-theme #appSidebar.mobile-open,
+  html body:not(.dark-theme) #appSidebar.mobile-open {
+    border-radius: 16px !important;
+    border-bottom-left-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding-bottom: 10px !important;
+    height: max-content !important;
+    min-height: 0 !important;
+    max-height: calc(100dvh - 12px) !important;
+    scrollbar-width: thin;
+  }
+  /* Keep the bottom item itself rounded, including when groups expand. */
+  html body #appSidebar.mobile-open > .collapsible-group:last-child > .sidebar-section-title {
+    border-radius: 10px !important;
+  }
+}
+</style>
+
+<style id="railsntgyan-v7-gentle-wiggle-hover">
+/* Navigation cards only. Hover triggers a single gentle head-shake, not an endless loop. */
+@keyframes rnHeadWiggle {
+  0%,100% {transform:perspective(650px) rotateZ(0deg) rotateY(0deg) translateY(0)}
+  22% {transform:perspective(650px) rotateZ(-1.15deg) rotateY(-2deg) translateY(-1px)}
+  48% {transform:perspective(650px) rotateZ(1.05deg) rotateY(2deg) translateY(-2px)}
+  73% {transform:perspective(650px) rotateZ(-.45deg) rotateY(-1deg) translateY(-1px)}
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  html body #appSidebar .home-btn:hover,
+  html body #appSidebar > .collapsible-group > .sidebar-section-title:hover,
+  html body #appSidebar > .collapsible-group > .nav-list > .nav-item:hover {
+    animation:rnHeadWiggle 480ms ease-in-out 1 !important;
+    transform-origin:50% 50% !important;
+    filter:brightness(1.08);
+  }
+  html body #appSidebar .home-btn,
+  html body #appSidebar > .collapsible-group > .sidebar-section-title,
+  html body #appSidebar > .collapsible-group > .nav-list > .nav-item {
+    will-change:auto;
+    transition:background-color .2s ease,box-shadow .2s ease,filter .2s ease !important;
+  }
+}
+html body #appSidebar .home-btn:active,
+html body #appSidebar > .collapsible-group > .sidebar-section-title:active,
+html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
+  transform:scale(.982) !important;
+  filter:brightness(1.12);
+}
+@media (prefers-reduced-motion:reduce) {
+  html body #appSidebar .home-btn,
+  html body #appSidebar .sidebar-section-title,
+  html body #appSidebar .nav-item {animation:none!important;transition:none!important;}
+}
+</style>
+
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
@@ -15532,3 +15862,529 @@ body:has(#mainRecordTable.file-movement-table) #topScrollbarWrapper{
 </script>
 
 
+
+
+
+
+<style id="railsntgyan-v8-hybrid-mouse-wiggle">
+/* Hybrid touch+mouse devices: do not depend on primary pointer media query. */
+@keyframes rnHybridWiggle {
+  0%,100% {transform:perspective(650px) rotateZ(0) translateY(0)}
+  20% {transform:perspective(650px) rotateZ(-2deg) translateY(-2px)}
+  45% {transform:perspective(650px) rotateZ(2deg) translateY(-3px)}
+  70% {transform:perspective(650px) rotateZ(-1deg) translateY(-1px)}
+}
+html body #appSidebar .rn-mouse-wiggle {
+ animation:rnHybridWiggle 650ms ease-in-out 1 !important;
+ transform-origin:center center!important;
+ filter:brightness(1.16)!important;
+}
+html body #appSidebar .rn-mouse-wiggle:hover {
+ box-shadow:0 0 0 1px #37b8ff,0 5px 16px rgba(25,145,245,.34)!important;
+}
+@media(prefers-reduced-motion:reduce) {
+ html body #appSidebar .rn-mouse-wiggle {animation:none!important}
+}
+</style>
+
+
+<style id="rn-v9-all-cards-pointer-fix">
+@keyframes rnV9Nod {0%,100%{transform:rotate(0deg) translateY(0)}20%{transform:rotate(-2.4deg) translateY(-2px)}45%{transform:rotate(2.4deg) translateY(-3px)}70%{transform:rotate(-1.2deg) translateY(-1px)}}
+html body #appSidebar .rn-v9-wiggle {animation:rnV9Nod .62s ease-in-out 1!important;transform-origin:50% 50%!important;filter:brightness(1.14)!important;}
+html body #appSidebar .rn-v9-wiggle:hover{box-shadow:0 0 0 1px #49aaff,0 5px 16px #198ff055!important;}
+@media(prefers-reduced-motion:reduce){html body #appSidebar .rn-v9-wiggle{animation:none!important}}
+</style>
+<script id="rn-v9-all-cards-pointer-fix-script">
+(function(){
+ const selector='#appSidebar .home-btn, #appSidebar .sidebar-section-title, #appSidebar .nav-item';
+ function cardOf(target){return target instanceof Element?target.closest(selector):null;}
+ document.addEventListener('pointerover',function(e){
+   if(e.pointerType!=='mouse')return;
+   const card=cardOf(e.target);
+   if(!card || (e.relatedTarget instanceof Node && card.contains(e.relatedTarget)))return;
+   card.classList.remove('rn-v9-wiggle');void card.offsetWidth;card.classList.add('rn-v9-wiggle');
+ },true);
+ document.addEventListener('pointerout',function(e){
+   if(e.pointerType!=='mouse')return;
+   const card=cardOf(e.target);
+   if(!card || (e.relatedTarget instanceof Node && card.contains(e.relatedTarget)))return;
+   card.classList.remove('rn-v9-wiggle');
+ },true);
+})();
+</script>
+
+
+<style id="rn-v11-universal-hover">
+@keyframes rnV11CardNod {0%,100%{transform:translateY(0) rotate(0deg)}22%{transform:translateY(-2px) rotate(-2deg)}48%{transform:translateY(-3px) rotate(2deg)}72%{transform:translateY(-1px) rotate(-1deg)}}
+/* Works with a physical mouse on hybrid tablets, independent of media queries. */
+#appSidebar .sidebar-section-title.rn-v11-hover,
+#appSidebar .nav-item.rn-v11-hover,
+#appSidebar .home-btn.rn-v11-hover {
+ animation:rnV11CardNod .65s ease-in-out 1!important;
+ transform-origin:center!important;
+ filter:brightness(1.15)!important;
+ outline:1px solid rgba(49,174,255,.55)!important;
+ box-shadow:0 5px 16px rgba(30,144,255,.25)!important;
+}
+@media(prefers-reduced-motion:reduce){#appSidebar .rn-v11-hover{animation:none!important}}
+</style>
+
+
+
+<style id="rn-v12-hover-tested-fix">
+@keyframes rnV12Nod {0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-2px) rotate(-2.2deg)}55%{transform:translateY(-3px) rotate(2.2deg)}80%{transform:translateY(-1px) rotate(-.8deg)}}
+#appSidebar .home-btn.rn-v12-active,
+#appSidebar .sidebar-section-title.rn-v12-active,
+#appSidebar .nav-item.rn-v12-active {
+ animation:rnV12Nod 680ms ease-in-out 1!important;
+ transform-origin:center center!important;
+ filter:brightness(1.14)!important;
+ outline:1px solid rgba(50,170,255,.5)!important;
+}
+@media(prefers-reduced-motion:reduce) {#appSidebar .rn-v12-active {animation:none!important}}
+</style>
+
+
+<style id="rn-v13-direct-hover">
+@keyframes rnV13Wiggle {0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-2px) rotate(-2deg)}50%{transform:translateY(-3px) rotate(2deg)}75%{transform:translateY(-1px) rotate(-1deg)}}
+/* CSS :hover works for mouse attached to touch tablets too. */
+html body #appSidebar .home-btn:hover,
+html body #appSidebar .sidebar-section-title:hover,
+html body #appSidebar .nav-item:hover {
+ animation:rnV13Wiggle 700ms ease-in-out 1!important;
+ transform-origin:center center!important;
+ filter:brightness(1.12)!important;
+ outline:1px solid rgba(56,189,248,.42)!important;
+}
+@media(prefers-reduced-motion:reduce){html body #appSidebar .home-btn:hover,html body #appSidebar .sidebar-section-title:hover,html body #appSidebar .nav-item:hover{animation:none!important}}
+</style>
+
+<style id="rn-final-v15-unified-hover">
+@keyframes rnFinalCardNod {
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  23%{transform:translateY(-2px) rotate(-2deg)}
+  50%{transform:translateY(-3px) rotate(2deg)}
+  75%{transform:translateY(-1px) rotate(-1deg)}
+}
+html body #appSidebar .home-btn:hover,
+html body #appSidebar .sidebar-section-title:hover,
+html body #appSidebar .nav-item:hover {
+  animation-name:rnFinalCardNod!important;
+  animation-duration:680ms!important;
+  animation-timing-function:ease-in-out!important;
+  animation-iteration-count:1!important;
+  transform-origin:center center!important;
+  filter:brightness(1.13)!important;
+}
+@media(prefers-reduced-motion:reduce) {
+ html body #appSidebar .home-btn:hover,
+ html body #appSidebar .sidebar-section-title:hover,
+ html body #appSidebar .nav-item:hover {animation:none!important}
+}
+</style>
+
+
+<style id="rn-release-consistent-hover">
+@keyframes rnReleaseNod{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-2px) rotate(-2deg)}50%{transform:translateY(-3px) rotate(2deg)}75%{transform:translateY(-1px) rotate(-1deg)}}
+html body #appSidebar .home-btn:hover,
+html body #appSidebar .sidebar-section-title:hover,
+html body #appSidebar .nav-item:hover{
+ animation:rnReleaseNod 680ms ease-in-out 1!important;
+ transform-origin:center center!important;
+ filter:brightness(1.13)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html body #appSidebar .home-btn:hover,
+ html body #appSidebar .sidebar-section-title:hover,
+ html body #appSidebar .nav-item:hover{animation:none!important}
+}
+</style>
+
+<style id="rn-final-hover-verified">@keyframes rnFinalVerifiedWiggle{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-2deg)}55%{transform:rotate(2deg)}80%{transform:rotate(-1deg)}}html body #appSidebar .home-btn.rn-final-hovering,html body #appSidebar .sidebar-section-title.rn-final-hovering,html body #appSidebar .nav-item.rn-final-hovering{animation:rnFinalVerifiedWiggle .7s ease-in-out 1!important;transform-origin:center!important;filter:brightness(1.12)!important}@media(prefers-reduced-motion:reduce){html body #appSidebar .rn-final-hovering{animation:none!important}}</style><script id="rn-final-hover-events">(function(){var selector='#appSidebar .home-btn,#appSidebar .sidebar-section-title,#appSidebar .nav-item',last=null;document.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var el=e.target.closest&&e.target.closest(selector);if(last===el)return;if(last)last.classList.remove('rn-final-hovering');last=el;if(el){el.classList.remove('rn-final-hovering');void el.offsetWidth;el.classList.add('rn-final-hovering')}},true);document.addEventListener('pointerout',function(e){if(last&&!e.relatedTarget){last.classList.remove('rn-final-hovering');last=null}},true)})();</script>
+<style id="rn-content-height-sidebar-v19">
+/* All viewports: shrink sidebar to its navigation content instead of filling the page. */
+html body #appSidebar {
+  box-sizing:border-box!important;
+  height:max-content!important;
+  min-height:0!important;
+  max-height:calc(100dvh - 12px)!important;
+  bottom:auto!important;
+  align-self:flex-start!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  border-radius:15px!important;
+  border:1px solid var(--border-color,rgba(100,150,200,.3))!important;
+  padding-bottom:8px!important;
+}
+html body #appSidebar > .home-btn-container,
+html body #appSidebar > .collapsible-group,
+html body #appSidebar > .collapsible-group.collapsed,
+html body #appSidebar > .collapsible-group:not(.collapsed){
+  flex:0 0 auto!important;
+  min-height:0!important;
+  height:auto!important;
+}
+html body #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+  flex:0 0 auto!important;
+  max-height:min(58dvh,560px)!important;
+  overflow-y:auto!important;
+}
+@media(max-width:1024px){
+ html body #appSidebar.mobile-open{
+   height:max-content!important;min-height:0!important;
+   max-height:calc(100dvh - 12px)!important;
+   bottom:auto!important;
+   border-radius:15px!important;
+ }
+}
+</style>
+
+<style id="rn-important-website-v20">
+/* Only Important Links: replace separate URL column with clickable website title. */
+th.important-website-heading, td.important-website-cell {
+  width: 320px!important; min-width: 210px!important;
+  white-space: normal!important; overflow-wrap: anywhere!important;
+  word-break: normal!important; text-align:left!important;
+}
+td.important-website-cell .important-website-link {
+  display:inline-flex!important; align-items:baseline; gap:8px;
+  white-space:normal!important; overflow-wrap:anywhere!important;
+  text-decoration:none!important; color:#38bdf8!important;
+  font-weight:700; line-height:1.5;
+}
+td.important-website-cell .important-website-link:hover {
+  color:#7dd3fc!important; text-decoration:underline!important;
+}
+body:not(.dark-theme) td.important-website-cell .important-website-link {
+  color:#075fa7!important;
+}
+td.important-website-cell .important-website-no-link {opacity:.8;}
+@media(max-width:767px) {
+ th.important-website-heading,td.important-website-cell {
+  width:240px!important; min-width:170px!important;
+ }
+}
+</style>
+
+
+<style id="rn-v21-all-device-six-row-accordion">
+/* Final override: identical in-place scroll list across desktop, tablet and mobile. */
+html body #appSidebar > .collapsible-group:not(.collapsed):has(> .nav-list) {
+  flex: 0 0 auto !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+html body #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+  display: block !important;
+  flex: 0 1 auto !important;
+  height: auto !important;
+  max-height: var(--rn-six-row-height, 270px) !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+html body #appSidebar > .collapsible-group.collapsed > .nav-list {display:none!important;}
+/* Don't stretch a single open group into all remaining vertical space. */
+html body #appSidebar {align-content:start!important;}
+</style>
+<script id="rn-v21-six-row-height">
+(function(){
+ function updateSixRows(){
+   var side=document.getElementById('appSidebar'); if(!side)return;
+   side.querySelectorAll(':scope > .collapsible-group > .nav-list').forEach(function(list){
+     var items=Array.from(list.children).filter(function(el){return el.matches('li.nav-item') && getComputedStyle(el).display!=='none';});
+     if(!items.length)return;
+     var six=items.slice(0,6);
+     var last=six[six.length-1];
+     var top=six[0].offsetTop;
+     var h=last.offsetTop+last.offsetHeight-top+12;
+     if(h>0){list.style.setProperty('max-height',Math.ceil(h)+'px','important');list.style.setProperty('overflow-y','auto','important');list.style.setProperty('overflow-x','hidden','important');list.style.setProperty('flex','0 1 auto','important');list.parentElement.style.setProperty('flex','0 0 auto','important');list.parentElement.style.setProperty('max-height','none','important');}
+   });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',updateSixRows);
+ else updateSixRows();
+ window.addEventListener('resize',updateSixRows,{passive:true});
+ document.addEventListener('click',function(e){if(e.target.closest('#appSidebar .sidebar-section-title'))requestAnimationFrame(updateSixRows)},true);
+})();
+</script>
+
+
+<style id="rn-v23-scroll-cue-style">
+#appSidebar > .collapsible-group {position:relative!important;}
+#appSidebar > .collapsible-group > .rn-scroll-cue {
+ display:none;align-items:center;justify-content:center;gap:7px;
+ box-sizing:border-box;width:calc(100% - 14px);margin:3px 7px 5px;
+ padding:6px 4px;border:1px solid rgba(42,188,245,.35);border-radius:8px;
+ background:rgba(18,91,131,.19);color:#5bd9ff;
+ font:600 11px/1.25 system-ui,sans-serif;letter-spacing:.12px;
+ pointer-events:none;user-select:none;
+}
+#appSidebar > .collapsible-group.rn-has-more:not(.collapsed) > .rn-scroll-cue {display:flex!important;}
+#appSidebar > .collapsible-group > .rn-scroll-cue .rn-cue-arrow {font-size:16px;animation:rn-scroll-arrow 1.5s ease-in-out infinite;}
+@keyframes rn-scroll-arrow {0%,100%{transform:translateY(-2px);opacity:.7}55%{transform:translateY(2px);opacity:1}}
+body:not(.dark-theme) #appSidebar > .collapsible-group > .rn-scroll-cue {background:rgba(14,113,170,.07);color:#076da6;border-color:rgba(14,113,170,.28)}
+@media(prefers-reduced-motion:reduce){#appSidebar .rn-cue-arrow{animation:none!important}}
+</style>
+<script id="rn-v23-scroll-cue-script">
+(function(){
+ const root=()=>document.getElementById('appSidebar');
+ function refresh(){
+  const sidebar=root();if(!sidebar)return;
+  sidebar.querySelectorAll(':scope > .collapsible-group').forEach(group=>{
+   const list=group.querySelector(':scope > .nav-list');if(!list)return;
+   let cue=group.querySelector(':scope > .rn-scroll-cue');
+   if(!cue){cue=document.createElement('div');cue.className='rn-scroll-cue';cue.setAttribute('aria-hidden','true');cue.innerHTML='<span class="rn-cue-arrow">⇣</span><span>Scroll for more subsections</span><span class="rn-cue-arrow">⇣</span>';group.appendChild(cue)}
+   function update(){
+    const hasMore=!group.classList.contains('collapsed') && list.scrollHeight>list.clientHeight+5 && list.scrollTop+list.clientHeight<list.scrollHeight-5;
+    group.classList.toggle('rn-has-more',hasMore);
+   }
+   if(!list.dataset.rnCueBound){list.addEventListener('scroll',update,{passive:true});list.dataset.rnCueBound='1'}
+   update();
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refresh);else refresh();
+ window.addEventListener('resize',()=>requestAnimationFrame(refresh),{passive:true});
+ document.addEventListener('click',e=>{if(e.target.closest('#appSidebar')){requestAnimationFrame(()=>requestAnimationFrame(refresh));setTimeout(refresh,180)}},true);
+ document.addEventListener('DOMContentLoaded',()=>{const side=root();if(side)new MutationObserver(()=>requestAnimationFrame(refresh)).observe(side,{subtree:false,childList:true});});
+})();
+</script>
+
+<style id="rn-chapter-book-width-v24">
+/* Match Chapter No. to the existing responsive Book Name column width.
+   Scoped to IRSEM / IRTEM chapter-wise table cells only. */
+#mainRecordTable th.chapter-book-width,
+#mainRecordTable td.chapter-book-width {
+  box-sizing:border-box!important;
+  width:var(--col-2-min-w)!important;
+  min-width:var(--col-2-min-w)!important;
+  max-width:var(--col-2-min-w)!important;
+  white-space:normal!important;
+  overflow-wrap:break-word!important;
+  word-break:normal!important;
+  text-align:center!important;
+}
+</style>
+
+
+<style id="rn-date-width-all-tables-v25">
+/* Fit a full DD-MM-YYYY date without wrapping; headings may wrap. */
+#mainRecordTable th.col-sanction-date,#mainRecordTable td.col-sanction-date,
+#mainRecordTable th.rn-date-column,#mainRecordTable td.rn-date-column {
+ box-sizing:border-box!important;width:112px!important;min-width:112px!important;max-width:112px!important;
+ text-align:center!important;font-variant-numeric:tabular-nums!important;
+}
+#mainRecordTable td.col-sanction-date,#mainRecordTable td.rn-date-column,
+#mainRecordTable td.col-sanction-date *,#mainRecordTable td.rn-date-column * {
+ white-space:nowrap!important;word-break:keep-all!important;
+}
+#mainRecordTable th.col-sanction-date,#mainRecordTable th.rn-date-column {
+ white-space:normal!important;overflow-wrap:normal!important;
+}
+@media (min-width:769px) and (max-width:1024px){
+ #mainRecordTable th.col-sanction-date,#mainRecordTable td.col-sanction-date,
+ #mainRecordTable th.rn-date-column,#mainRecordTable td.rn-date-column {
+  width:104px!important;min-width:104px!important;max-width:104px!important;
+ }
+}
+@media(max-width:768px){
+ #mainRecordTable th.col-sanction-date,#mainRecordTable td.col-sanction-date,
+ #mainRecordTable th.rn-date-column,#mainRecordTable td.rn-date-column {
+  width:96px!important;min-width:96px!important;max-width:96px!important;
+  padding-left:3px!important;padding-right:3px!important;
+ }
+}
+</style>
+<script id="rn-date-width-all-tables-v25-script">
+(function(){
+ const dateHeading=/\bdate\b|\bdated\b/i;
+ function sync(){
+  const table=document.getElementById('mainRecordTable');if(!table)return;
+  const head=table.tHead||table.querySelector('thead');if(!head)return;
+  const headers=Array.from(head.querySelectorAll('tr:last-child th'));
+  const dateIndexes=headers.map((th,i)=>dateHeading.test(th.textContent||'')||th.classList.contains('col-sanction-date')?i:-1).filter(i=>i>=0);
+  for(const row of table.rows){
+   if(row.cells.length!==headers.length)continue;
+   Array.from(row.cells).forEach((cell,i)=>{
+    const should=dateIndexes.includes(i);
+    if(cell.classList.contains('rn-date-column')!==should)cell.classList.toggle('rn-date-column',should);
+   });
+  }
+ }
+ function init(){
+  const table=document.getElementById('mainRecordTable');if(!table)return;
+  let queued=false;
+  const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})};
+  new MutationObserver(schedule).observe(table,{subtree:true,childList:true,characterData:true});
+  schedule();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<style id="rn-v26-universal-date-compact">
+/* All tables: compact only columns whose header refers to a date. */
+table th.rn-compact-date-v26,table td.rn-compact-date-v26 {
+  box-sizing:border-box!important;
+  width:90px!important;min-width:90px!important;max-width:90px!important;
+  text-align:center!important;
+  padding-left:5px!important;padding-right:5px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+table td.rn-compact-date-v26,table td.rn-compact-date-v26 * {
+  white-space:nowrap!important;word-break:normal!important;
+  overflow-wrap:normal!important;
+}
+table th.rn-compact-date-v26 {
+  white-space:normal!important;overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+@media (min-width:769px) and (max-width:1024px) {
+ table th.rn-compact-date-v26,table td.rn-compact-date-v26 {
+   width:86px!important;min-width:86px!important;max-width:86px!important;
+   padding-left:4px!important;padding-right:4px!important;
+ }
+}
+@media (max-width:768px) {
+ table th.rn-compact-date-v26,table td.rn-compact-date-v26 {
+   width:82px!important;min-width:82px!important;max-width:82px!important;
+   padding-left:3px!important;padding-right:3px!important;
+ }
+}
+</style>
+<script id="rn-v26-universal-date-compact-script">
+(function(){
+ const pattern=/\bdate\b|\bdated\b/i;
+ function scanTable(table){
+   const head=table.tHead||table.querySelector('thead');
+   if(!head)return;
+   const headerRow=head.rows[head.rows.length-1];
+   if(!headerRow)return;
+   const headers=Array.from(headerRow.cells);
+   if(!headers.length)return;
+   const indices=new Set(headers.map((h,i)=>pattern.test(h.textContent||'')?i:-1).filter(i=>i>=0));
+   for(const row of table.rows){
+     if(row.cells.length!==headers.length)continue;
+     for(let i=0;i<row.cells.length;i++){
+       const cell=row.cells[i];
+       const active=indices.has(i);
+       if(cell.classList.contains('rn-compact-date-v26')!==active)
+         cell.classList.toggle('rn-compact-date-v26',active);
+     }
+   }
+ }
+ let queued=false;
+ function scan(){queued=false;document.querySelectorAll('table').forEach(scanTable);}
+ function schedule(){if(!queued){queued=true;requestAnimationFrame(scan);}}
+ function start(){
+   scan();
+   new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
+ else start();
+})();
+</script>
+
+
+<style id="rn-v28-real-date-column-override">
+/* Stronger than historical fixed widths and EI/PCSTE special rules. */
+html body #mainRecordTable th.rn-date-final,
+html body #mainRecordTable td.rn-date-final,
+html body table th.rn-date-final,
+html body table td.rn-date-final {
+ width:90px!important;min-width:90px!important;max-width:90px!important;
+ box-sizing:border-box!important;padding-left:3px!important;padding-right:3px!important;
+ text-align:center!important;font-variant-numeric:tabular-nums!important;
+}
+html body #mainRecordTable td.rn-date-final,html body #mainRecordTable td.rn-date-final *,
+html body table td.rn-date-final,html body table td.rn-date-final * {
+ white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;
+}
+html body table th.rn-date-final {
+ white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;
+}
+@media (min-width:769px) and (max-width:1024px) {
+ html body table th.rn-date-final,html body table td.rn-date-final {
+ width:86px!important;min-width:86px!important;max-width:86px!important;
+ }
+}
+@media (max-width:768px) {
+ html body table th.rn-date-final,html body table td.rn-date-final {
+ width:82px!important;min-width:82px!important;max-width:82px!important;
+ }
+}
+</style>
+<script id="rn-v28-real-date-column-override-script">
+(function(){
+ const datePattern=/\bdate\b|\bdated\b/i;
+ let pending=false;
+ function width(){return window.innerWidth<=768?'82px':window.innerWidth<=1024?'86px':'90px'}
+ function sync(){
+  pending=false;
+  const w=width();
+  document.querySelectorAll('table').forEach(table=>{
+   const thead=table.tHead||table.querySelector('thead');
+   if(!thead||!thead.rows.length)return;
+   const header=thead.rows[thead.rows.length-1];
+   const cells=Array.from(header.cells);
+   const dateCols=cells.map((c,i)=>datePattern.test(c.textContent||'')||c.classList.contains('col-sanction-date')?i:-1).filter(i=>i>=0);
+   if(!dateCols.length)return;
+   for(const row of table.rows){
+    if(row.cells.length!==cells.length)continue;
+    for(const i of dateCols){
+     const cell=row.cells[i];
+     if(!cell.classList.contains('rn-date-final'))cell.classList.add('rn-date-final');
+     if(cell.tagName==='TD') {cell.style.setProperty('white-space','nowrap','important');cell.querySelectorAll('*').forEach(child=>{if(child.style.getPropertyValue('white-space')!=='nowrap')child.style.setProperty('white-space','nowrap','important')})}
+     for(const prop of ['width','min-width','max-width']){
+      if(cell.style.getPropertyValue(prop)!==w||cell.style.getPropertyPriority(prop)!=='important')
+       cell.style.setProperty(prop,w,'important');
+     }
+    }
+   }
+  });
+ }
+ function schedule(){if(!pending){pending=true;requestAnimationFrame(sync)}}
+ function init(){
+  sync();
+  new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:false});
+  window.addEventListener('resize',schedule,{passive:true});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+ else init();
+})();
+</script>
+
+
+<style id="rn-jpo-number-responsive-v32">
+/* JPO No. column: same compact widths as date columns; override older 150px rule. */
+html body #mainRecordTable.jpo-table th.jpo-number-th,
+html body #mainRecordTable.jpo-table td.jpo-number-cell {
+  box-sizing:border-box!important;
+  width:90px!important;min-width:90px!important;max-width:90px!important;
+  padding-left:4px!important;padding-right:4px!important;
+  text-align:center!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;
+}
+html body #mainRecordTable.jpo-table td.jpo-number-cell b {
+  white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;
+}
+@media (min-width:769px) and (max-width:1024px) {
+ html body #mainRecordTable.jpo-table th.jpo-number-th,
+ html body #mainRecordTable.jpo-table td.jpo-number-cell {
+  width:86px!important;min-width:86px!important;max-width:86px!important;
+ }
+}
+@media (max-width:768px) {
+ html body #mainRecordTable.jpo-table th.jpo-number-th,
+ html body #mainRecordTable.jpo-table td.jpo-number-cell {
+  width:82px!important;min-width:82px!important;max-width:82px!important;
+ }
+}
+</style>
