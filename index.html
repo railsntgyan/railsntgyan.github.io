@@ -6142,7 +6142,23 @@ html body #appSidebar#appSidebar#appSidebar#appSidebar .rn-v18-hovered {
  filter:brightness(1.15)!important;outline:1px solid rgba(56,189,248,.5)!important;
 }
 @media(prefers-reduced-motion:reduce){html body #appSidebar .rn-v18-hovered{animation:none!important}}
-</style><script id="rn-v18-mouse-support">(function(){var last=null,sel='#appSidebar .home-btn,#appSidebar .sidebar-section-title,#appSidebar .nav-item';document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var x=e.target.closest&&e.target.closest(sel);if(x===last)return;if(last)last.classList.remove('rn-v18-hovered');last=x;if(x){x.classList.remove('rn-v18-hovered');void x.offsetWidth;x.classList.add('rn-v18-hovered')}},true);document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse')return;if(last&&!last.contains(e.relatedTarget)){last.classList.remove('rn-v18-hovered');last=null}},true)})();</script></head>
+</style><script id="rn-v18-mouse-support">(function(){var last=null,sel='#appSidebar .home-btn,#appSidebar .sidebar-section-title,#appSidebar .nav-item';document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var x=e.target.closest&&e.target.closest(sel);if(x===last)return;if(last)last.classList.remove('rn-v18-hovered');last=x;if(x){x.classList.remove('rn-v18-hovered');void x.offsetWidth;x.classList.add('rn-v18-hovered')}},true);document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse')return;if(last&&!last.contains(e.relatedTarget)){last.classList.remove('rn-v18-hovered');last=null}},true)})();</script>
+<style id="rn-sidebar-scroll-important-links-repair">
+/* Allow the complete navigation, including IMPORTANT LINKS, to scroll inside the available app height. */
+html body #appSidebar {
+  height:100% !important;
+  max-height:100% !important;
+  min-height:0 !important;
+  align-self:stretch !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  overscroll-behavior-y:contain;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+}
+html body #appSidebar > .collapsible-group {flex-shrink:0 !important;}
+</style>
+</head>
 <script id="rn-theme-prebody-v33">
 (function(){
   var selected='dark';
@@ -16005,11 +16021,11 @@ html body #appSidebar .nav-item:hover{
 /* All viewports: shrink sidebar to its navigation content instead of filling the page. */
 html body #appSidebar {
   box-sizing:border-box!important;
-  height:max-content!important;
+  height:100%!important;
   min-height:0!important;
-  max-height:calc(100dvh - 12px)!important;
-  bottom:auto!important;
-  align-self:flex-start!important;
+  max-height:100%!important;
+  bottom:0!important;
+  align-self:stretch!important;
   overflow-x:hidden!important;
   overflow-y:auto!important;
   border-radius:15px!important;
@@ -16031,9 +16047,9 @@ html body #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
 }
 @media(max-width:1024px){
  html body #appSidebar.mobile-open{
-   height:max-content!important;min-height:0!important;
-   max-height:calc(100dvh - 12px)!important;
-   bottom:auto!important;
+   height:100dvh!important;min-height:0!important;
+   max-height:100dvh!important;
+   bottom:0!important;
    border-radius:15px!important;
  }
 }
