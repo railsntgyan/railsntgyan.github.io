@@ -6158,6 +6158,84 @@ html body #appSidebar {
 }
 html body #appSidebar > .collapsible-group {flex-shrink:0 !important;}
 </style>
+
+<style id="rn-table-header-viewport-scroll-fix">
+/* Keep the subsection controls above a dedicated table scrolling viewport.
+   The table header sticks inside that viewport, never behind the site header. */
+#mainContent:has(#tableViewSection[style*="flex"]) { min-height:0 !important; overflow:hidden !important; }
+#tableViewSection[style*="flex"] { flex:1 1 auto !important; height:100% !important; min-height:0 !important; max-height:100% !important; overflow:hidden !important; }
+#tableViewSection[style*="flex"] > .content-header-card,
+#tableViewSection[style*="flex"] > .filter-panel,
+#tableViewSection[style*="flex"] > .top-scrollbar-wrapper { flex-shrink:0 !important; }
+#tableViewSection[style*="flex"] #mainTableContainer { flex:1 1 auto !important; height:auto !important; min-height:0 !important; max-height:none !important; overflow-x:auto !important; overflow-y:auto !important; overscroll-behavior-y:contain; }
+#tableViewSection[style*="flex"] #mainRecordTable thead th { position:sticky !important; top:0 !important; }
+@media(max-width:1024px){
+ #mainContent:has(#tableViewSection[style*="flex"]) {overflow:hidden !important;}
+ #tableViewSection[style*="flex"] {height:100% !important; min-height:0 !important; overflow:hidden !important;}
+ #tableViewSection[style*="flex"] #mainTableContainer {height:auto !important; min-height:0 !important; overflow-y:auto !important;}
+}
+</style>
+<style id="rn-orange-line-sticky-table-header-final">
+/* Table view occupies the area immediately below the orange site-header border.
+   Only the records viewport scrolls; its column headings remain visible. */
+html body .app-container { min-height:0 !important; }
+html body #mainContent:has(#tableViewSection[style*="flex"]) {
+  min-height:0 !important; overflow:hidden !important;
+}
+html body #mainContent #tableViewSection[style*="flex"] {
+  display:flex !important; flex-direction:column !important;
+  flex:1 1 0% !important; height:100% !important;
+  min-height:0 !important; max-height:100% !important;
+  overflow:hidden !important;
+}
+html body #mainContent #tableViewSection[style*="flex"] > .content-header-card,
+html body #mainContent #tableViewSection[style*="flex"] > .filter-panel,
+html body #mainContent #tableViewSection[style*="flex"] > .top-scrollbar-wrapper {
+  flex:0 0 auto !important;
+}
+html body #mainContent #tableViewSection[style*="flex"] #mainTableContainer.table-container {
+  display:block !important; flex:1 1 0% !important;
+  height:auto !important; min-height:0 !important; max-height:100% !important;
+  overflow-x:auto !important; overflow-y:auto !important;
+  position:relative !important;
+}
+html body #mainContent #tableViewSection[style*="flex"] #mainRecordTable thead th {
+  position:sticky !important; top:0 !important; z-index:22 !important;
+}
+html body #mainContent #tableViewSection[style*="flex"] #mainRecordTable thead th:nth-child(-n+2) {
+  z-index:27 !important;
+}
+</style>
+<style id="rn-first-two-header-above-frozen-body-fix">
+/* Frozen body cells previously had z-index:90, covering headers at z-index:27. */
+html body #mainRecordTable thead th {position:sticky !important;top:0 !important;z-index:180 !important;}
+html body #mainRecordTable:not(.unfreeze-table) thead th:nth-child(1),
+html body #mainRecordTable:not(.unfreeze-table) thead th:nth-child(2) {
+ position:sticky !important;top:0 !important;z-index:250 !important;
+ background:var(--brand-navy) !important;
+}
+html body #mainRecordTable.unfreeze-table thead th:nth-child(1),
+html body #mainRecordTable.unfreeze-table thead th:nth-child(2) {
+ position:sticky !important;top:0 !important;z-index:250 !important;
+ background:var(--brand-navy) !important;
+}
+</style>
+<style id="rn-sticky-thead-group-final-v2">
+/* Keep the entire header row in the vertical scrollport; frozen columns stay horizontally sticky. */
+html body #mainTableContainer #mainRecordTable { border-collapse:separate !important; }
+html body #mainTableContainer #mainRecordTable thead {
+  position:sticky !important; top:0 !important; z-index:300 !important;
+}
+html body #mainTableContainer #mainRecordTable thead tr {
+  position:relative; z-index:1;
+}
+html body #mainTableContainer #mainRecordTable thead th {
+  top:0 !important; z-index:301 !important;
+}
+html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
+  position:sticky !important; z-index:305 !important;
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -14422,16 +14500,19 @@ html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group:not(
   display:block!important;position:relative!important;overflow:visible!important;
   height:auto!important;max-height:none!important;min-height:0!important;
   margin:0 0 5px 16px!important;padding:7px 0 6px 18px!important;
-  background:transparent!important;background-image:none!important;
+  background-color:transparent!important;
+  background-image:linear-gradient(#5595d6,#5595d6)!important;
+  background-repeat:no-repeat!important;
+  background-position:5px 0!important;
+  background-size:1.5px var(--rn-tree-trunk-height, 0px)!important;
+  background-attachment:local!important;
   border:0!important;box-shadow:none!important;transform:none!important;
   animation:rnReveal .22s ease-out both!important;
 }
 html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list::before {
-  content:""!important;display:block!important;position:absolute!important;
-  left:5px!important;top:0!important;bottom:16px!important;width:1.5px!important;
-  background:#5595d6!important;opacity:1!important;pointer-events:none!important;
+  content:none!important;display:none!important;
 }
-html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list::before {background:#a1b9fa!important;}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list {background-image:linear-gradient(#a1b9fa,#a1b9fa)!important;}
 html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item,
 html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .manual-submenu .nav-item {
   position:relative!important;display:flex!important;align-items:center!important;
@@ -14447,8 +14528,8 @@ html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .n
 }
 html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item::before {
   content:""!important;display:block!important;position:absolute!important;
-  left:-17px!important;top:50%!important;width:5px!important;height:5px!important;
-  border-radius:50%!important;background:#70b5fa!important;transform:translateY(-50%)!important;
+  left:-29px!important;top:50%!important;width:18px!important;height:5px!important;
+  border-radius:0!important;background:linear-gradient(#70b5fa,#70b5fa) left center / 16px 1.5px no-repeat, radial-gradient(circle,#70b5fa 2.5px,transparent 2.6px) right center / 5px 5px no-repeat!important;transform:translateY(-50%)!important;
 }
 html body #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item::after {
   content:"\f054"!important;display:block!important;position:absolute!important;
@@ -14582,6 +14663,27 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
 }
 </style>
 
+<script id="rn-tree-continuity-measure">
+(function(){
+  function measure(){
+    var sidebar=document.getElementById('appSidebar');if(!sidebar)return;
+    sidebar.querySelectorAll(':scope > .collapsible-group > .nav-list').forEach(function(list){
+      var items=Array.from(list.children).filter(function(el){return el.classList.contains('nav-item') && getComputedStyle(el).display!=='none';});
+      if(!items.length){list.style.setProperty('--rn-tree-trunk-height','0px');return;}
+      var last=items[items.length-1];
+      // Convert viewport coordinates into the list's own scrolling-content coordinates.
+      // The scrollTop term is essential when the six-row subsection panel is scrolled.
+      var listRect=list.getBoundingClientRect();
+      var lastRect=last.getBoundingClientRect();
+      var end=lastRect.top+lastRect.height/2-listRect.top+list.scrollTop;
+      list.style.setProperty('--rn-tree-trunk-height',Math.max(0,Math.ceil(end))+'px');
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',measure);else measure();
+  window.addEventListener('resize',function(){requestAnimationFrame(measure)},{passive:true});
+  document.addEventListener('click',function(e){if(e.target.closest('#appSidebar .sidebar-section-title'))requestAnimationFrame(function(){requestAnimationFrame(measure)})},true);
+})();
+</script>
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
