@@ -17,7 +17,8 @@
   <style id="v83-dark-first-paint-style">
     html, html.dark-theme { background:#07101d !important; color-scheme:dark; }
     html.dark-theme body { background-color:#07101d; }
-  </style>
+  .chapter-book-art img.chapter-special-art{width:100%;height:100%;object-fit:contain;display:block;border-radius:8px}
+</style>
   <style>html { background:#07101d; } body.dark-theme { background:#07101d; color:#e5edf7; }</style>
 <style id="rn-light-first-paint-v33">
 html.rail-saved-light,html.rail-saved-light body,
@@ -6009,49 +6010,49 @@ body.dark-theme #appSidebar .nav-item.selected {
 /* Mobile/tablet LIGHT-THEME drawer paint fix only.
    Geometry, font sizing, accordion behaviour and dark theme are untouched. */
 @media (max-width:1024px) {
-  body:not(.dark-theme) #appSidebar {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar {
     background:#f8fafc !important;
     background-color:#f8fafc !important;
     color:#334155 !important;
     border-right-color:#cbd5e1 !important;
     box-shadow:4px 0 18px rgba(15,23,42,.14) !important;
   }
-  body:not(.dark-theme) #appSidebar > .home-btn-container {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .home-btn-container {
     background:#ffffff !important;
     background-color:#ffffff !important;
   }
-  body:not(.dark-theme) #appSidebar > .collapsible-group {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group {
     background:transparent !important;
   }
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title {
     background:#f8fafc !important;
     background-color:#f8fafc !important;
     color:#334155 !important;
   }
-  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .sidebar-section-title {
     background:color-mix(in srgb, var(--section-accent, #06b6d4) 8%, #f8fafc) !important;
     color:#334155 !important;
   }
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title:hover {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title:hover {
     background:color-mix(in srgb, var(--section-accent, #06b6d4) 6%, #f8fafc) !important;
     color:#334155 !important;
   }
-  body:not(.dark-theme) #appSidebar .nav-list,
-  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
     background:#ffffff !important;
     background-color:#ffffff !important;
   }
-  body:not(.dark-theme) #appSidebar .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-item {
     color:#475569 !important;
     background-color:transparent !important;
   }
-  body:not(.dark-theme) #appSidebar .nav-item.active,
-  body:not(.dark-theme) #appSidebar .nav-item.active-subsection,
-  body:not(.dark-theme) #appSidebar .nav-item.selected {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-item.active,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-item.active-subsection,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-item.selected {
     color:#0b3b60 !important;
     background-color:#eaf4fb !important;
   }
-  body:not(.dark-theme) #appSidebar .nav-item:hover {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-item:hover {
     color:#0b3b60 !important;
     background-color:#f0f7fb !important;
   }
@@ -6060,7 +6061,7 @@ body.dark-theme #appSidebar .nav-item.selected {
     background:rgba(15,23,42,.42) !important;
     z-index:998 !important;
   }
-  body:not(.dark-theme) #appSidebar { z-index:999 !important; }
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar { z-index:999 !important; }
 }
 </style>
 
@@ -6235,6 +6236,173 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
   position:sticky !important; z-index:305 !important;
 }
 </style>
+<style id="rail-password-visibility-style">
+/* Password visibility control: login page only */
+#loginScreen #pagePasswordInput { padding-right: 46px; }
+#loginScreen .rail-password-eye { position:absolute; right:9px; top:50%; transform:translateY(-50%); width:34px; height:34px; display:flex; align-items:center; justify-content:center; border:0; border-radius:7px; background:transparent; color:#64748b; cursor:pointer; z-index:2; }
+#loginScreen .rail-password-eye i, body.dark-theme #loginScreen .rail-password-eye i { position:static !important; transform:none !important; color:inherit !important; font-size:15px; }
+#loginScreen .rail-password-eye:focus-visible { outline:2px solid #009ca6; outline-offset:1px; }
+#loginScreen .rail-password-eye:hover { color:#009ca6; }
+</style>
+<style id="rail-home-fy-single-row-fix">
+/* Keep dashboard heading, FY selector and total on one line on desktop. */
+@media (min-width: 701px) {
+  #dashboardView .dash-hero { display:flex !important; flex-wrap:nowrap !important; gap:10px !important; }
+  #dashboardView .dash-hero-title { flex:1 1 0 !important; min-width:0 !important; }
+  #dashboardView .home-workflow-title { white-space:nowrap !important; font-size:clamp(11px,1.05vw,16px) !important; letter-spacing:0 !important; }
+  #dashboardView .dash-fy-badge-wrapper { display:flex !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important; width:auto !important; flex:0 0 auto !important; margin-left:auto !important; }
+  #dashboardView .dash-fy-badge, #dashboardView .dash-total-badge { white-space:nowrap !important; padding:6px 9px !important; font-size:11px !important; }
+  #dashboardView #dashFYSelect { max-width:130px !important; }
+}
+@media (max-width: 700px) {
+  #dashboardView .dash-hero { flex-wrap:wrap !important; }
+}
+</style>
+<style id="chapter-book-gallery-style">
+/* Chapter-wise book gallery — limited to IRSEM and IRTEM */
+#mainTableContainer.chapter-gallery-mode{overflow-y:auto;overflow-x:hidden;padding:16px;background:var(--bg-light);border-top:2px solid var(--brand-orange)}
+#mainTableContainer.chapter-gallery-mode #mainRecordTable{display:none!important}
+#chapterBookGallery{display:none}
+#mainTableContainer.chapter-gallery-mode #chapterBookGallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr));gap:16px;align-content:start}
+.chapter-book-card{min-width:0;display:flex;flex-direction:column;overflow:hidden;border-radius:15px;background:#fff;border:1px solid #cbd5e1;box-shadow:0 6px 18px rgba(15,23,42,.11);transition:transform .2s,box-shadow .2s}
+.chapter-book-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,.18)}
+.chapter-book-heading{padding:11px 12px;color:#fff;background:linear-gradient(120deg,var(--brand-navy),#0b6280);font-size:13px;font-weight:800;text-align:center;min-height:44px}
+.chapter-book-art{height:128px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--book-soft),#fff);color:var(--book-accent)}
+.chapter-book-art svg{height:83px;width:83px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.12))}
+.chapter-book-desc{flex:1;padding:12px 11px 6px;color:#1e293b;font-size:12px;line-height:1.5;font-weight:750;text-align:center;overflow-wrap:anywhere}
+.chapter-book-slip{padding:2px 10px 9px;color:#64748b;text-align:center;font-size:10px}
+.chapter-book-actions{display:flex;justify-content:center;gap:7px;padding:10px;border-top:1px solid #e2e8f0;flex-wrap:wrap}
+.chapter-book-actions .action-icon-btn{flex-shrink:0}
+body.dark-theme #mainTableContainer.chapter-gallery-mode{background:#0b1424}
+body.dark-theme .chapter-book-card{background:#172337;border-color:#334155}
+body.dark-theme .chapter-book-desc{color:#f1f5f9}
+body.dark-theme .chapter-book-slip{color:#cbd5e1}
+body.dark-theme .chapter-book-actions{border-color:#334155}
+@media(max-width:600px){#mainTableContainer.chapter-gallery-mode{padding:10px}#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.chapter-book-art{height:105px}.chapter-book-art svg{width:68px;height:68px}.chapter-book-desc{font-size:11px}.chapter-book-heading{font-size:11px}}
+/* Separate, detailed IRSEM/IRTEM chapter SVG tiles */
+.chapter-book-art{height:155px;background:#091a2c!important}
+.chapter-book-art svg{width:135px;height:135px;max-width:94%;max-height:94%;filter:none}
+@media(max-width:600px){.chapter-book-art{height:122px}.chapter-book-art svg{width:108px;height:108px}}
+</style>
+
+<style id="chapter-gallery-compact-theme-fix-v1">
+/* Scoped to the two chapter-wise galleries only; preserves all other tables. */
+#mainTableContainer.chapter-gallery-mode{background:#f1f5f9!important;padding:9px 12px!important;border-top-color:#f97316!important;}
+#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;align-content:start!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-card{border-radius:11px!important;background:#fff!important;border:1px solid #d6e1ee!important;box-shadow:0 2px 7px rgba(15,23,42,.08)!important;min-height:0!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-heading{min-height:30px!important;padding:6px 5px!important;font-size:11px!important;line-height:18px!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-art{height:92px!important;background:#091a2c!important;flex-shrink:0!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-art svg{width:84px!important;height:84px!important;max-width:96%!important;max-height:96%!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-desc{flex:0 0 auto!important;min-height:45px!important;padding:7px 7px 4px!important;font-size:10.5px!important;line-height:1.3!important;color:#16304b!important;display:flex;align-items:center;justify-content:center;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-slip{min-height:0!important;padding:0 6px 2px!important;font-size:9px!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-actions{padding:5px!important;gap:6px!important;margin-top:auto!important;}
+body.dark-theme #mainTableContainer.chapter-gallery-mode{background:#0b1424!important;}
+body.dark-theme #mainTableContainer.chapter-gallery-mode .chapter-book-card{background:#172337!important;border-color:#334155!important;}
+body.dark-theme #mainTableContainer.chapter-gallery-mode .chapter-book-desc{color:#f1f5f9!important;}
+@media(min-width:1500px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(5,minmax(0,1fr))!important;}}
+@media(min-width:850px) and (max-width:1100px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}
+@media(min-width:601px) and (max-width:849px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}
+@media(max-width:600px){#mainTableContainer.chapter-gallery-mode{padding:8px!important;}#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}#mainTableContainer.chapter-gallery-mode .chapter-book-art{height:92px!important;}#mainTableContainer.chapter-gallery-mode .chapter-book-art svg{width:82px!important;height:82px!important;}}
+</style>
+
+<style id="rn-chapter-gallery-compact-light-v2">
+/* Only IRSEM/IRTEM chapter galleries; light theme is deliberately light. */
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode{background:#edf4fb!important;}
+#mainTableContainer.chapter-gallery-mode{padding:7px 9px!important;}
+#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-card{border-radius:9px!important;}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card{background:#fff!important;border-color:#c9dced!important;box-shadow:0 2px 6px #193c6115!important;}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-heading{background:#e5f2ff!important;color:#16466a!important;border-bottom:1px solid #c8e3f4!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-heading{min-height:25px!important;padding:4px 4px!important;font-size:10px!important;line-height:16px!important;}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art{background:#eaf4fc!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-art{height:74px!important;min-height:74px!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-art svg{width:70px!important;height:70px!important;max-height:96%!important;max-width:96%!important;}
+/* SVG artwork often has its own dark tile rectangle: lighten that tile in light mode. */
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art svg > rect:first-child[fill="#07182b"],
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art svg > rect:first-child[fill="#091a2c"],
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art svg > rect:first-child[fill="#06182b"]{fill:#e3f1fc!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-desc{min-height:39px!important;padding:5px 5px 3px!important;font-size:10px!important;line-height:1.22!important;overflow-wrap:break-word!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-slip{padding:0 4px 1px!important;font-size:8px!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-actions{padding:3px!important;gap:5px!important;}
+#mainTableContainer.chapter-gallery-mode .chapter-book-actions .action-icon-btn{min-width:23px!important;min-height:21px!important;padding:2px 4px!important;}
+@media(min-width:1550px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(6,minmax(0,1fr))!important;}}
+@media(min-width:850px) and (max-width:1120px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(4,minmax(0,1fr))!important;}}
+@media(min-width:601px) and (max-width:849px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}
+@media(max-width:600px){#mainTableContainer.chapter-gallery-mode #chapterBookGallery{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;}#mainTableContainer.chapter-gallery-mode .chapter-book-art{height:76px!important;}#mainTableContainer.chapter-gallery-mode .chapter-book-art svg{height:69px!important;width:69px!important;}}
+</style>
+
+<style id="railsntgyan-light-hover-upgrade-2026">
+/* Light-only, progressive enhancement: never changes layout, data or controls. */
+@media (hover:hover) and (pointer:fine) {
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card {
+ transition: transform .23s cubic-bezier(.2,.8,.2,1), box-shadow .23s ease, border-color .23s ease !important;
+ will-change: auto;
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card:hover {
+ transform:translateY(-4px) !important;
+ border-color:#67b5e8 !important;
+ box-shadow:0 11px 23px rgba(24,80,137,.17),0 0 0 1px rgba(46,155,224,.10) !important;
+ position:relative;z-index:1;
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art svg {
+ transition:transform .25s ease,filter .25s ease;
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card:hover .chapter-book-art svg {
+ transform:scale(1.075);
+ filter:drop-shadow(0 3px 5px rgba(35,113,174,.16));
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card:hover .chapter-book-heading {
+ background:#d8ecff!important;color:#0b4269!important;
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-actions .action-icon-btn {
+ transition:transform .17s ease,box-shadow .17s ease,background-color .17s ease;
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-actions .action-icon-btn:hover {
+ transform:translateY(-2px);box-shadow:0 3px 8px rgba(23,91,157,.18);
+ background-color:#dcefff;
+}
+}
+body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card:focus-within {
+ outline:2px solid #399ad5;outline-offset:1px;
+}
+@media (prefers-reduced-motion:reduce){
+#mainTableContainer.chapter-gallery-mode .chapter-book-card,
+#mainTableContainer.chapter-gallery-mode .chapter-book-art svg,
+#mainTableContainer.chapter-gallery-mode .action-icon-btn {transition:none!important;transform:none!important;}
+}
+</style>
+
+
+
+
+
+
+<style id="rn-single-layer-teal-hover-2026">
+/* Only one hover surface, no pseudo-element or parent overlay. */
+@media (hover:hover) and (pointer:fine) {
+ html body:not(.dark-theme) #appSidebar :is(.home-btn,.sidebar-section-title,.nav-item):hover {
+   background:#def6f2 !important;
+   background-image:none !important;
+   border-color:rgba(13,148,136,.55) !important;
+   box-shadow:inset 3px 0 0 #0d9488,0 2px 7px rgba(13,148,136,.10) !important;
+   color:#075e59 !important;
+   transform:none !important;
+   animation:none !important;
+   filter:none !important;
+   transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease !important;
+ }
+ html body:not(.dark-theme) #appSidebar :is(.home-btn,.sidebar-section-title,.nav-item):hover::before,
+ html body:not(.dark-theme) #appSidebar :is(.home-btn,.sidebar-section-title,.nav-item):hover::after {
+   background-color:transparent !important;
+   background-image:none !important;
+   box-shadow:none !important;
+ }
+ html body:not(.dark-theme) #appSidebar :is(.home-btn,.sidebar-section-title,.nav-item):hover > * {
+   background-color:transparent !important;
+   background-image:none !important;
+ }
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -6398,6 +6566,7 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
         <div class="login-input-wrapper">
           <i class="fa-solid fa-lock"></i>
           <input type="password" id="pagePasswordInput" class="login-input" placeholder="Enter account password" autocomplete="current-password" onkeydown="handleLoginKeyPress(event)">
+          <button type="button" class="rail-password-eye" aria-label="Show password" aria-pressed="false" title="Show password" onclick="toggleRailPasswordVisibility(this)"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
         </div>
       </div>
 
@@ -7093,11 +7262,13 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
           <div class="dash-fy-badge-wrapper">
             <div class="dash-fy-badge">
               <i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-              <span id="dashCurrentFYText">FY 2026–27</span>
+              <label for="dashFYSelect" style="font-size:12px;font-weight:800;color:#fff;">Financial Year</label>
+              <select id="dashFYSelect" aria-label="Select dashboard financial year" onchange="railDashboardFYChanged(this.value)" style="background:#fff;color:#0b3b60;border:0;border-radius:5px;padding:5px 8px;font-size:12px;font-weight:800;max-width:145px;cursor:pointer;"></select>
+              <span id="dashCurrentFYText" style="display:none"></span>
             </div>
             <div class="dash-total-badge">
               <i class="fa-solid fa-layer-group" style="color: #38bdf8;"></i>
-              <span>Total Current FY: <b id="dashTotalRecordsCount">0</b></span>
+              <span>Total Selected FY: <b id="dashTotalRecordsCount">0</b></span>
             </div>
           </div>
         </div>
@@ -7279,6 +7450,7 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
 
         <!-- 3. TABLE CONTAINER (WITH STICKY THEAD) -->
         <div class="table-container" id="mainTableContainer">
+          <div id="chapterBookGallery" aria-label="Chapter books"></div>
           <table id="mainRecordTable">
             <thead id="tableHead"></thead>
             <tbody id="tableBody"></tbody>
@@ -8441,8 +8613,41 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
       { key: 'SPEED RAISING', label: 'SPEED RAISING', domId: 'kpi-SPEED_RAISING', nodeCountId: 'nodeCount-SPEED_RAISING', color: '#10b981' }
     ];
 
+    // Dashboard FY selection is independent of table filters and FY reports.
+    // Default is always the current Indian financial year (April–March).
+    let railSelectedDashboardFY = null;
+    function railDashboardFYChanged(value) {
+      railSelectedDashboardFY = value || getCurrentFinancialYearString();
+      updateDashboardView();
+    }
+    function railRefreshDashboardFYOptions() {
+      const select = document.getElementById('dashFYSelect');
+      const actualFY = getCurrentFinancialYearString();
+      if (!railSelectedDashboardFY) railSelectedDashboardFY = actualFY;
+      if (!select) return;
+      const years = new Set([actualFY, railSelectedDashboardFY]);
+      records.forEach(rec => {
+        const info = getFinancialYearAndMonth(rec.date);
+        if (info) years.add(info.fy);
+      });
+      const ordered = [...years].sort((a,b) => Number(b.slice(0,4)) - Number(a.slice(0,4)));
+      const signature = ordered.join('|');
+      if (select.dataset.years !== signature) {
+        select.replaceChildren();
+        ordered.forEach(fy => {
+          const opt = document.createElement('option');
+          opt.value = fy;
+          opt.textContent = `FY ${fy}` + (fy === actualFY ? ' (Current)' : '');
+          select.appendChild(opt);
+        });
+        select.dataset.years = signature;
+      }
+      select.value = railSelectedDashboardFY;
+    }
+
     function updateDashboardView() {
-      const currentFY = getCurrentFinancialYearString();
+      railRefreshDashboardFYOptions();
+      const currentFY = railSelectedDashboardFY || getCurrentFinancialYearString();
       const currentFYLabel = `FY ${currentFY}`;
 
       const fyElem = document.getElementById('dashCurrentFYText');
@@ -8804,6 +9009,14 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
       const tbody = document.getElementById('tableBody');
       const tableElem = document.getElementById('mainRecordTable');
       if (!thead || !tbody || !tableElem) return;
+
+      const chapterGalleryMode = currentCategory === 'IRSEM CHAPTER WISE' || currentCategory === 'IRTEM CHAPTER WISE';
+      const galleryContainer = document.getElementById('mainTableContainer');
+      if (galleryContainer) galleryContainer.classList.toggle('chapter-gallery-mode', chapterGalleryMode);
+      const topScrollbar = document.getElementById('topScrollbarWrapper');
+      if (topScrollbar && chapterGalleryMode) topScrollbar.style.display = 'none';
+      const chapterGallery = document.getElementById('chapterBookGallery');
+      if (chapterGallery && !chapterGalleryMode) chapterGallery.innerHTML = '';
 
       const filterYear = document.getElementById('filterYear').value;
       const filterDiv = document.getElementById('filterDivision').value;
@@ -9182,6 +9395,193 @@ html body #mainTableContainer #mainRecordTable thead th:nth-child(-n+2) {
             return (a.year || 0) - (b.year || 0);
           });
         }
+      }
+
+      if (chapterGalleryMode && chapterGallery) {
+        const iconShapes = [
+          '<path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2zm0 0a2 2 0 0 1 2-2h12M8 7h6M8 11h6"/>',
+          '<path d="M12 2v5m0 10v5M2 12h5m10 0h5M7 7l3 3m4 4 3 3m0-10-3 3m-4 4-3 3"/><circle cx="12" cy="12" r="5"/>',
+          '<path d="M3 17h18M5 17V7l7-4 7 4v10M9 17v-6h6v6M4 21h16"/>',
+          '<path d="M4 5h16v14H4zM8 9h8M8 13h8M8 17h5"/><path d="M12 2v3"/>',
+          '<path d="M2 18h20M5 18V8h14v10M8 8V4h8v4M8 12h8M8 15h8"/>',
+          '<circle cx="12" cy="12" r="9"/><path d="M12 5v7l5 3M3 12h3M18 12h3"/>',
+          '<path d="M4 20h16M7 20V8l5-5 5 5v12M7 11h10M10 15h4"/>',
+          '<path d="M4 4h16v16H4zM8 8h8v8H8zM2 12h2m16 0h2M12 2v2m0 16v2"/>'
+        ];
+        // IRSEM-specific pictograms based on the supplied chapter/icon reference PDF.
+        // Each icon uses self-contained SVG geometry; IRTEM keeps its existing icons.
+        // 23 individually composed, multicolour subject-specific SVG illustrations.
+        const irsemIcons = {
+          0: `<path d="M9 10 Q20 5 31 12 Q42 5 55 10 V51 Q42 46 32 52 Q20 46 9 51Z"/><path d="M32 13V52 M14 18h13 M37 18h12"/><rect x="27" y="20" width="10" height="25" rx="3"/><circle cx="32" cy="26" r="2" fill="#ef4444"/><circle cx="32" cy="33" r="2"/><circle cx="32" cy="40" r="2"/><path d="M14 56h36" stroke="#38bdf8"/><path d="M17 23h8m-8 6h8m-8 6h8m23-12h8m-8 6h8" stroke="#f59e0b"/>`,
+          1: `<rect x="25" y="7" width="14" height="12" rx="3"/><path d="M32 19v12M13 31h38M13 31v8M32 31v8M51 31v8"/><rect x="5" y="39" width="16" height="15" rx="3"/><rect x="24" y="39" width="16" height="15" rx="3"/><rect x="43" y="39" width="16" height="15" rx="3"/><circle cx="32" cy="13" r="3" fill="#f97316"/><circle cx="13" cy="45" r="3" fill="#22c55e"/><circle cx="32" cy="45" r="3" fill="#38bdf8"/><circle cx="51" cy="45" r="3" fill="#a78bfa"/>`,
+          2: `<path d="M12 30a20 20 0 0 1 40 0M9 31h46M26 13v-5h12v5"/><rect x="17" y="36" width="30" height="22" rx="3"/><path d="m23 47 5 5 11-11"/><path d="M15 29h34" stroke="#f59e0b" stroke-width="5"/><path d="m23 46 5 5 11-11" stroke="#22c55e" stroke-width="4"/><circle cx="32" cy="25" r="3" fill="#38bdf8"/>`,
+          3: `<path d="M12 12l10 10-5 5-10-10M20 20l24 24M42 12l10 10-6 6-10-10"/><rect x="20" y="31" width="31" height="26" rx="3"/><path d="M27 38h16M27 44h12M27 50h16"/><circle cx="14" cy="12" r="5" fill="#fb923c"/><circle cx="48" cy="15" r="5" fill="#38bdf8"/><path d="m27 49 3 3 6-7" stroke="#22c55e"/>`,
+          4: `<rect x="7" y="7" width="28" height="49" rx="4"/><rect x="12" y="13" width="18" height="10" rx="2"/><path d="M13 32h5m6 0h5M13 40h5m6 0h5M13 48h5m6 0h5"/><circle cx="48" cy="39" r="12"/><path d="M48 27v12l10 6"/><text x="44" y="45" font-size="15" font-weight="bold" fill="#16a34a" stroke="none">₹</text><path d="M13 19h16" stroke="#38bdf8"/><path d="M13 31h5m6 0h5" stroke="#f59e0b"/>`,
+          5: `<path d="M7 46l14-33 13 33zM21 13v33M12 35h18"/><path d="M35 16l21-8v39l-21 8zM42 21l7 8-8 8"/><circle cx="21" cy="13" r="4" fill="#f97316"/><path d="M35 16l21-8v39l-21 8z" stroke="#22c55e"/><path d="M40 42l10-10" stroke="#38bdf8"/>`,
+          6: `<path d="M6 24l26-14 26 14v32H6zM6 30h52M12 37h15v17H12zM36 37h15v17H36z"/><path d="M17 43h6m18 0h6"/><rect x="13" y="38" width="12" height="12" fill="#fbbf24" fill-opacity=".45"/><rect x="37" y="38" width="12" height="12" fill="#38bdf8" fill-opacity=".35"/><path d="M6 24l26-14 26 14" stroke="#f97316"/>`,
+          7: `<rect x="12" y="7" width="16" height="46" rx="5"/><circle cx="20" cy="17" r="4" fill="#ef4444"/><circle cx="20" cy="30" r="4"/><circle cx="20" cy="43" r="4"/><path d="M44 18l13 5v12q-1 12-13 18-12-6-13-18V23z"/><path d="m37 35 6 6 10-12"/><circle cx="20" cy="17" r="4" fill="#ef4444" stroke="#ef4444"/><circle cx="20" cy="30" r="4" fill="#334155"/><circle cx="20" cy="43" r="4" fill="#334155"/><path d="m37 35 6 6 10-12" stroke="#22c55e" stroke-width="4"/>`,
+          8: `<path d="M8 17h42l7 8v29H8zM8 17l8-9h33l8 9M15 32h29M15 40h20M15 48h28"/><path d="M44 42l10-10m-5-2 7 7"/><path d="M15 32h29M15 40h20" stroke="#38bdf8"/><path d="M44 42l10-10m-5-2 7 7" stroke="#f97316" stroke-width="4"/>`,
+          9: `<path d="M11 10v47M12 12q13-9 26 0v21q-13-9-26 0"/><rect x="35" y="31" width="23" height="26" rx="3"/><path d="m40 44 5 5 9-11"/><path d="M12 12q13-9 26 0v21q-13-9-26 0" fill="#22c55e" fill-opacity=".35" stroke="#16a34a"/><path d="m40 44 5 5 9-11" stroke="#22c55e" stroke-width="4"/>`,
+          10: `<path d="M10 7h32l10 10v39H10zM42 7v12h10M17 28h26M17 35h21"/><path d="M17 48q7-11 13 0t13 0"/><path d="M17 48q7-11 13 0t13 0" stroke="#a78bfa" stroke-width="3"/><path d="M17 28h26" stroke="#38bdf8"/>`,
+          11: `<rect x="13" y="12" width="38" height="38" rx="4"/><path d="M19 6v6m10-6v6m10-6v6m10-6v6M19 50v7m10-7v7m10-7v7m10-7v7M6 19h7m-7 10h7m-7 10h7m38-20h7m-7 10h7m-7 10h7"/><path d="M18 34h7l5-11 6 19 5-8h5"/><path d="M18 34h7l5-11 6 19 5-8h5" stroke="#22c55e" stroke-width="3.5"/><rect x="24" y="17" width="17" height="8" rx="2" fill="#38bdf8" fill-opacity=".4"/>`,
+          12: `<circle cx="25" cy="30" r="14"/><circle cx="25" cy="30" r="6"/><path d="M25 7v9m0 28v9M2 30h9m28 0h9M9 14l7 7m18 18 7 7"/><path d="M43 17l13-9 4 7-13 9M45 20l11 20"/><circle cx="25" cy="30" r="6" fill="#f59e0b" fill-opacity=".7"/><path d="M43 17l13-9 4 7-13 9" fill="#38bdf8" fill-opacity=".5"/><path d="M45 20l11 20" stroke="#f97316"/>`,
+          13: `<path d="M8 18q0-9 9-9h19q9 0 9 9v26q0 9-9 9H17q-9 0-9-9zM13 21h27v15H13zM16 45h4m13 0h4M14 53l-4 6m30-6 4 6"/><path d="M49 17q8 8 0 16M54 12q13 13 0 26"/><path d="M13 21h27v15H13z" fill="#38bdf8" fill-opacity=".35"/><path d="M49 17q8 8 0 16M54 12q13 13 0 26" stroke="#22c55e" stroke-width="3"/><path d="M20 29h13" stroke="#f59e0b"/>`,
+          14: `<path d="M7 52V17h8v35M15 23h40v9H15zM23 23l8 9m2-9 8 9m2-9 8 9"/><path d="M48 48q0-12 7-12t7 12M46 50h16"/><path d="M15 23h40v9H15z" fill="#f8fafc"/><path d="M23 23l8 9m2-9 8 9m2-9 8 9" stroke="#ef4444" stroke-width="4"/><circle cx="55" cy="42" r="4" fill="#fbbf24"/>`,
+          15: `<circle cx="31" cy="32" r="24"/><circle cx="31" cy="32" r="18"/><circle cx="31" cy="32" r="11"/><circle cx="25" cy="27" r="3"/><circle cx="37" cy="27" r="3"/><circle cx="25" cy="38" r="3"/><circle cx="37" cy="38" r="3"/><circle cx="31" cy="32" r="18" stroke="#f97316" stroke-width="5"/><circle cx="31" cy="32" r="11" stroke="#38bdf8" stroke-width="4"/><circle cx="25" cy="27" r="3" fill="#22c55e"/><circle cx="37" cy="38" r="3" fill="#fbbf24"/>`,
+          16: `<rect x="7" y="11" width="43" height="44" rx="4"/><path d="M15 20h27M15 28h27M15 36h27"/><path d="M27 40l-7 10h9l-3 8 15-17h-9l4-8"/><path d="M50 25h7v17h-7"/><path d="M27 40l-7 10h9l-3 8 15-17h-9l4-8" fill="#facc15" stroke="#f59e0b"/><path d="M15 20h27" stroke="#38bdf8"/><path d="M15 28h27" stroke="#22c55e"/>`,
+          17: `<path d="M6 53h52M12 45h40M15 20l-7 33m41-33 7 33M13 29h38M11 37h42"/><circle cx="32" cy="27" r="10"/><path d="M27 27h10M32 22v10"/><circle cx="32" cy="27" r="10" fill="#38bdf8" fill-opacity=".3"/><path d="M27 27h10M32 22v10" stroke="#f97316" stroke-width="3"/><path d="M12 45h40" stroke="#22c55e"/>`,
+          18: `<rect x="8" y="8" width="33" height="47" rx="4"/><path d="M14 16h21M14 23h21M14 30h14"/><circle cx="46" cy="42" r="10"/><path d="M46 47v-7m-5 0v-3a5 5 0 0 1 10 0v3"/><circle cx="46" cy="42" r="10" fill="#fbbf24" fill-opacity=".25"/><path d="M14 16h21" stroke="#38bdf8"/><path d="M14 23h21" stroke="#22c55e"/><path d="M46 47v-7" stroke="#f97316"/>`,
+          19: `<path d="M8 54h48M16 54V12h18v42M21 21h8M21 30h8"/><rect x="40" y="13" width="14" height="35" rx="4"/><circle cx="47" cy="21" r="3" fill="#ef4444"/><circle cx="47" cy="30" r="3"/><circle cx="47" cy="39" r="3"/><circle cx="47" cy="21" r="3" fill="#ef4444" stroke="#ef4444"/><circle cx="47" cy="30" r="3" fill="#334155"/><circle cx="47" cy="39" r="3" fill="#334155"/><path d="M21 21h8" stroke="#22c55e"/><path d="M21 30h8" stroke="#f59e0b"/>`,
+          20: `<path d="M5 51h54M8 43h48"/><rect x="10" y="8" width="12" height="33" rx="4"/><rect x="27" y="8" width="12" height="33" rx="4"/><rect x="44" y="8" width="12" height="33" rx="4"/><circle cx="16" cy="16" r="3" fill="#ef4444"/><circle cx="33" cy="24" r="3"/><circle cx="50" cy="33" r="3"/><circle cx="16" cy="16" r="3" fill="#ef4444"/><circle cx="33" cy="24" r="3" fill="#fbbf24"/><circle cx="50" cy="33" r="3" fill="#22c55e"/><path d="M8 43h48" stroke="#38bdf8" stroke-width="3"/>`,
+          21: `<rect x="7" y="8" width="50" height="47" rx="4"/><rect x="17" y="17" width="21" height="21" rx="2"/><path d="M22 22h11v11H22zM12 20h5m21 0h12M12 32h5m21 0h12M25 8v9m0 21v17M43 42h8M43 48h8"/><rect x="17" y="17" width="21" height="21" rx="2" fill="#38bdf8" fill-opacity=".35"/><path d="M22 22h11v11H22z" stroke="#22c55e"/><circle cx="47" cy="20" r="3" fill="#f97316"/><circle cx="47" cy="32" r="3" fill="#22c55e"/>`,
+          22: `<path d="M7 53h50M16 53V9m30 44V9M16 14h30M10 24h42M12 35h40"/><path d="M35 19l-12 19h11l-5 17 17-25H35z"/><path d="M35 19l-12 19h11l-5 17 17-25H35z" fill="#facc15" stroke="#f59e0b"/><path d="M16 14h30M10 24h42" stroke="#38bdf8"/><path d="M7 53h50" stroke="#22c55e"/>`,
+        };
+        // IRTEM: topic-aware, non-repeating vector illustrations (one composition per record).
+        // The complete Description is used first; chapter number is only a stable fallback.
+        const irtemTopics = [
+          [/organisation|organization|administration|department|staff/, 'hierarchy'],
+          [/duties|responsibilit|supervis|engineer|personnel/, 'engineer'],
+          [/budget|estimate|expenditure|account|finance|cost/, 'budget'],
+          [/survey|planning|drawing|diagram|blueprint|specification/, 'drawing'],
+          [/store|inventory|material|procurement/, 'warehouse'],
+          [/maintenance|schedule|inspection|preventive/, 'maintenance'],
+          [/signal|aspect|semaphore|colour light/, 'signal'],
+          [/cable|optic|fiber|fibre|quad|telecom/, 'cable'],
+          [/power|battery|solar|ips|supply/, 'power'],
+          [/track circuit|axle counter|train detection/, 'track'],
+          [/point machine|switch|turnout|crossing/, 'points'],
+          [/relay|interlocking|electronic|route/, 'circuit'],
+          [/block instrument|bpac|ibs|token/, 'block'],
+          [/level crossing|gate|barrier/, 'barrier'],
+          [/train|locomotive|rolling stock|kavach|tcas/, 'train'],
+          [/radio|wireless|antenna|communication|network/, 'radio'],
+          [/test|measurement|testing|commission/, 'testing'],
+          [/safety|accident|protection|fire/, 'safety'],
+          [/contract|tender|agreement/, 'contract'],
+          [/computer|data|logger|monitor|software/, 'computer'],
+          [/electrif|25 ?kv|overhead|ohe/, 'ohe'],
+          [/tool|mechanical|workshop|equipment/, 'tools'],
+          [/rule|manual|instruction|general|introduction/, 'book']
+        ];
+        const irtemArt = (rec, idx) => {
+          const desc = [rec.description,rec.work,rec.bookName,rec.title].filter(Boolean).join(' ').toLowerCase();
+          const matched = irtemTopics.find(([rx]) => rx.test(desc));
+          const kind = matched ? matched[1] : 'chapter';
+          const n = String(rec.chapterNo || idx+1);
+          const hue = [...String(rec.chapterNo || rec.description || idx)].reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),194) % 360;
+          const shapes = {
+            hierarchy:'<circle cx="40" cy="14" r="7"/><path d="M40 21v15M14 36h52M14 36v11m26-11v11m26-11v11"/><rect x="4" y="47" width="20" height="18" rx="4"/><rect x="30" y="47" width="20" height="18" rx="4"/><rect x="56" y="47" width="20" height="18" rx="4"/>',
+            engineer:'<path d="M15 37a25 25 0 0 1 50 0M11 38h58M33 16v-8h14v8"/><rect x="21" y="43" width="38" height="28" rx="5"/><path d="m30 57 7 7 14-16"/>',
+            budget:'<rect x="8" y="8" width="39" height="64" rx="5"/><rect x="15" y="16" width="25" height="13" rx="2"/><path d="M16 40h5m9 0h5m-19 9h5m9 0h5m-19 9h5m9 0h5"/><circle cx="58" cy="54" r="17"/><text x="58" y="61" font-size="22" text-anchor="middle" stroke="none" fill="#f59e0b">₹</text>',
+            drawing:'<path d="M9 15h58v52H9zM15 25h35M15 33h25M15 41h19"/><path d="M46 55l22-31 6 5-22 31-12 5z"/><path d="M48 52l7 5"/>',
+            warehouse:'<path d="M5 32 40 11l35 21v39H5zM5 36h70M16 44h20v20H16zM44 44h20v20H44z"/><path d="M20 50h12m16 0h12"/>',
+            maintenance:'<rect x="7" y="13" width="53" height="56" rx="6"/><path d="M7 27h53M20 6v14m26-14v14M16 40h9m-9 11h9"/><path d="m35 53 8 8 22-26"/><circle cx="61" cy="52" r="13"/>',
+            signal:'<rect x="25" y="7" width="30" height="58" rx="10"/><circle cx="40" cy="20" r="7" fill="#ef4444"/><circle cx="40" cy="37" r="7"/><circle cx="40" cy="54" r="7"/><path d="M40 65v11"/>',
+            cable:'<circle cx="40" cy="40" r="30"/><circle cx="40" cy="40" r="21"/><circle cx="30" cy="30" r="7"/><circle cx="49" cy="30" r="7"/><circle cx="30" cy="49" r="7"/><circle cx="49" cy="49" r="7"/>',
+            power:'<rect x="9" y="18" width="58" height="49" rx="6"/><path d="M67 33h7v18h-7M44 24 25 46h14l-6 17 24-29H43z"/>',
+            track:'<path d="M22 6 9 74m49-68 13 68M18 21h44M15 36h50M12 51h56M9 66h62"/><circle cx="40" cy="34" r="12"/>',
+            points:'<path d="M10 73 35 9m35 64L45 9M13 65h54M18 51h44M23 37h34M28 23h24M35 42 55 23"/>',
+            circuit:'<rect x="10" y="10" width="60" height="60" rx="6"/><rect x="26" y="26" width="28" height="28" rx="3"/><path d="M33 33h14v14H33M3 28h23M3 52h23m28-24h23m-23 24h23M40 3v23m0 28v23"/>',
+            block:'<rect x="13" y="10" width="54" height="61" rx="6"/><circle cx="40" cy="31" r="13"/><path d="M40 19v24m-12-12h24M23 58h34"/>',
+            barrier:'<path d="M13 69V18h13v51M26 23h48v12H26M33 23l12 12m4-12 12 12"/><circle cx="66" cy="60" r="9"/>',
+            train:'<rect x="12" y="10" width="56" height="53" rx="13"/><path d="M20 23h40v19H20zM25 54h6m18 0h6M23 63l-7 12m41-12 7 12"/><path d="M26 33h28"/>',
+            radio:'<path d="M40 24 21 72h38zM30 49h20M25 62h30M40 24v-9M23 19q17-18 34 0M15 12q25-27 50 0"/>',
+            testing:'<rect x="14" y="8" width="52" height="64" rx="5"/><path d="M23 21h34M23 30h34M23 40h11m-11 11h11"/><circle cx="51" cy="53" r="12"/><path d="m60 62 12 12"/>',
+            safety:'<path d="M40 6 68 18v21q-2 23-28 35Q14 62 12 39V18z"/><path d="m25 39 10 10 20-23"/>',
+            contract:'<path d="M14 7h38l14 14v52H14zM52 7v15h14M23 35h34M23 44h27M23 55q12-15 22 0t16 0"/>',
+            computer:'<rect x="8" y="11" width="64" height="47" rx="5"/><path d="M30 58v12m20-12v12M21 70h38M16 44l12-12 10 8 11-17 14 11"/>',
+            ohe:'<path d="M14 74V11m52 63V11M14 19h52M7 30h66M26 30l-6 22h19l-8 20 29-33H42l7-17"/>',
+            tools:'<path d="M17 69 53 33q-7-12 4-23l9 10 10-9q3 17-14 26L27 73z"/><circle cx="20" cy="67" r="4"/>',
+            book:'<path d="M40 15Q23 6 7 15v51q18-9 33 1 15-10 33-1V15Q57 6 40 15zM40 15v52M15 26h17m-17 11h17m16-11h17m-17 11h17"/>',
+            chapter:'<rect x="13" y="8" width="54" height="64" rx="7"/><path d="M24 21h32M24 31h24M24 42h32M24 53h19"/>'
+          };
+          // Unique per chapter: topic illustration + distinctive chapter seal and motif.
+          // Stable across filtering and sorting (no reliance on the displayed index).
+          const stableKey = [rec.chapterNo, rec.description, rec.work, rec.id].filter(Boolean).join('|');
+          let fingerprint = 2166136261;
+          for (let i=0;i<stableKey.length;i++) fingerprint = Math.imul(fingerprint ^ stableKey.charCodeAt(i),16777619) >>> 0;
+          const motif = fingerprint % 6;
+          const motifs = [
+            '<path d="M5 7l5 5-5 5-5-5z"/>',
+            '<circle cx="5" cy="12" r="5"/>',
+            '<path d="M0 17 5 5l5 12z"/>',
+            '<path d="M0 7h10v10H0z"/>',
+            '<path d="M5 4 7 9l5 1-4 4 1 5-4-3-4 3 1-5-4-4 5-1z"/>',
+            '<path d="M0 12q5-10 10 0-5 10-10 0z"/>'
+          ];
+          const unique = `<g transform="translate(61 1)" fill="hsl(${(fingerprint%300)+20} 85% 54%)" stroke="#fff" stroke-width=".7">${motifs[motif]}</g><rect x="24" y="61" width="32" height="16" rx="8" fill="#102b55" stroke="#fff" stroke-width="1.5"/><text x="40" y="72.5" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff" stroke="none">${safeText(n.slice(0,9))}</text>`;
+          return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="${safeText(desc.slice(0,100) || 'Chapter '+n)}" fill="none" stroke="hsl(${hue} 78% 48%)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="40" cy="40" r="37" fill="hsl(${hue} 80% 52% / .10)" stroke="none"/>${shapes[kind]}${unique}</svg>`;
+        };
+        // Two isolated libraries: IRSEM artwork never falls through to IRTEM artwork.
+        const IRSEM_CARD_SVGS = {"0": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 0\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 10 Q20 5 31 12 Q42 5 55 10 V51 Q42 46 32 52 Q20 46 9 51Z\"/><path d=\"M32 13V52 M14 18h13 M37 18h12\"/><rect x=\"27\" y=\"20\" width=\"10\" height=\"25\" rx=\"3\"/><circle cx=\"32\" cy=\"26\" r=\"2\" fill=\"#ef4444\"/><circle cx=\"32\" cy=\"33\" r=\"2\"/><circle cx=\"32\" cy=\"40\" r=\"2\"/><path d=\"M14 56h36\" stroke=\"#38bdf8\"/><path d=\"M17 23h8m-8 6h8m-8 6h8m23-12h8m-8 6h8\" stroke=\"#f59e0b\"/></g></svg>", "1": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 1\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"25\" y=\"7\" width=\"14\" height=\"12\" rx=\"3\"/><path d=\"M32 19v12M13 31h38M13 31v8M32 31v8M51 31v8\"/><rect x=\"5\" y=\"39\" width=\"16\" height=\"15\" rx=\"3\"/><rect x=\"24\" y=\"39\" width=\"16\" height=\"15\" rx=\"3\"/><rect x=\"43\" y=\"39\" width=\"16\" height=\"15\" rx=\"3\"/><circle cx=\"32\" cy=\"13\" r=\"3\" fill=\"#f97316\"/><circle cx=\"13\" cy=\"45\" r=\"3\" fill=\"#22c55e\"/><circle cx=\"32\" cy=\"45\" r=\"3\" fill=\"#38bdf8\"/><circle cx=\"51\" cy=\"45\" r=\"3\" fill=\"#a78bfa\"/></g></svg>", "2": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 2\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 30a20 20 0 0 1 40 0M9 31h46M26 13v-5h12v5\"/><rect x=\"17\" y=\"36\" width=\"30\" height=\"22\" rx=\"3\"/><path d=\"m23 47 5 5 11-11\"/><path d=\"M15 29h34\" stroke=\"#f59e0b\" stroke-width=\"5\"/><path d=\"m23 46 5 5 11-11\" stroke=\"#22c55e\" stroke-width=\"4\"/><circle cx=\"32\" cy=\"25\" r=\"3\" fill=\"#38bdf8\"/></g></svg>", "3": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 3\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 12l10 10-5 5-10-10M20 20l24 24M42 12l10 10-6 6-10-10\"/><rect x=\"20\" y=\"31\" width=\"31\" height=\"26\" rx=\"3\"/><path d=\"M27 38h16M27 44h12M27 50h16\"/><circle cx=\"14\" cy=\"12\" r=\"5\" fill=\"#fb923c\"/><circle cx=\"48\" cy=\"15\" r=\"5\" fill=\"#38bdf8\"/><path d=\"m27 49 3 3 6-7\" stroke=\"#22c55e\"/></g></svg>", "4": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 4\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"7\" y=\"7\" width=\"28\" height=\"49\" rx=\"4\"/><rect x=\"12\" y=\"13\" width=\"18\" height=\"10\" rx=\"2\"/><path d=\"M13 32h5m6 0h5M13 40h5m6 0h5M13 48h5m6 0h5\"/><circle cx=\"48\" cy=\"39\" r=\"12\"/><path d=\"M48 27v12l10 6\"/><text x=\"44\" y=\"45\" font-size=\"15\" font-weight=\"bold\" fill=\"#16a34a\" stroke=\"none\">₹</text><path d=\"M13 19h16\" stroke=\"#38bdf8\"/><path d=\"M13 31h5m6 0h5\" stroke=\"#f59e0b\"/></g></svg>", "5": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 5\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 46l14-33 13 33zM21 13v33M12 35h18\"/><path d=\"M35 16l21-8v39l-21 8zM42 21l7 8-8 8\"/><circle cx=\"21\" cy=\"13\" r=\"4\" fill=\"#f97316\"/><path d=\"M35 16l21-8v39l-21 8z\" stroke=\"#22c55e\"/><path d=\"M40 42l10-10\" stroke=\"#38bdf8\"/></g></svg>", "6": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 6\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 24l26-14 26 14v32H6zM6 30h52M12 37h15v17H12zM36 37h15v17H36z\"/><path d=\"M17 43h6m18 0h6\"/><rect x=\"13\" y=\"38\" width=\"12\" height=\"12\" fill=\"#fbbf24\" fill-opacity=\".45\"/><rect x=\"37\" y=\"38\" width=\"12\" height=\"12\" fill=\"#38bdf8\" fill-opacity=\".35\"/><path d=\"M6 24l26-14 26 14\" stroke=\"#f97316\"/></g></svg>", "7": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 7\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"12\" y=\"7\" width=\"16\" height=\"46\" rx=\"5\"/><circle cx=\"20\" cy=\"17\" r=\"4\" fill=\"#ef4444\"/><circle cx=\"20\" cy=\"30\" r=\"4\"/><circle cx=\"20\" cy=\"43\" r=\"4\"/><path d=\"M44 18l13 5v12q-1 12-13 18-12-6-13-18V23z\"/><path d=\"m37 35 6 6 10-12\"/><circle cx=\"20\" cy=\"17\" r=\"4\" fill=\"#ef4444\" stroke=\"#ef4444\"/><circle cx=\"20\" cy=\"30\" r=\"4\" fill=\"#334155\"/><circle cx=\"20\" cy=\"43\" r=\"4\" fill=\"#334155\"/><path d=\"m37 35 6 6 10-12\" stroke=\"#22c55e\" stroke-width=\"4\"/></g></svg>", "8": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 8\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 17h42l7 8v29H8zM8 17l8-9h33l8 9M15 32h29M15 40h20M15 48h28\"/><path d=\"M44 42l10-10m-5-2 7 7\"/><path d=\"M15 32h29M15 40h20\" stroke=\"#38bdf8\"/><path d=\"M44 42l10-10m-5-2 7 7\" stroke=\"#f97316\" stroke-width=\"4\"/></g></svg>", "9": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 9\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11 10v47M12 12q13-9 26 0v21q-13-9-26 0\"/><rect x=\"35\" y=\"31\" width=\"23\" height=\"26\" rx=\"3\"/><path d=\"m40 44 5 5 9-11\"/><path d=\"M12 12q13-9 26 0v21q-13-9-26 0\" fill=\"#22c55e\" fill-opacity=\".35\" stroke=\"#16a34a\"/><path d=\"m40 44 5 5 9-11\" stroke=\"#22c55e\" stroke-width=\"4\"/></g></svg>", "10": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 10\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 7h32l10 10v39H10zM42 7v12h10M17 28h26M17 35h21\"/><path d=\"M17 48q7-11 13 0t13 0\"/><path d=\"M17 48q7-11 13 0t13 0\" stroke=\"#a78bfa\" stroke-width=\"3\"/><path d=\"M17 28h26\" stroke=\"#38bdf8\"/></g></svg>", "11": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 11\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"13\" y=\"12\" width=\"38\" height=\"38\" rx=\"4\"/><path d=\"M19 6v6m10-6v6m10-6v6m10-6v6M19 50v7m10-7v7m10-7v7m10-7v7M6 19h7m-7 10h7m-7 10h7m38-20h7m-7 10h7m-7 10h7\"/><path d=\"M18 34h7l5-11 6 19 5-8h5\"/><path d=\"M18 34h7l5-11 6 19 5-8h5\" stroke=\"#22c55e\" stroke-width=\"3.5\"/><rect x=\"24\" y=\"17\" width=\"17\" height=\"8\" rx=\"2\" fill=\"#38bdf8\" fill-opacity=\".4\"/></g></svg>", "12": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 12\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"25\" cy=\"30\" r=\"14\"/><circle cx=\"25\" cy=\"30\" r=\"6\"/><path d=\"M25 7v9m0 28v9M2 30h9m28 0h9M9 14l7 7m18 18 7 7\"/><path d=\"M43 17l13-9 4 7-13 9M45 20l11 20\"/><circle cx=\"25\" cy=\"30\" r=\"6\" fill=\"#f59e0b\" fill-opacity=\".7\"/><path d=\"M43 17l13-9 4 7-13 9\" fill=\"#38bdf8\" fill-opacity=\".5\"/><path d=\"M45 20l11 20\" stroke=\"#f97316\"/></g></svg>", "13": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 13\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 18q0-9 9-9h19q9 0 9 9v26q0 9-9 9H17q-9 0-9-9zM13 21h27v15H13zM16 45h4m13 0h4M14 53l-4 6m30-6 4 6\"/><path d=\"M49 17q8 8 0 16M54 12q13 13 0 26\"/><path d=\"M13 21h27v15H13z\" fill=\"#38bdf8\" fill-opacity=\".35\"/><path d=\"M49 17q8 8 0 16M54 12q13 13 0 26\" stroke=\"#22c55e\" stroke-width=\"3\"/><path d=\"M20 29h13\" stroke=\"#f59e0b\"/></g></svg>", "14": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 14\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 52V17h8v35M15 23h40v9H15zM23 23l8 9m2-9 8 9m2-9 8 9\"/><path d=\"M48 48q0-12 7-12t7 12M46 50h16\"/><path d=\"M15 23h40v9H15z\" fill=\"#f8fafc\"/><path d=\"M23 23l8 9m2-9 8 9m2-9 8 9\" stroke=\"#ef4444\" stroke-width=\"4\"/><circle cx=\"55\" cy=\"42\" r=\"4\" fill=\"#fbbf24\"/></g></svg>", "15": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 15\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"31\" cy=\"32\" r=\"24\"/><circle cx=\"31\" cy=\"32\" r=\"18\"/><circle cx=\"31\" cy=\"32\" r=\"11\"/><circle cx=\"25\" cy=\"27\" r=\"3\"/><circle cx=\"37\" cy=\"27\" r=\"3\"/><circle cx=\"25\" cy=\"38\" r=\"3\"/><circle cx=\"37\" cy=\"38\" r=\"3\"/><circle cx=\"31\" cy=\"32\" r=\"18\" stroke=\"#f97316\" stroke-width=\"5\"/><circle cx=\"31\" cy=\"32\" r=\"11\" stroke=\"#38bdf8\" stroke-width=\"4\"/><circle cx=\"25\" cy=\"27\" r=\"3\" fill=\"#22c55e\"/><circle cx=\"37\" cy=\"38\" r=\"3\" fill=\"#fbbf24\"/></g></svg>", "16": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 16\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"7\" y=\"11\" width=\"43\" height=\"44\" rx=\"4\"/><path d=\"M15 20h27M15 28h27M15 36h27\"/><path d=\"M27 40l-7 10h9l-3 8 15-17h-9l4-8\"/><path d=\"M50 25h7v17h-7\"/><path d=\"M27 40l-7 10h9l-3 8 15-17h-9l4-8\" fill=\"#facc15\" stroke=\"#f59e0b\"/><path d=\"M15 20h27\" stroke=\"#38bdf8\"/><path d=\"M15 28h27\" stroke=\"#22c55e\"/></g></svg>", "17": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 17\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 53h52M12 45h40M15 20l-7 33m41-33 7 33M13 29h38M11 37h42\"/><circle cx=\"32\" cy=\"27\" r=\"10\"/><path d=\"M27 27h10M32 22v10\"/><circle cx=\"32\" cy=\"27\" r=\"10\" fill=\"#38bdf8\" fill-opacity=\".3\"/><path d=\"M27 27h10M32 22v10\" stroke=\"#f97316\" stroke-width=\"3\"/><path d=\"M12 45h40\" stroke=\"#22c55e\"/></g></svg>", "18": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 18\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"8\" y=\"8\" width=\"33\" height=\"47\" rx=\"4\"/><path d=\"M14 16h21M14 23h21M14 30h14\"/><circle cx=\"46\" cy=\"42\" r=\"10\"/><path d=\"M46 47v-7m-5 0v-3a5 5 0 0 1 10 0v3\"/><circle cx=\"46\" cy=\"42\" r=\"10\" fill=\"#fbbf24\" fill-opacity=\".25\"/><path d=\"M14 16h21\" stroke=\"#38bdf8\"/><path d=\"M14 23h21\" stroke=\"#22c55e\"/><path d=\"M46 47v-7\" stroke=\"#f97316\"/></g></svg>", "19": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 19\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 54h48M16 54V12h18v42M21 21h8M21 30h8\"/><rect x=\"40\" y=\"13\" width=\"14\" height=\"35\" rx=\"4\"/><circle cx=\"47\" cy=\"21\" r=\"3\" fill=\"#ef4444\"/><circle cx=\"47\" cy=\"30\" r=\"3\"/><circle cx=\"47\" cy=\"39\" r=\"3\"/><circle cx=\"47\" cy=\"21\" r=\"3\" fill=\"#ef4444\" stroke=\"#ef4444\"/><circle cx=\"47\" cy=\"30\" r=\"3\" fill=\"#334155\"/><circle cx=\"47\" cy=\"39\" r=\"3\" fill=\"#334155\"/><path d=\"M21 21h8\" stroke=\"#22c55e\"/><path d=\"M21 30h8\" stroke=\"#f59e0b\"/></g></svg>", "20": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 20\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 51h54M8 43h48\"/><rect x=\"10\" y=\"8\" width=\"12\" height=\"33\" rx=\"4\"/><rect x=\"27\" y=\"8\" width=\"12\" height=\"33\" rx=\"4\"/><rect x=\"44\" y=\"8\" width=\"12\" height=\"33\" rx=\"4\"/><circle cx=\"16\" cy=\"16\" r=\"3\" fill=\"#ef4444\"/><circle cx=\"33\" cy=\"24\" r=\"3\"/><circle cx=\"50\" cy=\"33\" r=\"3\"/><circle cx=\"16\" cy=\"16\" r=\"3\" fill=\"#ef4444\"/><circle cx=\"33\" cy=\"24\" r=\"3\" fill=\"#fbbf24\"/><circle cx=\"50\" cy=\"33\" r=\"3\" fill=\"#22c55e\"/><path d=\"M8 43h48\" stroke=\"#38bdf8\" stroke-width=\"3\"/></g></svg>", "21": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 21\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"7\" y=\"8\" width=\"50\" height=\"47\" rx=\"4\"/><rect x=\"17\" y=\"17\" width=\"21\" height=\"21\" rx=\"2\"/><path d=\"M22 22h11v11H22zM12 20h5m21 0h12M12 32h5m21 0h12M25 8v9m0 21v17M43 42h8M43 48h8\"/><rect x=\"17\" y=\"17\" width=\"21\" height=\"21\" rx=\"2\" fill=\"#38bdf8\" fill-opacity=\".35\"/><path d=\"M22 22h11v11H22z\" stroke=\"#22c55e\"/><circle cx=\"47\" cy=\"20\" r=\"3\" fill=\"#f97316\"/><circle cx=\"47\" cy=\"32\" r=\"3\" fill=\"#22c55e\"/></g></svg>", "22": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRSEM Chapter 22\"><defs><linearGradient id=\"bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071629\"/><stop offset=\"1\" stop-color=\"#10344d\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"162\" height=\"162\" rx=\"18\" fill=\"url(#bg)\" stroke=\"#13d9ec\" stroke-width=\"3\"/><g transform=\"translate(18 18) scale(2.08)\" fill=\"none\" stroke=\"#39e0ee\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 53h50M16 53V9m30 44V9M16 14h30M10 24h42M12 35h40\"/><path d=\"M35 19l-12 19h11l-5 17 17-25H35z\"/><path d=\"M35 19l-12 19h11l-5 17 17-25H35z\" fill=\"#facc15\" stroke=\"#f59e0b\"/><path d=\"M16 14h30M10 24h42\" stroke=\"#38bdf8\"/><path d=\"M7 53h50\" stroke=\"#22c55e\"/></g></svg>"};
+        const IRTEM_CARD_SVGS = {"0": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IRTEM MAIN BOOK_2021\"><defs><linearGradient id=\"irt0_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt0_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M45 42 Q68 32 85 45 V116 Q66 103 45 113 Z M85 45 Q104 32 126 42 V113 Q106 103 85 116\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M55 58 H73 M55 70 H73 M98 58 H117 M98 70 H117\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"85\" cy=\"86\" r=\"12\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M85 79 V93 M78 86 H92\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">MAIN</text></svg>", "1": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"ORGANISATION OF THE SIGNAL &amp; TELECOMMUNICATION DEPARTMENT\"><defs><linearGradient id=\"irt1_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt1_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><circle cx=\"85\" cy=\"39\" r=\"13\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><rect x=\"65\" y=\"57\" width=\"40\" height=\"25\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><path d=\"M85 82 V95 H34 V105 M85 95 H136 V105\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"20\" y=\"105\" width=\"27\" height=\"18\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"72\" y=\"105\" width=\"27\" height=\"18\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"124\" y=\"105\" width=\"27\" height=\"18\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">01</text></svg>", "2": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"ROLE OF PTCC AND PTCC CLEARANCES\"><defs><linearGradient id=\"irt2_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt2_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M50 47 L23 112 H77 Z M32 88 H68 M38 69 H62\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"50\" cy=\"43\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M116 47 L89 112 H143 Z M98 88 H134 M104 69 H128\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"116\" cy=\"43\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M34 61 Q84 36 132 61 M33 71 Q83 46 132 71\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M85 87 L105 94 V112 Q98 128 85 133 Q72 128 65 112 V94 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M77 109 L84 116 L96 101\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">02</text></svg>", "3": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"ROLE OF WPC AND SACFA CLEARANCES\"><defs><linearGradient id=\"irt3_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt3_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M65 53 L38 118 H92 Z M47 94 H83 M53 75 H77\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"65\" cy=\"49\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M74 43 Q89 51 74 59\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M83 34 Q98 51 83 68\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M92 25 Q107 51 92 77\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"105\" y=\"83\" width=\"45\" height=\"47\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><path d=\"M115 98 H139 M115 107 H139\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"127\" cy=\"120\" r=\"7\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">03</text></svg>", "4": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"COMMUNICATION REQUIREMENTS FOR NEW STATIONS/SECTIONS\"><defs><linearGradient id=\"irt4_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt4_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M25 96 L85 61 L145 96\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"35\" y=\"95\" width=\"100\" height=\"40\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"68\" y=\"106\" width=\"32\" height=\"29\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><path d=\"M137 11 L110 76 H164 Z M119 52 H155 M125 33 H149\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"137\" cy=\"7\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M116 44 Q131 52 116 60\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M125 35 Q140 52 125 69\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M134 26 Q149 52 134 78\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">04</text></svg>", "5": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"TRAIN TRAFFIC CONTROL\"><defs><linearGradient id=\"irt5_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt5_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"23\" y=\"40\" width=\"125\" height=\"77\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"35\" y=\"53\" width=\"68\" height=\"36\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><path d=\"M42 82 L56 67 L67 75 L84 60\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"121\" cy=\"65\" r=\"13\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><path d=\"M121 56 V66 L129 72\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"50\" y=\"96\" width=\"78\" height=\"37\" rx=\"11\" fill=\"#143653\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"62\" y=\"104\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"94\" y=\"104\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><circle cx=\"67\" cy=\"135\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"111\" cy=\"135\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M42 142 L138 142\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">05</text></svg>", "6": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"VIDEO SURVEILLANCE SYSTEM\"><defs><linearGradient id=\"irt6_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt6_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M25 56 L102 46 L121 62 L42 72 Z\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"111\" cy=\"63\" r=\"7\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M55 70 L48 92 H80\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"86\" y=\"93\" width=\"63\" height=\"39\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"93\" y=\"100\" width=\"21\" height=\"12\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><rect x=\"118\" y=\"100\" width=\"23\" height=\"12\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><circle cx=\"39\" cy=\"116\" r=\"13\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">06</text></svg>", "7": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"LINE PLANT SYSTEMS - UNDERGROUND COPPER CABLE\"><defs><linearGradient id=\"irt7_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt7_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M15 53 Q80 36 155 53 M15 65 Q80 48 155 65\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M18 86 H154 M18 117 H154\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"42\" y=\"91\" width=\"92\" height=\"23\" rx=\"11\" fill=\"#23455b\" stroke=\"#d6edf7\" stroke-width=\"3\"/><circle cx=\"61\" cy=\"103\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"77\" cy=\"103\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"93\" cy=\"103\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"109\" cy=\"103\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">07</text></svg>", "8": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IP-MPLS\"><defs><linearGradient id=\"irt8_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt8_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><circle cx=\"43\" cy=\"54\" r=\"15\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"127\" cy=\"54\" r=\"15\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"43\" cy=\"118\" r=\"15\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"127\" cy=\"118\" r=\"15\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"none\"/><path d=\"M58 54 H112 M43 69 V103 M127 69 V103 M58 118 H112 M54 65 L116 107 M116 65 L54 107\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"85\" y=\"89\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">MPLS</text><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">08</text></svg>", "9": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"TELEPHONE EXCHANGE\"><defs><linearGradient id=\"irt9_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt9_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"28\" y=\"34\" width=\"75\" height=\"99\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"39\" y=\"45\" width=\"51\" height=\"12\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"39\" y=\"62\" width=\"51\" height=\"12\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"39\" y=\"79\" width=\"51\" height=\"12\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"39\" y=\"96\" width=\"51\" height=\"12\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><path d=\"M111 72 Q140 54 145 80 V110 Q127 127 113 103 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M114 76 Q131 87 124 102\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">09</text></svg>", "10": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"QUAD CABLE BASED CONTROL COMMUNICATION SYSTEM\"><defs><linearGradient id=\"irt10_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt10_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M28 43 L143 103 L125 130 L15 65 Z\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M32 51 L124 103\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M41 56 L127 106\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M50 61 L130 109\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M59 66 L133 112\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"139\" cy=\"48\" r=\"15\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><text x=\"139\" y=\"52\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">Q</text><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">10</text></svg>", "11": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"RADIO COMMUNICATION (ANALOG/DIGITAL VHF)\"><defs><linearGradient id=\"irt11_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt11_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"47\" y=\"65\" width=\"48\" height=\"67\" rx=\"7\" fill=\"#11384b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"58\" y=\"77\" width=\"27\" height=\"16\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><circle cx=\"71\" cy=\"111\" r=\"9\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M60 65 L51 39\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M97 40 Q112 48 97 56\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M106 31 Q121 48 106 65\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M115 22 Q130 48 115 74\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"109\" y=\"98\" width=\"36\" height=\"21\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">11</text></svg>", "12": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"ETHERNET RADIO\"><defs><linearGradient id=\"irt12_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt12_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M33 90 Q83 30 130 90\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M43 90 Q83 45 120 90\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"83\" cy=\"90\" r=\"7\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M80 97 L65 128 H101 Z\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"112\" y=\"111\" width=\"35\" height=\"22\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><path d=\"M117 116 L117 125\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M123 116 L123 125\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M129 116 L129 125\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M135 116 L135 125\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">12</text></svg>", "13": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"OPTIC FIBRE COMMUNICATION SYSTEM\"><defs><linearGradient id=\"irt13_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt13_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M20 115 Q56 95 80 90\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q100 90 138 35\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q103 81 140 48\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q106 72 142 61\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q109 63 144 74\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q112 54 146 87\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q115 45 148 100\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M80 90 Q118 36 150 113\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"79\" cy=\"90\" r=\"8\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">13</text></svg>", "14": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"DIGITAL MULTIPLEXING EQUIPMENT\"><defs><linearGradient id=\"irt14_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt14_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M20 39 L72 75\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 54 L72 75\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 69 L72 75\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 84 L72 75\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 99 L72 75\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"70\" y=\"60\" width=\"35\" height=\"40\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><path d=\"M105 70 L148 49\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M105 75 L148 65\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M105 80 L148 81\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M105 85 L148 97\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">14</text></svg>", "15": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"DATA - NETWORK\"><defs><linearGradient id=\"irt15_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt15_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><circle cx=\"85\" cy=\"82\" r=\"34\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M51 82 H119 M85 48 V116 M58 62 Q85 83 112 62 M58 103 Q85 81 112 103\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"30\" cy=\"45\" r=\"8\" stroke=\"#d6edf7\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"140\" cy=\"44\" r=\"8\" stroke=\"#d6edf7\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"30\" cy=\"124\" r=\"8\" stroke=\"#d6edf7\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"140\" cy=\"124\" r=\"8\" stroke=\"#d6edf7\" stroke-width=\"3\" fill=\"none\"/><path d=\"M37 50 L57 61 M133 49 L112 61 M37 119 L58 103 M133 119 L112 103\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">15</text></svg>", "16": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"POWER PLANT SYSTEMS FOR TELECOM INSTALLATIONS\"><defs><linearGradient id=\"irt16_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt16_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"25\" y=\"42\" width=\"55\" height=\"83\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"91\" y=\"42\" width=\"55\" height=\"83\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"35\" y=\"55\" width=\"34\" height=\"11\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"35\" y=\"74\" width=\"34\" height=\"11\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"35\" y=\"93\" width=\"34\" height=\"11\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"101\" y=\"55\" width=\"34\" height=\"11\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"101\" y=\"74\" width=\"34\" height=\"11\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><rect x=\"101\" y=\"93\" width=\"34\" height=\"11\" rx=\"3\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\"/><path d=\"M91 60 L76 89 H88 L81 115 L107 79 H93 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">16</text></svg>", "17": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"ACCIDENT COMMUNICATION\"><defs><linearGradient id=\"irt17_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt17_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M30 112 L66 47 L102 112 Z\" fill=\"none\" stroke=\"#ff776e\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"66\" y=\"98\" text-anchor=\"middle\" font-size=\"35\" font-weight=\"800\" fill=\"#ff776e\" font-family=\"Arial,sans-serif\">!</text><rect x=\"110\" y=\"78\" width=\"35\" height=\"43\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><path d=\"M116 93 H139 M127 82 V105\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M127 36 Q142 44 127 52\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M136 27 Q151 44 136 61\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M145 18 Q160 44 145 70\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">17</text></svg>", "18": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"MOBILE TRAIN RADIO COMMUNICATION - GSM-R\"><defs><linearGradient id=\"irt18_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt18_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"20\" y=\"90\" width=\"78\" height=\"37\" rx=\"11\" fill=\"#143653\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"32\" y=\"98\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"64\" y=\"98\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><circle cx=\"37\" cy=\"129\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"81\" cy=\"129\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M12 136 L108 136\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M134 57 L107 122 H161 Z M116 98 H152 M122 79 H146\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"134\" cy=\"53\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M123 39 Q138 47 123 55\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M132 30 Q147 47 132 64\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M141 21 Q156 47 141 73\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"48\" y=\"53\" text-anchor=\"middle\" font-size=\"17\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">GSM-R</text><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">18</text></svg>", "19": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"MOBILE TRAIN RADIO COMMUNICATION - LTE\"><defs><linearGradient id=\"irt19_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt19_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"20\" y=\"90\" width=\"78\" height=\"37\" rx=\"11\" fill=\"#143653\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"32\" y=\"98\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"64\" y=\"98\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><circle cx=\"37\" cy=\"129\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"81\" cy=\"129\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M12 136 L108 136\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M134 57 L107 122 H161 Z M116 98 H152 M122 79 H146\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"134\" cy=\"53\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M123 39 Q138 47 123 55\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M132 30 Q147 47 132 64\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M141 21 Q156 47 141 73\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"48\" y=\"53\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">4G/LTE</text><path d=\"M20 75 H73\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">19</text></svg>", "20": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"SOUND DISTRIBUTION SYSTEM\"><defs><linearGradient id=\"irt20_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt20_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M30 73 H52 L79 52 V113 L52 92 H30 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M83 72 Q98 80 83 88\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M92 63 Q107 80 92 97\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M101 54 Q116 80 101 106\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"105\" y=\"102\" width=\"47\" height=\"26\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><circle cx=\"117\" cy=\"115\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"139\" cy=\"115\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">20</text></svg>", "21": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"PASSENGER INFORMATION SYSTEM\"><defs><linearGradient id=\"irt21_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt21_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"19\" y=\"46\" width=\"132\" height=\"79\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"29\" y=\"58\" width=\"111\" height=\"21\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><text x=\"84\" y=\"73\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"800\" fill=\"#102638\" font-family=\"Arial,sans-serif\">ARRIVAL   DEPART</text><path d=\"M35 89 L133 89\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M35 99 L133 99\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M35 109 L133 109\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">21</text></svg>", "22": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"SATELLITE COMMUNICATION SYSTEM\"><defs><linearGradient id=\"irt22_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt22_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M30 108 Q65 116 83 78 L49 62 Q37 76 30 108 Z\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M66 91 L84 108\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M93 45 L115 67 L134 48 L112 26 Z\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M110 60 Q91 72 85 88\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M95 54 Q110 62 95 70\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M104 45 Q119 62 104 79\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M113 36 Q128 62 113 88\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">22</text></svg>", "23": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"PROTECTION OF TELECOM EQUIPMENTS AGAINST LIGHTNING\"><defs><linearGradient id=\"irt23_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt23_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M72 60 L45 125 H99 Z M54 101 H90 M60 82 H84\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"72\" cy=\"56\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M128 37 L113 66 H125 L118 92 L144 56 H130 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M32 122 H142 M47 122 L35 136 H132 L120 122\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"113\" cy=\"115\" r=\"14\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">23</text></svg>", "24": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"INSTRUCTIONS FOR PROTECTION TO STAFF\"><defs><linearGradient id=\"irt24_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt24_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M42 62 Q85 15 128 62 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M47 62 H123\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M52 85 L85 73 L118 85 V115 Q99 132 85 136 Q62 127 52 115 Z\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M71 107 L82 118 L105 94\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">24</text></svg>", "25": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"FAULT CONTROL PROCEDURES\"><defs><linearGradient id=\"irt25_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt25_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"26\" y=\"45\" width=\"111\" height=\"80\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><path d=\"M40 102 L62 77 L78 91 L102 60\" fill=\"none\" stroke=\"#ff776e\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"118\" cy=\"104\" r=\"19\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M131 118 L149 137\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"84\" y=\"57\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"800\" fill=\"#ff776e\" font-family=\"Arial,sans-serif\">FAULT</text><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">25</text></svg>", "26": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"INSPECTION\"><defs><linearGradient id=\"irt26_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt26_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"56\" y=\"35\" width=\"78\" height=\"97\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><path d=\"M78 34 V25 H111 V34\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M67 60 L73 66 L84 53 M92 61 H122\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M67 78 L73 84 L84 71 M92 79 H122\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M67 96 L73 102 L84 89 M92 97 H122\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"40\" cy=\"94\" r=\"15\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M40 82 V97 L49 103\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">26</text></svg>", "27": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"PAINTING\"><defs><linearGradient id=\"irt27_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt27_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M38 54 L116 39 L130 55 L50 70 Z\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M84 66 L92 113 H113\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"112\" y=\"100\" width=\"29\" height=\"34\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><path d=\"M45 70 Q44 94 55 100\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"55\" cy=\"107\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">27</text></svg>", "28": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"DRAWINGS AND SPECIFICATIONS\"><defs><linearGradient id=\"irt28_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt28_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"26\" y=\"32\" width=\"113\" height=\"95\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><path d=\"M40 102 L69 61 L97 96 Z M86 55 H124 V90\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M35 116 H130 M42 111 V122 M53 111 V122 M64 111 V122\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M116 47 L128 35\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">28</text></svg>", "29": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"BOOKS OF REFERENCE\"><defs><linearGradient id=\"irt29_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt29_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"34\" y=\"47\" width=\"29\" height=\"75\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"69\" y=\"54\" width=\"29\" height=\"66\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><rect x=\"104\" y=\"61\" width=\"29\" height=\"57\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><path d=\"M44 58 V110 M79 63 V106 M114 72 V99\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"84\" y=\"38\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">S&amp;T</text><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">29</text></svg>", "30": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"Wi-Fi\"><defs><linearGradient id=\"irt30_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt30_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"39\" y=\"104\" width=\"92\" height=\"26\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><circle cx=\"58\" cy=\"117\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"73\" cy=\"117\" r=\"4\" stroke=\"#31e2e0\" stroke-width=\"3\" fill=\"#31e2e0\"/><path d=\"M35 70 Q85 23 135 70 M49 82 Q85 50 121 82 M65 94 Q85 77 105 94\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"85\" cy=\"99\" r=\"4\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">30</text></svg>", "31": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"IP ADDRESSING - IPV4/IPV6\"><defs><linearGradient id=\"irt31_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt31_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><rect x=\"20\" y=\"36\" width=\"130\" height=\"92\" rx=\"3\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"30\" y=\"48\" width=\"52\" height=\"30\" rx=\"3\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"88\" y=\"48\" width=\"52\" height=\"30\" rx=\"3\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"3\"/><text x=\"56\" y=\"67\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">IPv4</text><text x=\"114\" y=\"67\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"800\" fill=\"#ffb34d\" font-family=\"Arial,sans-serif\">IPv6</text><path d=\"M40 94 H131 M40 105 H114\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"125\" cy=\"105\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"none\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">31</text></svg>", "32": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"240\" viewBox=\"0 0 170 170\" role=\"img\" aria-label=\"TUNNEL COMMUNICATION\"><defs><linearGradient id=\"irt32_bg\" x2=\"0\" y2=\"1\"><stop stop-color=\"#081a2d\"/><stop offset=\"1\" stop-color=\"#102b42\"/></linearGradient></defs><rect x=\"2\" y=\"2\" width=\"166\" height=\"166\" rx=\"20\" fill=\"url(#irt32_bg)\" stroke=\"#28516c\" stroke-width=\"3\"/><circle cx=\"84\" cy=\"81\" r=\"58\" fill=\"#17415a\" opacity=\".22\"/><path d=\"M24 133 V81 Q24 20 85 20 Q146 20 146 81 V133\" fill=\"none\" stroke=\"#d6edf7\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M45 133 V83 Q45 42 85 42 Q125 42 125 83 V133\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 133 H150 M68 133 L79 83 H91 L103 133\" fill=\"none\" stroke=\"#ffb34d\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"62\" y=\"88\" width=\"78\" height=\"37\" rx=\"11\" fill=\"#143653\" stroke=\"#d6edf7\" stroke-width=\"3\"/><rect x=\"74\" y=\"96\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><rect x=\"106\" y=\"96\" width=\"22\" height=\"13\" rx=\"3\" fill=\"#12485b\" stroke=\"#31e2e0\" stroke-width=\"3\"/><circle cx=\"79\" cy=\"127\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><circle cx=\"123\" cy=\"127\" r=\"5\" stroke=\"#ffb34d\" stroke-width=\"3\" fill=\"#ffb34d\"/><path d=\"M54 134 L150 134\" fill=\"none\" stroke=\"#5e91b1\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M120 47 Q135 55 120 63\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M129 38 Q144 55 129 72\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M138 29 Q153 55 138 81\" fill=\"none\" stroke=\"#31e2e0\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"5\" y=\"5\" width=\"45\" height=\"25\" rx=\"8\" fill=\"#234a66\"/><text x=\"27\" y=\"23\" fill=\"white\" text-anchor=\"middle\" font-size=\"17\" font-family=\"Arial\" font-weight=\"bold\">32</text></svg>"};
+        const getBookCardSvg = (rec, isIrsem) => {
+          const raw = String(rec.chapterNo || '').trim().toUpperCase();
+          const desc = String(rec.work || rec.description || rec.bookName || rec.title || '').toLowerCase();
+          const clean = raw.replace(/^(?:CHAPTER|CH\.?)[\s.:#-]*/i,'').replace(/[^A-Z0-9]/g,'');
+          if (isIrsem) {
+            if (/MAINT(?:ENANCE|AINANCE|ENENCE|ANANCE).*SCHEDUL/i.test(desc)) return null;
+            if (/DRAWING.*GUIDANCE|GUIDANCE.*DRAWING/i.test(desc)) return null;
+            const roman = {I:1,II:2,III:3,IV:4,V:5,VI:6,VII:7,VIII:8,IX:9,X:10,XI:11,XII:12,XIII:13,XIV:14,XV:15,XVI:16,XVII:17,XVIII:18,XIX:19,XX:20,XXI:21,XXII:22};
+            let n = roman[clean] ?? (/^\d+$/.test(clean) ? Number(clean) : -1);
+            if (/MAIN\s*BOOK|IRSEM\s*MAIN/.test(desc) || clean === '-') n = 0;
+            return IRSEM_CARD_SVGS[n] || null;
+          }
+          let n = /^\d+$/.test(clean) ? Number(clean) : -1;
+          if (/IRTEM\s*MAIN\s*BOOK|MAIN\s*BOOK/.test(desc) || clean === '-') n = 0;
+          return IRTEM_CARD_SVGS[n] || null;
+        };
+        const romanToIndex = {I:1,II:2,III:3,IV:4,V:5,VI:6,VII:7,VIII:8,IX:9,X:10,XI:11,XII:12,XIII:13,XIV:14,XV:15,XVI:16,XVII:17,XVIII:18,XIX:19,XX:20,XXI:21,XXII:22};
+        const colors = ['#0284c7','#ea580c','#7c3aed','#059669','#db2777','#0d9488','#d97706','#4f46e5'];
+        const safeText = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        const safeJs = value => JSON.stringify(String(value ?? '')).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/'/g,'\\u0027');
+        chapterGallery.innerHTML = filtered.length ? filtered.map((rec,idx) => {
+          const accent = colors[idx % colors.length];
+          // Resolve Roman numerals, numeric chapter labels, and chapter descriptions reliably.
+          // Never fall back to the repeating generic icon cycle for IRSEM.
+          const rawChapter = String(rec.chapterNo || '').trim().toUpperCase()
+            .replace(/^(?:IRSEM\s*)?(?:CHAPTER|CH\.?|NO\.?)\s*[-.:#]*/i, '')
+            .replace(/[.\s]/g, '');
+          const topic = [rec.work, rec.description, rec.chapterNo, rec.bookName, rec.name, rec.title].filter(Boolean).join(' ').toLowerCase();
+          const topicMatchers = [
+            /irsem\s*(main|book)|main\s*book/,
+            /organi[sz]ation/, /duties.*engineer/, /duties.*supervisor|technical staff/,
+            /budget|expenditure/, /planning|estimating.*survey/, /stores|accountal/,
+            /essentials.*signall/, /drawings|specifications/, /commissioning/,
+            /contracts.*works/, /datalogger|predictive/, /mechanical signall/,
+            /kavach|tcas|etcs|tpws|train management/, /level crossing|lc gate/,
+            /cables/, /power supply|ips|solar|battery/, /train detection|axle counter|track circuit/,
+            /block instrument|bpac|ibs/, /outdoor signalling|installation.*testing/,
+            /automatic block/, /electronic interlocking|relay.*interlocking/,
+            /25\s*kv|electrified area|ohe/
+          ];
+          let chapterIndex = rawChapter === '-' || /MAIN|BOOK/.test(rawChapter) ? 0
+            : (romanToIndex[rawChapter] ?? (/^\d+$/.test(rawChapter) ? Number(rawChapter) : -1));
+          if (!(chapterIndex >= 0 && chapterIndex <= 22)) chapterIndex = topicMatchers.findIndex(rx => rx.test(topic));
+          const isIrsem = currentCategory === 'IRSEM CHAPTER WISE';
+          // Dedicated artwork for the two additional IRSEM resources, independent of chapter numbering.
+          const isMaintenanceArtwork = isIrsem && /maint(?:enance|ainance|enence|anance)[\s\S]*schedul/i.test(topic);
+          const isDrawingArtwork = isIrsem && /drawing(?:s)?\s+(?:for\s+)?guidance|guidance\s+drawing/i.test(topic);
+          const specialArtwork = isMaintenanceArtwork ? "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 150\" role=\"img\" aria-label=\"Maintenance calendar, wrench and gears\"><defs><linearGradient id=\"msMetal\" x2=\"1\" y2=\"1\"><stop stop-color=\"#f1f6fb\"/><stop offset=\"1\" stop-color=\"#8faec7\"/></linearGradient><linearGradient id=\"msOrange\" x2=\"0\" y2=\"1\"><stop stop-color=\"#ffb32b\"/><stop offset=\"1\" stop-color=\"#ed7800\"/></linearGradient></defs><rect x=\"13\" y=\"23\" width=\"114\" height=\"110\" rx=\"12\" fill=\"#f7fbff\" stroke=\"#102d69\" stroke-width=\"5\"/><path d=\"M13 49h114\" stroke=\"#102d69\" stroke-width=\"5\"/><path d=\"M13 36q0-13 13-13h88q13 0 13 13v13H13Z\" fill=\"url(#msMetal)\" stroke=\"#102d69\" stroke-width=\"4\"/><g fill=\"#12b7ac\" stroke=\"#102d69\" stroke-width=\"4\"><rect x=\"30\" y=\"10\" width=\"10\" height=\"31\" rx=\"5\"/><rect x=\"55\" y=\"10\" width=\"10\" height=\"31\" rx=\"5\"/><rect x=\"80\" y=\"10\" width=\"10\" height=\"31\" rx=\"5\"/><rect x=\"105\" y=\"10\" width=\"10\" height=\"31\" rx=\"5\"/></g><g fill=\"#c4d6e1\"><rect x=\"29\" y=\"61\" width=\"13\" height=\"12\"/><rect x=\"51\" y=\"61\" width=\"13\" height=\"12\"/><rect x=\"73\" y=\"61\" width=\"13\" height=\"12\"/><rect x=\"95\" y=\"61\" width=\"13\" height=\"12\"/></g><g fill=\"none\" stroke=\"#102d69\" stroke-width=\"5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m29 87 6 6 11-13\"/><path d=\"m51 87 6 6 11-13\"/><path d=\"m73 87 6 6 11-13\"/></g><g fill=\"url(#msOrange)\" stroke=\"#102d69\" stroke-width=\"4\" stroke-linejoin=\"round\"><path d=\"M111 56l6 3 7-3 7 7-3 7 3 6 7 3v10l-7 3-3 6 3 7-7 7-7-3-6 3-3 7h-10l-3-7-6-3-7 3-7-7 3-7-3-6-7-3V79l7-3 3-6-3-7 7-7 7 3 6-3 3-7h10Z\"/><path d=\"M112 104l5 4 8-1 5 7-4 7 2 7 7 4-2 9-8 1-5 6-1 8h-9l-3-8-6-4-8 1-5-7 4-7-2-7-7-4 2-9 8-1 5-6 1-8h9Z\"/></g><g fill=\"#fff\" stroke=\"#102d69\" stroke-width=\"4\"><circle cx=\"106\" cy=\"84\" r=\"11\"/><circle cx=\"109\" cy=\"125\" r=\"10\"/></g><path d=\"M28 137 83 83q-4-12 6-22 7-7 17-5L94 69l7 9 13-12q2 10-5 17-8 9-19 7l-54 55q-8 5-12-2-2-4 4-6Z\" fill=\"url(#msMetal)\" stroke=\"#102d69\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"m39 129 38-38\" stroke=\"#0bb9b2\" stroke-width=\"6\" stroke-linecap=\"round\"/></svg>" : isDrawingArtwork ? "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 100\" role=\"img\"><circle cx=\"60\" cy=\"50\" r=\"45\" fill=\"#e8f4ff\" stroke=\"#173b68\" stroke-width=\"5\"/><circle cx=\"60\" cy=\"50\" r=\"37\" fill=\"#fff\" stroke=\"#6b9dbd\" stroke-width=\"1.5\"/><path d=\"M25 72h70M26 30h68M33 20v59M87 20v59\" stroke=\"#b5d0e4\" stroke-width=\"1\"/><path d=\"M38 80 53 48 68 80M82 80 67 48 52 80\" stroke=\"#173b68\" stroke-width=\"4\" fill=\"none\"/><path d=\"M43 68h35M47 60h26M51 53h18\" stroke=\"#173b68\" stroke-width=\"3\"/><rect x=\"30\" y=\"25\" width=\"13\" height=\"27\" rx=\"6\" fill=\"#173b68\"/><circle cx=\"36.5\" cy=\"45\" r=\"4\" fill=\"#ef4444\"/><circle cx=\"36.5\" cy=\"36\" r=\"4\" fill=\"#64748b\"/><rect x=\"76\" y=\"21\" width=\"13\" height=\"31\" rx=\"6\" fill=\"#173b68\"/><circle cx=\"82.5\" cy=\"43\" r=\"4\" fill=\"#f59e0b\"/><circle cx=\"82.5\" cy=\"33\" r=\"4\" fill=\"#64748b\"/><path d=\"M59 25v-9m-7 11-5-5m19 5 5-5\" stroke=\"#0891b2\" stroke-width=\"3\" stroke-linecap=\"round\"/><circle cx=\"59\" cy=\"32\" r=\"3\" fill=\"#0891b2\"/><path d=\"M19 69 40 90M23 65l21 21\" stroke=\"#f59e0b\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M91 63 103 80 81 84Z\" fill=\"#0d9488\" stroke=\"#173b68\" stroke-width=\"2\"/></svg>" : null;
+          const selectedBookSvg = getBookCardSvg(rec, isIrsem);
+          const icon = isIrsem
+            ? (irsemIcons[chapterIndex] || `<rect x="8" y="7" width="48" height="50" rx="6"/><text x="32" y="39" text-anchor="middle" font-size="21" fill="#38bdf8" stroke="none" font-weight="800">${safeText(rec.chapterNo || '?')}</text>`)
+            : iconShapes[idx % iconShapes.length];
+          const title = rec.work || '—';
+          const link = rec.driveLink || '';
+          return `<article class="chapter-book-card" style="--book-accent:${accent};--book-soft:${accent}20">
+            <div class="chapter-book-heading">${safeText(rec.chapterNo || idx+1)}</div>
+            <div class="chapter-book-art" aria-hidden="true">${specialArtwork || selectedBookSvg || (isIrsem ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="var(--book-accent)" stroke-width="2.8">${icon}</svg>` : irtemArt(rec,idx))}</div>
+            <div class="chapter-book-desc">${safeText(title)}</div>
+            <div class="chapter-book-slip">${rec.correctionSlipNo ? 'Correction Slip: '+safeText(rec.correctionSlipNo) : ' '}</div>
+            <div class="chapter-book-actions">
+              <button class="action-icon-btn" title="Read PDF" onclick='openPreview(${safeJs(title)},${safeJs(link)})'><i class="fa-solid fa-book-open"></i></button>
+              <button class="action-icon-btn edit-btn" title="Edit Record (Admin)" onclick='openEditModal(${safeJs(rec.id)})'><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="action-icon-btn delete-btn" title="Delete Record (Admin)" onclick='deleteRecord(${safeJs(rec.id)})'><i class="fa-solid fa-trash-can"></i></button>
+            </div></article>`;
+        }).join('') : '<p style="padding:20px">No chapters found matching the filters.</p>';
+        tbody.innerHTML = '';
+        return;
       }
 
       if (filtered.length === 0) {
@@ -13947,7 +14347,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 @media (max-width:1024px) {
   #appSidebar,
   body.dark-theme #appSidebar,
-  body:not(.dark-theme) #appSidebar {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar {
     background:transparent !important;
     background-color:transparent !important;
     border-right-color:transparent !important;
@@ -13955,7 +14355,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
   }
 
   /* Preserve the existing painted navigation surfaces themselves. */
-  body:not(.dark-theme) #appSidebar > .home-btn-container {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .home-btn-container {
     background:#ffffff !important;
     background-color:#ffffff !important;
   }
@@ -13972,7 +14372,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
   }
 
   /* An expanded subsection list still needs an opaque reading surface. */
-  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
     background:#ffffff !important;
     background-color:#ffffff !important;
   }
@@ -13998,7 +14398,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
   /* The drawer shell itself must not create a frosted/blurred transparent tail. */
   #appSidebar,
   body.dark-theme #appSidebar,
-  body:not(.dark-theme) #appSidebar {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar {
     backdrop-filter:none !important;
     -webkit-backdrop-filter:none !important;
     filter:none !important;
@@ -14032,7 +14432,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* HOME wrapper must also be transparent: only the HOME button itself is solid. */
   #appSidebar > .home-btn-container,
-  body:not(.dark-theme) #appSidebar > .home-btn-container,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .home-btn-container,
   body.dark-theme #appSidebar > .home-btn-container {
     background: transparent !important;
     background-color: transparent !important;
@@ -14045,7 +14445,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* No continuous background behind parent groups or in the gaps between cards. */
   #appSidebar > .collapsible-group,
-  body:not(.dark-theme) #appSidebar > .collapsible-group,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group,
   body.dark-theme #appSidebar > .collapsible-group {
     background: transparent !important;
     background-color: transparent !important;
@@ -14056,7 +14456,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* IMPORTANT: section strips themselves stay solid/readable.
      Keep the portal's existing light/dark theme colors; do not make these transparent. */
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title {
     background: rgba(241,245,249,.97) !important;
     background-color: rgba(241,245,249,.97) !important;
   }
@@ -14066,7 +14466,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
   }
 
   /* Expanded child list is a real reading surface, so it remains solid. */
-  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
     background: rgba(255,255,255,.98) !important;
     background-color: rgba(255,255,255,.98) !important;
     backdrop-filter: none !important;
@@ -14107,8 +14507,8 @@ body.dark-theme .process-track-container { gap:8px !important; }
   /* Expanded subsection container itself must paint nothing. */
   #appSidebar > .collapsible-group > .nav-list,
   #appSidebar > .collapsible-group:not(.collapsed) > .nav-list,
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list,
-  body:not(.dark-theme) #appSidebar > .collapsible-group:not(.collapsed) > .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group:not(.collapsed) > .nav-list,
   body.dark-theme #appSidebar > .collapsible-group > .nav-list,
   body.dark-theme #appSidebar > .collapsible-group:not(.collapsed) > .nav-list {
     background: transparent !important;
@@ -14121,10 +14521,10 @@ body.dark-theme .process-track-container { gap:8px !important; }
   }
 
   /* Each child/subsection is its own solid floating strip. */
-  body:not(.dark-theme) #appSidebar .nav-list > li,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-item {
     background-color: rgba(255,255,255,.98) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -14165,10 +14565,10 @@ body.dark-theme .process-track-container { gap:8px !important; }
    Main section cards, icons, layout, transparency gaps and desktop remain unchanged. */
 @media (max-width:1024px) {
   /* LIGHT: soft blue-grey subsection surface */
-  body:not(.dark-theme) #appSidebar .nav-list > li,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > .nav-item {
     background: #e8eef5 !important;
     background-color: #e8eef5 !important;
   }
@@ -14184,7 +14584,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* Preserve the transparent canvas/gaps around the subsection cards. */
   #appSidebar .nav-list,
-  body:not(.dark-theme) #appSidebar .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list,
   body.dark-theme #appSidebar .nav-list {
     background: transparent !important;
     background-color: transparent !important;
@@ -14200,10 +14600,10 @@ body.dark-theme .process-track-container { gap:8px !important; }
    Keeps parent section colors, icon colors, transparent gaps, and desktop unchanged. */
 @media (max-width:1024px) {
   /* LIGHT — cool mist/slate surface, visibly distinct from white dashboard */
-  body:not(.dark-theme) #appSidebar .nav-list > li,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > .nav-item {
     background: #dbe5ef !important;
     background-color: #dbe5ef !important;
     color: #24364b !important;
@@ -14225,9 +14625,9 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* Ensure text inherits the sophisticated high-contrast surface color,
      while existing colored icons keep their own colors. */
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-list .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list .nav-item {
     color: #24364b !important;
   }
   body.dark-theme #appSidebar .nav-list > li > a,
@@ -14238,7 +14638,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* Canvas/gaps remain fully transparent so HOME is visible between strips. */
   #appSidebar .nav-list,
-  body:not(.dark-theme) #appSidebar .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list,
   body.dark-theme #appSidebar .nav-list {
     background: transparent !important;
     background-color: transparent !important;
@@ -14255,10 +14655,10 @@ body.dark-theme .process-track-container { gap:8px !important; }
    Responsive drawer only; parent cards, icon colors, transparent gaps and desktop unchanged. */
 @media (max-width:1024px) {
   /* LIGHT THEME — soft cyan/teal surface */
-  body:not(.dark-theme) #appSidebar .nav-list > li,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > .nav-item {
     background: #D7F0F4 !important;
     background-color: #D7F0F4 !important;
     color: #173A46 !important;
@@ -14278,9 +14678,9 @@ body.dark-theme .process-track-container { gap:8px !important; }
     box-shadow: 0 1px 2px rgba(0,0,0,.22) !important;
   }
 
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-list .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list .nav-item {
     color: #173A46 !important;
   }
 
@@ -14292,7 +14692,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* Keep the canvas and the spaces between subsection strips fully transparent. */
   #appSidebar .nav-list,
-  body:not(.dark-theme) #appSidebar .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list,
   body.dark-theme #appSidebar .nav-list {
     background: transparent !important;
     background-color: transparent !important;
@@ -14312,10 +14712,10 @@ body.dark-theme .process-track-container { gap:8px !important; }
 @media (max-width:1024px) {
 
   /* LIGHT THEME: crisp teal edge with a very restrained glow */
-  body:not(.dark-theme) #appSidebar .nav-list > li,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a,
-  body:not(.dark-theme) #appSidebar .nav-list > a,
-  body:not(.dark-theme) #appSidebar .nav-list > .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > .nav-item {
     border: 1px solid rgba(18, 177, 196, .62) !important;
     box-shadow:
       0 0 0 1px rgba(18, 177, 196, .06),
@@ -14335,12 +14735,12 @@ body.dark-theme .process-track-container { gap:8px !important; }
   }
 
   /* Hover/focus: slightly stronger, never an aggressive gaming-style glow */
-  body:not(.dark-theme) #appSidebar .nav-list > li:hover,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a:hover,
-  body:not(.dark-theme) #appSidebar .nav-list > a:hover,
-  body:not(.dark-theme) #appSidebar .nav-list > .nav-item:hover,
-  body:not(.dark-theme) #appSidebar .nav-list > li > a:focus-visible,
-  body:not(.dark-theme) #appSidebar .nav-list > a:focus-visible {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li:hover,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a:hover,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a:hover,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > .nav-item:hover,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > li > a:focus-visible,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list > a:focus-visible {
     border-color: rgba(6, 182, 212, .88) !important;
     box-shadow:
       0 0 4px rgba(6, 182, 212, .18),
@@ -14362,7 +14762,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 
   /* Preserve transparent space around cards. */
   #appSidebar .nav-list,
-  body:not(.dark-theme) #appSidebar .nav-list,
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list,
   body.dark-theme #appSidebar .nav-list {
     background: transparent !important;
     background-color: transparent !important;
@@ -14376,7 +14776,7 @@ body.dark-theme .process-track-container { gap:8px !important; }
 /* Final requested treatment: parent SECTION strips are fully opaque on mobile/tablet.
    Subsection palette/neon treatment, transparent gaps, layout and desktop remain unchanged. */
 @media (max-width:1024px) {
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title {
     background:#f8fafc !important;
     background-color:#f8fafc !important;
     opacity:1 !important;
@@ -14699,6 +15099,75 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
   document.addEventListener('click',function(e){if(e.target.closest('#appSidebar .sidebar-section-title'))requestAnimationFrame(function(){requestAnimationFrame(measure)})},true);
 })();
 </script>
+
+<script id="rail-password-visibility-script">
+function toggleRailPasswordVisibility(button) {
+  const field = document.getElementById('pagePasswordInput');
+  if (!field) return;
+  const showing = field.type === 'password';
+  field.type = showing ? 'text' : 'password';
+  button.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+  button.setAttribute('title', showing ? 'Hide password' : 'Show password');
+  button.setAttribute('aria-pressed', String(showing));
+  const icon = button.querySelector('i');
+  if (icon) { icon.classList.toggle('fa-eye', !showing); icon.classList.toggle('fa-eye-slash', showing); }
+}
+</script>
+
+<style id="rn-final-light-gallery-sidebar-fix">
+/* Theme-specific overrides: keep existing dark mode untouched. */
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item,
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .manual-submenu .nav-item {
+ background:#f8fbff!important;background-image:none!important;color:#173c64!important;
+ border:1px solid #d9e5f3!important;border-left:3px solid transparent!important;
+ box-shadow:0 1px 3px rgba(29,67,112,.07)!important;
+}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item:hover,
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list > .nav-item.active,
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .manual-submenu .nav-item:hover,
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .manual-submenu .nav-item.active {
+ background:#e5f1ff!important;background-image:none!important;color:#0c3c6e!important;
+ border-color:#9dc6f4!important;border-left-color:#1689d4!important;
+ box-shadow:0 2px 5px rgba(22,82,145,.10)!important;
+}
+/* Continuous tree connectors remain visible in both themes. */
+html html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar .nav-list { --rn-tree-line:#94b9e9; }
+/* Light cards, including the actual SVG tiles (not only their outer containers). */
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art {
+ background:#f1f7fe!important;
+}
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art svg .rn-svg-tile-background {
+ fill:#e6f2ff!important;stroke:#6fa9d0!important;
+}
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-art svg .rn-svg-tile-background + rect {filter:none!important;}
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-desc,
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-actions,
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-slip {
+ background:#fff!important;color:#153755!important;
+}
+html body:not(.dark-theme) #mainTableContainer.chapter-gallery-mode .chapter-book-card {background:#fff!important;}
+</style>
+<script id="rn-svg-tile-theme-fix">
+/* Mark only full-size background rectangles, preserving distinct chapter drawings. */
+(function(){
+ function markTiles(){
+  var root=document.getElementById('chapterBookGallery'); if(!root)return;
+  root.querySelectorAll('.chapter-book-art svg').forEach(function(svg){
+   var r=svg.querySelector(':scope > rect:first-child'); if(!r)return;
+   var w=parseFloat(r.getAttribute('width')),h=parseFloat(r.getAttribute('height'));
+   var vb=svg.viewBox && svg.viewBox.baseVal;
+   if(w>=65 && h>=65 && (!vb || !vb.width || (w>=vb.width*.65 && h>=vb.height*.65)))r.classList.add('rn-svg-tile-background');
+  });
+ }
+ function init(){var root=document.getElementById('chapterBookGallery');if(!root)return;markTiles();new MutationObserver(markTiles).observe(root,{childList:true,subtree:true});}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+
+
+
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
@@ -14719,7 +15188,7 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
     backdrop-filter:none !important;
     -webkit-backdrop-filter:none !important;
   }
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title {
     background:#f8fafc !important;
     color:#334155 !important;
     box-shadow:0 0 0 1px color-mix(in srgb,var(--section-accent) 10%,transparent),
@@ -14739,7 +15208,7 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
   }
 
   /* Actual subsection strip — target .nav-item directly, regardless of LI/A markup. */
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .nav-item {
     background:#d7f0f4 !important;
     color:#173a46 !important;
     border:1px solid #12b1c4 !important;
@@ -14758,7 +15227,7 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
                0 0 10px rgba(20,184,166,.16),
                0 2px 4px rgba(0,0,0,.22) !important;
   }
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item:hover {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .nav-item:hover {
     border-color:#06b6d4 !important;
     box-shadow:0 0 5px rgba(6,182,212,.22),0 3px 7px rgba(15,23,42,.10) !important;
   }
@@ -14787,7 +15256,7 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
   }
 
   /* LIGHT: pastel opaque tint of each section's own accent colour */
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .sidebar-section-title {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .sidebar-section-title {
     background:color-mix(in srgb, var(--section-accent) 10%, #ffffff) !important;
     color:#10234a !important;
     box-shadow:
@@ -14838,7 +15307,7 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
   }
 
   /* Subsections use the SAME family as their parent section, with a clear border. */
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .nav-item {
     background:color-mix(in srgb,var(--section-accent) 9%,#ffffff) !important;
     color:#17304e !important;
     border:1.5px solid color-mix(in srgb,var(--section-accent) 88%,#ffffff) !important;
@@ -14858,7 +15327,7 @@ html body #appSidebar > .collapsible-group > .nav-list > .nav-item:active {
       inset 0 0 9px color-mix(in srgb,var(--section-accent) 8%,transparent) !important;
   }
 
-  body:not(.dark-theme) #appSidebar > .collapsible-group > .nav-list .nav-item:hover {
+  html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .nav-list .nav-item:hover {
     background:color-mix(in srgb,var(--section-accent) 14%,#ffffff) !important;
     border-color:var(--section-accent) !important;
     box-shadow:0 0 6px color-mix(in srgb,var(--section-accent) 25%,transparent) !important;
@@ -15264,7 +15733,7 @@ body:not(.dark-theme) #mainContent {
 
 <style id="v116-light-sidebar-empty-area-E5D3AF">
 /* Light theme: continue the warm page colour through the unused sidebar area. */
-body:not(.dark-theme) #appSidebar {
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar {
     background-color: #E5D3AF !important;
 }
 
@@ -16133,7 +16602,7 @@ html body #appSidebar .nav-item:hover{
 }
 </style>
 
-<style id="rn-final-hover-verified">@keyframes rnFinalVerifiedWiggle{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-2deg)}55%{transform:rotate(2deg)}80%{transform:rotate(-1deg)}}html body #appSidebar .home-btn.rn-final-hovering,html body #appSidebar .sidebar-section-title.rn-final-hovering,html body #appSidebar .nav-item.rn-final-hovering{animation:rnFinalVerifiedWiggle .7s ease-in-out 1!important;transform-origin:center!important;filter:brightness(1.12)!important}@media(prefers-reduced-motion:reduce){html body #appSidebar .rn-final-hovering{animation:none!important}}</style><script id="rn-final-hover-events">(function(){var selector='#appSidebar .home-btn,#appSidebar .sidebar-section-title,#appSidebar .nav-item',last=null;document.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var el=e.target.closest&&e.target.closest(selector);if(last===el)return;if(last)last.classList.remove('rn-final-hovering');last=el;if(el){el.classList.remove('rn-final-hovering');void el.offsetWidth;el.classList.add('rn-final-hovering')}},true);document.addEventListener('pointerout',function(e){if(last&&!e.relatedTarget){last.classList.remove('rn-final-hovering');last=null}},true)})();</script>
+
 <style id="rn-content-height-sidebar-v19">
 /* All viewports: shrink sidebar to its navigation content instead of filling the page. */
 html body #appSidebar {
@@ -16262,7 +16731,7 @@ html body #appSidebar {align-content:start!important;}
 #appSidebar > .collapsible-group.rn-has-more:not(.collapsed) > .rn-scroll-cue {display:flex!important;}
 #appSidebar > .collapsible-group > .rn-scroll-cue .rn-cue-arrow {font-size:16px;animation:rn-scroll-arrow 1.5s ease-in-out infinite;}
 @keyframes rn-scroll-arrow {0%,100%{transform:translateY(-2px);opacity:.7}55%{transform:translateY(2px);opacity:1}}
-body:not(.dark-theme) #appSidebar > .collapsible-group > .rn-scroll-cue {background:rgba(14,113,170,.07);color:#076da6;border-color:rgba(14,113,170,.28)}
+html body:not(.dark-theme) #appSidebar#appSidebar#appSidebar > .collapsible-group > .rn-scroll-cue {background:rgba(14,113,170,.07);color:#076da6;border-color:rgba(14,113,170,.28)}
 @media(prefers-reduced-motion:reduce){#appSidebar .rn-cue-arrow{animation:none!important}}
 </style>
 <script id="rn-v23-scroll-cue-script">
@@ -16521,3 +16990,6 @@ html body #mainRecordTable.jpo-table td.jpo-number-cell b {
  }
 }
 </style>
+
+
+
