@@ -6427,6 +6427,51 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
 :where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #22b8c9;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){#dashboardView .dash-hero,#dashboardView .process-infographic-card,#dashboardView .process-step-item,#dashboardView .chart-card,.chapter-book-card,#loginScreen .login-btn,.home-btn{transition:none!important}#dashboardView .process-step-item:hover,.chapter-book-card:hover{transform:none!important}}
 </style>
+<style id="signal-ebook-ai-image-gallery">
+#mainTableContainer.signal-image-gallery-mode{overflow-x:hidden!important;overflow-y:auto!important;padding:14px!important}
+#mainTableContainer.signal-image-gallery-mode #chapterBookGallery{display:block!important}
+.signal-book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:15px;align-items:stretch}
+.signal-book-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border-radius:15px;background:var(--card-bg,#f8fbff);border:1px solid rgba(115,150,185,.28);box-shadow:0 5px 16px rgba(0,40,80,.12);transition:transform .2s ease,box-shadow .2s ease}
+.signal-book-card:hover{transform:translateY(-4px);box-shadow:0 12px 25px rgba(0,40,80,.2)}
+.signal-book-image{display:block;width:100%;height:145px;object-fit:cover;background:#d6e6f5}
+.signal-image-missing{display:flex;align-items:center;justify-content:center;font-size:40px;color:#086288}
+.signal-book-body{padding:12px;display:flex;flex:1;flex-direction:column;justify-content:space-between;gap:13px}
+.signal-book-info{display:flex;align-items:flex-start;gap:9px}
+.signal-book-number{display:inline-block;flex-shrink:0;padding:5px 8px;border-radius:7px;background:var(--signal-card-accent);color:#fff;font-size:13px;font-weight:800;line-height:1.2}
+.signal-book-title{font-size:13px;line-height:1.4;font-weight:700;overflow-wrap:anywhere;color:var(--text-primary,inherit)}
+.signal-book-actions{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap}
+.signal-read-pdf{cursor:pointer;border:0;border-radius:9px;padding:9px 14px;background:#d9edff;color:#0057a6;font-weight:750;font-size:12px}
+.signal-book-admin-action{cursor:pointer;border:1px solid rgba(120,140,165,.3);border-radius:7px;padding:8px;background:transparent;color:inherit;font-size:12px}
+.signal-book-card button:hover{filter:brightness(.94)}
+.signal-book-empty{padding:20px;text-align:center}
+@media(max-width:600px){.signal-book-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.signal-book-image{height:112px}.signal-book-body{padding:9px}.signal-book-title{font-size:11px}.signal-book-number{font-size:11px}.signal-read-pdf{font-size:11px;padding:7px 9px}}
+@media(max-width:360px){.signal-book-grid{grid-template-columns:1fr}.signal-book-image{height:155px}}
+/* Signal E-Book card: explicit contrast in both themes */
+body.dark-theme #mainTableContainer.signal-image-gallery-mode .signal-book-card,
+body.dark-theme #mainTableContainer.signal-image-gallery-mode .signal-book-body {
+  background: #172337 !important;
+}
+body.dark-theme #mainTableContainer.signal-image-gallery-mode .signal-book-title {
+  color: #f1f5f9 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+body:not(.dark-theme) #mainTableContainer.signal-image-gallery-mode .signal-book-title {
+  color: #14263d !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #14263d !important;
+}
+body.dark-theme #mainTableContainer.signal-image-gallery-mode .signal-book-admin-action {
+  color: #e2e8f0 !important;
+  border-color: #60748f !important;
+  opacity: 1 !important;
+}
+body.dark-theme #mainTableContainer.signal-image-gallery-mode .signal-read-pdf {
+  color: #064f94 !important;
+  background: #d9edff !important;
+  opacity: 1 !important;
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -7670,11 +7715,6 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
           </select>
         </div>
 
-        <div class="form-group" id="formStationContainer">
-          <label id="formStationLabel">Station / Section</label>
-          <input type="text" id="formStation" placeholder="e.g. ROB, BSP Yard, CPH, RIG">
-        </div>
-
         <div class="form-group" id="formDivisionContainer">
           <label>Division</label>
           <select id="formDivision">
@@ -7684,6 +7724,11 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
             <option value="Nagpur">Nagpur</option>
             <option value="HQ">HQ / SECR</option>
           </select>
+        </div>
+
+        <div class="form-group" id="formStationContainer">
+          <label id="formStationLabel">Station / Section</label>
+          <input type="text" id="formStation" placeholder="e.g. ROB, BSP Yard, CPH, RIG">
         </div>
 
         <div class="form-group" id="formJpoNoContainer" style="display:none;">
@@ -7767,7 +7812,9 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
             <option value="Project">Project</option>
             <option value="Construction">Construction</option>
             <option value="Division">Division</option>
+            <option value="Other">Other</option>
           </select>
+          <input type="text" id="formAgencyOther" placeholder="Enter agency name" aria-label="Other agency name" style="display:none;margin-top:8px;width:100%;" autocomplete="off">
         </div>
 
         <div class="form-group" id="formGivenByContainer" style="display:none;">
@@ -9035,12 +9082,14 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
       if (!thead || !tbody || !tableElem) return;
 
       const chapterGalleryMode = currentCategory === 'IRSEM CHAPTER WISE' || currentCategory === 'IRTEM CHAPTER WISE';
+      const signalGalleryMode = currentCategory === 'IRISET E-BOOK (SIGNAL)' || currentCategory === 'IRISET E-BOOK (TELECOM)';
       const galleryContainer = document.getElementById('mainTableContainer');
-      if (galleryContainer) galleryContainer.classList.toggle('chapter-gallery-mode', chapterGalleryMode);
+      if (galleryContainer) galleryContainer.classList.toggle('chapter-gallery-mode', chapterGalleryMode || signalGalleryMode);
+      if (galleryContainer) galleryContainer.classList.toggle('signal-image-gallery-mode', signalGalleryMode);
       const topScrollbar = document.getElementById('topScrollbarWrapper');
-      if (topScrollbar && chapterGalleryMode) topScrollbar.style.display = 'none';
+      if (topScrollbar && (chapterGalleryMode || signalGalleryMode)) topScrollbar.style.display = 'none';
       const chapterGallery = document.getElementById('chapterBookGallery');
-      if (chapterGallery && !chapterGalleryMode) chapterGallery.innerHTML = '';
+      if (chapterGallery && !chapterGalleryMode && !signalGalleryMode) chapterGallery.innerHTML = '';
 
       const filterYear = document.getElementById('filterYear').value;
       const filterDiv = document.getElementById('filterDivision').value;
@@ -9419,6 +9468,122 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
             return (a.year || 0) - (b.year || 0);
           });
         }
+      }
+
+      if (signalGalleryMode && chapterGallery) {
+        const htmlEscape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const telecomGallery = currentCategory === 'IRISET E-BOOK (TELECOM)';
+        const catalog = [
+          ['S1','Basics of Indian Railway Signalling','s1'],
+          ['S2','Principles of Interlocking and Control Table','s2'],
+          ['S7','Signalling in 25kV AC Electrified Section','s7'],
+          ['S8','Signalling General','s8'],
+          ['S9','Power Supply for Signalling','s9'],
+          ['S10','Colour Light, LED and Automatic Signalling','s10'],
+          ['S11','Datalogger','s11'],
+          ['S12','Relay Interlocking (Metal Carbon Relays) (British)','s12'],
+          ['S13','Circuit Practice (British)','s13'],
+          ['S14','Interlocking with Metal Metal Relays (Siemens)','s14'],
+          ['S16','Route Relay Interlocking (Siemens)','s16'],
+          ['S18','Electronic Interlocking','s18'],
+          ['S18A','EI Design Medha','s18a_medha'],
+          ['S18A','EI Design Microlok-II','s18a_microlok'],
+          ['S18A','EI Design K5BMC','s18a_k5bmc'],
+          ['S18A','EI Design Westrace','s18a_westrace'],
+          ['S19','Signalling Relays and Cables','s19'],
+          ['S20','L C Gates','s20'],
+          ['S21','Electric Point Machine','s21'],
+          ['S22','Block Working Double Line','s22'],
+          ['S23','Frequency Modulated Block Instruments Handle Type','s23'],
+          ['S24','Intermediate Block Signalling and Block Proving Axle Counter','s24'],
+          ['S25','Train Detection','s25'],
+          ['S26','Train Detection System II Multi Section Digital Axle Counters','s26'],
+          ['S27','Railway Accidents & Safety','s27'],
+          ['S28','Kavach','s28'],
+          ['S29','Railway Signalling Installation & Quality Hand Book','s29'],
+          ['S30','Signalling Data Hand Book','s30']
+        ];
+        const telecomCatalog = [
+          ['TA1','Mobile Communication','ta1'],
+          ['TA2','Data Communication Networking','ta2'],
+          ['TA3','Data networks of IR','ta3'],
+          ['TA4','Cyber Security','ta4'],
+          ['TA5','Long Term Evalution (LTE)','ta5'],
+          ['TA6','IP-Multi Protocol Label Switching (IP-MPLS)','ta6'],
+          ['TA7','Video Surveillance System in Indian Railways','ta7'],
+          ['TB1','Telecom General','tb1'],
+          ['TB3','Digital Electronics','tb3'],
+          ['TB4','Digital Modulation Technique','tb4'],
+          ['TB5','Radio propagation','tb5'],
+          ['TB6','Measuring Instruments','tb6'],
+          ['TC1','Telecom Cables (Copper)','tc1'],
+          ['TC2','Public Address System','tc2'],
+          ['TC3','Passenger Information System','tc3'],
+          ['TC4','Power Supply Arrangements','tc4'],
+          ['TC5','Earthing and Surge Protection Devices','tc5'],
+          ['TC6','Train Traffic Control','tc6'],
+          ['TCS1','Telephone Instruments','tcs1'],
+          ['TCS2','Principles of SPC Exchanges','tcs2'],
+          ['TCS4','ISDN Exchange and Advancements','tcs4'],
+          ['TCS5','Signalling in Telecommunications','tcs5'],
+          ['TCS6','IP Telephony and NGN','tcs6'],
+          ['TCS7','Asterisk based VOIP (IP PBX & TCCS)','tcs7'],
+          ['TCT1','Digital Radio Equipment','tct1'],
+          ['TCT2','PDH Principles','tct2'],
+          ['TCT3','Programmable Digital Drop-Insert E1 Multiplexers','tct3'],
+          ['TCT4','OFC Systems','tct4'],
+          ['TCT5','SDH Principles','tct5'],
+          ['TCT6','STM Equipments','tct6'],
+          ['THB','Telecom Handbook (THB)','thb']
+        ];
+        const activeCatalog = telecomGallery ? telecomCatalog : catalog;
+        const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+        const pickImage = rec => {
+          const book = String(rec.bookName || '').toUpperCase().replace(/\s+/g,'').trim();
+          const description = normalize([rec.work,rec.description].filter(Boolean).join(' '));
+          const candidates = activeCatalog.filter(entry => entry[0].replace(/\s+/g,'') === book);
+          if (candidates.length === 1) return candidates[0];
+          if (candidates.length > 1) {
+            const hit = candidates.find(entry => {
+              const key = entry[2].split('_').pop();
+              return description.includes(key === 'microlok' ? 'microlok' : key);
+            });
+            return hit || candidates[0];
+          }
+          return activeCatalog.find(entry => normalize(entry[1]) === description) || null;
+        };
+        const palette = ['#086288','#468432','#AD6550','#7963B5','#B67C27','#287F80','#A64C75','#526DAB'];
+        chapterGallery.innerHTML = filtered.length ? '<div class="signal-book-grid">' + filtered.map((rec,idx) => {
+          const info = pickImage(rec);
+          const title = String(rec.work || rec.description || (info && info[1]) || '').trim();
+          const code = String(rec.bookName || (info && info[0]) || '').trim();
+          const imageKey = info ? info[2] : '';
+          const imgSrc = imageKey ? (telecomGallery ? 'railsntgyan_telecom_book_images/' : 'railsntgyan_signal_book_images/') + imageKey + '.webp' : '';
+          const accent = palette[idx % palette.length];
+          const link = rec.driveLink || rec.directLink || rec.link || rec.pdfLink || rec.url || '';
+          return `<article class="signal-book-card" style="--signal-card-accent:${accent}">
+            ${imgSrc ? `<img class="signal-book-image" src="${htmlEscape(imgSrc)}" alt="${htmlEscape(title)}" loading="lazy">` : '<div class="signal-book-image signal-image-missing"><i class="fa-solid fa-book-open"></i></div>'}
+            <div class="signal-book-body"><div class="signal-book-info"><span class="signal-book-number">${htmlEscape(code)}</span><div class="signal-book-title">${htmlEscape(title)}</div></div>
+            <div class="signal-book-actions"><button type="button" class="signal-read-pdf" data-signal-action="read" data-signal-index="${idx}"><i class="fa-solid fa-book-open"></i> Read PDF</button>
+            <button type="button" class="signal-book-admin-action" data-signal-action="edit" data-signal-index="${idx}" title="Edit Record"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button type="button" class="signal-book-admin-action" data-signal-action="delete" data-signal-index="${idx}" title="Delete Record"><i class="fa-solid fa-trash"></i></button></div></div></article>`;
+        }).join('') + '</div>' : '<p class="signal-book-empty">No E-Books match the current search.</p>';
+        chapterGallery.onclick = event => {
+          const button = event.target.closest('[data-signal-action]');
+          if (!button) return;
+          const rec = filtered[Number(button.dataset.signalIndex)];
+          if (!rec) return;
+          const action = button.dataset.signalAction;
+          if (action === 'read') {
+            const link = rec.driveLink || rec.directLink || rec.link || rec.pdfLink || rec.url || '';
+            if (link) openPreview(String(rec.work || rec.description || rec.bookName || 'E-Book'), link);
+            else alert('PDF link is not available for this book.');
+          } else if (action === 'edit') openEditModal(rec.id);
+          else if (action === 'delete') {
+            if (typeof deleteRecord === 'function') deleteRecord(rec.id);
+          }
+        };
+        return;
       }
 
       if (chapterGalleryMode && chapterGallery) {
@@ -11093,6 +11258,7 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
         if (el) el.value = '';
       });
       toggleFormFields();
+      toggleAgencyOther();
       document.getElementById('addRecordModal').style.display = 'flex';
       history.pushState({ view: 'modal', modal: 'addForm' }, '', '');
     }
@@ -11123,7 +11289,7 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
       document.getElementById('formChapterNo').value = rec.chapterNo || '';
       document.getElementById('formCorrectionSlipNo').value = rec.correctionSlipNo || '';
       document.getElementById('formParaChapter').value = rec.paraChapter || '';
-      document.getElementById('formAgency').value = rec.agency || '';
+      setAgencyValue(rec.agency || '');
       document.getElementById('formGivenBy').value = rec.givenBy || rec.sanctionBy || '';
       document.getElementById('formDepartment').value = rec.department || '';
       document.getElementById('formInspectionBy').value = rec.inspectionBy || '';
@@ -11152,6 +11318,7 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
 
     function clearFormFields() {
       document.getElementById('formStation').value = '';
+      setAgencyValue('');
       document.getElementById('formJpoNo').value = '';
       document.getElementById('formAddressedTo').value = '';
       document.querySelectorAll('.jpo-dept-checkbox').forEach(cb => cb.checked = false);
@@ -11183,6 +11350,29 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
         if (el) el.value = '';
       });
     }
+
+    function toggleAgencyOther() {
+      const select = document.getElementById('formAgency');
+      const input = document.getElementById('formAgencyOther');
+      if (!select || !input) return;
+      input.style.display = select.value === 'Other' ? 'block' : 'none';
+      input.required = select.value === 'Other' && document.getElementById('formAgencyContainer').style.display !== 'none';
+      if (select.value !== 'Other') input.value = '';
+    }
+    function getAgencyValue() {
+      const choice = document.getElementById('formAgency').value;
+      return choice === 'Other' ? document.getElementById('formAgencyOther').value.trim() : choice;
+    }
+    function setAgencyValue(value) {
+      const select = document.getElementById('formAgency');
+      const input = document.getElementById('formAgencyOther');
+      if (!select || !input) return;
+      const known = ['Project', 'Construction', 'Division'];
+      select.value = known.includes(value) ? value : (value ? 'Other' : '');
+      input.value = value && !known.includes(value) && value !== 'Other' ? value : '';
+      toggleAgencyOther();
+    }
+    document.getElementById('formAgency').addEventListener('change', toggleAgencyOther);
 
     function toggleJpoOtherDepartment() {
       const other = Array.from(document.querySelectorAll('.jpo-dept-checkbox')).find(cb => cb.value === 'Other');
@@ -11400,6 +11590,12 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
       const isImpLetter = (cat === 'IMP. LETTER');
       const isPolicyOrTypical = (cat === 'SECR POLICY' || cat === 'SECR TYPICAL');
 
+      if (document.getElementById('formAgencyContainer').style.display !== 'none' && document.getElementById('formAgency').value === 'Other' && !document.getElementById('formAgencyOther').value.trim()) {
+        alert('Please enter the agency name.');
+        document.getElementById('formAgencyOther').focus();
+        return;
+      }
+
       const recordData = {
         category: cat,
         station: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
@@ -11418,7 +11614,7 @@ tbody tr:hover td{background-color:#e7f7f4!important}body.dark-theme tbody tr:ho
         correctionSlipNo: isIrsemIrtem ? document.getElementById('formCorrectionSlipNo').value.trim() : '',
         paraChapter: isIrsemIrtemCorrection ? document.getElementById('formParaChapter').value.trim() : '',
         agency: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising)
-          ? document.getElementById('formAgency').value : '',
+          ? getAgencyValue() : '',
         givenBy: isDispensation ? document.getElementById('formGivenBy').value : '',
         department: isJpo ? getSelectedJpoDepartments() : ((isSpeedCert || isJsc) ? document.getElementById('formDepartment').value.trim() : ''),
         inspectionBy: isInspection ? document.getElementById('formInspectionBy').value.trim() : '',
@@ -15345,6 +15541,73 @@ function init(){paint();const parent=document.getElementById('mainTableContainer
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
+<style id="station-smart-css">
+.station-smart-panel{margin-top:9px;padding:12px;border:1px solid var(--border-color,#94a3b8);border-radius:12px;background:rgba(100,116,139,.08);display:grid;gap:9px;min-width:0}
+.station-smart-panel label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+.station-smart-panel select,.station-smart-panel input{width:100%;min-width:0;padding:9px;border-radius:7px;border:1px solid #94a3b8;background:var(--bg-card,#fff);color:var(--text-main,#1e293b);font-size:12px}
+.station-smart-panel .smart-search-wrap{position:relative;min-width:0}
+.station-smart-panel .smart-suggestions{display:none;position:absolute;top:100%;left:0;right:0;z-index:10020;max-height:225px;overflow-y:auto;background:#fff;color:#172b46;border:1px solid #94a3b8;border-radius:0 0 9px 9px;box-shadow:0 12px 24px rgba(0,0,0,.2)}
+.station-smart-panel .smart-suggestions.open{display:block}
+.station-smart-panel .smart-option{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-bottom:1px solid #e2e8f0;background:#fff;color:#172b46;cursor:pointer;font-size:12px}
+.station-smart-panel .smart-option:hover,.station-smart-panel .smart-option.active{background:#d9f2f2;color:#063d4c}
+.station-smart-panel .smart-option small{opacity:.7;margin-left:6px}
+.station-smart-panel .smart-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.station-smart-panel [data-k=selectors]{grid-template-columns:minmax(0,1fr)}.station-smart-panel [data-k=selectors]:has([data-k=toWrap][style*=block]){grid-template-columns:repeat(2,minmax(0,1fr))}
+.station-smart-panel [data-k=search1],.station-smart-panel [data-k=search2]{width:100%!important}.station-smart-panel .smart-suggestions{min-width:100%}
+.station-smart-panel .smart-preview{padding:8px;border-radius:7px;border:1px dashed #94a3b8;font-weight:700;overflow-wrap:anywhere}
+@media(max-width:500px){.station-smart-panel .smart-row{grid-template-columns:1fr}}
+</style>
+<script id="station-smart-script">
+(function(){
+'use strict';
+const MASTER={"Bilaspur": [{"id": "B001", "name": "IB", "code": "IB"}, {"id": "B002", "name": "BRAJRAJNAGAR", "code": "BRJN"}, {"id": "B003", "name": "LAJKURA", "code": "LJKR"}, {"id": "B004", "name": "BELPAHAR", "code": "BPH"}, {"id": "B005", "name": "HIMGIR", "code": "HGR"}, {"id": "B006", "name": "BSMA (ACBPL)", "code": "BSMA"}, {"id": "B007", "name": "DAGHORA", "code": "DAO"}, {"id": "B008", "name": "JAMGA", "code": "JMG"}, {"id": "B009", "name": "KOTARLIA", "code": "KRL"}, {"id": "B010", "name": "CHAKARTHARNAGAR", "code": "CKR"}, {"id": "B011", "name": "RAIGARH", "code": "RIG"}, {"id": "B012", "name": "JSPL", "code": "JSPL"}, {"id": "B013", "name": "KIRODIMAL NAGAR", "code": "KDTR"}, {"id": "B014", "name": "BHUPDEOPUR", "code": "BEF"}, {"id": "B015", "name": "SPGCL", "code": "SPGCL"}, {"id": "B016", "name": "ROBERTSON", "code": "ROB"}, {"id": "B017", "name": "KHARSIA", "code": "KHS"}, {"id": "B018", "name": "JHARRADIH", "code": "JDI"}, {"id": "B019", "name": "SAKTI", "code": "SKT"}, {"id": "B020", "name": "BARADUAR", "code": "BUA"}, {"id": "B021", "name": "SARAGAON DEORI", "code": "SRGD"}, {"id": "B022", "name": "CHAMPA", "code": "CPH"}, {"id": "B023", "name": "NAILA", "code": "NIA"}, {"id": "B024", "name": "AKALTARA", "code": "AKT"}, {"id": "B025", "name": "LATIA", "code": "LATIA"}, {"id": "B026", "name": "JAIRAMNAGAR", "code": "JRMG"}, {"id": "B027", "name": "GATORA", "code": "GTW"}, {"id": "B028", "name": "BILASPUR JUNCTION CABIN", "code": "BSP JN. CABIN"}, {"id": "B029", "name": "BILASPUR", "code": "BSP"}, {"id": "B030", "name": "SIVINI", "code": "SIVINI"}, {"id": "B031", "name": "BALPUR ROAD", "code": "BPRH"}, {"id": "B032", "name": "KOTHARI RD.", "code": "KTHD"}, {"id": "B033", "name": "MADWARANI", "code": "MWRN"}, {"id": "B034", "name": "SARAGBUNDIA", "code": "SRBA"}, {"id": "B035", "name": "LANCO POWER JUNCTION CABIN (PLAU)", "code": "PLAU"}, {"id": "B036", "name": "URGA", "code": "URGA"}, {"id": "B037", "name": "KORBA", "code": "KRBA"}, {"id": "B038", "name": "KUSMUNDA", "code": "KBS"}, {"id": "B039", "name": "GEVRA RD", "code": "GAD"}, {"id": "B040", "name": "USLAPUR", "code": "USL"}, {"id": "B041", "name": "GHUTKU", "code": "GTK"}, {"id": "B042", "name": "KALMITAR", "code": "KLTR"}, {"id": "B043", "name": "KARGI ROAD", "code": "KGB"}, {"id": "B044", "name": "SALKA ROAD", "code": "SLKR"}, {"id": "B045", "name": "BELGHANA", "code": "BIG"}, {"id": "B046", "name": "TENGANMUDA", "code": "TGQ"}, {"id": "B047", "name": "KHONGSARA", "code": "KGS"}, {"id": "B048", "name": "BHANWAR TONK", "code": "BHTK"}, {"id": "B049", "name": "KHODRI", "code": "KOI"}, {"id": "B050", "name": "SARBAHARA", "code": "SBRA"}, {"id": "B051", "name": "PENDRA ROAD", "code": "PND"}, {"id": "B052", "name": "HARRI", "code": "HRB"}, {"id": "B053", "name": "VENKATNAGAR", "code": "VKR"}, {"id": "B054", "name": "NIGAURA", "code": "NIQ"}, {"id": "B055", "name": "JAITHARI", "code": "JTI"}, {"id": "B056", "name": "CHHULHA", "code": "CLF"}, {"id": "B057", "name": "ANUPPUR", "code": "APR"}, {"id": "B058", "name": "AMLAI", "code": "AAL"}, {"id": "B059", "name": "BURHAR", "code": "BUH"}, {"id": "B060", "name": "SINGHPUR", "code": "SNGP"}, {"id": "B061", "name": "SHAHDOL", "code": "SDL"}, {"id": "B062", "name": "BADHWABARA", "code": "BDWA"}, {"id": "B063", "name": "GHUNGHUTI", "code": "GGT"}, {"id": "B064", "name": "MUDARIA", "code": "MDXR"}, {"id": "B065", "name": "BIRSINGHPUR", "code": "BRS"}, {"id": "B066", "name": "NOW ROZABAD", "code": "NRZB"}, {"id": "B067", "name": "KARKELI", "code": "KKI"}, {"id": "B068", "name": "UMARIA", "code": "UMR"}, {"id": "B069", "name": "LORHA", "code": "LOA"}, {"id": "B070", "name": "CHANDIA RD.", "code": "CHD"}, {"id": "B071", "name": "VILAYATKALAN RD.", "code": "VYK"}, {"id": "B072", "name": "RUPAUND", "code": "RPD"}, {"id": "B073", "name": "JHALWARA", "code": "JLW"}, {"id": "B074", "name": "MAUHARI", "code": "MZH"}, {"id": "B075", "name": "HARRAD", "code": "HRV"}, {"id": "B076", "name": "KOTMA", "code": "KTMA"}, {"id": "B077", "name": "BHAITOLA", "code": "BATL"}, {"id": "B078", "name": "BIJURI", "code": "BJRI"}, {"id": "B079", "name": "BORIDAND", "code": "BRND"}, {"id": "B080", "name": "UDALKACHHAR", "code": "UKR"}, {"id": "B081", "name": "DARRITOLA", "code": "DTL"}, {"id": "B082", "name": "NAGAR", "code": "NGE"}, {"id": "B083", "name": "BAIKUNTH PUR RD.", "code": "BRH"}, {"id": "B084", "name": "KATORA", "code": "KTO"}, {"id": "B085", "name": "SHEOPRASAD NAGAR", "code": "SPDR"}, {"id": "B086", "name": "SURAJPUR", "code": "SJQ"}, {"id": "B087", "name": "KARONJI", "code": "KJZ"}, {"id": "B088", "name": "BISHRAMPUR", "code": "BSPR"}, {"id": "B089", "name": "KAMALPUR", "code": "KLPG"}, {"id": "B090", "name": "AMBIKAPUR", "code": "ABKP"}, {"id": "B091", "name": "MANENDRAGARH", "code": "MDGR"}, {"id": "B092", "name": "PARADOL", "code": "PRDL"}, {"id": "B093", "name": "CHRIMIRI", "code": "CHRM"}, {"id": "B094", "name": "GURDA", "code": "GURDA"}, {"id": "B095", "name": "CHHAL", "code": "CHHL"}, {"id": "B096", "name": "GHARGHODA", "code": "GGDA"}, {"id": "B097", "name": "KORICHHAPAR", "code": "KCHP"}, {"id": "B098", "name": "PUTI PAKHANA", "code": ""}, {"id": "B099", "name": "SENDURGARH", "code": ""}, {"id": "B100", "name": "MATIN", "code": ""}, {"id": "B101", "name": "PUTUWA", "code": ""}, {"id": "B102", "name": "BHINGRA", "code": ""}, {"id": "B103", "name": "KATGHORA", "code": ""}, {"id": "B104", "name": "SURKACHHAR", "code": ""}, {"id": "B105", "name": "BHAISAMA", "code": ""}, {"id": "B106", "name": "DONGAAMA", "code": ""}, {"id": "B107", "name": "DHINARA", "code": ""}, {"id": "B108", "name": "DHASKAMUND", "code": ""}, {"id": "B109", "name": "HATI", "code": ""}, {"id": "B110", "name": "KHADGAON", "code": ""}, {"id": "B111", "name": "BHALUMUDA", "code": "BUMA"}, {"id": "B112", "name": "DHOURBHANTTHA", "code": ""}, {"id": "B113", "name": "THANGARGHAT", "code": ""}, {"id": "B114", "name": "MUNDHARKHET", "code": ""}, {"id": "B115", "name": "SARDEGA", "code": ""}, {"id": "B116", "name": "DHARMJAIGARH ROAD", "code": "DMJG"}, {"id": "B117", "name": "KURUMKELA", "code": ""}, {"id": "B118", "name": "KORICHHAPAR", "code": ""}], "Raipur": [{"id": "R001", "name": "DADHAPARA", "code": "DPH"}, {"id": "R002", "name": "BELHA", "code": "BYL"}, {"id": "R003", "name": "DAGORI", "code": "DGS"}, {"id": "R004", "name": "NIPANIA", "code": "NPI"}, {"id": "R005", "name": "BHATAPARA", "code": "BYT"}, {"id": "R006", "name": "HATHBANDH", "code": "HN"}, {"id": "R007", "name": "TILDA", "code": "TLD"}, {"id": "R008", "name": "BAIKUNTH", "code": "BKTH"}, {"id": "R009", "name": "SILYARI", "code": "SLH"}, {"id": "R010", "name": "MANDHAR", "code": "MDH"}, {"id": "R011", "name": "URKURA", "code": "URK"}, {"id": "R012", "name": "RAIPUR", "code": "R"}, {"id": "R013", "name": "SARONA", "code": "SZB"}, {"id": "R014", "name": "KUMHARI", "code": "KMI"}, {"id": "R015", "name": "C-CABIN", "code": ""}, {"id": "R016", "name": "G-CABIN", "code": ""}, {"id": "R017", "name": "A-CABIN", "code": ""}, {"id": "R018", "name": "D-CABIN", "code": ""}, {"id": "R019", "name": "H-CABIN", "code": ""}, {"id": "R020", "name": "BHILAI", "code": "BIA"}, {"id": "R021", "name": "BHILAI NAGAR", "code": "BQR"}, {"id": "R022", "name": "DURG LINK BLOCK CABIN", "code": "DLBS"}, {"id": "R023", "name": "DURG", "code": "DUG"}, {"id": "R024", "name": "RAIPUR STORE DEPOT", "code": "RSD"}, {"id": "R025", "name": "RAIPUR VIJYANAGARAM HUT", "code": "RVH"}, {"id": "R026", "name": "MANDIRHASAUD", "code": "MNDH"}, {"id": "R027", "name": "LAKHOLI", "code": "LAE"}, {"id": "R028", "name": "NAYA RAIPUR", "code": "NAYA RAIPUR"}, {"id": "R029", "name": "KENDRI", "code": "KDRI"}, {"id": "R030", "name": "ABHANPUR", "code": "AVP"}, {"id": "R031", "name": "KURUD", "code": "KRX"}, {"id": "R032", "name": "RAJIM", "code": "RIM"}, {"id": "R033", "name": "E-CABIN", "code": "E/CAB"}, {"id": "R034", "name": "BHILAI MARSHALLING YARD", "code": "BMY(CENTRAL)"}, {"id": "R035", "name": "BHILAI EXCHANGE YARD", "code": "BIA EX YD"}, {"id": "R036", "name": "P-CABIN", "code": "P-CAB"}, {"id": "R037", "name": "ORE LOAD YARD", "code": "OLY"}, {"id": "R038", "name": "COAL LOAD YARD (EAST)", "code": "CLY/E"}, {"id": "R039", "name": "COAL LOAD YARD (WEST)", "code": "CLY/W"}, {"id": "R040", "name": "COAL EMPTY YARD (EAST)", "code": "CEY/E"}, {"id": "R041", "name": "COALEMPTY YARD (WEST)", "code": "CEY/W"}, {"id": "R042", "name": "FREIGHT MAINTENANCE YARD (FMY)", "code": "FMY"}, {"id": "R043", "name": "MARAUDA", "code": "MXA"}, {"id": "R044", "name": "RISAMA", "code": "RSA"}, {"id": "R045", "name": "GUNDERDEHI", "code": "GDZ"}, {"id": "R046", "name": "LATABOR", "code": "LBO"}, {"id": "R047", "name": "BALOD", "code": "BXA"}, {"id": "R048", "name": "KUSUMKASA", "code": "KYS"}, {"id": "R049", "name": "DALLI RAJHARA", "code": "DRZ"}, {"id": "R050", "name": "GUDUM", "code": "GUDM"}, {"id": "R051", "name": "BHANUPRATAPPUR", "code": "BPTP"}, {"id": "R052", "name": "KEOTI", "code": "KEOTI"}, {"id": "R053", "name": "ANTAGARH", "code": "AAGH"}, {"id": "R054", "name": "TAROKI", "code": "TAROKI"}, {"id": "R055", "name": "ROWGHAT", "code": "RWT"}, {"id": "R056", "name": "KENDRI", "code": ""}, {"id": "R057", "name": "ABHANPUR", "code": "AVP"}, {"id": "R058", "name": "JAMUL CEMENT WORKS", "code": "JCW"}], "Nagpur": [{"id": "N001", "name": "RASMARA", "code": "RSM"}, {"id": "N002", "name": "MURHIPAR", "code": "MUP"}, {"id": "N003", "name": "PARMALKASA", "code": "PMS"}, {"id": "N004", "name": "RAJNANDGAON", "code": "RJN"}, {"id": "N005", "name": "BAKAL", "code": "BAKL"}, {"id": "N006", "name": "MUSRA", "code": "MUA"}, {"id": "N007", "name": "JATKANHAR", "code": "JTR"}, {"id": "N008", "name": "DONGARGARH", "code": "DGG"}, {"id": "N009", "name": "PANIAJOB", "code": "PJB"}, {"id": "N010", "name": "BORTALAO", "code": "BTL"}, {"id": "N011", "name": "DAREKASA", "code": "DKS"}, {"id": "N012", "name": "SALEKASA", "code": "SKS"}, {"id": "N013", "name": "DHANOLI", "code": "DNL"}, {"id": "N014", "name": "AMGAON", "code": "AGN"}, {"id": "N015", "name": "GUDMA", "code": "GDM"}, {"id": "N016", "name": "GONDIA", "code": "G"}, {"id": "N017", "name": "GANGAJHARI", "code": "GJ"}, {"id": "N018", "name": "KACHEWANI", "code": "KWN"}, {"id": "N019", "name": "TIRORA", "code": "TRO"}, {"id": "N020", "name": "MUNDIKOTA", "code": "MNU"}, {"id": "N021", "name": "TUMSAR ROAD", "code": "TMR"}, {"id": "N022", "name": "KOKA", "code": "K"}, {"id": "N023", "name": "BHANDARA ROAD", "code": "BRD"}, {"id": "N024", "name": "KHAT", "code": "KT"}, {"id": "N025", "name": "REWRAL", "code": "RRL"}, {"id": "N026", "name": "THARSA", "code": "TAR"}, {"id": "N027", "name": "CHACHER", "code": "CHCR"}, {"id": "N028", "name": "SALWA", "code": "SAL"}, {"id": "N029", "name": "KANHAN", "code": "KNHN"}, {"id": "N030", "name": "KAMPTEE", "code": "KP"}, {"id": "N031", "name": "KALUMNA", "code": "KAV"}, {"id": "N032", "name": "KAV- JN CABIN", "code": ""}, {"id": "N033", "name": "ITWARI", "code": "ITR"}, {"id": "N034", "name": "G- JN CABIN", "code": ""}, {"id": "N035", "name": "HIRDAMALI", "code": "HDM"}, {"id": "N036", "name": "GONGLE", "code": "GNL"}, {"id": "N037", "name": "SONDAD", "code": "SNV"}, {"id": "N038", "name": "DEWALGAON", "code": "DEW"}, {"id": "N039", "name": "WADEGAON", "code": "WDG"}, {"id": "N040", "name": "ARJUNI", "code": "AJU"}, {"id": "N041", "name": "WADSA", "code": "WSA"}, {"id": "N042", "name": "BRAHMAPURI", "code": "BMP"}, {"id": "N043", "name": "NAGBHIR", "code": "NAB"}, {"id": "N044", "name": "TALODHI ROAD", "code": "TUD"}, {"id": "N045", "name": "ALEWAHI", "code": "AWH"}, {"id": "N046", "name": "SINDEWAHI", "code": "SYE"}, {"id": "N047", "name": "RAJOLI", "code": "ROL"}, {"id": "N048", "name": "MUL-MARORA", "code": "MME"}, {"id": "N049", "name": "KELZER", "code": "KEZ"}, {"id": "N050", "name": "CHANDA FORT", "code": "CAF"}, {"id": "N051", "name": "DHUMURIKHURUD", "code": "DKU"}, {"id": "N052", "name": "RAMTEK", "code": "RTK"}, {"id": "N053", "name": "GOBERWAHI", "code": "GBRI"}, {"id": "N054", "name": "DONGRIBUZURG", "code": "DGBZ"}, {"id": "N055", "name": "TIRODI", "code": "TRDI"}, {"id": "N056", "name": "BIRSOLA", "code": "BRA"}, {"id": "N057", "name": "HATTA ROAD", "code": "HTT"}, {"id": "N058", "name": "BALAGHAT", "code": "BTC"}, {"id": "N059", "name": "WARASEONI", "code": "WRI"}, {"id": "N060", "name": "KATANGI", "code": "KGE"}, {"id": "N061", "name": "GRAHA", "code": "GGGS"}, {"id": "N062", "name": "GOWARIGHAT", "code": "GRG"}, {"id": "N063", "name": "BARGI", "code": "BUQ"}, {"id": "N064", "name": "SUKRI MANGELA", "code": "SOY"}, {"id": "N065", "name": "SHIKARA", "code": "SKY"}, {"id": "N066", "name": "BINAIKI", "code": "VNK"}, {"id": "N067", "name": "GHUNSUR", "code": "GNS"}, {"id": "N068", "name": "NITHANI", "code": "NDI"}, {"id": "N069", "name": "PINDRAI", "code": "PDE"}, {"id": "N070", "name": "NAINPUR", "code": "NIR"}, {"id": "N071", "name": "PADRIGANJ", "code": "PNJ"}, {"id": "N072", "name": "NAGARWARA", "code": "NWA"}, {"id": "N073", "name": "LAMTA", "code": "LTA"}, {"id": "N074", "name": "SAMNAPUR", "code": "SMC"}, {"id": "N075", "name": "CHAREGAON", "code": "CRN"}, {"id": "N076", "name": "CHIRAIDONGRI", "code": "CID"}, {"id": "N077", "name": "MANDLA FORT", "code": "MFR"}, {"id": "N078", "name": "KHAPRIKHEDA", "code": "KPKD"}, {"id": "N079", "name": "PATANSAONGI", "code": "PTS"}, {"id": "N080", "name": "SAONER", "code": "SONR"}, {"id": "N081", "name": "KELOD", "code": "KELOD"}, {"id": "N082", "name": "SAUSAR", "code": "SASR"}, {"id": "N083", "name": "RAMAKONA", "code": "RMO"}, {"id": "N084", "name": "LODHIKHERA", "code": "LDE"}, {"id": "N085", "name": "BHIMALGONDI", "code": "BMC"}, {"id": "N086", "name": "BHANDARKUND", "code": "BDKD"}, {"id": "N087", "name": "UMRANALLA", "code": "ULA"}, {"id": "N088", "name": "LINGA", "code": "LIG"}, {"id": "N089", "name": "CHHINDWARA", "code": "CWA"}, {"id": "N090", "name": "KEOLARI", "code": "KLZ"}, {"id": "N091", "name": "PALARI", "code": "PUE"}, {"id": "N092", "name": "BHOMA", "code": "BHV"}, {"id": "N093", "name": "CHAURAI", "code": "CHUA"}, {"id": "N094", "name": "JHILIMILI", "code": "JLY"}, {"id": "N095", "name": "SEONI", "code": "SEY"}, {"id": "N096", "name": "PIPARDAHI", "code": "PED"}]};
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function init(inputId,divisionId){
+ const input=document.getElementById(inputId),division=document.getElementById(divisionId);
+ if(!input||!division||document.getElementById(inputId+'Smart'))return;
+ const panel=document.createElement('div');panel.id=inputId+'Smart';panel.className='station-smart-panel';
+ panel.innerHTML='<div class="smart-row"><div><label>Location Type</label><select data-k="type"><option value="station">Station</option><option value="section">Section (From–To)</option><option value="manual">Manual / Other Location</option></select></div><div><label>Display Format</label><select data-k="format"><option value="both">Station Name (Code)</option><option value="code">Station Code Only</option><option value="name">Full Station Name Only</option></select></div></div><div data-k="selectors" class="smart-row"><div><label data-k="fromLabel">Select Station</label><div class="smart-search-wrap"><input data-k="search1" type="search" autocomplete="off" placeholder="Type station name or code"><div data-k="suggest1" class="smart-suggestions"></div></div><select data-k="from" style="display:none"></select></div><div data-k="toWrap"><label>To Station</label><div class="smart-search-wrap"><input data-k="search2" type="search" autocomplete="off" placeholder="Type station name or code"><div data-k="suggest2" class="smart-suggestions"></div></div><select data-k="to" style="display:none"></select></div></div><div class="smart-preview" data-k="preview" style="display:none">Select a station</div>';
+ input.insertAdjacentElement('afterend',panel);
+ const el=k=>panel.querySelector('[data-k="'+k+'"]');
+ const state={};
+ function list(){return MASTER[division.value]||[]}
+ function options(k,searchKey){const sel=el(k),previous=sel.value,query=el(searchKey).value.trim().toLowerCase();const entries=list().filter(x=>(x.name+' '+x.code).toLowerCase().includes(query));sel.innerHTML='<option value="">-- Select Station --</option>'+entries.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+(x.code?' ('+esc(x.code)+')':' (Code pending)')+'</option>').join('');if(entries.some(x=>x.id===previous))sel.value=previous;}
+ function find(id){return list().find(x=>x.id===id)}
+ function formatted(x){if(!x)return '';const mode=el('format').value;if(mode==='name'||!x.code)return x.name;if(mode==='both')return x.name+' ('+x.code+')';return x.code;}
+ function update(){const type=el('type').value;el('selectors').style.display=type==='manual'?'none':'grid';el('toWrap').style.display=type==='section'?'block':'none';el('fromLabel').textContent=type==='section'?'From Station':'Select Station';let value='';if(type!=='manual'){const a=find(el('from').value),b=find(el('to').value);value=type==='station'?formatted(a):(a&&b?formatted(a)+'–'+formatted(b):'');if(type==='section'&&a&&b&&a.id===b.id){el('preview').textContent='Choose two different stations';return;}if(value)input.value=value;}el('preview').textContent=value|| (type==='manual'?'Type the location in the field above':'Select a station');if(type!=='manual'&&!value)input.value='';}
+ division.addEventListener('change',()=>{el('search1').value='';el('search2').value='';options('from','search1');options('to','search2');closeFrom();closeTo();update()});
+ for(const k of ['type','format','from','to'])el(k).addEventListener('change',()=>{update();if(k==='format'){const a=find(el('from').value),b=find(el('to').value);if(a)el('search1').value=formatted(a);if(b)el('search2').value=formatted(b);}});
+ function autocomplete(searchKey,selectKey,suggestKey){
+  const search=el(searchKey),select=el(selectKey),box=el(suggestKey);let active=-1;
+  function close(){box.classList.remove('open');box.innerHTML='';active=-1;}
+  function choose(x){select.value=x.id;search.value=formatted(x);close();update();}
+  function show(){const q=search.value.trim().toLowerCase();const matches=list().filter(x=>(x.name+' '+x.code).toLowerCase().includes(q)).slice(0,35);
+    box.innerHTML='';active=-1;
+    if(!matches.length){if(q){const empty=document.createElement('div');empty.className='smart-option';empty.textContent='No matching station';box.appendChild(empty);box.classList.add('open');}else close();return;}
+    matches.forEach(x=>{const btn=document.createElement('button');btn.type='button';btn.className='smart-option';btn.textContent=x.name+(x.code?' ('+x.code+')':' (Code pending)');btn.addEventListener('mousedown',e=>e.preventDefault());btn.addEventListener('click',()=>choose(x));box.appendChild(btn);});box.classList.add('open');
+  }
+  search.addEventListener('input',()=>{select.value='';update();show();});
+  search.addEventListener('focus',()=>{if(select.value){search.select();}show();});
+  search.addEventListener('keydown',e=>{const buttons=[...box.querySelectorAll('button.smart-option')];if(e.key==='Escape'){close();return;}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!box.classList.contains('open'))show();const items=[...box.querySelectorAll('button.smart-option')];if(!items.length)return;active=(active+(e.key==='ArrowDown'?1:-1)+items.length)%items.length;items.forEach((b,i)=>b.classList.toggle('active',i===active));items[active].scrollIntoView({block:'nearest'});}else if(e.key==='Enter'&&box.classList.contains('open')){e.preventDefault();const items=[...box.querySelectorAll('button.smart-option')];if(items.length)items[Math.max(active,0)].click();}});
+  search.addEventListener('blur',()=>setTimeout(close,160));
+  return close;
+ }
+ const closeFrom=autocomplete('search1','from','suggest1');const closeTo=autocomplete('search2','to','suggest2');
+ document.addEventListener('click',e=>{if(!panel.contains(e.target)){closeFrom();closeTo();}});
+ input.addEventListener('input',()=>{el('preview').textContent=input.value||'Manual entry';});
+ function reset(mode='station'){el('type').value=mode;el('format').value='both';el('search1').value='';el('search2').value='';options('from','search1');options('to','search2');closeFrom();closeTo();update();}
+ reset();
+ // Existing record editing remains manual unless the user deliberately selects a station/section.
+ const observer=new MutationObserver(()=>{if(input.value&&el('type').value==='manual')el('preview').textContent=input.value;});
+ observer.observe(input,{attributes:true,attributeFilter:['value']});
+ return {reset};
+}
+function ready(){const main=init('formStation','formDivision');const movement=init('fmStation','fmDivision');
+ if(main){const oldAdd=window.openAddModal; if(typeof oldAdd==='function')window.openAddModal=function(){const r=oldAdd.apply(this,arguments);main.reset();return r;};const oldEdit=window.openEditModal;if(typeof oldEdit==='function')window.openEditModal=function(){const r=oldEdit.apply(this,arguments);main.reset('manual');return r;};}
+ if(movement){const oldMovement=window.openFileMovementModal;if(typeof oldMovement==='function')window.openFileMovementModal=function(){const r=oldMovement.apply(this,arguments);movement.reset();return r;};}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
+})();
+</script>
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
@@ -16464,11 +16727,6 @@ body.dark-theme #fileMovementModal input[type="date"]::-webkit-calendar-picker-i
       <input type="hidden" id="fmEditId">
       <div class="form-grid">
         <div class="form-group">
-          <label for="fmStation">Station / Section</label>
-          <input type="text" id="fmStation" placeholder="Enter Station/Section">
-        </div>
-
-        <div class="form-group">
           <label for="fmDivision">Division</label>
           <select id="fmDivision" required>
             <option value="">-- Select --</option>
@@ -16476,6 +16734,11 @@ body.dark-theme #fileMovementModal input[type="date"]::-webkit-calendar-picker-i
             <option>Raipur</option>
             <option>Nagpur</option>
           </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fmStation">Station / Section</label>
+          <input type="text" id="fmStation" placeholder="Enter Station/Section">
         </div>
 
         <div class="form-group">
