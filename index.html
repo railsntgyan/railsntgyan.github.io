@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta id="railsViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta id="railsViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#07101d">
   <!-- v83: Dark theme is the default from the very first paint, including BFCache/back navigation. -->
@@ -6629,6 +6629,21 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
  body.hmis-home-active #hmisDashboard .hmis-top .hmis-search input{font-size:11px!important;}
 }
 </style>
+<style id="v24-jpo-hq-under-files">
+/* JPO and HQ Letters are now entries within Files & Approvals, not independent sidebar groups. */
+#appSidebar > #grpHqLetters, #appSidebar > #grpJpo { display:none !important; }
+</style>
+
+<!-- v25: Native browser pinch zoom on mobile/tablet. Redundant table +/-/Reset removed; keep Fit/Scroll/Fullscreen. -->
+<style id="rails-native-pinch-v25">
+@media (hover:none) and (pointer:coarse) {
+ html, body, #app, #mainContent, #tableViewSection,
+ #mainTableContainer, #mainRecordTable, #railsFitTable,
+ #appSidebar, #appSidebar .nav-list {
+   touch-action: pan-x pan-y pinch-zoom !important;
+ }
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -7386,6 +7401,8 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
           <li class="nav-item" onclick="switchCategory('INSPECTION NOTE')"><i class="fa-solid fa-clipboard-check" style="color: #2563eb;"></i> INSPECTION NOTE</li>
           <li class="nav-item" onclick="switchCategory('SECR POLICY')"><i class="fa-solid fa-book" style="color: #4f46e5;"></i> SECR POLICY</li>
           <li class="nav-item" onclick="switchCategory('SECR TYPICAL')"><i class="fa-solid fa-diagram-project" style="color: #c026d3;"></i> SECR TYPICAL</li>
+          <li class="nav-item" onclick="switchCategory('JPO (JOINT PROCEDURE ORDER)')"><i class="fa-solid fa-people-group" style="color: #7c3aed;"></i> JPO (JOINT PROCEDURE ORDER)</li>
+          <li class="nav-item" onclick="switchCategory('LETTER ISSUED BY HQ')"><i class="fa-solid fa-paper-plane" style="color: #2563eb;"></i> LETTER ISSUED BY HQ</li>
           <li class="nav-item" onclick="switchCategory('FILE MOVEMENT REGISTER')"><i class="fa-solid fa-folder-tree" style="color: #475569;"></i> FILE MOVEMENT REGISTER</li>
         </ul>
       </div>
@@ -9055,15 +9072,16 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
       let normCat = catName.toUpperCase().trim();
       if (normCat === 'PCSTE DISPENSATION') normCat = 'DISPENSATION';
       currentCategory = normCat;
+      window.__railsCurrentCategory = normCat;
 
       // IMPORTANT LINKS must keep its own sidebar group expanded, including
       // after returning from an external website with the browser/app Back key.
       if (currentCategory === 'IMPORTANT LINKS') {
         openOnlyAccordion('grpImportantLinks');
       } else if (currentCategory === 'LETTER ISSUED BY HQ') {
-        openOnlyAccordion('grpHqLetters');
+        openOnlyAccordion('grpFilesApprovals');
       } else if (currentCategory === 'JPO (JOINT PROCEDURE ORDER)') {
-        openOnlyAccordion('grpJpo');
+        openOnlyAccordion('grpFilesApprovals');
       }
 
       document.getElementById('dashboardView').style.display = 'none';
@@ -10840,11 +10858,8 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
     }
 
     function restoreNativePinchAfterPreview() {
-      const meta = document.getElementById('railsViewportMeta') ||
-                   document.querySelector('meta[name="viewport"]');
-      if (!meta || previewViewportOriginalContent === null) return;
-
-      meta.setAttribute('content', previewViewportOriginalContent);
+      // Page-wide two-finger zoom remains enabled after closing a PDF preview.
+      // Do not restore the legacy user-scalable=no viewport.
       previewViewportOriginalContent = null;
     }
 
@@ -17878,65 +17893,227 @@ function ready(){
 }
 </style>
 
-<!-- v16: Optional mobile/tablet table fit/scroll and zoom controls; desktop unchanged. -->
-<style id="rails-table-fit-v16">
+<!-- v20: Rebuilt mobile/tablet fit preview. A separate, non-sticky table prevents frozen-column overlap. -->
+<style id="rails-table-v20-css">
 #railsTableModeBar{display:none}
 @media(max-width:1366px){
- #railsTableModeBar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:7px 8px;border:1px solid #94a3b8;border-radius:9px;background:#eaf1fa;color:#10243e;margin:5px 0;font-size:12px;font-weight:800;position:relative;z-index:3}
- body.dark-theme #railsTableModeBar{background:#18283d;color:#f8fafc;border-color:#52647c}
- #railsTableModeBar button{padding:6px 9px;border-radius:7px;border:1px solid #94a3b8;background:#fff;color:#173453;font-size:12px;font-weight:800;cursor:pointer}
- #railsTableModeBar button[aria-pressed="true"]{background:#086f87;color:#fff;border-color:#086f87}
- #railsTableModeBar .rails-scale-readout{margin-left:auto;min-width:37px;text-align:right}
- #mainTableContainer.rails-fit-mode{overflow-x:hidden!important;overflow-y:visible!important;scrollbar-gutter:auto!important}
- #mainTableContainer.rails-fit-mode #mainRecordTable{max-width:none!important;table-layout:auto!important;transform:none!important;transform-origin:top left!important}
- body.rails-table-fullscreen #mainTableContainer{position:fixed!important;inset:56px 4px 5px!important;z-index:12000!important;background:#fff!important;overflow:auto!important;height:auto!important;max-height:none!important;box-shadow:0 0 0 9999px rgba(0,0,0,.65)!important}
+ #railsTableModeBar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px;border:1px solid #546981;border-radius:9px;background:#17283f;color:#fff;font-size:12px;font-weight:750;flex-shrink:0}
+ #railsTableModeBar button{padding:7px 9px;border-radius:6px;border:1px solid #a3b4c8;background:#f7fbff;color:#14304d;font-weight:750;cursor:pointer}
+ #railsTableModeBar button[aria-pressed=true]{background:#087e98;color:white;border-color:#087e98}
+ #railsTableModeBar [data-scale]{margin-left:auto}
+ #mainTableContainer.rails-fit-mode{overflow:auto!important;scrollbar-gutter:auto!important;position:relative!important}
+ #mainTableContainer.rails-fit-mode #mainRecordTable{display:none!important}
+ #mainTableContainer.rails-fit-mode #railsFitTable{display:table!important;position:relative!important;margin:0!important;max-width:none!important;min-width:0!important;table-layout:fixed!important;border-collapse:separate!important;border-spacing:0!important;transform:none!important;transform-origin:top left!important}
+ #mainTableContainer.rails-fit-mode #railsFitTable tr>*{position:static!important;left:auto!important;right:auto!important;top:auto!important;z-index:auto!important;transform:none!important;box-shadow:none!important;overflow-wrap:anywhere!important;word-break:normal!important}
+ #mainTableContainer.rails-fit-mode #railsFitTable thead th{position:sticky!important;top:0!important;z-index:2!important;background:#0b3b60!important;color:#fff!important}
+ #mainTableContainer.rails-fit-mode #railsFitTable tr>:first-child{border-right:2px solid #f97316!important}
+ #mainTableContainer.rails-fit-mode #railsFitTable tr>:nth-child(2){border-right:2px solid #f97316!important}
+ #mainTableContainer.rails-fit-mode #railsFitTable tbody td{white-space:normal!important;overflow:visible!important}
+ body.rails-table-fullscreen #mainTableContainer{position:fixed!important;inset:58px 5px 5px!important;z-index:12000!important;height:auto!important;max-height:none!important;background:#fff!important;overflow:auto!important;box-shadow:0 0 0 9999px rgba(0,0,0,.7)!important}
  body.rails-table-fullscreen #railsTableModeBar{position:fixed!important;top:0;left:0;right:0;z-index:12001!important;margin:0;border-radius:0;min-height:52px}
- body.rails-table-fullscreen #mainTableContainer.rails-fit-mode{overflow-x:auto!important}
 }
+@media(min-width:1367px){#railsFitTable{display:none!important}}
 </style>
-<script id="rails-table-fit-v16-script">
+<script id="rails-table-v20-js">
 (function(){
- const mq=window.matchMedia('(max-width:1366px)');
- let mode='fit', manual=1, natural=0;
- const get=()=>({sec:document.getElementById('tableViewSection'),box:document.getElementById('mainTableContainer'),table:document.getElementById('mainRecordTable'),bar:document.getElementById('railsTableModeBar')});
- function update(){
-  const {sec,box,table,bar}=get();if(!sec||!box||!table||!bar)return;
-  const enabled=mq.matches && getComputedStyle(sec).display!=='none';
-  bar.style.display=enabled?'flex':'none';
-  if(!mq.matches){table.style.removeProperty('zoom');table.style.removeProperty('width');box.classList.remove('rails-fit-mode');document.body.classList.remove('rails-table-fullscreen');return;}
-  if(!enabled)return;
+ const mq=matchMedia('(max-width:1366px)');
+ let mode='scroll',zoomFactor=1,baseWidth=0,queued=false;
+ const get=()=>({section:document.getElementById('tableViewSection'),box:document.getElementById('mainTableContainer'),table:document.getElementById('mainRecordTable'),bar:document.getElementById('railsTableModeBar')});
+ function render(){
+  queued=false;
+  const {section,box,table,bar}=get();if(!section||!box||!table||!bar)return;
+  const active=mq.matches&&getComputedStyle(section).display!=='none';
+  bar.style.display=active?'flex':'none';
+  if(!mq.matches||!active){box.classList.remove('rails-fit-mode');if(!mq.matches)document.body.classList.remove('rails-table-fullscreen');return;}
   if(mode==='scroll'){
-   table.style.removeProperty('zoom');table.style.removeProperty('width');box.classList.remove('rails-fit-mode');
+   box.classList.remove('rails-fit-mode');const old=document.getElementById('railsFitTable');if(old)old.remove();
    bar.querySelector('[data-scale]').textContent='100%';return;
   }
-  table.style.zoom='1';table.style.removeProperty('width');
-  natural=Math.max(table.scrollWidth,table.getBoundingClientRect().width,780);
-  const available=Math.max(240,box.clientWidth-4);
-  const fit=Math.min(1,available/natural);
-  const scale=Math.max(.20,Math.min(2.5,fit*manual));
-  table.style.width=natural+'px';table.style.zoom=String(scale);
+  box.classList.remove('rails-fit-mode');
+  const old=document.getElementById('railsFitTable');if(old)old.remove();
+  // Measure the real table before scaling. Do not scale the sticky original.
+  const originalWidth=Math.max(table.scrollWidth,table.getBoundingClientRect().width,780);
+  const copy=table.cloneNode(true);
+  copy.id='railsFitTable';copy.removeAttribute('style');copy.classList.add('rails-fit-preview');
+  copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+  copy.setAttribute('aria-label','Scaled table preview');
+  copy.style.width=originalWidth+'px';copy.style.minWidth='0';
+  copy.style.maxWidth='none';
+  // Remove the sticky offsets and any fixed-position cells inherited from original CSS.
+  copy.querySelectorAll('th,td').forEach(cell=>{
+   cell.style.position='static';cell.style.left='auto';cell.style.right='auto';cell.style.transform='none';
+  });
+  box.appendChild(copy);
   box.classList.add('rails-fit-mode');
+  const avail=Math.max(100,box.clientWidth-5);
+  const scale=Math.max(.12,Math.min(2.5,avail/originalWidth*zoomFactor));
+  copy.style.zoom=String(scale);
+  // Some browsers restore a previous scroll offset when table content changes.
+  box.scrollLeft=0;box.scrollTop=0;
   bar.querySelector('[data-scale]').textContent=Math.round(scale*100)+'%';
+  // Forward action clicks to corresponding live elements (edit, links, view, etc.).
+  copy.addEventListener('click',function(e){
+   const target=e.target.closest('a,button,[onclick],[role="button"]');if(!target)return;
+   const row=target.closest('tr');if(!row)return;
+   const rowIndex=Array.from(row.parentNode.children).indexOf(row);
+   const realParent=table.querySelector(row.parentNode.tagName.toLowerCase());
+   const realRow=realParent&&realParent.children[rowIndex];if(!realRow)return;
+   const list=Array.from(row.querySelectorAll('a,button,[onclick],[role="button"]'));
+   const index=list.indexOf(target);
+   const live=realRow.querySelectorAll('a,button,[onclick],[role="button"]')[index];
+   if(live){e.preventDefault();live.click();}
+  });
  }
+ function schedule(){if(queued)return;queued=true;requestAnimationFrame(render)}
  function init(){
-  const {sec,box}=get();if(!sec||!box||document.getElementById('railsTableModeBar'))return;
+  const {box,table}=get();if(!box||!table||document.getElementById('railsTableModeBar'))return;
   const bar=document.createElement('div');bar.id='railsTableModeBar';
-  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="true">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="false">Normal Scroll</button><button type="button" data-zoom="out" title="Zoom out">−</button><button type="button" data-zoom="in" title="Zoom in">+</button><button type="button" data-zoom="reset">Reset</button><button type="button" data-fullscreen="1">⛶ Fullscreen</button><span class="rails-scale-readout" data-scale>100%</span>';
+  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="false">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="true">Normal Scroll</button><button type="button" data-fullscreen>⛶ Fullscreen</button>';
   box.parentNode.insertBefore(bar,box);
   bar.addEventListener('click',e=>{
-   const btn=e.target.closest('button');if(!btn)return;
-   if(btn.dataset.mode){mode=btn.dataset.mode;manual=1;bar.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));}
-   if(btn.dataset.zoom){if(mode==='scroll'){mode='fit';bar.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));}manual=btn.dataset.zoom==='in'?Math.min(4,manual*1.25):btn.dataset.zoom==='out'?Math.max(.5,manual/1.25):1;}
-   if(btn.dataset.fullscreen){const full=document.body.classList.toggle('rails-table-fullscreen');btn.textContent=full?'✕ Close':'⛶ Fullscreen';}
-   update();
+   const b=e.target.closest('button');if(!b)return;
+   if(b.dataset.mode){mode=b.dataset.mode;zoomFactor=1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
+   if(b.dataset.zoom){mode='fit';zoomFactor=b.dataset.zoom==='in'?Math.min(4,zoomFactor*1.25):b.dataset.zoom==='out'?Math.max(.4,zoomFactor/1.25):1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
+   if(b.hasAttribute('data-fullscreen')){const yes=document.body.classList.toggle('rails-table-fullscreen');b.textContent=yes?'✕ Close':'⛶ Fullscreen';}
+   schedule();
   });
-  if(window.ResizeObserver){new ResizeObserver(()=>requestAnimationFrame(update)).observe(box);}
+  if(window.ResizeObserver)new ResizeObserver(schedule).observe(box);
   const body=document.getElementById('tableBody'),head=document.getElementById('tableHead');
-  if(window.MutationObserver){const obs=new MutationObserver(()=>requestAnimationFrame(update));[body,head].filter(Boolean).forEach(el=>obs.observe(el,{childList:true,subtree:true}));}
-  window.addEventListener('resize',()=>requestAnimationFrame(update),{passive:true});
-  document.addEventListener('click',()=>setTimeout(update,70),true);
-  update();
+  if(window.MutationObserver){const observer=new MutationObserver(schedule);[body,head].filter(Boolean).forEach(el=>observer.observe(el,{childList:true,subtree:true,characterData:true}));}
+  window.addEventListener('resize',schedule,{passive:true});
+  document.addEventListener('click',()=>setTimeout(schedule,100),true);
+  schedule();
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
+
+<style id="rails-v21-render-tested-fixes">
+@media(max-width:1366px){
+ #mainTableContainer.rails-fit-mode{overflow:auto!important; overscroll-behavior:contain;}
+ #mainTableContainer.rails-fit-mode #railsFitTable{border:1px solid #f97316!important;border-spacing:0!important;table-layout:fixed!important;}
+ #mainTableContainer.rails-fit-mode #railsFitTable th,
+ #mainTableContainer.rails-fit-mode #railsFitTable td{box-sizing:border-box!important;border-right:1px solid rgba(249,115,22,.65)!important;border-bottom:1px solid rgba(249,115,22,.3)!important;vertical-align:middle!important;}
+ #mainTableContainer.rails-fit-mode #railsFitTable tr>:nth-child(1){position:static!important;left:auto!important;border-right:2px solid #f97316!important;box-shadow:none!important;}
+ #mainTableContainer.rails-fit-mode #railsFitTable tr>:nth-child(2){position:static!important;left:auto!important;border-right:2px solid #f97316!important;box-shadow:none!important;}
+ #mainTableContainer.rails-fit-mode #railsFitTable thead th{position:sticky!important;top:0!important;z-index:2!important;}
+ #railsTableModeBar{gap:5px!important;padding:7px!important;}
+ #railsTableModeBar button{min-height:30px;padding:6px 8px!important;}
+ #railsTableModeBar [data-scale]{font-variant-numeric:tabular-nums;}
+}
+@media(max-width:430px){#railsTableModeBar{font-size:11px!important}#railsTableModeBar button{font-size:11px!important}}
+</style>
+
+<!-- v22: User-approved per-category frozen columns. Applies to real table in Normal Scroll; Fit preview remains fully unfrozen. -->
+<style id="rails-freeze-rules-v22">
+@media (max-width:1366px){
+ #mainTableContainer:not(.rails-fit-mode) {overflow-x:auto!important;overflow-y:auto!important;}
+}
+/* Reset inherited frozen positions; apply one consistent rule to every category. */
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed tr > :nth-child(1),
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed tr > :nth-child(2){
+ position:static!important;left:auto!important;right:auto!important;box-shadow:none!important;
+}
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed thead th{
+ position:sticky!important;top:0!important;z-index:30!important;
+}
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-one tr > :first-child,
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two tr > :first-child{
+ position:sticky!important;left:0!important;right:auto!important;
+ border-right:2px solid #f97316!important;
+}
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two tr > :nth-child(2){
+ position:sticky!important;left:var(--rails-first-width,52px)!important;right:auto!important;
+ border-right:2px solid #f97316!important;
+}
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed tbody td:first-child,
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two tbody td:nth-child(2){
+ z-index:21!important;background:#fff!important;
+}
+html body.dark-theme #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed tbody td:first-child,
+html body.dark-theme #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two tbody td:nth-child(2){
+ background:#172338!important;
+}
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed thead th:first-child,
+html body #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two thead th:nth-child(2){
+ z-index:42!important;background:#0b3b60!important;
+}
+/* The fit-mode clone is deliberately never frozen. */
+html body #mainTableContainer.rails-fit-mode #railsFitTable tr > * {left:auto!important;position:static!important;box-shadow:none!important}
+html body #mainTableContainer.rails-fit-mode #railsFitTable thead th {position:sticky!important;top:0!important;z-index:2!important}
+</style>
+<script id="rails-freeze-rules-v22-js">
+(function(){
+ const onlyFirst=new Set([
+  'GCC','IRSOD & CORRECTION SLIP','LINE OPENING (MANUAL)',
+  'SOP (SCHEDULE OF POWER)','OTHER MANUALS',
+  'DOCUMENTS FOR EI TSAA','DOCUMENTS FOR MSDAC TSAA',
+  'DOCUMENTS FOR PCSTE SANCTION','DOCUMENTS FOR GM SANCTION',
+  'DOCUMENTS FOR OTHER APPROVALS','IMPORTANT LINKS'
+ ]);
+ const firstTwo=new Set([
+  'PCSTE SANCTION','EI TSAA','MSDAC TSAA','S&T SPEED CERTIFICATE',
+  'DISPENSATION','GM SANCTION','GRADE CONDONATION','LINE OPENING',
+  'SPEED RAISING','JOINT SAFETY CERTIFICATE (JSC)','INSPECTION NOTE',
+  'SECR POLICY','SECR TYPICAL','FILE MOVEMENT REGISTER',
+  'IMP. LETTER','RDSO TAN (TECHNICAL ADVISORY NOTE)',
+  'IRSEM CORRECTION SLIP','IRTEM CORRECTION SLIP',
+  'IRISET E-BOOK (SIGNAL)','IRISET E-BOOK (TELECOM)',
+  'JPO (JOINT PROCEDURE ORDER)','LETTER ISSUED BY HQ',
+  'ASTE','AEN','AMM','APO','AFA','AME','ACM','AOM','AEE'
+ ]);
+ const skip=new Set(['IRSEM CHAPTER WISE','IRTEM CHAPTER WISE']);
+ let scheduled=false;
+ function apply(){
+  scheduled=false;
+  const table=document.getElementById('mainRecordTable');
+  if(!table)return;
+  const category=(typeof currentCategory !== 'undefined' ? currentCategory : (window.currentCategory||'')).replace(/\s+/g,' ').trim().toUpperCase();
+  if(skip.has(category))return;
+  const one=onlyFirst.has(category),two=firstTwo.has(category);
+  if(!one&&!two){table.classList.remove('rails-freeze-managed','rails-freeze-one','rails-freeze-two');return;}
+  table.classList.add('rails-freeze-managed');
+  table.classList.toggle('rails-freeze-one',one);
+  table.classList.toggle('rails-freeze-two',two);
+  const first=table.querySelector('thead tr > :first-child')||table.querySelector('tbody tr > :first-child');
+  if(first){const width=first.getBoundingClientRect().width;if(width>0)table.style.setProperty('--rails-first-width',width+'px');}
+ }
+ function queue(){if(scheduled)return;scheduled=true;requestAnimationFrame(apply)}
+ function init(){
+  const table=document.getElementById('mainRecordTable');if(!table)return;
+  const head=document.getElementById('tableHead');
+  if(head)new MutationObserver(queue).observe(head,{childList:true,subtree:true});
+  const body=document.getElementById('tableBody');
+  if(body)new MutationObserver(queue).observe(body,{childList:true});
+  if(window.ResizeObserver)new ResizeObserver(queue).observe(table);
+  window.addEventListener('resize',queue,{passive:true});
+  document.addEventListener('click',()=>setTimeout(queue,30),true);
+  queue();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+<style id="rails-v23-freeze-stability">
+@media(max-width:1366px){
+ #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed{transform:none!important;zoom:1!important;}
+ #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two tr>:nth-child(2){left:var(--rails-first-width,52px)!important;}
+ #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed tr>:first-child{background-clip:padding-box!important;}
+ #mainTableContainer:not(.rails-fit-mode) #mainRecordTable.rails-freeze-managed.rails-freeze-two tr>:nth-child(2){background-clip:padding-box!important;}
+}
+</style>
+
+<!-- v26: visible border around every HMIS dashboard icon (including nested icons), without changing the card layout -->
+<style id="rails-hmis-all-icon-borders-v26">
+#hmisDashboard .hmis-item > .hmis-icon,
+#hmisDashboard .hmis-summary-toggle > .hmis-icon {
+  box-sizing: border-box !important;
+  border: 2.5px solid rgba(74, 94, 139, .62) !important;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.45), 0 2px 6px rgba(35,48,80,.09) !important;
+}
+body.dark-theme #hmisDashboard .hmis-item > .hmis-icon,
+body.dark-theme #hmisDashboard .hmis-summary-toggle > .hmis-icon {
+  border-color: rgba(138, 181, 227, .8) !important;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.08), 0 2px 7px rgba(0,0,0,.25) !important;
+}
+</style>
