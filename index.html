@@ -6472,6 +6472,163 @@ body.dark-theme #mainTableContainer.signal-image-gallery-mode .signal-read-pdf {
   opacity: 1 !important;
 }
 </style>
+
+<style id="rail-mobile-table-repair-20261014">
+/* Tablet/mobile-only: prevent translucent frozen cells exposing the first row. */
+@media (max-width:1024px) {
+  html body #mainTableContainer #mainRecordTable tbody td:nth-child(1),
+  html body #mainTableContainer #mainRecordTable tbody td:nth-child(2) {
+    background-color:#fff !important;
+    background-image:none !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+  html body #mainTableContainer #mainRecordTable tbody tr:nth-child(even) td:nth-child(-n+2) {background-color:#f8fafc !important;}
+  html body.dark-theme #mainTableContainer #mainRecordTable tbody td:nth-child(-n+2) {background-color:#101e32 !important;}
+  html body.dark-theme #mainTableContainer #mainRecordTable tbody tr:nth-child(even) td:nth-child(-n+2) {background-color:#15263b !important;}
+  /* All headings remain above body cells and keep an opaque backdrop. */
+  html body #mainTableContainer #mainRecordTable thead th {background:var(--brand-navy) !important; background-image:none !important;}
+  /* Description-second tables: freeze only Sr. No. horizontally, including header. */
+  html body #mainTableContainer #mainRecordTable.unfreeze-table.description-second-first-freeze thead th:first-child,
+  html body #mainTableContainer #mainRecordTable.unfreeze-table.description-second-first-freeze tbody td:first-child {
+    position:sticky !important;left:0 !important;
+    z-index:320 !important;
+    background-clip:padding-box !important;
+  }
+  html body #mainTableContainer #mainRecordTable.unfreeze-table.description-second-first-freeze thead th:first-child {top:0 !important;z-index:340 !important;background:var(--brand-navy) !important;}
+  /* Other manual/reference tables: freeze Sr. No. without freezing the description. */
+  html body #mainTableContainer #mainRecordTable.unfreeze-table:not(.description-second-first-freeze) thead th:first-child,
+  html body #mainTableContainer #mainRecordTable.unfreeze-table:not(.description-second-first-freeze) tbody td:first-child {
+    position:sticky !important;left:0 !important;z-index:320 !important;background-clip:padding-box !important;
+  }
+  html body #mainTableContainer #mainRecordTable.unfreeze-table:not(.description-second-first-freeze) thead th:first-child {top:0 !important;z-index:340 !important;background:var(--brand-navy) !important;}
+  /* Important Links: readable width for website titles on narrow screens. */
+  html body #mainRecordTable th.important-website-heading,
+  html body #mainRecordTable td.important-website-cell {
+    width:300px !important;min-width:300px !important;max-width:none !important;
+    overflow-wrap:break-word !important;word-break:normal !important;
+  }
+}
+@media (max-width:599px) {
+  html body #mainRecordTable th.important-website-heading,
+  html body #mainRecordTable td.important-website-cell {width:260px !important;min-width:260px !important;}
+}
+</style>
+<style id="hmis-dashboard-v1">
+#hmisDashboard{display:none;flex-direction:column;gap:16px;width:100%;padding-bottom:85px;overflow-y:auto;flex:1;min-height:0}
+.hmis-card{background:#fff;border:1px solid #e1e3eb;border-radius:18px;padding:17px 15px;box-shadow:0 3px 12px rgba(20,31,60,.04)}
+.hmis-title{font-size:17px;font-weight:800;color:#453783;display:flex;gap:10px;align-items:center;margin-bottom:16px;line-height:1.35}
+.hmis-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px 8px}
+.hmis-item{border:0;background:transparent;min-width:0;display:flex;align-items:center;flex-direction:column;gap:8px;cursor:pointer;color:#41396d;padding:5px 2px;border-radius:12px}
+.hmis-item:focus-visible{outline:3px solid #38bdf8}.hmis-item:hover{background:rgba(115,88,183,.07)}
+.hmis-icon{width:62px;height:62px;border-radius:16px;background:#f7e8f4;display:grid;place-items:center;position:relative}
+.hmis-icon>i:first-child{font-size:29px;color:var(--hmis-icon-color,#a62c86)}
+.hmis-name{text-align:center;font-size:11px;font-weight:800;line-height:1.35;overflow-wrap:anywhere}
+.hmis-child-indicator{position:absolute;right:-5px;bottom:-4px;background:#534091;color:white;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-size:10px}
+.hmis-nested{grid-column:1/-1;background:#f6f1fb;border:1px solid #e8d9f2;border-radius:15px;padding:14px 9px}
+.hmis-nested-title{font-size:13px;font-weight:800;color:#543b89;margin:0 5px 12px}
+.hmis-top{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;padding:12px 15px;border-radius:16px}
+.hmis-top h2{font-size:21px;color:#263b59;margin:0}.hmis-top small{color:#64748b;font-weight:600}
+.hmis-summary-btn{border:1px solid #b8b9d9;border-radius:10px;padding:9px 12px;background:#f5f3ff;color:#493a86;font-weight:800;cursor:pointer}
+.hmis-bottom{display:none}
+body.hmis-home-active #dashboardView{display:none!important}
+body.hmis-home-active #hmisDashboard{display:flex!important}
+body.hmis-home-active #appSidebar{display:none!important}
+body.hmis-home-active #mainContent{padding:15px;overflow:hidden}
+body.dark-theme .hmis-card,body.dark-theme .hmis-top{background:#17263c;border-color:#30465f}
+body.dark-theme .hmis-title,body.dark-theme .hmis-name,body.dark-theme .hmis-top h2{color:#e3e6ff}
+body.dark-theme .hmis-icon{background:#302840}
+body.dark-theme .hmis-nested{background:#202a44;border-color:#394361}
+body.dark-theme .hmis-nested-title{color:#e3c4f6}
+body.dark-theme .hmis-summary-btn{background:#293651;color:#e3e6ff;border-color:#526080}
+@media(min-width:700px){.hmis-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:22px 15px}.hmis-name{font-size:12px}.hmis-card{padding:20px}.hmis-icon{width:72px;height:72px}.hmis-icon>i:first-child{font-size:32px}}
+@media(min-width:1100px){.hmis-grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media(max-width:699px){body.hmis-home-active #mainContent{padding:10px 10px 0!important}#hmisDashboard{padding-bottom:90px}.hmis-card{padding:15px 10px}.hmis-bottom{display:flex;position:fixed;bottom:12px;left:4%;width:92%;z-index:80;border-radius:40px;padding:12px 10px;background:#fff;box-shadow:0 5px 24px #0003;justify-content:space-around}.hmis-bottom button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;color:#4d4388;font-size:10px;font-weight:800}.hmis-bottom i{font-size:20px}body.dark-theme .hmis-bottom{background:#1a2c44}}
+</style>
+<style id="hmis-mobile-login-recovery-css">
+html.rail-auth-pending body { visibility:visible !important; }
+html.rail-auth-pending:not(.portal-session-auth) #loginScreen { display:flex !important; visibility:visible !important; }
+</style>
+<style id="hmis-home-original-content-v4">
+/* One unified home: original summary and HMIS icon sections. */
+body.hmis-home-active #hmisDashboard #dashboardView,
+body.hmis-home-active #dashboardView.hmis-original-summary{display:flex!important;flex:0 0 auto!important;overflow:visible!important;height:auto!important;min-height:0!important;width:100%!important;}
+body.hmis-home-active #hmisDashboard{overflow-y:auto!important;overflow-x:hidden!important;gap:14px!important;padding-bottom:85px!important;}
+body.hmis-home-active #mainHeader .menu-toggle-btn,
+body.hmis-home-active #mobileMenuBtn{display:none!important;}
+body.hmis-home-active #hmisDashboard .hmis-bottom button[data-act="menu"]{display:none!important;}
+body.hmis-home-active #dashboardView .dash-charts-grid{flex:none!important;min-height:230px!important;}
+body.hmis-home-active #dashboardView .chart-wrapper{min-height:190px!important;}
+@media(max-width:699px){body.hmis-home-active #hmisDashboard{padding-bottom:90px!important;}body.hmis-home-active #dashboardView .dash-charts-grid{grid-template-columns:1fr!important;}body.hmis-home-active #dashboardView .process-track-container{overflow-x:auto;}}
+</style>
+<style id="hmis-summary-collapsible-v6">
+/* Summary is an opt-in panel; all HMIS category cards remain visible. */
+body.hmis-home-active #hmisDashboard #dashboardView.hmis-original-summary,
+body.hmis-home-active #dashboardView.hmis-original-summary {display:none!important;}
+body.hmis-home-active #hmisDashboard.hmis-summary-open #dashboardView.hmis-original-summary {display:flex!important;}
+.hmis-summary-toggle{width:100%;display:flex;align-items:center;gap:12px;border:0;background:transparent;text-align:left;cursor:pointer;padding:4px;color:inherit;}
+.hmis-summary-toggle .hmis-icon{flex:0 0 auto;display:flex;align-items:center;justify-content:center;}
+.hmis-summary-label{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1;}
+.hmis-summary-label strong{font-size:13px;letter-spacing:.3px;}
+.hmis-summary-label small{font-size:11px;opacity:.7;line-height:1.4;}
+.hmis-summary-arrow{margin-left:auto;transition:transform .2s;}
+.hmis-summary-open .hmis-summary-arrow{transform:rotate(180deg);}
+</style>
+<style id="hmis-group-consolidation-v8">
+/* Consolidation applies only to HMIS phone/tablet navigation; preserve desktop sidebar. */
+@media (max-width:1024px) { #appSidebar > #grpHqLetters, #appSidebar > #grpJpo {display:none !important;} }
+#hmisDashboard .hmis-card[data-source-group="grpHqLetters"],
+#hmisDashboard .hmis-card[data-source-group="grpJpo"] {display:none !important;}
+</style>
+<style id="hmis-polish-v7">
+/* V7: visual improvements limited to the HMIS landing page. */
+#hmisDashboard{scroll-behavior:smooth;scroll-padding-top:12px}
+#hmisDashboard .hmis-card[hidden],#hmisDashboard .hmis-item[hidden],#hmisDashboard .hmis-no-results[hidden]{display:none!important}
+#hmisDashboard .hmis-card{border-radius:20px;box-shadow:0 6px 22px rgba(30,40,80,.065);transition:box-shadow .2s ease}
+#hmisDashboard .hmis-title{font-size:clamp(13px,1.6vw,16px);padding-bottom:10px;border-bottom:1px solid rgba(125,108,165,.16);margin-bottom:13px}
+#hmisDashboard .hmis-item{min-height:96px;transition:background .18s ease,transform .18s ease}
+#hmisDashboard .hmis-item:active{transform:scale(.97)}
+#hmisDashboard .hmis-icon{box-shadow:inset 0 1px 2px #fff8,0 3px 9px #42245612}
+#hmisDashboard .hmis-item[aria-expanded="true"]{background:rgba(150,77,165,.11)}
+#hmisDashboard .hmis-item[aria-expanded="true"] .hmis-icon{outline:2px solid #ad6eae;outline-offset:2px}
+#hmisDashboard .hmis-summary-launcher{padding:12px 15px;border-left:4px solid #3c8cb0}
+#hmisDashboard .hmis-summary-toggle{min-height:70px}
+#hmisDashboard .hmis-summary-toggle:focus-visible{outline:3px solid #38bdf8;border-radius:10px}
+#hmisDashboard .hmis-nested{animation:hmisReveal .2s ease-out}
+@keyframes hmisReveal{from{opacity:.35;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+#hmisDashboard .hmis-search{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid #e1e3eb;border-radius:15px;box-shadow:0 3px 12px #17223b0c}
+#hmisDashboard .hmis-search i{color:#8b4a91}
+#hmisDashboard .hmis-search input{width:100%;min-width:0;background:transparent;border:0;outline:0;font-size:13px;color:#27344c}
+#hmisDashboard .hmis-search input::placeholder{color:#8290a3}
+#hmisDashboard .hmis-search button{border:0;background:transparent;color:#6b7280;padding:4px 7px;cursor:pointer}
+#hmisDashboard .hmis-no-results{padding:15px;text-align:center;color:#64748b;font-weight:600;background:#fff;border-radius:12px}
+body.dark-theme #hmisDashboard .hmis-search,body.dark-theme #hmisDashboard .hmis-no-results{background:#17263c;border-color:#30465f;color:#e2e8f0}
+body.dark-theme #hmisDashboard .hmis-search input{color:#e2e8f0}
+body.dark-theme #hmisDashboard .hmis-title{border-bottom-color:#38445f}
+@media(max-width:699px){#hmisDashboard .hmis-grid{gap:10px 4px}#hmisDashboard .hmis-item{min-height:90px;gap:6px}#hmisDashboard .hmis-icon{width:56px;height:56px;border-radius:15px}#hmisDashboard .hmis-icon>i:first-child{font-size:25px}#hmisDashboard .hmis-name{font-size:10px;line-height:1.4}#hmisDashboard .hmis-card{padding:13px 9px}#hmisDashboard .hmis-title{margin-bottom:10px}#hmisDashboard .hmis-bottom{bottom:8px;padding:10px}}
+@media(prefers-reduced-motion:reduce){#hmisDashboard *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+<style id="hmis-top-summary-search-v10">
+/* Replace redundant RailSNTGyan heading with the existing summary launcher and search. */
+body.hmis-home-active #hmisDashboard .hmis-top{display:flex!important;align-items:stretch!important;justify-content:space-between!important;gap:12px!important;width:100%;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-launcher{flex:1 1 54%;min-width:0;margin:0!important;padding:8px 12px!important;display:flex;align-items:center;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle{min-height:44px!important;gap:9px!important;padding:0!important;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-search{flex:1 1 46%;min-width:0;margin:0!important;align-self:stretch;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label strong{font-size:clamp(10px,1.5vw,14px);line-height:1.25;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-size:10px;}
+@media(max-width:699px){
+ body.hmis-home-active #hmisDashboard .hmis-top{gap:7px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-launcher{flex:0 1 54%;padding:7px!important;border-radius:12px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle{gap:5px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon{width:30px!important;height:30px!important;border-radius:9px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i{font-size:15px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label strong{font-size:10px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{display:none!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-arrow{font-size:10px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-search{flex:1 1 46%;gap:6px!important;padding:8px!important;border-radius:12px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-search input{font-size:11px!important;}
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -15608,6 +15765,59 @@ function ready(){const main=init('formStation','formDivision');const movement=in
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
 })();
 </script>
+
+
+
+<style id="rail-table-canonical-v4">
+@media(max-width:1024px){
+ #mainTableContainer{overflow-x:auto!important;overflow-y:auto!important;position:relative!important;isolation:auto!important;}
+ #mainRecordTable{border-collapse:separate!important;border-spacing:0!important;table-layout:fixed!important;width:max-content!important;min-width:100%!important;max-width:none!important;}
+ #mainRecordTable thead,#mainRecordTable thead tr{position:static!important;transform:none!important;}
+ #mainRecordTable tr>th,#mainRecordTable tr>td{box-sizing:border-box!important;transform:none!important;overflow:visible!important;background-image:none!important;}
+ #mainRecordTable thead tr>th{position:sticky!important;top:0!important;z-index:20!important;background:#103a5a!important;}
+ #mainRecordTable tr> :first-child{position:sticky!important;left:0!important;right:auto!important;width:52px!important;min-width:52px!important;max-width:52px!important;padding:6px 3px!important;text-align:center!important;box-shadow:2px 0 0 #f97316!important;}
+ #mainRecordTable thead tr> :first-child{z-index:100!important;background:#103a5a!important;}
+ #mainRecordTable tbody tr> :first-child{z-index:70!important;background:#101e32!important;}
+ #mainRecordTable tbody tr:nth-child(even)> :first-child{background:#15263b!important;}
+ #mainRecordTable.rn-first-only tr> :nth-child(2){position:static!important;left:auto!important;box-shadow:none!important;}
+ #mainRecordTable:not(.rn-first-only) tr> :nth-child(2){position:sticky!important;left:52px!important;z-index:65!important;background:#101e32!important;box-shadow:2px 0 0 #f97316!important;}
+ #mainRecordTable:not(.rn-first-only) thead tr> :nth-child(2){z-index:95!important;background:#103a5a!important;}
+ #mainRecordTable:not(.rn-first-only) tbody tr:nth-child(even)> :nth-child(2){background:#15263b!important;}
+ body:not(.dark-theme) #mainRecordTable tbody tr> :first-child,body:not(.dark-theme) #mainRecordTable:not(.rn-first-only) tbody tr> :nth-child(2){background:#fff!important;}
+ body:not(.dark-theme) #mainRecordTable tbody tr:nth-child(even)> :first-child,body:not(.dark-theme) #mainRecordTable:not(.rn-first-only) tbody tr:nth-child(even)> :nth-child(2){background:#f8fafc!important;}
+ #mainRecordTable.rn-important-links tr> :nth-child(2){width:260px!important;min-width:260px!important;max-width:260px!important;white-space:normal!important;overflow-wrap:break-word!important;}
+ #mainRecordTable.rn-important-links tr> :nth-child(3){width:150px!important;min-width:150px!important;}
+}
+@media(max-width:599px){#mainRecordTable tr> :first-child{width:46px!important;min-width:46px!important;max-width:46px!important;}#mainRecordTable:not(.rn-first-only) tr> :nth-child(2){left:46px!important;}}
+</style>
+<script id="rail-table-canonical-controller-v4">
+(function(){
+ const tId='mainRecordTable';let busy=false;
+ function update(){const t=document.getElementById(tId);if(!t)return;
+ const h=[...t.querySelectorAll('thead th')];if(!h.length)return;
+ const labels=h.map(e=>e.textContent.trim().toLowerCase());
+ const links=labels.some(x=>x.includes('imp. website'));
+ const only=links||t.classList.contains('unfreeze-table')||labels[1]?.includes('description')||labels[1]?.includes('website');
+ t.classList.toggle('rn-first-only',!!only);t.classList.toggle('rn-important-links',links);
+ // The first header must be the same sticky corner as the numbered body cells.
+ const first=h[0];if(first){first.style.setProperty('position','sticky','important');first.style.setProperty('left','0px','important');first.style.setProperty('top','0px','important');first.style.setProperty('z-index','100','important');}
+ }
+ function init(){const t=document.getElementById(tId);if(!t)return;const obs=new MutationObserver(()=>{if(busy)return;busy=true;requestAnimationFrame(()=>{busy=false;update()})});obs.observe(t,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});update();}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<style id="rail-important-links-visible-borders-v6">
+@media(max-width:1024px){
+ #mainTableContainer:has(#mainRecordTable.rn-important-links){border:2px solid #f97316!important;border-radius:7px!important;overflow-x:auto!important;}
+ #mainRecordTable.rn-important-links{border:1px solid #f97316!important;border-collapse:separate!important;border-spacing:0!important;}
+ #mainRecordTable.rn-important-links thead th{border-bottom:2px solid #f97316!important;border-right:1px solid #f97316!important;}
+ #mainRecordTable.rn-important-links tbody td{border-bottom:1px solid #41536b!important;border-right:1px solid #41536b!important;}
+ #mainRecordTable.rn-important-links tr>:first-child{border-right:2px solid #f97316!important;box-shadow:none!important;}
+ #mainRecordTable.rn-important-links tr>:nth-child(2){border-right:2px solid #f97316!important;box-shadow:none!important;}
+ #mainRecordTable.rn-important-links tr>:last-child{border-right:1px solid #f97316!important;}
+ #mainRecordTable.rn-important-links tbody tr:last-child td{border-bottom:1px solid #f97316!important;}
+}
+</style>
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
@@ -17433,3 +17643,300 @@ html body #mainRecordTable.jpo-table td.jpo-number-cell b {
 
 
 
+
+
+<style id="rail-important-links-layout-final">
+/* Important Links only: compact action buttons and a genuinely wide website column. */
+@media(max-width:1024px){
+ html body #mainRecordTable.rn-important-links{table-layout:fixed!important;width:100%!important;min-width:0!important;max-width:100%!important;border-spacing:0!important;}
+ html body #mainRecordTable.rn-important-links col.ril-number{width:40px!important;}
+ html body #mainRecordTable.rn-important-links col.ril-website{width:auto!important;}
+ html body #mainRecordTable.rn-important-links col.ril-action{width:78px!important;}
+ html body #mainRecordTable.rn-important-links tr>:nth-child(1){width:40px!important;min-width:40px!important;max-width:40px!important;box-sizing:border-box!important;left:0!important;padding:5px 2px!important;text-align:center!important;}
+ html body #mainRecordTable.rn-important-links tr>:nth-child(2),html body #mainRecordTable.rn-important-links th.important-website-heading,html body #mainRecordTable.rn-important-links td.important-website-cell{width:auto!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;position:static!important;left:auto!important;white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;text-align:left!important;padding:6px 7px!important;box-shadow:none!important;}
+ html body #mainRecordTable.rn-important-links tr>:nth-child(3){width:78px!important;min-width:78px!important;max-width:78px!important;box-sizing:border-box!important;position:static!important;left:auto!important;text-align:center!important;padding:4px 1px!important;white-space:nowrap!important;}
+ html body #mainRecordTable.rn-important-links tr>:nth-child(2) a{white-space:normal!important;overflow-wrap:break-word!important;text-align:left!important;}
+ html body #mainRecordTable.rn-important-links tr>:nth-child(3) button,html body #mainRecordTable.rn-important-links tr>:nth-child(3) .btn-icon{width:25px!important;min-width:25px!important;max-width:25px!important;height:24px!important;padding:2px!important;margin:0 2px!important;}
+ html body #mainRecordTable.rn-important-links thead th:nth-child(1){position:sticky!important;top:0!important;left:0!important;z-index:35!important;background:#0b3b60!important;}
+ html body #mainRecordTable.rn-important-links tbody td:nth-child(1){position:sticky!important;left:0!important;z-index:15!important;background:#101b2e!important;}
+}
+</style>
+<script id="rail-important-links-layout-controller-final">
+(function(){
+ const tableId='mainRecordTable';let queued=false;
+ function apply(){
+  const t=document.getElementById(tableId);if(!t)return;
+  const h=[...t.querySelectorAll('thead th')];
+  const isLinks=h.length===3&&/imp\.?\s*website/i.test(h[1].textContent);
+  t.classList.toggle('rn-important-links',isLinks);
+  if(!isLinks){t.querySelector('colgroup[data-ril-layout]')?.remove();return;}
+  t.classList.add('rn-first-only');
+  let cg=t.querySelector('colgroup[data-ril-layout]');
+  if(!cg){cg=document.createElement('colgroup');cg.setAttribute('data-ril-layout','');cg.innerHTML='<col class="ril-number"><col class="ril-website"><col class="ril-action">';t.prepend(cg);}
+  // Remove old hardcoded inline widths from header AND all data cells.
+  t.querySelectorAll('tr').forEach(row=>{[...row.children].forEach((cell,i)=>{
+   if(i>2)return;
+   ['width','min-width','max-width'].forEach(k=>{if(cell.style.getPropertyValue(k))cell.style.removeProperty(k);});
+  });});
+ }
+ function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;apply()});}
+ function init(){const t=document.getElementById(tableId);if(!t)return;apply();new MutationObserver(schedule).observe(t,{childList:true,subtree:true});}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<script id="hmis-mobile-login-recovery-js">
+(function(){
+ function reveal(){
+   var root=document.documentElement, login=document.getElementById('loginScreen');
+   if(!login)return;
+   root.classList.remove('rail-auth-pending');
+   if(!root.classList.contains('portal-session-auth')){
+     login.style.display='flex';
+     login.style.visibility='visible';
+   }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',reveal,{once:true});
+ else reveal();
+ window.addEventListener('pageshow',reveal);
+})();
+</script>
+<script id="hmis-dashboard-controller">
+(function(){
+const source=document.getElementById('appSidebar'),main=document.getElementById('mainContent');if(!source||!main)return;
+const panel=document.createElement('div');panel.id='hmisDashboard';main.insertBefore(panel,document.getElementById('dashboardView'));
+const top=document.createElement('div');top.className='hmis-top';top.innerHTML='';panel.appendChild(top);
+// Reuse the original live dashboard; do not duplicate its data, charts or listeners.
+const originalDashboard=document.getElementById('dashboardView');
+if(originalDashboard){
+  const summaryCard=document.createElement('section');
+  summaryCard.className='hmis-card hmis-summary-launcher';
+  const summaryBtn=document.createElement('button');
+  summaryBtn.type='button';summaryBtn.className='hmis-summary-toggle';
+  summaryBtn.setAttribute('aria-expanded','false');
+  summaryBtn.setAttribute('aria-controls','dashboardView');
+  summaryBtn.innerHTML='<span class="hmis-icon" style="--hmis-icon-color:#287fa8"><i class="fa-solid fa-chart-pie"></i></span><span class="hmis-summary-label"><strong>S&T TECHNICAL SUMMARY</strong><small>Financial Year-wise report, approval cards & charts</small></span><i class="fa-solid fa-chevron-down hmis-summary-arrow"></i>';
+  summaryCard.appendChild(summaryBtn);
+  top.appendChild(summaryCard);
+  panel.appendChild(originalDashboard);
+  originalDashboard.classList.add('hmis-original-summary');
+  summaryBtn.addEventListener('click',()=>{
+    const opened=panel.classList.toggle('hmis-summary-open');
+    summaryBtn.setAttribute('aria-expanded',String(opened));
+    if(opened){requestAnimationFrame(()=>{
+      if(typeof updateDashboardView==='function')updateDashboardView();
+      originalDashboard.scrollIntoView({behavior:'smooth',block:'start'});
+    });}
+  });
+}
+const colors=['#b52e8b','#de6b22','#2089b5','#6e53c7','#168b75','#cc456b'];
+function createTile(li,index,groupId){const name=li.childNodes.length?Array.from(li.childNodes).filter(n=>n.nodeType===3).map(n=>n.textContent).join(' ').trim():'';const icon=li.querySelector('i:not(.manual-submenu-chevron)');const label=name||li.textContent.trim();const btn=document.createElement('button');btn.type='button';btn.className='hmis-item';btn.innerHTML='<span class="hmis-icon" style="--hmis-icon-color:'+colors[index%colors.length]+'"><i class="'+(icon?icon.className:'fa-solid fa-file')+'"></i></span><span class="hmis-name"></span>';btn.querySelector('.hmis-name').textContent=label;const call=li.getAttribute('onclick')||'';const m=call.match(/toggleManualSubmenu\('([^']+)'/);if(m){btn.dataset.nestedId=m[1];btn.setAttribute('aria-expanded','false');btn.querySelector('.hmis-icon').insertAdjacentHTML('beforeend','<span class="hmis-child-indicator"><i class="fa-solid fa-chevron-down"></i></span>');btn.addEventListener('click',()=>{const grid=btn.closest('.hmis-grid');const old=Array.from(grid.children).find(el=>el.classList.contains('hmis-nested'));if(old){const same=old.dataset.parent===m[1];old.remove();if(same)return}const sub=source.querySelector('#'+m[1]);if(!sub)return;const nested=document.createElement('div');nested.className='hmis-nested';nested.dataset.parent=m[1];const title=document.createElement('div');title.className='hmis-nested-title';title.textContent=label+' — Select Section';nested.appendChild(title);const inner=document.createElement('div');inner.className='hmis-grid';sub.querySelectorAll(':scope > li.nav-item').forEach((child,j)=>inner.appendChild(createTile(child,j,groupId)));nested.appendChild(inner);grid.appendChild(nested);});}else{btn.addEventListener('click',()=>{const match=call.match(/switchCategory\('([^']+)'/);if(match&&typeof switchCategory==='function')switchCategory(match[1]);});}return btn;}
+source.querySelectorAll(':scope > .collapsible-group').forEach(group=>{const heading=group.querySelector(':scope > .sidebar-section-title');if(!heading)return;const card=document.createElement('section');card.className='hmis-card';card.dataset.sourceGroup=group.id;const title=document.createElement('div');title.className='hmis-title';const left=heading.querySelector('.sidebar-section-title-left');title.innerHTML=left?left.innerHTML:heading.textContent;card.appendChild(title);const ul=group.querySelector(':scope > ul.nav-list');if(ul){const grid=document.createElement('div');grid.className='hmis-grid';Array.from(ul.children).filter(el=>el.matches('li.nav-item')).forEach((li,i)=>grid.appendChild(createTile(li,i,group.id)));card.appendChild(grid);}else{card.style.cursor='pointer';card.addEventListener('click',()=>{const match=(heading.getAttribute('onclick')||'').match(/switchCategory\('([^']+)'/);if(match) switchCategory(match[1]);});}panel.appendChild(card);});
+const bottom=document.createElement('div');bottom.className='hmis-bottom';bottom.innerHTML='<button type="button" data-act="home"><i class="fa-solid fa-house"></i>HOME</button><button type="button" data-act="books"><i class="fa-solid fa-book-open"></i>BOOKS</button><button type="button" data-act="ldce"><i class="fa-solid fa-graduation-cap"></i>LDCE</button>';panel.appendChild(bottom);bottom.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;const act=btn.dataset.act;if(act==='menu'){if(typeof openSidebarDrawer==='function')openSidebarDrawer();else source.style.display='flex';return;}const target=act==='books'?'grpRefBooks':act==='ldce'?'grpLdcePapers':null;if(target){const section=panel.querySelector('[data-source-group="'+target+'"]');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});}else panel.scrollTo({top:0,behavior:'smooth'});});
+const originalHome=goHome;goHome=function(...args){const ret=originalHome.apply(this,args);document.body.classList.add('hmis-home-active');requestAnimationFrame(()=>{if(typeof updateDashboardView==='function')updateDashboardView();});return ret;};
+const originalSwitch=switchCategory;switchCategory=function(...args){document.body.classList.remove('hmis-home-active');return originalSwitch.apply(this,args);};
+function sync(){if(typeof currentCategory!=='undefined'&&currentCategory==='HOME'){document.body.classList.add('hmis-home-active');}else document.body.classList.remove('hmis-home-active');const admin=source.querySelector('#grpFilesApprovals');const card=panel.querySelector('[data-source-group="grpFilesApprovals"]');if(admin&&card)card.style.display=getComputedStyle(admin).display==='none'?'none':'';}
+setTimeout(sync,800);document.addEventListener('click',()=>setTimeout(sync,120));
+})();
+</script>
+<script id="hmis-polish-controller-v7">
+(function(){
+function ready(){
+ const panel=document.getElementById('hmisDashboard');if(!panel||panel.dataset.polishV7)return;panel.dataset.polishV7='1';
+ const top=panel.querySelector('.hmis-top');if(!top)return;
+ const search=document.createElement('label');search.className='hmis-search';search.innerHTML='<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input type="search" aria-label="Search sections and subsections" placeholder="Search sections, books, approvals…"><button type="button" aria-label="Clear search" hidden><i class="fa-solid fa-xmark"></i></button>';
+ top.appendChild(search);
+ const input=search.querySelector('input'),clear=search.querySelector('button');
+ const cards=Array.from(panel.querySelectorAll('.hmis-card:not(.hmis-summary-launcher)'));
+ const empty=document.createElement('div');empty.className='hmis-no-results';empty.textContent='No matching sections found';empty.hidden=true;search.insertAdjacentElement('afterend',empty);
+ function filter(){const q=input.value.trim().toLocaleLowerCase();clear.hidden=!q;let found=0;
+  cards.forEach(card=>{const heading=card.querySelector('.hmis-title');const all=Array.from(card.querySelectorAll(':scope > .hmis-grid > .hmis-item'));const headingMatches=heading&&heading.textContent.toLocaleLowerCase().includes(q);let visible=0;
+   all.forEach(tile=>{const matches=!q||headingMatches||tile.textContent.toLocaleLowerCase().includes(q);tile.hidden=!matches;if(matches)visible++});
+   card.hidden=!!q&&!visible&&!headingMatches;if(!card.hidden)found++;
+   const nested=card.querySelector(':scope > .hmis-grid > .hmis-nested');if(q&&nested)nested.remove();
+  });empty.hidden=found>0||!q;
+ }
+ input.addEventListener('input',filter);clear.addEventListener('click',()=>{input.value='';filter();input.focus()});
+ panel.addEventListener('click',e=>{const tile=e.target.closest('.hmis-item');if(!tile)return;requestAnimationFrame(()=>{panel.querySelectorAll('.hmis-item[aria-expanded]').forEach(b=>{const grid=b.closest('.hmis-grid');const nested=grid&&grid.querySelector(':scope > .hmis-nested');b.setAttribute('aria-expanded',String(!!nested&&nested.dataset.parent===b.dataset.nestedId));});});});
+ panel.querySelectorAll('.hmis-item').forEach(tile=>{const indicator=tile.querySelector('.hmis-child-indicator');if(indicator){tile.setAttribute('aria-expanded','false');const group=tile.closest('.hmis-grid');const children=group&&Array.from(group.children).filter(x=>x.classList.contains('hmis-item'));if(children){/* preserve the nested ID assigned by createTile */} }});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
+})();
+</script>
+
+<style id="hmis-device-scope-v13">
+@media (min-width:1367px) {
+ body.hmis-home-active #hmisDashboard, #hmisDashboard {display:none!important}
+ body.hmis-home-active #appSidebar {display:flex!important}
+ body.hmis-home-active #dashboardView,
+ body.hmis-home-active #dashboardView.hmis-original-summary,
+ body.hmis-home-active #hmisDashboard #dashboardView {display:flex!important}
+ body.hmis-home-active #mainContent {padding:14px 18px!important;overflow-y:auto!important}
+ body.hmis-home-active .menu-toggle-btn {display:none!important}
+}
+@media (max-width:1366px) {
+ body.hmis-home-active #hmisDashboard .hmis-name {font-size:13px!important;font-weight:900!important;line-height:1.4!important;color:#25324c!important}
+ body.dark-theme.hmis-home-active #hmisDashboard .hmis-name {color:#f0f3ff!important}
+}
+</style>
+<script id="hmis-device-scope-controller-v13">
+(function(){
+ function sync(){
+  const panel=document.getElementById('hmisDashboard');
+  const dashboard=document.getElementById('dashboardView');
+  const main=document.getElementById('mainContent');
+  if(!panel||!dashboard||!main)return;
+  if(window.matchMedia('(min-width:1367px)').matches){
+   if(dashboard.parentElement!==main)main.insertBefore(dashboard,panel.nextSibling);
+  }else if(dashboard.parentElement!==panel){
+   const cards=panel.querySelectorAll('.hmis-card');
+   const last=cards.length?cards[cards.length-1]:null;
+   if(last&&last.parentElement===panel)last.after(dashboard);
+   else panel.appendChild(dashboard);
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync);
+ else sync();
+ window.addEventListener('resize',sync,{passive:true});
+})();
+</script>
+
+<style id="hmis-tablet-fix-v14">
+/* 1280px landscape tablets remain in the HMIS layout; desktop starts at 1367px. */
+@media (min-width:1025px) and (max-width:1366px) {
+ body.hmis-home-active #hmisDashboard {display:flex!important;overflow-y:auto!important}
+ body.hmis-home-active #appSidebar {display:none!important}
+ body.hmis-home-active #mainContent {padding:14px!important;overflow:hidden!important}
+ body.hmis-home-active #dashboardView.hmis-original-summary {display:none!important}
+ body.hmis-home-active #hmisDashboard.hmis-summary-open #dashboardView.hmis-original-summary {display:flex!important}
+ #hmisDashboard .hmis-grid {grid-template-columns:repeat(5,minmax(0,1fr))!important}
+ #hmisDashboard .hmis-item {min-height:105px}
+ #hmisDashboard .hmis-name {font-size:13px!important;font-weight:900!important}
+}
+@media (max-width:1366px) {
+ #hmisDashboard .hmis-card[data-source-group="grpHqLetters"],
+ #hmisDashboard .hmis-card[data-source-group="grpJpo"] {display:none!important}
+}
+</style>
+<script id="hmis-missing-files-tiles-v14">
+(function(){
+ function fix(){
+  const panel=document.getElementById('hmisDashboard');
+  const sidebar=document.getElementById('appSidebar');
+  if(!panel||!sidebar)return;
+  const files=panel.querySelector('.hmis-card[data-source-group="grpFilesApprovals"] .hmis-grid');
+  if(!files)return;
+  function makeTile(groupId,category,label,color,icon){
+   const group=sidebar.querySelector('#'+groupId);
+   if(!group||files.querySelector('[data-hmis-added="'+groupId+'"]'))return;
+   const tile=document.createElement('button');
+   tile.type='button';tile.className='hmis-item';
+   tile.dataset.hmisAdded=groupId;
+   tile.innerHTML='<span class="hmis-icon" style="--hmis-icon-color:'+color+'"><i class="'+icon+'"></i></span><span class="hmis-name"></span>';
+   tile.querySelector('.hmis-name').textContent=label;
+   tile.addEventListener('click',function(){
+    if(typeof switchCategory==='function')switchCategory(category);
+   });
+   files.appendChild(tile);
+  }
+  // Preserve File Movement Register as the final icon.
+  const movement=Array.from(files.children).find(x=>x.classList.contains('hmis-item')&&x.textContent.includes('FILE MOVEMENT REGISTER'));
+  if(movement)movement.remove();
+  makeTile('grpJpo','JPO (JOINT PROCEDURE ORDER)','JPO (JOINT PROCEDURE ORDER)','#7c3aed','fa-solid fa-people-group');
+  makeTile('grpHqLetters','LETTER ISSUED BY HQ','LETTER ISSUED BY HQ','#2563eb','fa-solid fa-paper-plane');
+  if(movement)files.appendChild(movement);
+  // The search controller captures tiles at creation time, so include added items in search filtering.
+  const search=panel.querySelector('.hmis-search input');
+  if(search&&!search.dataset.v14){
+   search.dataset.v14='1';
+   search.addEventListener('input',function(){
+    const q=search.value.trim().toLocaleLowerCase();
+    const card=files.closest('.hmis-card');
+    const title=card.querySelector('.hmis-title');
+    const headingMatch=title&&title.textContent.toLocaleLowerCase().includes(q);
+    for(const tile of files.querySelectorAll('[data-hmis-added]')){
+      tile.hidden=!!q&&!headingMatch&&!tile.textContent.toLocaleLowerCase().includes(q);
+    }
+    if(q&&Array.from(files.querySelectorAll(':scope > .hmis-item')).some(x=>!x.hidden))card.hidden=false;
+   });
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix,{once:true});else fix();
+})();
+</script>
+
+<!-- v15: Remove hamburger navigation button in mobile and tablet layouts only. -->
+<style id="hmis-no-hamburger-mobile-tablet-v15">
+@media screen and (max-width:1366px) {
+  html body #mainHeader #mobileMenuBtn,
+  html body #mainHeader button.menu-toggle-btn,
+  html body #mobileMenuBtn,
+  html body .menu-toggle-btn {
+    display:none!important;
+    visibility:hidden!important;
+  }
+}
+</style>
+
+<!-- v16: Optional mobile/tablet table fit/scroll and zoom controls; desktop unchanged. -->
+<style id="rails-table-fit-v16">
+#railsTableModeBar{display:none}
+@media(max-width:1366px){
+ #railsTableModeBar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:7px 8px;border:1px solid #94a3b8;border-radius:9px;background:#eaf1fa;color:#10243e;margin:5px 0;font-size:12px;font-weight:800;position:relative;z-index:3}
+ body.dark-theme #railsTableModeBar{background:#18283d;color:#f8fafc;border-color:#52647c}
+ #railsTableModeBar button{padding:6px 9px;border-radius:7px;border:1px solid #94a3b8;background:#fff;color:#173453;font-size:12px;font-weight:800;cursor:pointer}
+ #railsTableModeBar button[aria-pressed="true"]{background:#086f87;color:#fff;border-color:#086f87}
+ #railsTableModeBar .rails-scale-readout{margin-left:auto;min-width:37px;text-align:right}
+ #mainTableContainer.rails-fit-mode{overflow-x:hidden!important;overflow-y:visible!important;scrollbar-gutter:auto!important}
+ #mainTableContainer.rails-fit-mode #mainRecordTable{max-width:none!important;table-layout:auto!important;transform:none!important;transform-origin:top left!important}
+ body.rails-table-fullscreen #mainTableContainer{position:fixed!important;inset:56px 4px 5px!important;z-index:12000!important;background:#fff!important;overflow:auto!important;height:auto!important;max-height:none!important;box-shadow:0 0 0 9999px rgba(0,0,0,.65)!important}
+ body.rails-table-fullscreen #railsTableModeBar{position:fixed!important;top:0;left:0;right:0;z-index:12001!important;margin:0;border-radius:0;min-height:52px}
+ body.rails-table-fullscreen #mainTableContainer.rails-fit-mode{overflow-x:auto!important}
+}
+</style>
+<script id="rails-table-fit-v16-script">
+(function(){
+ const mq=window.matchMedia('(max-width:1366px)');
+ let mode='fit', manual=1, natural=0;
+ const get=()=>({sec:document.getElementById('tableViewSection'),box:document.getElementById('mainTableContainer'),table:document.getElementById('mainRecordTable'),bar:document.getElementById('railsTableModeBar')});
+ function update(){
+  const {sec,box,table,bar}=get();if(!sec||!box||!table||!bar)return;
+  const enabled=mq.matches && getComputedStyle(sec).display!=='none';
+  bar.style.display=enabled?'flex':'none';
+  if(!mq.matches){table.style.removeProperty('zoom');table.style.removeProperty('width');box.classList.remove('rails-fit-mode');document.body.classList.remove('rails-table-fullscreen');return;}
+  if(!enabled)return;
+  if(mode==='scroll'){
+   table.style.removeProperty('zoom');table.style.removeProperty('width');box.classList.remove('rails-fit-mode');
+   bar.querySelector('[data-scale]').textContent='100%';return;
+  }
+  table.style.zoom='1';table.style.removeProperty('width');
+  natural=Math.max(table.scrollWidth,table.getBoundingClientRect().width,780);
+  const available=Math.max(240,box.clientWidth-4);
+  const fit=Math.min(1,available/natural);
+  const scale=Math.max(.20,Math.min(2.5,fit*manual));
+  table.style.width=natural+'px';table.style.zoom=String(scale);
+  box.classList.add('rails-fit-mode');
+  bar.querySelector('[data-scale]').textContent=Math.round(scale*100)+'%';
+ }
+ function init(){
+  const {sec,box}=get();if(!sec||!box||document.getElementById('railsTableModeBar'))return;
+  const bar=document.createElement('div');bar.id='railsTableModeBar';
+  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="true">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="false">Normal Scroll</button><button type="button" data-zoom="out" title="Zoom out">−</button><button type="button" data-zoom="in" title="Zoom in">+</button><button type="button" data-zoom="reset">Reset</button><button type="button" data-fullscreen="1">⛶ Fullscreen</button><span class="rails-scale-readout" data-scale>100%</span>';
+  box.parentNode.insertBefore(bar,box);
+  bar.addEventListener('click',e=>{
+   const btn=e.target.closest('button');if(!btn)return;
+   if(btn.dataset.mode){mode=btn.dataset.mode;manual=1;bar.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));}
+   if(btn.dataset.zoom){if(mode==='scroll'){mode='fit';bar.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));}manual=btn.dataset.zoom==='in'?Math.min(4,manual*1.25):btn.dataset.zoom==='out'?Math.max(.5,manual/1.25):1;}
+   if(btn.dataset.fullscreen){const full=document.body.classList.toggle('rails-table-fullscreen');btn.textContent=full?'✕ Close':'⛶ Fullscreen';}
+   update();
+  });
+  if(window.ResizeObserver){new ResizeObserver(()=>requestAnimationFrame(update)).observe(box);}
+  const body=document.getElementById('tableBody'),head=document.getElementById('tableHead');
+  if(window.MutationObserver){const obs=new MutationObserver(()=>requestAnimationFrame(update));[body,head].filter(Boolean).forEach(el=>obs.observe(el,{childList:true,subtree:true}));}
+  window.addEventListener('resize',()=>requestAnimationFrame(update),{passive:true});
+  document.addEventListener('click',()=>setTimeout(update,70),true);
+  update();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
