@@ -6555,7 +6555,7 @@ body.dark-theme .hmis-nested-title{color:#e3c4f6}
 body.dark-theme .hmis-summary-btn{background:#293651;color:#e3e6ff;border-color:#526080}
 @media(min-width:700px){.hmis-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:22px 15px}.hmis-name{font-size:12px}.hmis-card{padding:20px}.hmis-icon{width:72px;height:72px}.hmis-icon>i:first-child{font-size:32px}}
 @media(min-width:1100px){.hmis-grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
-@media(max-width:699px){body.hmis-home-active #mainContent{padding:10px 10px 0!important}#hmisDashboard{padding-bottom:90px}.hmis-card{padding:15px 10px}.hmis-bottom{display:flex;position:fixed;bottom:12px;left:4%;width:92%;z-index:80;border-radius:40px;padding:12px 10px;background:#fff;box-shadow:0 5px 24px #0003;justify-content:space-around}.hmis-bottom button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;color:#4d4388;font-size:10px;font-weight:800}.hmis-bottom i{font-size:20px}body.dark-theme .hmis-bottom{background:#1a2c44}}
+@media(max-width:699px){body.hmis-home-active #mainContent{padding:10px 10px 0!important}#hmisDashboard{padding-bottom:16px}.hmis-card{padding:15px 10px}}
 </style>
 <style id="hmis-mobile-login-recovery-css">
 html.rail-auth-pending body { visibility:visible !important; }
@@ -6707,6 +6707,19 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i
 #mainTableContainer.rails-fit-mode #railsFitTable {
  transform:none!important;
  transform-origin:top left;
+}
+</style>
+
+<style id="rails-remove-mobile-tablet-bottom-nav">
+/* HOME / BOOKS / LDCE floating navigation removed on phones and tablets. */
+@media (max-width:1099px) {
+  #hmisDashboard .hmis-bottom,
+  body.hmis-home-active #hmisDashboard .hmis-bottom,
+  #hmisDashboard.hmis-summary-page > .hmis-bottom {
+    display:none!important;
+    visibility:hidden!important;
+  }
+  body.hmis-home-active #hmisDashboard {padding-bottom:16px!important;}
 }
 </style>
 </head>
@@ -18049,7 +18062,8 @@ if(originalDashboard){
 const colors=['#b52e8b','#de6b22','#2089b5','#6e53c7','#168b75','#cc456b'];
 function createTile(li,index,groupId){const name=li.childNodes.length?Array.from(li.childNodes).filter(n=>n.nodeType===3).map(n=>n.textContent).join(' ').trim():'';const icon=li.querySelector('i:not(.manual-submenu-chevron)');const label=name||li.textContent.trim();const btn=document.createElement('button');btn.type='button';btn.className='hmis-item';btn.innerHTML='<span class="hmis-icon" style="--hmis-icon-color:'+colors[index%colors.length]+'"><i class="'+(icon?icon.className:'fa-solid fa-file')+'"></i></span><span class="hmis-name"></span>';btn.querySelector('.hmis-name').textContent=label;const call=li.getAttribute('onclick')||'';const m=call.match(/toggleManualSubmenu\('([^']+)'/);if(m){btn.dataset.nestedId=m[1];btn.setAttribute('aria-expanded','false');btn.querySelector('.hmis-icon').insertAdjacentHTML('beforeend','<span class="hmis-child-indicator"><i class="fa-solid fa-chevron-down"></i></span>');btn.addEventListener('click',()=>{const grid=btn.closest('.hmis-grid');const old=Array.from(grid.children).find(el=>el.classList.contains('hmis-nested'));if(old){const same=old.dataset.parent===m[1];old.remove();if(same)return}const sub=source.querySelector('#'+m[1]);if(!sub)return;const nested=document.createElement('div');nested.className='hmis-nested';nested.dataset.parent=m[1];const title=document.createElement('div');title.className='hmis-nested-title';title.textContent=label+' — Select Section';nested.appendChild(title);const inner=document.createElement('div');inner.className='hmis-grid';sub.querySelectorAll(':scope > li.nav-item').forEach((child,j)=>inner.appendChild(createTile(child,j,groupId)));nested.appendChild(inner);grid.appendChild(nested);});}else{btn.addEventListener('click',()=>{const match=call.match(/switchCategory\('([^']+)'/);if(match&&typeof switchCategory==='function')switchCategory(match[1]);});}return btn;}
 source.querySelectorAll(':scope > .collapsible-group').forEach(group=>{const heading=group.querySelector(':scope > .sidebar-section-title');if(!heading)return;const card=document.createElement('section');card.className='hmis-card';card.dataset.sourceGroup=group.id;const title=document.createElement('div');title.className='hmis-title';const left=heading.querySelector('.sidebar-section-title-left');title.innerHTML=left?left.innerHTML:heading.textContent;card.appendChild(title);const ul=group.querySelector(':scope > ul.nav-list');if(ul){const grid=document.createElement('div');grid.className='hmis-grid';Array.from(ul.children).filter(el=>el.matches('li.nav-item')).forEach((li,i)=>grid.appendChild(createTile(li,i,group.id)));card.appendChild(grid);}else{card.style.cursor='pointer';card.addEventListener('click',()=>{const match=(heading.getAttribute('onclick')||'').match(/switchCategory\('([^']+)'/);if(match) switchCategory(match[1]);});}panel.appendChild(card);});
-const bottom=document.createElement('div');bottom.className='hmis-bottom';bottom.innerHTML='<button type="button" data-act="home"><i class="fa-solid fa-house"></i>HOME</button><button type="button" data-act="books"><i class="fa-solid fa-book-open"></i>BOOKS</button><button type="button" data-act="ldce"><i class="fa-solid fa-graduation-cap"></i>LDCE</button>';panel.appendChild(bottom);bottom.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;const act=btn.dataset.act;if(act==='menu'){if(typeof openSidebarDrawer==='function')openSidebarDrawer();else source.style.display='flex';return;}const target=act==='books'?'grpRefBooks':act==='ldce'?'grpLdcePapers':null;if(target){const section=panel.querySelector('[data-source-group="'+target+'"]');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});}else panel.scrollTo({top:0,behavior:'smooth'});});
+// HOME / BOOKS / LDCE bottom navigation intentionally removed.
+// No bottom navigation element is created on any screen size.
 const originalHome=goHome;goHome=function(...args){const ret=originalHome.apply(this,args);document.body.classList.add('hmis-home-active');requestAnimationFrame(()=>{if(typeof updateDashboardView==='function')updateDashboardView();});return ret;};
 const originalSwitch=switchCategory;switchCategory=function(...args){document.body.classList.remove('hmis-home-active');return originalSwitch.apply(this,args);};
 function sync(){if(typeof currentCategory!=='undefined'&&currentCategory==='HOME'){document.body.classList.add('hmis-home-active');}else document.body.classList.remove('hmis-home-active');const admin=source.querySelector('#grpFilesApprovals');const card=panel.querySelector('[data-source-group="grpFilesApprovals"]');if(admin&&card)card.style.display=getComputedStyle(admin).display==='none'?'none':'';}
