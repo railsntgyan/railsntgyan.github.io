@@ -2,6 +2,18 @@
 <head>
   <meta charset="UTF-8">
   <meta id="railsViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <script id="rails-tablet-viewport-core">
+  (function () {
+    // Android tablets: landscape often reports 1280 CSS px, wrongly triggering desktop styles.
+    // Keep the existing <=1024px tablet CSS active without changing laptop breakpoints.
+    var ua = navigator.userAgent || '';
+    var androidTablet = /Android/i.test(ua) && !/Mobile/i.test(ua);
+    var samsungTab = /SM-X216|SM-X210|SM-X218|SM-X215|SM-X216B/i.test(ua);
+    if (!(androidTablet || samsungTab)) return;
+    var meta = document.getElementById('railsViewportMeta');
+    if (meta) meta.setAttribute('content', 'width=1024, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+  })();
+  </script>
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#07101d">
   <!-- v83: Dark theme is the default from the very first paint, including BFCache/back navigation. -->
@@ -4790,7 +4802,7 @@ body.dark-theme .btn-success{background:linear-gradient(135deg,#059669,#047857)!
 <style id="v-tablet-home-full-width-fix">
 /* Tablet-only Home/dashboard width correction.
    Scope: 769px–1024px only. No table, data, Firebase, navigation or desktop/mobile logic changed. */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) and (pointer:coarse) {
   html, body {
     width: 100% !important;
     max-width: 100% !important;
@@ -6611,21 +6623,24 @@ body.dark-theme #hmisDashboard .hmis-title{border-bottom-color:#38445f}
 <style id="hmis-top-summary-search-v10">
 /* Replace redundant RailSNTGyan heading with the existing summary launcher and search. */
 body.hmis-home-active #hmisDashboard .hmis-top{display:flex!important;align-items:stretch!important;justify-content:space-between!important;gap:12px!important;width:100%;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;}
-body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-launcher{flex:1 1 54%;min-width:0;margin:0!important;padding:8px 12px!important;display:flex;align-items:center;}
-body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle{min-height:44px!important;gap:9px!important;padding:0!important;}
-body.hmis-home-active #hmisDashboard .hmis-top .hmis-search{flex:1 1 46%;min-width:0;margin:0!important;align-self:stretch;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-launcher{flex:1 1 54%;min-width:0;margin:0!important;padding:2px 8px!important;display:flex;align-items:center;height:38px!important;min-height:38px!important;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle{min-height:32px!important;height:32px!important;gap:7px!important;padding:0!important;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-search{flex:1 1 46%;min-width:0;margin:0!important;align-self:center;height:38px!important;min-height:38px!important;padding:5px 10px!important;}
 body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label strong{font-size:clamp(10px,1.5vw,14px);line-height:1.25;}
-body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-size:10px;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-size:9px;line-height:1.15;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label{gap:2px;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon{width:26px!important;height:26px!important;border-radius:7px!important;}
+body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i{font-size:14px!important;}
 @media(max-width:699px){
  body.hmis-home-active #hmisDashboard .hmis-top{gap:7px!important;}
- body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-launcher{flex:0 1 54%;padding:7px!important;border-radius:12px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-launcher{flex:0 1 54%;padding:2px 5px!important;border-radius:12px!important;}
  body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle{gap:5px!important;}
- body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon{width:30px!important;height:30px!important;border-radius:9px!important;}
- body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i{font-size:15px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon{width:26px!important;height:26px!important;border-radius:7px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i{font-size:14px!important;}
  body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label strong{font-size:10px!important;}
  body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{display:none!important;}
  body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-arrow{font-size:10px!important;}
- body.hmis-home-active #hmisDashboard .hmis-top .hmis-search{flex:1 1 46%;gap:6px!important;padding:8px!important;border-radius:12px!important;}
+ body.hmis-home-active #hmisDashboard .hmis-top .hmis-search{flex:1 1 46%;gap:6px!important;padding:5px 8px!important;border-radius:12px!important;}
  body.hmis-home-active #hmisDashboard .hmis-top .hmis-search input{font-size:11px!important;}
 }
 </style>
@@ -7451,20 +7466,6 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
         </ul>
       </div>
 
-      <!-- SECTION 4: LETTER ISSUED BY HQ -->
-      <div class="collapsible-group collapsed" id="grpHqLetters">
-        <div class="sidebar-section-title" onclick="switchCategory('LETTER ISSUED BY HQ', true)" role="button" tabindex="0">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-paper-plane" style="color:#2563eb;"></i> LETTER ISSUED BY HQ</span>
-        </div>
-      </div>
-
-      <!-- SECTION 5: JPO (JOINT PROCEDURE ORDER) -->
-      <div class="collapsible-group collapsed" id="grpJpo">
-        <div class="sidebar-section-title" onclick="switchCategory('JPO (JOINT PROCEDURE ORDER)', true)" role="button" tabindex="0">
-          <span class="sidebar-section-title-left"><i class="fa-solid fa-people-group" style="color:#7c3aed;"></i> JPO (JOINT PROCEDURE ORDER)</span>
-        </div>
-      </div>
-
       <!-- SECTION 6: LDCE GR. B QUESTION PAPER -->
       <div class="collapsible-group collapsed" id="grpLdcePapers">
         <div class="sidebar-section-title" onclick="toggleAccordion('grpLdcePapers')">
@@ -7479,7 +7480,7 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
           <li class="nav-item" onclick="switchCategory('AFA')"><i class="fa-solid fa-calculator" style="color: #3b82f6;"></i> AFA</li>
           <li class="nav-item" onclick="switchCategory('AME')"><i class="fa-solid fa-gears" style="color: #8b5cf6;"></i> AME</li>
           <li class="nav-item" onclick="switchCategory('ACM')"><i class="fa-solid fa-ticket" style="color: #ec4899;"></i> ACM</li>
-          <li class="nav-item" onclick="switchCategory('AOM')"><i class="fa-solid fa-train-track" style="color: #06b6d4;"></i> AOM</li>
+          <li class="nav-item" onclick="switchCategory('AOM')"><i class="fa-solid fa-train" style="color: #06b6d4;"></i> AOM</li>
           <li class="nav-item" onclick="switchCategory('AEE')"><i class="fa-solid fa-bolt-lightning" style="color: #facc15;"></i> AEE</li>
         </ul>
       </div>
@@ -8471,6 +8472,21 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
       backNavigationBusy = true;
       const finish = () => setTimeout(() => { backNavigationBusy = false; }, 80);
 
+      // Summary is a child route of HOME on mobile/tablet. Handle it before
+      // the HOME boundary/logout guard, including Android hardware Back.
+      const summaryPanel = document.getElementById('hmisDashboard');
+      if (summaryPanel && summaryPanel.classList.contains('hmis-summary-page')) {
+        summaryPanel.classList.remove('hmis-summary-page', 'hmis-summary-open');
+        const summaryToggle = summaryPanel.querySelector('.hmis-summary-toggle');
+        if (summaryToggle) summaryToggle.setAttribute('aria-expanded', 'false');
+        if (currentCategory !== 'HOME') goHome(false);
+        // The popped entry is the HOME route. Never show the logout prompt
+        // for this transition, regardless of the browser's state payload.
+        try { history.replaceState({ view: 'home', railsntgyan: true }, '', window.location.href); } catch(e) {}
+        finish();
+        return;
+      }
+
       // PRIORITY 1: If a drawer is open, Back only closes the drawer.
       const sidebar = document.getElementById('appSidebar');
       if (sidebar && sidebar.classList.contains('mobile-open')) {
@@ -9238,8 +9254,7 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
     // use normal browser navigation instead of the in-page iframe viewer.
     function openExternalLinkSafe(title, url) {
       if (!url || url === '#') return;
-      saveImportantLinksReturnState();
-      window.location.href = url;
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
 
     function closeInAppWebModal() {
@@ -9996,7 +10011,7 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-label small{font-si
               <td class="important-website-cell">
                 ${rec.directLink ? `
                   <a href="${escapeHtml(rec.directLink)}"
-                     onclick="saveImportantLinksReturnState()"
+                     target="_blank" rel="noopener noreferrer"
                      class="important-website-link"
                      title="${escapeHtml(rec.directLink)}">
                     <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
@@ -15833,6 +15848,241 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  #mainRecordTable.rn-important-links tbody tr:last-child td{border-bottom:1px solid #f97316!important;}
 }
 </style>
+
+<!-- RailSNTGyan vNext: mobile/tablet IRSEM & IRTEM bottom sheet -->
+<style id="rails-manual-sheet-style">
+#railsManualSheet{position:fixed;inset:0;z-index:100000;display:none;align-items:flex-end;justify-content:center}
+#railsManualSheet.is-open{display:flex}
+#railsManualSheet .rms-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.66);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+#railsManualSheet .rms-panel{position:relative;width:min(100%,560px);background:linear-gradient(155deg,#f9fbff,#eaf1ff);color:#142a52;border:1px solid rgba(255,255,255,.8);border-radius:26px 26px 0 0;padding:10px 20px calc(22px + env(safe-area-inset-bottom,0px));box-shadow:0 -20px 65px rgba(0,0,0,.35);animation:rms-rise .24s ease-out;max-height:85dvh;overflow:auto}
+#railsManualSheet .rms-handle{width:44px;height:5px;background:#b8c5d9;border-radius:10px;margin:0 auto 17px}
+#railsManualSheet .rms-head{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+#railsManualSheet .rms-book-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:#e2eaff;color:#3558b7;font-size:22px}
+#railsManualSheet .rms-heading{flex:1;min-width:0}
+#railsManualSheet .rms-heading strong{font-size:19px;display:block;font-weight:800}
+#railsManualSheet .rms-heading small{font-size:12px;color:#61728e}
+#railsManualSheet .rms-close{width:36px;height:36px;border:0;border-radius:50%;background:#e1e8f5;color:#30476b;font-size:17px;cursor:pointer}
+#railsManualSheet .rms-choice{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:15px 14px;margin-bottom:12px;border:1px solid #dbe4f3;border-radius:18px;background:#fff;box-shadow:0 5px 15px rgba(39,70,130,.08);color:#1b3156;cursor:pointer}
+#railsManualSheet .rms-choice:active{transform:scale(.985)}
+#railsManualSheet .rms-choice-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:#e7efff;color:#3c5cc2;font-size:20px;flex-shrink:0}
+#railsManualSheet .rms-choice:nth-of-type(2) .rms-choice-icon{background:#fff0e5;color:#d87527}
+#railsManualSheet .rms-choice-copy{flex:1;font-size:14px;font-weight:800;line-height:1.4}
+#railsManualSheet .rms-choice-copy small{display:block;color:#667790;font-size:11px;font-weight:500;margin-top:3px}
+body.dark-theme #railsManualSheet .rms-panel{background:linear-gradient(145deg,#1d2c47,#111d32);color:#f0f5ff;border-color:#354665}
+body.dark-theme #railsManualSheet .rms-choice{background:#243653;color:#f0f5ff;border-color:#3a4c6c}
+body.dark-theme #railsManualSheet .rms-choice-copy small,body.dark-theme #railsManualSheet .rms-heading small{color:#b5c3da}
+body.dark-theme #railsManualSheet .rms-close{background:#344666;color:#fff}
+@keyframes rms-rise{from{transform:translateY(100%);opacity:.65}to{transform:translateY(0);opacity:1}}
+@media(min-width:1367px){#railsManualSheet{display:none!important}}
+@media(prefers-reduced-motion:reduce){#railsManualSheet .rms-panel{animation:none}}
+</style>
+<div id="railsManualSheet" role="dialog" aria-modal="true" aria-labelledby="rmsTitle" aria-hidden="true">
+ <div class="rms-backdrop" data-rms-close="1"></div>
+ <div class="rms-panel"><div class="rms-handle"></div><div class="rms-head"><div class="rms-book-icon"><i class="fa-solid fa-book-open"></i></div><div class="rms-heading"><strong id="rmsTitle">IRSEM</strong><small>Select section to continue</small></div><button class="rms-close" type="button" aria-label="Close" data-rms-close="1"><i class="fa-solid fa-xmark"></i></button></div><div id="rmsChoices"></div></div>
+</div>
+<!-- Bottom sheet interception disabled: native inline submenu with auto-scroll enabled. -->
+
+<!-- Premium IRSEM / IRTEM mobile bottom sheet visual upgrade -->
+<style id="rms-premium-visual-v2">
+#railsManualSheet{padding:0 12px max(18px,env(safe-area-inset-bottom,0px));box-sizing:border-box}
+#railsManualSheet .rms-backdrop{background:rgba(2,8,23,.52);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#railsManualSheet .rms-panel{width:min(100%,530px);max-height:min(78dvh,600px);border-radius:28px;padding:14px 17px 18px;overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(145deg,#f8fbff,#e8efff);border:1px solid #b6c9f1;box-shadow:0 0 0 1px rgba(255,255,255,.35) inset,0 -12px 45px rgba(3,18,52,.28)}
+#railsManualSheet .rms-handle{height:5px;width:50px;margin:0 auto 18px;background:#a7b8d5}
+#railsManualSheet .rms-head{gap:13px;margin-bottom:19px}
+#railsManualSheet .rms-book-icon{width:52px;height:52px;border-radius:15px;background:linear-gradient(140deg,#eef3ff,#cbdcff);box-shadow:0 4px 14px rgba(40,83,183,.15);color:#3257ca}
+#railsManualSheet .rms-heading strong{font-size:21px;letter-spacing:.1px}
+#railsManualSheet .rms-heading small{font-size:12px;margin-top:4px;display:block}
+#railsManualSheet .rms-close{width:42px;height:42px;background:#dce6f9;flex-shrink:0}
+#railsManualSheet .rms-choice{min-height:77px;border-radius:17px;padding:13px 14px;gap:14px;margin-bottom:12px;border:1.5px solid #b9cff7;background:linear-gradient(115deg,#fff,#edf4ff);box-shadow:0 5px 14px rgba(31,73,148,.10)}
+#railsManualSheet .rms-choice:nth-child(2){border-color:#f2c49d;background:linear-gradient(115deg,#fffaf5,#ffeadc)}
+#railsManualSheet .rms-choice-icon{width:49px;height:49px;border-radius:15px;font-size:21px;background:#dce8ff}
+#railsManualSheet .rms-choice:nth-child(2) .rms-choice-icon{background:#ffe2c8;color:#e9741d}
+#railsManualSheet .rms-choice-copy{font-size:14px;overflow-wrap:normal;word-break:normal}
+#railsManualSheet .rms-choice-copy small{font-size:11px;line-height:1.4}
+#railsManualSheet .rms-choice > i:last-child{background:rgba(73,111,184,.12);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+#railsManualSheet .rms-choice:nth-child(2)>i:last-child{background:rgba(233,116,29,.13);color:#dc741f}
+body.dark-theme #railsManualSheet .rms-panel{background:linear-gradient(155deg,#1c3359 0%,#10213d 48%,#0d1b34 100%);border:1.5px solid #466db5;color:#f5f8ff;box-shadow:0 0 0 1px rgba(120,163,248,.12) inset,0 -15px 55px rgba(0,0,0,.45)}
+body.dark-theme #railsManualSheet .rms-handle{background:#b3c9ec}
+body.dark-theme #railsManualSheet .rms-book-icon{background:linear-gradient(145deg,#e9f0ff,#bfd0ff);color:#3559c9}
+body.dark-theme #railsManualSheet .rms-close{background:#334d76;color:white}
+body.dark-theme #railsManualSheet .rms-choice{background:linear-gradient(110deg,#344f7c,#263e65);border:1.5px solid #6789c7;color:#f7faff}
+body.dark-theme #railsManualSheet .rms-choice:nth-child(2){background:linear-gradient(110deg,#4c3b3a,#302c3b);border-color:#bd8660}
+body.dark-theme #railsManualSheet .rms-choice-icon{background:#e2ebff;color:#4268d8}
+body.dark-theme #railsManualSheet .rms-choice:nth-child(2) .rms-choice-icon{background:#ffeadc;color:#f07825}
+body.dark-theme #railsManualSheet .rms-choice-copy small,body.dark-theme #railsManualSheet .rms-heading small{color:#c2d2eb}
+body.dark-theme #railsManualSheet .rms-choice>i:last-child{background:#42608f}
+body.dark-theme #railsManualSheet .rms-choice:nth-child(2)>i:last-child{background:#77503d;color:#ffbb8d}
+#railsManualSheet .rms-foot{display:flex;align-items:center;gap:12px;margin-top:6px;padding:12px 5px 0;border-top:1px solid rgba(121,150,199,.35)}
+#railsManualSheet .rms-foot-icon{font-size:24px}
+#railsManualSheet .rms-foot-copy{font-size:12px;font-weight:800;line-height:1.4}
+#railsManualSheet .rms-foot-copy small{display:block;font-weight:500;font-size:10px;color:#6c7f9f}
+body.dark-theme #railsManualSheet .rms-foot-copy small{color:#b5c6e0}
+@media(max-width:420px){#railsManualSheet{padding-left:10px;padding-right:10px}#railsManualSheet .rms-panel{padding:12px 14px 16px}#railsManualSheet .rms-choice{min-height:72px;padding:11px 10px;gap:10px}#railsManualSheet .rms-choice-copy{font-size:12.5px}#railsManualSheet .rms-choice-icon{width:43px;height:43px}#railsManualSheet .rms-choice-copy small{font-size:10px}}
+</style>
+<script id="rms-premium-footer-v2">
+(function(){const sheet=document.getElementById('railsManualSheet');if(!sheet)return;const panel=sheet.querySelector('.rms-panel');if(!panel||panel.querySelector('.rms-foot'))return;const foot=document.createElement('div');foot.className='rms-foot';foot.innerHTML='<span class="rms-foot-icon" aria-hidden="true">📚</span><span class="rms-foot-copy">IRSEM<small>Indian Railway Signal Engineering Manual</small></span>';panel.appendChild(foot);const title=document.getElementById('rmsTitle');if(title){new MutationObserver(()=>{const irtem=title.textContent.trim()==='IRTEM';foot.querySelector('.rms-foot-copy').innerHTML=irtem?'IRTEM<small>Indian Railway Telecom Engineering Manual</small>':'IRSEM<small>Indian Railway Signal Engineering Manual</small>';}).observe(title,{childList:true,characterData:true,subtree:true});}})();
+</script>
+
+<style id="rails-inline-manual-autoscroll-v1">
+/* Compact premium in-page manual selector; no overlay and no viewport-wide modal. */
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]{
+  border:2px solid #8b7cf2!important;border-radius:17px!important;
+  background:linear-gradient(135deg,#e9e8ff,#f7f2ff)!important;
+  padding:13px!important;box-shadow:0 6px 22px rgba(92,68,207,.20)!important;
+  scroll-margin-top:14px;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-nested-title,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-nested-title{
+  color:#25217a!important;font-size:clamp(12px,1.8vw,17px)!important;margin-bottom:12px!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] > .hmis-grid,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] > .hmis-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item{
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  justify-content:flex-start!important;gap:10px!important;min-height:78px!important;
+  text-align:left!important;padding:12px!important;border-radius:13px!important;
+  background:linear-gradient(145deg,#172e57,#112448)!important;
+  border:1px solid #6074bb!important;box-shadow:0 4px 10px #101a3c22!important;
+}
+#hmisDashboard .hmis-nested .hmis-item .hmis-icon{
+  width:43px!important;height:43px!important;min-width:43px!important;margin:0!important;
+  display:grid!important;place-items:center!important;border-radius:11px!important;
+}
+#hmisDashboard .hmis-nested .hmis-item .hmis-name{
+  font-size:clamp(10px,1.4vw,15px)!important;line-height:1.35!important;
+  color:#fff!important;overflow-wrap:normal!important;word-break:normal!important;
+}
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]{
+  background:linear-gradient(130deg,#17254b,#282249)!important;border-color:#9e82ff!important;
+  box-shadow:0 0 0 1px #8c6dff55,0 7px 24px #6e52d033!important;
+}
+body.dark-theme #hmisDashboard .hmis-nested .hmis-nested-title{color:#f0eaff!important}
+@media(max-width:430px){
+ #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] > .hmis-grid,
+ #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] > .hmis-grid{grid-template-columns:1fr!important}
+}
+</style>
+<script id="rails-inline-manual-autoscroll-controller-v2">
+/* Delegated handler: HMIS is built later and lives in its own scroll container. */
+(function(){
+  function scrollToManual(tile,id){
+    const root=document.getElementById('hmisDashboard');
+    if(!root)return;
+    const grid=tile.closest('.hmis-grid');
+    const selector=grid&&Array.from(grid.children).find(el=>el.classList.contains('hmis-nested')&&el.dataset.parent===id);
+    if(!selector||!selector.isConnected)return;
+    const r=selector.getBoundingClientRect(), h=root.getBoundingClientRect();
+    const desired=root.scrollTop+r.top-h.top-Math.max(18,(h.height-r.height)*.38);
+    const max=root.scrollHeight-root.clientHeight;
+    root.scrollTo({top:Math.max(0,Math.min(max,desired)),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  }
+  document.addEventListener('click',function(e){
+    const tile=e.target.closest('#hmisDashboard .hmis-item[data-nested-id]');
+    if(!tile)return;
+    const id=tile.dataset.nestedId;
+    if(id!=='irsemSubmenu'&&id!=='irtemSubmenu')return;
+    // Native click creates submenu, then allow layout to settle.
+    requestAnimationFrame(()=>requestAnimationFrame(()=>scrollToManual(tile,id)));
+    setTimeout(()=>scrollToManual(tile,id),180);
+  },false);
+})();
+</script>
+
+<style id="rails-manual-light-cards-v4">
+/* Explicit light-mode override after legacy !important navy selectors. */
+body:not(.dark-theme) #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+body:not(.dark-theme) #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item{
+ background:linear-gradient(145deg,#ffffff,#f0edff)!important;
+ border:1.5px solid #c6b9f1!important;
+ box-shadow:0 5px 14px rgba(82,66,153,.13)!important;
+}
+body:not(.dark-theme) #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-name,
+body:not(.dark-theme) #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-name{
+ color:#26345b!important;
+}
+body:not(.dark-theme) #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item:active,
+body:not(.dark-theme) #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item:active{
+ background:#e7e1ff!important;
+}
+</style>
+<script id="rails-manual-outside-touch-v5">
+/* Close on completed click, never on pointerdown: removing a panel during
+   pointerdown can retarget the subsequent click to an underlying tile. */
+(function(){
+ const selector='.hmis-nested[data-parent="irsemSubmenu"],.hmis-nested[data-parent="irtemSubmenu"]';
+ const trigger='#hmisDashboard .hmis-item[data-nested-id="irsemSubmenu"],#hmisDashboard .hmis-item[data-nested-id="irtemSubmenu"]';
+ function closeAll(root){
+   root.querySelectorAll(selector).forEach(n=>n.remove());
+   root.querySelectorAll('.hmis-item[data-nested-id]').forEach(b=>b.setAttribute('aria-expanded','false'));
+ }
+ document.addEventListener('click',function(e){
+   const root=document.getElementById('hmisDashboard');
+   if(!root||!root.querySelector(selector))return;
+   if(e.target.closest(trigger))return;
+   if(e.target.closest(selector))return;
+   // The original click target remains intact until all normal click handlers
+   // have finished; empty-space taps cannot activate a tile beneath the panel.
+   closeAll(root);
+ },false);
+})();
+</script>
+
+<!-- Mobile/tablet summary route: single dashboard surface, browser-history navigation. -->
+<style id="rail-summary-isolated-mobile-v1">
+@media (max-width:1300px) {
+ body.hmis-home-active #hmisDashboard.hmis-summary-page > .hmis-card,
+ body.hmis-home-active #hmisDashboard.hmis-summary-page > .hmis-bottom,
+ body.hmis-home-active #hmisDashboard.hmis-summary-page > .hmis-no-results,
+ body.hmis-home-active #hmisDashboard.hmis-summary-page > .hmis-top {display:none!important}
+ body.hmis-home-active #hmisDashboard.hmis-summary-page #dashboardView.hmis-original-summary {display:flex!important;flex-direction:column!important;flex:1 0 auto!important;height:auto!important;overflow:visible!important;width:100%!important;min-width:0!important}
+ body.hmis-home-active #hmisDashboard.hmis-summary-page {overflow-y:auto!important;overscroll-behavior-y:contain!important}
+ body.hmis-home-active #hmisDashboard.hmis-summary-page #dashboardView .process-track-container {width:100%!important;min-width:0!important}
+}
+</style>
+<script id="rail-summary-isolated-mobile-controller-v1">
+(function(){
+ function init(){
+  const panel=document.getElementById('hmisDashboard');
+  if(!panel||panel.dataset.summaryPageInstalled)return;
+  const launch=panel.querySelector('.hmis-summary-toggle');
+  if(!launch)return;
+  panel.dataset.summaryPageInstalled='1';
+  function mobile(){return matchMedia('(max-width:1300px)').matches || /Android/i.test(navigator.userAgent)}
+  function exit(){panel.classList.remove('hmis-summary-page','hmis-summary-open');launch.setAttribute('aria-expanded','false');}
+  function enter(){
+   const dashboard=document.getElementById('dashboardView');
+   const top=panel.querySelector('.hmis-top');
+   if(dashboard&&top&&dashboard.parentElement!==panel)top.after(dashboard);
+   panel.classList.add('hmis-summary-page','hmis-summary-open');
+   launch.setAttribute('aria-expanded','true');
+   requestAnimationFrame(function(){panel.scrollTop=0;if(typeof updateDashboardView==='function')updateDashboardView();});
+  }
+  launch.addEventListener('click',function(){
+   if(!mobile())return;
+   const open=!panel.classList.contains('hmis-summary-page');
+   if(open){enter();try{history.pushState({view:'rail-summary',railsntgyan:true},'','');}catch(e){}}
+   else if(history.state&&history.state.view==='rail-summary')history.back();
+   else exit();
+  });
+  window.addEventListener('popstate',function(e){
+   if(!mobile())return;
+   if(e.state&&e.state.view==='rail-summary')enter();else exit();
+  });
+  window.addEventListener('resize',function(){if(!mobile())exit()},{passive:true});
+  panel.querySelectorAll('.hmis-bottom button').forEach(function(b){b.addEventListener('click',exit)});
+  document.addEventListener('click',function(e){
+   if(!panel.classList.contains('hmis-summary-page'))return;
+   if(e.target.closest('header .menu-toggle-btn, #appSidebar .nav-item, #appSidebar .home-btn'))exit();
+  },true);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 </body>
 </html>
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
@@ -17730,12 +17980,14 @@ if(originalDashboard){
   summaryBtn.type='button';summaryBtn.className='hmis-summary-toggle';
   summaryBtn.setAttribute('aria-expanded','false');
   summaryBtn.setAttribute('aria-controls','dashboardView');
-  summaryBtn.innerHTML='<span class="hmis-icon" style="--hmis-icon-color:#287fa8"><i class="fa-solid fa-chart-pie"></i></span><span class="hmis-summary-label"><strong>S&T TECHNICAL SUMMARY</strong><small>Financial Year-wise report, approval cards & charts</small></span><i class="fa-solid fa-chevron-down hmis-summary-arrow"></i>';
+  summaryBtn.innerHTML='<span class="hmis-icon" style="--hmis-icon-color:#287fa8"><i class="fa-solid fa-chart-simple"></i></span><span class="hmis-summary-label"><strong>S&T TECHNICAL SUMMARY</strong></span><i class="fa-solid fa-chevron-down hmis-summary-arrow"></i>';
   summaryCard.appendChild(summaryBtn);
   top.appendChild(summaryCard);
   panel.appendChild(originalDashboard);
   originalDashboard.classList.add('hmis-original-summary');
   summaryBtn.addEventListener('click',()=>{
+    // The separate mobile/tablet page controller owns this interaction.
+    if((matchMedia('(max-width:1300px)').matches || /Android/i.test(navigator.userAgent)) && getComputedStyle(panel).display!=='none')return;
     const opened=panel.classList.toggle('hmis-summary-open');
     summaryBtn.setAttribute('aria-expanded',String(opened));
     if(opened){requestAnimationFrame(()=>{
@@ -17780,16 +18032,18 @@ function ready(){
 </script>
 
 <style id="hmis-device-scope-v13">
-@media (min-width:1367px) {
+@media (min-width:1301px) and (pointer:fine) and (hover:hover) {
  body.hmis-home-active #hmisDashboard, #hmisDashboard {display:none!important}
  body.hmis-home-active #appSidebar {display:flex!important}
  body.hmis-home-active #dashboardView,
  body.hmis-home-active #dashboardView.hmis-original-summary,
  body.hmis-home-active #hmisDashboard #dashboardView {display:flex!important}
  body.hmis-home-active #mainContent {padding:14px 18px!important;overflow-y:auto!important}
+ body.hmis-home-active #dashboardView .process-track-container {grid-template-columns:repeat(10,minmax(0,1fr))!important}
+ body.hmis-home-active #dashboardView .dash-charts-grid {grid-template-columns:minmax(0,2fr) minmax(220px,1fr)!important}
  body.hmis-home-active .menu-toggle-btn {display:none!important}
 }
-@media (max-width:1366px) {
+@media (max-width:1366px) and (pointer:coarse) {
  body.hmis-home-active #hmisDashboard .hmis-name {font-size:13px!important;font-weight:900!important;line-height:1.4!important;color:#25324c!important}
  body.dark-theme.hmis-home-active #hmisDashboard .hmis-name {color:#f0f3ff!important}
 }
@@ -17801,13 +18055,17 @@ function ready(){
   const dashboard=document.getElementById('dashboardView');
   const main=document.getElementById('mainContent');
   if(!panel||!dashboard||!main)return;
-  if(window.matchMedia('(min-width:1367px)').matches){
-   if(dashboard.parentElement!==main)main.insertBefore(dashboard,panel.nextSibling);
-  }else if(dashboard.parentElement!==panel){
-   const cards=panel.querySelectorAll('.hmis-card');
-   const last=cards.length?cards[cards.length-1]:null;
-   if(last&&last.parentElement===panel)last.after(dashboard);
-   else panel.appendChild(dashboard);
+  // Match the actual active layout, not just mouse/touch capabilities.
+  // Hybrid laptops and Chrome tablet emulation may expose a fine pointer.
+  const panelIsActive = document.body.classList.contains('hmis-home-active') &&
+    getComputedStyle(panel).display !== 'none';
+  if(panelIsActive){
+   if(dashboard.parentElement!==panel){
+    const launcher=panel.querySelector('.hmis-summary-launcher');
+    if(launcher)launcher.after(dashboard);else panel.appendChild(dashboard);
+   }
+  }else if(dashboard.parentElement!==main){
+   main.insertBefore(dashboard,panel.nextSibling);
   }
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync);
@@ -17818,10 +18076,13 @@ function ready(){
 
 <style id="hmis-tablet-fix-v14">
 /* 1280px landscape tablets remain in the HMIS layout; desktop starts at 1367px. */
-@media (min-width:1025px) and (max-width:1366px) {
- body.hmis-home-active #hmisDashboard {display:flex!important;overflow-y:auto!important}
+@media (min-width:1025px) and (max-width:1300px) {
+ body.hmis-home-active #hmisDashboard {display:flex!important;overflow-y:auto!important;width:100%!important;min-width:0!important}
  body.hmis-home-active #appSidebar {display:none!important}
- body.hmis-home-active #mainContent {padding:14px!important;overflow:hidden!important}
+ body.hmis-home-active #mainContent {padding:14px!important;overflow:hidden!important;min-width:0!important}
+ body.hmis-home-active #hmisDashboard .hmis-top {width:100%;min-width:0}
+ body.hmis-home-active #hmisDashboard .process-track-container {grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ body.hmis-home-active #hmisDashboard .dash-charts-grid {grid-template-columns:1fr!important}
  body.hmis-home-active #dashboardView.hmis-original-summary {display:none!important}
  body.hmis-home-active #hmisDashboard.hmis-summary-open #dashboardView.hmis-original-summary {display:flex!important}
  #hmisDashboard .hmis-grid {grid-template-columns:repeat(5,minmax(0,1fr))!important}
@@ -17843,7 +18104,7 @@ function ready(){
   if(!files)return;
   function makeTile(groupId,category,label,color,icon){
    const group=sidebar.querySelector('#'+groupId);
-   if(!group||files.querySelector('[data-hmis-added="'+groupId+'"]'))return;
+   if(files.querySelector('[data-hmis-added="'+groupId+'"]'))return;
    const tile=document.createElement('button');
    tile.type='button';tile.className='hmis-item';
    tile.dataset.hmisAdded=groupId;
@@ -17909,22 +18170,22 @@ function ready(){
  #mainTableContainer.rails-fit-mode #railsFitTable tr>:first-child{border-right:2px solid #f97316!important}
  #mainTableContainer.rails-fit-mode #railsFitTable tr>:nth-child(2){border-right:2px solid #f97316!important}
  #mainTableContainer.rails-fit-mode #railsFitTable tbody td{white-space:normal!important;overflow:visible!important}
- body.rails-table-fullscreen #mainTableContainer{position:fixed!important;inset:58px 5px 5px!important;z-index:12000!important;height:auto!important;max-height:none!important;background:#fff!important;overflow:auto!important;box-shadow:0 0 0 9999px rgba(0,0,0,.7)!important}
- body.rails-table-fullscreen #railsTableModeBar{position:fixed!important;top:0;left:0;right:0;z-index:12001!important;margin:0;border-radius:0;min-height:52px}
 }
 @media(min-width:1367px){#railsFitTable{display:none!important}}
 </style>
 <script id="rails-table-v20-js">
 (function(){
  const mq=matchMedia('(max-width:1366px)');
+ // Show table mode controls only on mobile/tablet, never on mouse-driven laptops.
+ const isTouchDevice=()=>/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||matchMedia('(pointer: coarse)').matches;
  let mode='scroll',zoomFactor=1,baseWidth=0,queued=false;
  const get=()=>({section:document.getElementById('tableViewSection'),box:document.getElementById('mainTableContainer'),table:document.getElementById('mainRecordTable'),bar:document.getElementById('railsTableModeBar')});
  function render(){
   queued=false;
   const {section,box,table,bar}=get();if(!section||!box||!table||!bar)return;
-  const active=mq.matches&&getComputedStyle(section).display!=='none';
+  const active=mq.matches&&isTouchDevice()&&getComputedStyle(section).display!=='none';
   bar.style.display=active?'flex':'none';
-  if(!mq.matches||!active){box.classList.remove('rails-fit-mode');if(!mq.matches)document.body.classList.remove('rails-table-fullscreen');return;}
+  if(!active){box.classList.remove('rails-fit-mode');const preview=document.getElementById('railsFitTable');if(preview)preview.remove();return;}
   if(mode==='scroll'){
    box.classList.remove('rails-fit-mode');const old=document.getElementById('railsFitTable');if(old)old.remove();
    bar.querySelector('[data-scale]').textContent='100%';return;
@@ -17968,13 +18229,12 @@ function ready(){
  function init(){
   const {box,table}=get();if(!box||!table||document.getElementById('railsTableModeBar'))return;
   const bar=document.createElement('div');bar.id='railsTableModeBar';
-  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="false">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="true">Normal Scroll</button><button type="button" data-fullscreen>⛶ Fullscreen</button>';
+  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="false">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="true">Normal Scroll</button>';
   box.parentNode.insertBefore(bar,box);
   bar.addEventListener('click',e=>{
    const b=e.target.closest('button');if(!b)return;
    if(b.dataset.mode){mode=b.dataset.mode;zoomFactor=1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
    if(b.dataset.zoom){mode='fit';zoomFactor=b.dataset.zoom==='in'?Math.min(4,zoomFactor*1.25):b.dataset.zoom==='out'?Math.max(.4,zoomFactor/1.25):1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
-   if(b.hasAttribute('data-fullscreen')){const yes=document.body.classList.toggle('rails-table-fullscreen');b.textContent=yes?'✕ Close':'⛶ Fullscreen';}
    schedule();
   });
   if(window.ResizeObserver)new ResizeObserver(schedule).observe(box);
@@ -18117,3 +18377,133 @@ body.dark-theme #hmisDashboard .hmis-summary-toggle > .hmis-icon {
   box-shadow: inset 0 1px 2px rgba(255,255,255,.08), 0 2px 7px rgba(0,0,0,.25) !important;
 }
 </style>
+
+<style id="rails-premium-dashboard-2026">
+/* Visual-only enhancement: existing buttons, events, Firebase and navigation untouched. */
+@media(max-width:1366px){
+body:not(.dark-theme).hmis-home-active #mainContent{background:linear-gradient(145deg,#edf6ff 0%,#f3f1ff 53%,#eaf8ff 100%)!important}
+#hmisDashboard{gap:15px!important;padding:10px 5px 115px!important;scroll-padding-bottom:115px}
+#hmisDashboard .hmis-card:not(.hmis-summary-launcher){border-radius:23px!important;padding:18px 13px!important;border:1px solid rgba(255,255,255,.95)!important;background:rgba(255,255,255,.91)!important;box-shadow:0 12px 28px rgba(51,72,130,.09),inset 0 1px 0 #fff!important}
+#hmisDashboard .hmis-title{color:#172e65!important;font-size:clamp(14px,3.8vw,19px)!important;letter-spacing:-.3px;line-height:1.3!important;padding-bottom:12px;margin-bottom:15px!important;border-bottom:2px solid #e8edfa}
+#hmisDashboard .hmis-title i{color:#f49a13!important;filter:drop-shadow(0 3px 4px #f6bb6c77)}
+#hmisDashboard .hmis-grid{gap:13px 9px!important;align-items:stretch}
+#hmisDashboard .hmis-item{--tile-color:var(--hmis-icon-color,#7753b6);position:relative!important;min-width:0!important;min-height:130px!important;padding:11px 4px 13px!important;gap:11px!important;border-radius:19px!important;background:linear-gradient(155deg,#fff 10%,#f9faff 100%)!important;border:1px solid #e8edfa!important;box-shadow:0 7px 15px rgba(38,65,126,.10),inset 0 1px 0 #fff!important;transition:transform .18s,box-shadow .18s!important}
+#hmisDashboard .hmis-item:active{transform:scale(.96)!important}
+#hmisDashboard .hmis-item>.hmis-icon{width:clamp(53px,15vw,77px)!important;height:clamp(53px,15vw,77px)!important;flex-shrink:0!important;border-radius:20px!important;border:2.5px solid color-mix(in srgb,var(--hmis-icon-color,#8a6ab4) 38%,white)!important;background:linear-gradient(145deg,color-mix(in srgb,var(--hmis-icon-color,#8a6ab4) 12%,white),#fff 80%)!important;box-shadow:6px 7px 13px color-mix(in srgb,var(--hmis-icon-color,#8a6ab4) 18%,transparent),inset 2px 2px 2px #fff,inset -2px -3px 6px #e9e7f3!important}
+#hmisDashboard .hmis-item>.hmis-icon>i:first-child{font-size:clamp(25px,7.5vw,37px)!important;filter:drop-shadow(1px 3px 2px #25345524)}
+#hmisDashboard .hmis-name{font-size:clamp(9px,2.7vw,13px)!important;line-height:1.28!important;letter-spacing:-.15px!important;font-weight:900!important;color:#17264d!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;text-wrap:balance!important;max-width:100%!important}
+#hmisDashboard .hmis-nested{border-radius:19px!important;background:#f5f2ff!important}
+#hmisDashboard .hmis-bottom{position:fixed!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:4%!important;width:92%!important;display:flex!important;justify-content:space-around!important;padding:12px 8px!important;border-radius:40px!important;background:rgba(255,255,255,.96)!important;border:1px solid #fff!important;box-shadow:0 12px 30px #253e7940!important;backdrop-filter:blur(18px)}
+#hmisDashboard .hmis-bottom button{color:#4c448a!important;font-weight:900!important;gap:5px!important}
+#hmisDashboard .hmis-bottom i{font-size:23px!important}
+body.dark-theme.hmis-home-active #mainContent{background:linear-gradient(145deg,#0a1527,#15162d 60%,#102b3b)!important}
+body.dark-theme #hmisDashboard .hmis-card{background:#17243a!important;border-color:#314260!important;box-shadow:0 12px 28px #0005!important}
+body.dark-theme #hmisDashboard .hmis-title,body.dark-theme #hmisDashboard .hmis-name{color:#f0f4ff!important}
+body.dark-theme #hmisDashboard .hmis-item{background:linear-gradient(145deg,#243650,#17263f)!important;border-color:#344862!important;box-shadow:0 8px 15px #0004!important}
+body.dark-theme #hmisDashboard .hmis-item>.hmis-icon{background:linear-gradient(145deg,#34415f,#1e2d46)!important;border-color:#64789d!important;box-shadow:5px 6px 13px #0005,inset 1px 1px 2px #ffffff26!important}
+body.dark-theme #hmisDashboard .hmis-bottom{background:#1a2942!important;border-color:#344761!important}
+body.dark-theme #hmisDashboard .hmis-bottom button{color:#d8d7ff!important}
+}
+@media(max-width:699px){#hmisDashboard .hmis-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}#hmisDashboard .hmis-card{padding:15px 10px!important}#hmisDashboard .hmis-item{min-height:125px!important}}
+@media(max-width:360px){#hmisDashboard .hmis-grid{gap:9px 6px!important}#hmisDashboard .hmis-item{padding:9px 2px!important}#hmisDashboard .hmis-name{font-size:9px!important}}
+@media(prefers-reduced-motion:reduce){#hmisDashboard .hmis-item{transition:none!important}}
+</style>
+
+<style id="rails-manual-autoscroll-final-v2">
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]{background:linear-gradient(135deg,#e8eaff,#f6f1ff)!important;border:2px solid #9b8aee!important;box-shadow:0 7px 20px #6555c42a!important}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-nested-title,#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-nested-title{color:#26236d!important;font-weight:900!important}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item{background:linear-gradient(135deg,#192f60,#10234a)!important;border:1px solid #647db9!important;min-height:76px!important;padding:12px!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:12px!important}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-name,#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-name{color:#fff!important;font-size:clamp(11px,1.6vw,15px)!important;text-align:left!important}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-icon,#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-icon{width:45px!important;height:45px!important;min-width:45px!important;border-radius:12px!important}
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],body.dark-theme #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]{background:linear-gradient(135deg,#1a2750,#272044)!important;border-color:#a78bfa!important}
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-nested-title,body.dark-theme #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-nested-title{color:#f0eaff!important}
+@media(max-width:430px){#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"]>.hmis-grid,#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]>.hmis-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+
+
+<!-- v3: Unified IRSEM/IRTEM selector geometry and global exclusive close -->
+<style id="rails-manual-uniform-v3">
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]{
+ --manual-accent:#8b78ec;
+ padding:16px!important;border:2px solid var(--manual-accent)!important;
+ border-radius:20px!important;background:linear-gradient(135deg,#edeaff,#f8f5ff)!important;
+ box-shadow:0 8px 24px rgba(74,57,160,.17)!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"]>.hmis-grid,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]>.hmis-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item{
+ box-sizing:border-box!important;min-width:0!important;min-height:86px!important;
+ display:flex!important;flex-direction:row!important;justify-content:flex-start!important;
+ align-items:center!important;gap:12px!important;padding:12px!important;
+ border-radius:15px!important;background:linear-gradient(140deg,#1a315e,#10254b)!important;
+ border:1.5px solid #7185c4!important;box-shadow:0 5px 13px rgba(15,28,65,.22)!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-icon,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-icon{
+ width:50px!important;height:50px!important;min-width:50px!important;flex:0 0 50px!important;
+ margin:0!important;border-radius:13px!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-name,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-name{
+ color:#fff!important;text-align:left!important;font-size:clamp(11px,1.45vw,15px)!important;
+ line-height:1.35!important;font-weight:800!important;overflow-wrap:break-word!important;
+}
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]{
+ background:linear-gradient(135deg,#1a2750,#282145)!important;
+ border-color:#9b85ff!important;box-shadow:0 8px 24px rgba(0,0,0,.3)!important;
+}
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+body.dark-theme #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item{
+ background:linear-gradient(140deg,#1a315e,#10254b)!important;
+ border-color:#7185c4!important;min-height:86px!important;
+}
+@media(max-width:430px){
+ #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+ #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item{gap:8px!important;padding:9px!important;}
+ #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-icon,
+ #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-icon{width:40px!important;height:40px!important;min-width:40px!important;flex-basis:40px!important;}
+}
+</style>
+<script id="rails-manual-exclusive-close-v3">
+(function(){
+ const rootId='hmisDashboard';
+ function closeManuals(except){
+  const root=document.getElementById(rootId);if(!root)return;
+  root.querySelectorAll('.hmis-nested[data-parent="irsemSubmenu"],.hmis-nested[data-parent="irtemSubmenu"]').forEach(node=>{
+   if(except && node.dataset.parent===except)return;
+   node.remove();
+  });
+  root.querySelectorAll('.hmis-item[data-nested-id]').forEach(btn=>{
+   const id=btn.dataset.nestedId;
+   btn.setAttribute('aria-expanded',String(!!root.querySelector('.hmis-nested[data-parent="'+id+'"]')));
+  });
+ }
+ // Capture click: other dashboard cards, section headings, search, navigation, and sidebar close any open manual.
+ // Manual parent tiles retain their original toggle and auto-scroll handlers.
+ document.addEventListener('click',function(e){
+  const root=document.getElementById(rootId);if(!root)return;
+  const tile=e.target.closest('#hmisDashboard .hmis-item[data-nested-id]');
+  if(tile && (tile.dataset.nestedId==='irsemSubmenu'||tile.dataset.nestedId==='irtemSubmenu')){
+   closeManuals(tile.dataset.nestedId);return;
+  }
+  const withinManual=e.target.closest('#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"],#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"]');
+  // Clicking an actual submenu option navigates away and closes it; blank selector background does not.
+  if(withinManual&&!e.target.closest('.hmis-item'))return;
+  if(e.target.closest('#hmisDashboard .hmis-item,#hmisDashboard .hmis-title,#hmisDashboard .hmis-bottom,#hmisDashboard .hmis-summary-toggle,#hmisDashboard .hmis-search,#appSidebar .nav-item,#appSidebar .sidebar-section-title,header,.menu-toggle-btn')){
+   closeManuals();
+  }
+ },true);
+ // When any category or HOME is opened via another route (including JS), close the selector.
+ document.addEventListener('click',function(e){
+  if(e.target.closest('#hmisDashboard .hmis-item[data-nested-id]'))return;
+  if(e.target.closest('#hmisDashboard .hmis-item,#hmisDashboard .hmis-bottom,#appSidebar .nav-item')){
+   requestAnimationFrame(()=>closeManuals());
+  }
+ },false);
+})();
+</script>
