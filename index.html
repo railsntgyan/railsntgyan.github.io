@@ -11,7 +11,7 @@
     var samsungTab = /SM-X216|SM-X210|SM-X218|SM-X215|SM-X216B/i.test(ua);
     if (!(androidTablet || samsungTab)) return;
     var meta = document.getElementById('railsViewportMeta');
-    if (meta) meta.setAttribute('content', 'width=1024, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+    if (meta) meta.setAttribute('content', 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes');
   })();
   </script>
   <meta name="color-scheme" content="dark">
@@ -6673,6 +6673,40 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i
    touch-action:pan-x pan-y!important;-webkit-overflow-scrolling:touch!important;
    overscroll-behavior:contain!important;min-height:0!important;}
  #mainTableContainer.rails-fit-mode #railsFitTable {touch-action:pan-x pan-y!important;}
+}
+</style>
+<style id="rails-tablet-login-fit-smooth-fix">
+/* Center login in the usable WebView viewport on phones and tablets. */
+#loginScreen {
+ inset:0;
+ width:100%;
+ height:100dvh;
+ min-height:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
+}
+#loginScreen .login-card {
+ flex:0 1 440px;
+ margin:auto;
+ max-width:min(440px,100%);
+}
+@media (max-height:560px) {
+ #loginScreen {align-items:safe center;}
+ #loginScreen .login-card {margin:auto;}
+}
+/* Native single-finger panning stays enabled when the fit preview is zoomed. */
+#mainTableContainer.rails-fit-mode {
+ touch-action:pan-x pan-y !important;
+ -webkit-overflow-scrolling:touch;
+ overflow:auto!important;
+}
+#mainTableContainer.rails-fit-mode #railsFitTable {
+ transform:none!important;
+ transform-origin:top left;
 }
 </style>
 </head>
@@ -18194,41 +18228,51 @@ function ready(){
  const mq=matchMedia('(max-width:1366px)');
  // Show table mode controls only on mobile/tablet, never on mouse-driven laptops.
  const isTouchDevice=()=>/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||matchMedia('(pointer: coarse)').matches;
- let mode='scroll',zoomFactor=1,baseWidth=0,queued=false;
+ let mode='scroll',zoomFactor=1,queued=false,needsRebuild=true,fitBaseScale=1;
  const get=()=>({section:document.getElementById('tableViewSection'),box:document.getElementById('mainTableContainer'),table:document.getElementById('mainRecordTable'),bar:document.getElementById('railsTableModeBar')});
  function render(){
   queued=false;
   const {section,box,table,bar}=get();if(!section||!box||!table||!bar)return;
   const active=mq.matches&&isTouchDevice()&&getComputedStyle(section).display!=='none';
   bar.style.display=active?'flex':'none';
-  if(!active){box.classList.remove('rails-fit-mode');const preview=document.getElementById('railsFitTable');if(preview)preview.remove();return;}
+  if(!active){box.classList.remove('rails-fit-mode');const preview=document.getElementById('railsFitTable');if(preview)preview.remove();needsRebuild=true;return;}
   if(mode==='scroll'){
    box.classList.remove('rails-fit-mode');const old=document.getElementById('railsFitTable');if(old)old.remove();
-   bar.querySelector('[data-scale]').textContent='100%';return;
+   bar.querySelector('[data-scale]').textContent='100%';needsRebuild=true;return;
   }
-  const savedScrollTop=box.scrollTop, savedScrollLeft=box.scrollLeft;
-  box.classList.remove('rails-fit-mode');
-  const old=document.getElementById('railsFitTable');if(old)old.remove();
-  // Measure the real table before scaling. Do not scale the sticky original.
-  const originalWidth=Math.max(table.scrollWidth,table.getBoundingClientRect().width,780);
-  const copy=table.cloneNode(true);
-  copy.id='railsFitTable';copy.removeAttribute('style');copy.classList.add('rails-fit-preview');
-  copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
-  copy.setAttribute('aria-label','Scaled table preview');
-  copy.style.width=originalWidth+'px';copy.style.minWidth='0';
-  copy.style.maxWidth='none';
-  // Remove the sticky offsets and any fixed-position cells inherited from original CSS.
-  copy.querySelectorAll('th,td').forEach(cell=>{
-   cell.style.position='static';cell.style.left='auto';cell.style.right='auto';cell.style.transform='none';
-  });
-  box.appendChild(copy);
-  box.classList.add('rails-fit-mode');
-  const avail=Math.max(100,box.clientWidth-5);
-  const scale=Math.max(.12,Math.min(2.5,avail/originalWidth*zoomFactor));
+  // Rebuild the preview only when its source data/layout changes, NOT on every
+  // pinch frame. Re-cloning thousands of table cells caused stutter and lost scroll.
+  let copy=document.getElementById('railsFitTable');
+  if(needsRebuild || !copy){
+   const savedTop=box.scrollTop, savedLeft=box.scrollLeft;
+   box.classList.remove('rails-fit-mode');
+   if(copy)copy.remove();
+   const originalWidth=Math.max(table.scrollWidth,table.getBoundingClientRect().width,780);
+   copy=table.cloneNode(true);
+   copy.id='railsFitTable';
+   copy.removeAttribute('style');
+   copy.classList.add('rails-fit-preview');
+   copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+   copy.setAttribute('aria-label','Scaled table preview');
+   copy.style.width=originalWidth+'px';
+   copy.style.minWidth='0';
+   copy.style.maxWidth='none';
+   copy.querySelectorAll('th,td').forEach(cell=>{
+    cell.style.position='static';cell.style.left='auto';
+    cell.style.right='auto';cell.style.transform='none';
+   });
+   box.appendChild(copy);
+   box.classList.add('rails-fit-mode');
+   fitBaseScale=Math.max(.12,Math.min(2.5,Math.max(100,box.clientWidth-5)/originalWidth));
+   box.scrollTop=savedTop;box.scrollLeft=savedLeft;
+   needsRebuild=false;
+  }
+  const scale=Math.max(.12,Math.min(4,fitBaseScale*zoomFactor));
   copy.style.zoom=String(scale);
-  // Some browsers restore a previous scroll offset when table content changes.
-  box.scrollLeft=savedScrollLeft;box.scrollTop=savedScrollTop;
   bar.querySelector('[data-scale]').textContent=Math.round(scale*100)+'%';
+  // Keep the current scroll position while zooming; the same DOM stays mounted.
+  if(copy.dataset.railClicksAttached==='yes')return;
+  copy.dataset.railClicksAttached='yes';
   // Forward action clicks to corresponding live elements (edit, links, view, etc.).
   copy.addEventListener('click',function(e){
    const target=e.target.closest('a,button,[onclick],[role="button"]');if(!target)return;
@@ -18258,20 +18302,20 @@ function ready(){
    if(mode!=='fit'||e.touches.length!==2||!pinchStartDistance)return;
    e.preventDefault();
    const next=Math.max(.4,Math.min(4,pinchStartFactor*distance(e.touches)/pinchStartDistance));
-   if(Math.abs(next-zoomFactor)>.025){zoomFactor=next;schedule();}
+   if(Math.abs(next-zoomFactor)>.008){zoomFactor=next;schedule();}
   },{passive:false});
   box.addEventListener('touchend',e=>{if(e.touches.length<2)pinchStartDistance=0;},{passive:true});
   bar.addEventListener('click',e=>{
    const b=e.target.closest('button');if(!b)return;
-   if(b.dataset.mode){mode=b.dataset.mode;zoomFactor=1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
+   if(b.dataset.mode){mode=b.dataset.mode;zoomFactor=1;needsRebuild=true;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
    if(b.dataset.zoom){mode='fit';zoomFactor=b.dataset.zoom==='in'?Math.min(4,zoomFactor*1.25):b.dataset.zoom==='out'?Math.max(.4,zoomFactor/1.25):1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
    schedule();
   });
-  if(window.ResizeObserver)new ResizeObserver(schedule).observe(box);
+  if(window.ResizeObserver)new ResizeObserver(()=>{needsRebuild=true;schedule();}).observe(box);
   const body=document.getElementById('tableBody'),head=document.getElementById('tableHead');
-  if(window.MutationObserver){const observer=new MutationObserver(schedule);[body,head].filter(Boolean).forEach(el=>observer.observe(el,{childList:true,subtree:true,characterData:true}));}
-  window.addEventListener('resize',schedule,{passive:true});
-  document.addEventListener('click',()=>setTimeout(schedule,100),true);
+  if(window.MutationObserver){const observer=new MutationObserver(()=>{needsRebuild=true;schedule();});[body,head].filter(Boolean).forEach(el=>observer.observe(el,{childList:true,subtree:true,characterData:true}));}
+  window.addEventListener('resize',()=>{needsRebuild=true;schedule();},{passive:true});
+  document.addEventListener('click',e=>{if(!e.target.closest('#railsTableModeBar, #mainTableContainer'))setTimeout(()=>{needsRebuild=true;schedule();},100);},true);
   schedule();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
