@@ -6659,6 +6659,22 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i
  }
 }
 </style>
+
+<style id="rails-mobile-overflow-and-fit-pan-fix-20261017">
+/* Keep all mobile navigation labels within their own cards. */
+@media (max-width: 1366px) {
+ #hmisDashboard .hmis-grid, #hmisDashboard .hmis-nested {min-width:0!important;}
+ #hmisDashboard .hmis-item {min-width:0!important;max-width:100%!important;overflow:visible!important;}
+ #hmisDashboard .hmis-name {display:block!important;width:100%!important;max-width:100%!important;
+   white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;
+   hyphens:auto!important;line-height:1.3!important;font-size:clamp(9px,2.6vw,11px)!important;}
+ #hmisDashboard .hmis-icon {max-width:100%!important;flex-shrink:0!important;}
+ #mainTableContainer.rails-fit-mode {overflow-x:auto!important;overflow-y:auto!important;
+   touch-action:pan-x pan-y!important;-webkit-overflow-scrolling:touch!important;
+   overscroll-behavior:contain!important;min-height:0!important;}
+ #mainTableContainer.rails-fit-mode #railsFitTable {touch-action:pan-x pan-y!important;}
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -18190,6 +18206,7 @@ function ready(){
    box.classList.remove('rails-fit-mode');const old=document.getElementById('railsFitTable');if(old)old.remove();
    bar.querySelector('[data-scale]').textContent='100%';return;
   }
+  const savedScrollTop=box.scrollTop, savedScrollLeft=box.scrollLeft;
   box.classList.remove('rails-fit-mode');
   const old=document.getElementById('railsFitTable');if(old)old.remove();
   // Measure the real table before scaling. Do not scale the sticky original.
@@ -18210,7 +18227,7 @@ function ready(){
   const scale=Math.max(.12,Math.min(2.5,avail/originalWidth*zoomFactor));
   copy.style.zoom=String(scale);
   // Some browsers restore a previous scroll offset when table content changes.
-  box.scrollLeft=0;box.scrollTop=0;
+  box.scrollLeft=savedScrollLeft;box.scrollTop=savedScrollTop;
   bar.querySelector('[data-scale]').textContent=Math.round(scale*100)+'%';
   // Forward action clicks to corresponding live elements (edit, links, view, etc.).
   copy.addEventListener('click',function(e){
@@ -18231,6 +18248,19 @@ function ready(){
   const bar=document.createElement('div');bar.id='railsTableModeBar';
   bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="false">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="true">Normal Scroll</button>';
   box.parentNode.insertBefore(bar,box);
+  // Two-finger zoom for Fit Screen, with native one-finger vertical/horizontal panning.
+  let pinchStartDistance=0, pinchStartFactor=1;
+  const distance=touches=>Math.hypot(touches[0].clientX-touches[1].clientX,touches[0].clientY-touches[1].clientY);
+  box.addEventListener('touchstart',e=>{
+   if(mode==='fit' && e.touches.length===2){pinchStartDistance=distance(e.touches);pinchStartFactor=zoomFactor;}
+  },{passive:true});
+  box.addEventListener('touchmove',e=>{
+   if(mode!=='fit'||e.touches.length!==2||!pinchStartDistance)return;
+   e.preventDefault();
+   const next=Math.max(.4,Math.min(4,pinchStartFactor*distance(e.touches)/pinchStartDistance));
+   if(Math.abs(next-zoomFactor)>.025){zoomFactor=next;schedule();}
+  },{passive:false});
+  box.addEventListener('touchend',e=>{if(e.touches.length<2)pinchStartDistance=0;},{passive:true});
   bar.addEventListener('click',e=>{
    const b=e.target.closest('button');if(!b)return;
    if(b.dataset.mode){mode=b.dataset.mode;zoomFactor=1;bar.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));}
@@ -18507,3 +18537,20 @@ body.dark-theme #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-it
  },false);
 })();
 </script>
+
+
+<!-- RailSNTGyan v2: final cascade correction for compact mobile tiles -->
+<style id="rails-mobile-tile-label-final-fix">
+@media (max-width:699px) {
+ #hmisDashboard .hmis-grid {grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px 6px!important;}
+ #hmisDashboard .hmis-item {box-sizing:border-box!important;min-width:0!important;max-width:100%!important;min-height:126px!important;height:auto!important;padding:9px 3px 10px!important;gap:6px!important;overflow:visible!important;align-items:center!important;justify-content:flex-start!important;}
+ #hmisDashboard .hmis-item>.hmis-icon {width:clamp(36px,11vw,47px)!important;height:clamp(36px,11vw,47px)!important;min-width:0!important;border-radius:13px!important;}
+ #hmisDashboard .hmis-item>.hmis-icon>i:first-child {font-size:clamp(18px,5.6vw,25px)!important;}
+ #hmisDashboard .hmis-item>.hmis-name {display:block!important;flex:0 0 auto!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:0 1px!important;text-align:center!important;font-size:8.5px!important;line-height:1.22!important;letter-spacing:-.22px!important;font-weight:800!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;hyphens:auto!important;text-wrap:wrap!important;overflow:visible!important;}
+}
+@media (max-width:380px) {
+ #hmisDashboard .hmis-item>.hmis-name {font-size:8px!important;line-height:1.2!important;}
+ #hmisDashboard .hmis-item {min-height:120px!important;padding:8px 2px 9px!important;gap:5px!important;}
+}
+/* Preserve larger, horizontal IRSEM/IRTEM nested selector cards. */
+</style>
