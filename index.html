@@ -6722,6 +6722,35 @@ body.hmis-home-active #hmisDashboard .hmis-top .hmis-summary-toggle>.hmis-icon i
   body.hmis-home-active #hmisDashboard {padding-bottom:16px!important;}
 }
 </style>
+
+<style id="rails-manual-selector-text-wrap-fix">
+/* Only IRSEM/IRTEM selection cards: keep every label inside its own card. */
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item {
+  min-width:0!important; max-width:100%!important; overflow:hidden!important;
+}
+#hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-name,
+#hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-name {
+  display:block!important; flex:1 1 0!important; width:auto!important;
+  min-width:0!important; max-width:100%!important;
+  white-space:normal!important; overflow-wrap:anywhere!important;
+  word-break:normal!important; hyphens:auto!important;
+  font-size:clamp(10px,1.6vw,14px)!important;
+  line-height:1.35!important; text-align:left!important;
+}
+@media (max-width:600px) {
+ #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item,
+ #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item {
+   flex-direction:column!important; justify-content:center!important;
+   align-items:center!important; gap:8px!important; padding:12px 7px!important;
+ }
+ #hmisDashboard .hmis-nested[data-parent="irsemSubmenu"] .hmis-item .hmis-name,
+ #hmisDashboard .hmis-nested[data-parent="irtemSubmenu"] .hmis-item .hmis-name {
+   flex:0 1 auto!important; width:100%!important; text-align:center!important;
+   font-size:clamp(10px,2.8vw,13px)!important;
+ }
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
