@@ -1,0 +1,16 @@
+RailSNTGyan - COMPACT v3 deployment verification (23-Oct-2026)
+
+1. GitHub repo ke PUBLISHED branch/folder me purane index.html ko replace karein.
+   Settings > Pages > Build and deployment me source Branch aur /(root) ya /docs verify karein.
+2. Upload name EXACT: index.html (RailSNTGyan_Compact_Master_v3_Deploy_Verified.html nahin).
+3. images/ folder preserve karein. Blank Template root par rakhein.
+4. Changes Commit karein. GitHub Pages published HTTPS link kholein (local content://downloads nahi).
+5. Site URL par ?v=compact-v3 jodein. Incognito tab me bhi test karein.
+6. Admin Profile > ADD IN DATABASE kholein. Pop-up heading ke paas bright 'COMPACT v3' badge
+   aur Saved Master Entries ke paas COMPACT v3 dikhega.
+7. 2-line compact rows, Search, Division Filter, 25/50 pagination, edit and more icons honge.
+8. Agar COMPACT v3 badge nahi dikh raha to purana index.html hi publish ho raha hai;
+   GitHub Pages branch/folder / file naam aur committed version check karein.
+9. Firebase collection data, records, login aur excel-import code change nahi hua hai.
+
+This package does not automatically publish the site to GitHub. No live Firebase tests performed.
