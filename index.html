@@ -17624,6 +17624,26 @@ html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[ari
   #railProfileOverlay .rail-profile-footer{margin-top:7px}
 }
 @media(max-width:360px){#railProfileOverlay .rail-pe-tab span{font-size:10px}}
+
+/* Email verification controls inside the existing compact Security tab. */
+#railProfileOverlay .rail-pe-email-verify{grid-column:1/-1;display:block;border:1px solid #c5dced;border-radius:12px;padding:12px;background:rgba(227,242,252,.44);min-width:0}
+#railProfileOverlay .rail-pe-verify-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+#railProfileOverlay .rail-pe-verify-heading h3{font-size:14px;margin:0 0 4px}
+#railProfileOverlay .rail-pe-verify-heading .rail-pe-note{margin:0;font-size:11px;line-height:1.5}
+#railProfileOverlay .rail-pe-verify-badge{font-size:11px;font-weight:700;padding:5px 9px;border:1px solid #e6c39b;background:#fff2dc;color:#82500e;border-radius:999px;white-space:nowrap}
+#railProfileOverlay .rail-pe-verify-badge[data-verified="true"]{border-color:#a6d9b9;background:#e6faee;color:#13613c}
+#railProfileOverlay .rail-pe-verify-actions{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+#railProfileOverlay .rail-pe-verify-actions .rail-pe-button{min-width:0;padding:8px 13px;min-height:37px;font-size:11px}
+#railProfileOverlay .rail-pe-verify-actions .rail-pe-button:disabled{opacity:.56;cursor:not-allowed}
+#railProfileOverlay .rail-pe-email-verify .rail-pe-status{margin-top:8px;font-size:11px}
+body.dark-theme #railProfileOverlay .rail-pe-email-verify{background:rgba(23,54,83,.47);border-color:#365a79}
+body.dark-theme #railProfileOverlay .rail-pe-verify-badge{background:#473825;color:#ffdfaa;border-color:#8a6a39}
+body.dark-theme #railProfileOverlay .rail-pe-verify-badge[data-verified="true"]{background:#123f30;color:#b4f8d2;border-color:#3a9370}
+@media(max-width:620px){
+ #railProfileOverlay .rail-pe-email-verify{grid-column:auto;padding:11px}
+ #railProfileOverlay .rail-pe-verify-actions{flex-direction:column}
+ #railProfileOverlay .rail-pe-verify-actions .rail-pe-button{width:100%}
+}
 </style>
 
 <div id="railProfileOverlay" hidden aria-hidden="true">
@@ -17689,6 +17709,20 @@ html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[ari
         <button id="railPePasswordCancel" type="button" class="rail-pe-button rail-pe-secondary">Cancel</button>
       </div>
       <p class="rail-pe-note">Forgot your current password? Sign out and use Forgot password? on the login screen to get a reset link by email.</p>
+      <section class="rail-pe-email-verify" aria-labelledby="railPeVerifyHeading">
+        <div class="rail-pe-verify-heading">
+          <div>
+            <h3 id="railPeVerifyHeading"><i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i> Email Verification</h3>
+            <p id="railPeVerifyHint" class="rail-pe-note">Verify the email address associated with your account.</p>
+          </div>
+          <span id="railPeVerifyBadge" class="rail-pe-verify-badge">Not verified</span>
+        </div>
+        <div class="rail-pe-actions rail-pe-verify-actions">
+          <button type="button" id="railPeSendVerifyEmail" class="rail-pe-button"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send Verification Email</button>
+          <button type="button" id="railPeRefreshVerify" class="rail-pe-button rail-pe-secondary"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Check Verification Status</button>
+        </div>
+        <p id="railPeVerifyStatus" class="rail-pe-status" role="status" aria-live="polite"></p>
+      </section>
     </form>
     <!-- Admin-only master data settings: never displayed in regular User profiles. -->
     <section id="railProfileAdminManagement" class="rail-profile-admin-management" hidden aria-label="Admin Management">
@@ -17774,6 +17808,7 @@ html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[ari
     setText('railProfileRole',role);
     setText('railProfileRoleDetail',role);
     setText('railProfileVerified',current.emailVerified===true?'Verified':'Not verified');
+    if(typeof window.railProfileUpdateEmailVerification==='function')window.railProfileUpdateEmailVerification(current);
     setText('railProfileLastLogin',localDate(current.metadata && current.metadata.lastSignInTime));
     const avatar=(current.displayName||current.email||'U').trim();
     setText('railProfileAvatar',avatar?avatar[0].toUpperCase():'U');
@@ -17860,7 +17895,10 @@ html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[ari
        $('railPeDirectory').hidden=true;
        compactView('admin');
      }else if(tab==='edit')showForm('railPeEditForm');
-     else if(tab==='security')showForm('railPePasswordForm');
+     else if(tab==='security'){
+       showForm('railPePasswordForm');
+       if(typeof window.railProfileUpdateEmailVerification==='function')window.railProfileUpdateEmailVerification(active());
+     }
      else {showForm(null);$('railPeDirectory').hidden=true;compactView('overview');}
    });
  });
@@ -17903,7 +17941,8 @@ html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[ari
  window.railProfileDetailsOpened=async function(user){
    const nonce=++profileNonce;
    showForm(null);
-   status('railPeEditStatus','');status('railPePasswordStatus','');
+   status('railPeEditStatus','');status('railPePasswordStatus','');status('railPeVerifyStatus','');
+   if(typeof window.railProfileUpdateEmailVerification==='function')window.railProfileUpdateEmailVerification(user);
    $('railPeDirectory').hidden=true;
    $('railProfileOverlay')?.querySelector('.rail-profile-panel')?.classList.remove('rail-pe-expanded');
    directoryRows=[];
@@ -17970,6 +18009,65 @@ html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[ari
      if(!authWarning)setTimeout(()=>{if(active()?.uid===user.uid){showForm(null);status('railPeEditStatus','');}},1300);
    }catch(err){status('railPeEditStatus',niceError(err),true);}
    finally{button.disabled=false;}
+ });
+ // Firebase Auth (compat) supplies email verification without Firestore Rules or Cloud Functions.
+ function updateEmailVerification(user){
+   const signedIn=!!user && active()?.uid===user.uid;
+   const verified=signedIn && user.emailVerified===true;
+   const badge=$('railPeVerifyBadge');
+   if(badge){badge.textContent=verified?'Verified':'Not verified';badge.dataset.verified=String(verified);}
+   text('railProfileVerified',verified?'Verified':'Not verified');
+   const send=$('railPeSendVerifyEmail');
+   const refresh=$('railPeRefreshVerify');
+   if(send)send.disabled=!signedIn || verified;
+   if(refresh)refresh.disabled=!signedIn;
+   const hint=$('railPeVerifyHint');
+   if(hint)hint.textContent=!signedIn?'Sign in to manage email verification.':
+     verified?'Your registered email address is verified.':
+     'A verification link will be sent to '+(user.email||'your registered email')+'.';
+ }
+ window.railProfileUpdateEmailVerification=updateEmailVerification;
+ function verificationError(err){
+   const code=err?.code||'';
+   if(code==='auth/too-many-requests')return 'Too many requests. Try again later.';
+   if(code==='auth/requires-recent-login')return 'For security, sign out and sign in again, then retry.';
+   if(code==='auth/network-request-failed')return 'Network error. Check your internet connection.';
+   if(code==='auth/invalid-email'||code==='auth/missing-email')return 'A valid registered email is required.';
+   if(code==='auth/user-token-expired'||code==='auth/user-disabled')return 'Your session has expired or account is disabled. Sign in again.';
+   return 'Could not complete verification request. Please retry or check Firebase Authentication settings.';
+ }
+ $('railPeSendVerifyEmail')?.addEventListener('click',async function(){
+   const user=active();
+   if(!user || !user.email){status('railPeVerifyStatus','Sign in with your registered email account first.',true);return;}
+   const btn=this,refresh=$('railPeRefreshVerify');
+   btn.disabled=true;if(refresh)refresh.disabled=true;
+   status('railPeVerifyStatus','Checking email verification status…');
+   try{
+     await user.reload(); // status may have changed in another browser tab
+     if(active()?.uid!==user.uid)return;
+     updateEmailVerification(user);
+     if(user.emailVerified){status('railPeVerifyStatus','Email is already verified.');return;}
+     status('railPeVerifyStatus','Sending verification email…');
+     await user.sendEmailVerification();
+     if(active()?.uid!==user.uid)return;
+     status('railPeVerifyStatus','Verification email sent. Open your inbox (or Spam), click the link, then select Check Verification Status here.');
+   }catch(err){if(active()?.uid===user.uid)status('railPeVerifyStatus',verificationError(err),true);}
+   finally{if(active()?.uid===user.uid){updateEmailVerification(user);if(refresh)refresh.disabled=false;}}
+ });
+ $('railPeRefreshVerify')?.addEventListener('click',async function(){
+   const user=active();if(!user)return;
+   const send=$('railPeSendVerifyEmail'),btn=this;
+   btn.disabled=true;if(send)send.disabled=true;
+   status('railPeVerifyStatus','Checking Firebase for your email verification…');
+   try{
+     await user.reload();
+     if(active()?.uid!==user.uid)return;
+     updateEmailVerification(user);
+     status('railPeVerifyStatus',user.emailVerified?
+       'Email verified successfully. Your profile status is now Verified.':
+       'Not verified yet. Open the verification link in your email, then check again.',!user.emailVerified);
+   }catch(err){if(active()?.uid===user.uid)status('railPeVerifyStatus',verificationError(err),true);}
+   finally{if(active()?.uid===user.uid)updateEmailVerification(user);}
  });
  $('railPePasswordForm')?.addEventListener('submit',async function(e){
    e.preventDefault();
