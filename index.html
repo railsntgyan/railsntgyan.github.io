@@ -7235,83 +7235,6 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
  #rmModal .rm-firestore-note{position:static!important;}
 }
 </style>
-<style id="rail-admin-users-management-css">
-/* RailSNTGyan admin-only Firebase users: embedded UI, no credentials in the browser. */
-#railUserManagerPanel[hidden]{display:none!important}
-#railProfileOverlay.rail-users-open {justify-content:center!important;align-items:center!important;padding:10px!important;}
-#railProfileOverlay.rail-users-open .rail-profile-panel {
-  width:min(950px,calc(100vw - 20px))!important;max-height:calc(100dvh - 20px)!important;
-  padding:clamp(12px,2.4vw,22px)!important;border-radius:18px!important;
-}
-#railProfileOverlay.rail-users-open .rail-profile-details,
-#railProfileOverlay.rail-users-open .rail-profile-badge,
-#railProfileOverlay.rail-users-open #railProfileAdminManagement,
-#railProfileOverlay.rail-users-open .rail-profile-footer{display:none!important}
-#railUserManagerPanel {--ru-border:rgba(127,214,248,.28);--ru-bg:rgba(1,17,37,.48);
-  --ru-text:#f2faff;--ru-muted:#b8d1e8;--ru-input:#092643;color:var(--ru-text);}
-#railUserManagerPanel *{box-sizing:border-box}
-#railUserManagerPanel .ru-top{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:0 0 10px}
-#railUserManagerPanel h3{font-size:16px;font-weight:800;color:inherit;margin:0}
-#railUserManagerPanel .ru-small{font-size:11px;color:var(--ru-muted);line-height:1.5}
-#railUserManagerPanel .ru-actions{display:flex;gap:7px;flex-wrap:wrap}
-#railUserManagerPanel button{font:inherit;cursor:pointer}
-#railUserManagerPanel .ru-btn{border-radius:9px;padding:9px 12px;border:1px solid rgba(120,214,255,.38);
-  background:rgba(12,69,112,.72);color:#f3fbff;font-weight:750;font-size:12px;display:inline-flex;gap:6px;align-items:center;justify-content:center;}
-#railUserManagerPanel .ru-btn.ru-primary{background:linear-gradient(100deg,#068aaf,#1672e4);color:white;border-color:#4fdefe}
-#railUserManagerPanel .ru-btn.ru-danger{background:rgba(151,31,51,.28);border-color:rgba(251,121,139,.5);color:#ffe4e9}
-#railUserManagerPanel .ru-btn:disabled{opacity:.48;cursor:not-allowed}
-#railUserManagerPanel .ru-btn:focus-visible,#railUserManagerPanel input:focus-visible{outline:2px solid #7ae5ff;outline-offset:2px}
-#railUserManagerPanel .ru-feedback{border-radius:9px;padding:9px 11px;border:1px solid var(--ru-border);margin:7px 0 10px;
-  background:rgba(35,133,190,.15);color:#dbf4ff;font-size:12px;line-height:1.45}
-#railUserManagerPanel .ru-feedback.ru-error{color:#ffe0e0;background:rgba(144,23,23,.18);border-color:#d67d7d}
-#railUserManagerPanel .ru-feedback[hidden]{display:none}
-#railUserManagerPanel .ru-columns{display:grid;grid-template-columns:minmax(235px,.85fr) minmax(0,1.15fr);gap:12px;align-items:stretch}
-#railUserManagerPanel .ru-list-wrap,#railUserManagerPanel .ru-editor{border:1px solid var(--ru-border);border-radius:12px;padding:12px;background:var(--ru-bg);min-width:0}
-#railUserManagerPanel .ru-list-wrap{display:flex;flex-direction:column;min-height:320px}
-#railUserManagerPanel .ru-search{width:100%;margin:8px 0 8px}
-#railUserManagerPanel .ru-list{max-height:min(47dvh,440px);overflow:auto;display:flex;flex-direction:column;gap:6px}
-#railUserManagerPanel .ru-person{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;
-  border:1px solid var(--ru-border);background:rgba(24,71,109,.27);border-radius:8px;padding:9px;color:inherit}
-#railUserManagerPanel .ru-person strong{font-size:12px;overflow-wrap:anywhere}
-#railUserManagerPanel .ru-person small{font-size:10px;color:var(--ru-muted);overflow-wrap:anywhere}
-#railUserManagerPanel .ru-person.ru-selected{background:rgba(23,136,190,.4);border-color:#5ad7ff}
-#railUserManagerPanel .ru-person.ru-disabled{border-left:3px solid #ee6c74}
-#railUserManagerPanel .ru-busy{opacity:.65;pointer-events:none}
-#railUserManagerPanel .ru-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-#railUserManagerPanel .ru-fields label{display:flex;flex-direction:column;gap:4px;color:var(--ru-muted);font-size:11px;font-weight:750;min-width:0}
-#railUserManagerPanel .ru-fields label.ru-wide{grid-column:1/-1}
-#railUserManagerPanel input{background:var(--ru-input);color:var(--ru-text);border:1px solid var(--ru-border);font-size:13px;
-  border-radius:8px;padding:9px 10px;min-width:0;width:100%;outline:none}
-#railUserManagerPanel input::placeholder{color:#98b3c8}
-#railUserManagerPanel .ru-editor h4{font-size:14px;margin:0 0 9px}
-#railUserManagerPanel .ru-form-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
-#railUserManagerPanel .ru-pw-section{margin-top:13px;border-top:1px solid var(--ru-border);padding-top:10px}
-#railUserManagerPanel .ru-pw-section[hidden],#railUserManagerPanel .ru-only-create[hidden],
-#railUserManagerPanel .ru-only-edit[hidden]{display:none!important}
-#railUserManagerPanel .ru-uid{font:11px ui-monospace,monospace;word-break:break-all;color:var(--ru-muted)}
-#railUserManagerPanel .ru-pill{font-size:10px;font-weight:800;border:1px solid var(--ru-border);
-  border-radius:50px;padding:2px 6px;color:#d4f4ff}
-html.rail-saved-light body:not(.dark-theme) #railUserManagerPanel {
-  --ru-border:#b4d0e0;--ru-bg:#f5fbff;--ru-text:#153653;--ru-muted:#526d84;--ru-input:#fff;}
-html.rail-saved-light body:not(.dark-theme) #railUserManagerPanel .ru-person{background:#eaf5fb;color:#153653}
-html.rail-saved-light body:not(.dark-theme) #railUserManagerPanel .ru-person.ru-selected{background:#c7eafc;border-color:#2999d2}
-html.rail-saved-light body:not(.dark-theme) #railUserManagerPanel .ru-btn:not(.ru-primary):not(.ru-danger){background:#e3f2ff;color:#154b6a}
-html.rail-saved-light body:not(.dark-theme) #railUserManagerPanel .ru-feedback{color:#164869;background:#e3f6ff}
-html.rail-saved-light body:not(.dark-theme) #railUserManagerPanel .ru-feedback.ru-error{color:#922b29;background:#ffeded}
-@media(max-width:720px){
- #railProfileOverlay.rail-users-open{align-items:flex-start!important;padding:6px!important;}
- #railProfileOverlay.rail-users-open .rail-profile-panel{width:calc(100vw - 12px)!important;max-height:calc(100dvh - 12px)!important;padding:11px!important}
- #railUserManagerPanel .ru-columns{grid-template-columns:1fr}
- #railUserManagerPanel .ru-list-wrap{min-height:0}
- #railUserManagerPanel .ru-list{max-height:22dvh}
- #railUserManagerPanel .ru-fields{grid-template-columns:1fr 1fr;gap:7px}
- #railUserManagerPanel .ru-fields label.ru-mobile-full{grid-column:1/-1}
- #railUserManagerPanel .ru-btn{padding:8px 10px}
-}
-@media(max-width:370px){#railUserManagerPanel .ru-fields{grid-template-columns:1fr}#railUserManagerPanel .ru-fields label{grid-column:auto!important}}
-#railUserManagerPanel [hidden]{display:none!important}
-
-</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -17560,7 +17483,149 @@ window.railV44ShowWelcome = function(){
   });
 };
 </script>
+
+<style id="rail-profile-extended-settings-style">
+/* RailSNTGyan profile additions only. Nothing outside #railProfileOverlay is styled. */
+#railProfileOverlay .rail-pe-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
+#railProfileOverlay .rail-pe-button{min-width:0;cursor:pointer;border:1px solid rgba(104,208,251,.45);border-radius:10px;background:linear-gradient(115deg,#11558a,#0d3b66);color:#f4faff;font-family:inherit;font-size:12px;font-weight:700;line-height:1.35;padding:11px 8px;display:inline-flex;justify-content:center;align-items:center;gap:7px}
+#railProfileOverlay .rail-pe-button:hover,#railProfileOverlay .rail-pe-button:focus-visible{border-color:#85e4ff;outline-offset:2px}
+#railProfileOverlay .rail-pe-button:disabled{cursor:wait;opacity:.65}
+#railProfileOverlay .rail-pe-button.rail-pe-secondary{background:rgba(30,71,104,.35)}
+#railProfileOverlay .rail-pe-form[hidden],#railProfileOverlay .rail-pe-directory[hidden],#railProfileOverlay .rail-pe-profile-card[hidden]{display:none!important}
+#railProfileOverlay .rail-pe-form{margin-top:13px;padding:13px;border-radius:13px;border:1px solid rgba(118,209,250,.28);background:rgba(5,21,45,.58);display:grid;gap:10px}
+#railProfileOverlay .rail-pe-form h3{margin:0 0 3px;font-size:14px;font-weight:800;color:inherit}
+#railProfileOverlay .rail-pe-field{display:grid;gap:4px;min-width:0}
+#railProfileOverlay .rail-pe-field label{font-size:11px;font-weight:700;color:#bfdded}
+#railProfileOverlay .rail-pe-field input,#railProfileOverlay .rail-pe-field select,#railProfileOverlay .rail-pe-filter{width:100%;min-width:0;min-height:40px;box-sizing:border-box;font:inherit;font-size:13px;border:1px solid #7399b4;border-radius:9px;background:#112c48;color:#fff;padding:8px 10px}
+#railProfileOverlay .rail-pe-field input:focus-visible,#railProfileOverlay .rail-pe-field select:focus-visible,#railProfileOverlay .rail-pe-filter:focus-visible{outline:2px solid #50bbec;outline-offset:2px}
+#railProfileOverlay .rail-pe-field input::placeholder,#railProfileOverlay .rail-pe-filter::placeholder{color:#a6c5d9}
+#railProfileOverlay .rail-pe-status{font-size:11px;line-height:1.55;color:#b3eaff;min-height:0;margin:0;overflow-wrap:anywhere}
+#railProfileOverlay .rail-pe-status[data-error=true]{color:#ffbac0}
+#railProfileOverlay .rail-pe-note{font-size:11px;line-height:1.5;color:#b9ccde;margin:0}
+#railProfileOverlay .rail-pe-directory{margin-top:13px;border:1px solid rgba(80,185,239,.45);padding:12px;border-radius:14px;background:rgba(3,29,53,.7)}
+#railProfileOverlay .rail-pe-directory-head{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:11px}
+#railProfileOverlay .rail-pe-directory-head h3{font-size:16px;margin:0;color:inherit}
+#railProfileOverlay .rail-pe-directory-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+#railProfileOverlay .rail-pe-stat{padding:12px 5px;border-radius:10px;text-align:center;border:1px solid rgba(120,187,226,.26);background:rgba(15,66,102,.46)}
+#railProfileOverlay .rail-pe-stat strong{display:block;font-size:22px;line-height:1.25;color:inherit}
+#railProfileOverlay .rail-pe-stat small{display:block;font-size:10px;line-height:1.4;color:#b4cee2}
+#railProfileOverlay .rail-pe-list{display:grid;gap:8px;margin-top:10px}
+#railProfileOverlay .rail-pe-profile-card{border:1px solid rgba(120,187,226,.26);border-radius:11px;padding:11px;background:rgba(12,42,68,.68)}
+#railProfileOverlay .rail-pe-profile-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#railProfileOverlay .rail-pe-profile-top strong{display:block;font-size:13px;overflow-wrap:anywhere}
+#railProfileOverlay .rail-pe-profile-top small{display:block;font-size:11px;color:#bfcedc;overflow-wrap:anywhere;margin-top:3px}
+#railProfileOverlay .rail-pe-profile-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding-top:12px;margin-top:10px;border-top:1px solid rgba(160,198,219,.25)}
+#railProfileOverlay .rail-pe-profile-info span{font-size:10px;color:#b3cbdc;display:block;margin-bottom:3px}
+#railProfileOverlay .rail-pe-profile-info b{font-size:12px;font-weight:600;color:inherit;overflow-wrap:anywhere;display:block}
+#railProfileOverlay .rail-pe-tiny-btn{cursor:pointer;border:1px solid rgba(130,209,245,.45);border-radius:8px;padding:8px 10px;background:rgba(14,70,109,.6);color:inherit;font-size:11px;font-weight:700;white-space:nowrap}
+#railProfileOverlay .rail-pe-profile-info[hidden]{display:none}
+#railProfileOverlay .rail-pe-directory-open-placeholder{font-size:11px;color:#b3cbdc}
+#railProfileOverlay .rail-profile-panel.rail-pe-expanded{width:min(790px,calc(100vw - 28px))}
+#railProfileOverlay .rail-pe-expanded .rail-profile-details{grid-template-columns:repeat(2,minmax(0,1fr))}
+#railProfileOverlay .rail-pe-expanded .rail-profile-details>div{min-width:0}
+@media(max-width:560px){#railProfileOverlay .rail-pe-expanded .rail-profile-details{grid-template-columns:1fr}#railProfileOverlay .rail-pe-profile-info{grid-template-columns:1fr}}
+/* Existing rail-saved-light is the website's current light mode flag. */
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-button{background:linear-gradient(115deg,#d7f2ff,#c1e6fa);color:#123f62;border-color:#86bbdc}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-button.rail-pe-secondary{background:#f3f9fe}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-form,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-directory{background:#f5faff;border-color:#c6deed}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-field label{color:#345671}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-field input,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-field select,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-filter{background:#fff;color:#162e45;border-color:#abc9de}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-field input::placeholder,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-filter::placeholder{color:#637e92}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-status{color:#176e7f}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-status[data-error=true]{color:#ae2835}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-note,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-directory-open-placeholder{color:#596e7f}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-stat,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-profile-card{background:#fff;border-color:#dae7f1}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-stat small,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-profile-top small,html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-profile-info span{color:#536f84}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tiny-btn{background:#e4f3fc;border-color:#9dcae1;color:#154b75}
+
+</style>
 <!-- Authenticated user information. Values are populated ONLY from Firebase Auth. -->
+
+<style id="rail-profile-compact-tabs-v2">
+/* Compact Profile modal – strictly scoped. No changes to portal, dashboard, Auth, tables or themes. */
+#railProfileOverlay:not([hidden]){justify-content:center;align-items:center;padding:16px;overscroll-behavior:contain}
+#railProfileOverlay .rail-profile-panel,
+#railProfileOverlay .rail-profile-panel.rail-pe-expanded{
+  width:min(840px,calc(100vw - 32px));max-height:calc(100dvh - 32px);
+  display:flex;flex-direction:column;overflow:hidden;padding:18px 22px 12px;
+  margin:auto;min-height:0;border-radius:19px;
+}
+#railProfileOverlay .rail-profile-header{flex-shrink:0;margin-bottom:12px;gap:12px}
+#railProfileOverlay .rail-profile-avatar{width:45px;height:45px;font-size:18px}
+#railProfileOverlay .rail-profile-title{font-size:19px}
+#railProfileOverlay .rail-profile-subtitle{font-size:11px}
+#railProfileOverlay .rail-profile-close{margin-left:auto}
+#railProfileOverlay .rail-pe-tabs{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;padding:4px;margin:0 0 12px;
+  border:1px solid rgba(105,177,212,.24);border-radius:12px;
+  background:rgba(13,58,92,.35);flex-shrink:0;
+}
+#railProfileOverlay .rail-pe-tab{
+  display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;
+  border:1px solid transparent;border-radius:9px;background:transparent;
+  color:#bdd8e8;min-height:37px;padding:6px 10px;white-space:nowrap;
+  font-family:inherit;font-weight:700;font-size:12px;cursor:pointer;
+}
+#railProfileOverlay .rail-pe-tab:hover{background:rgba(112,197,241,.10);color:#fff}
+#railProfileOverlay .rail-pe-tab[aria-selected="true"]{
+  background:linear-gradient(120deg,#185a89,#0e3b68);color:#fff;
+  border-color:rgba(130,214,255,.44);box-shadow:0 2px 8px rgba(0,0,0,.12)
+}
+#railProfileOverlay .rail-pe-tab[hidden]{display:none!important}
+#railProfileOverlay .rail-pe-tabs:not(:has(.rail-pe-tab[data-rail-pe-tab="admin"]:not([hidden]))){grid-template-columns:repeat(3,minmax(0,1fr))}
+#railProfileOverlay .rail-pe-tab:focus-visible{outline:2px solid #65c6f0;outline-offset:1px}
+#railProfileOverlay .rail-pe-views{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#84bad0 transparent;padding:0 3px 3px;overscroll-behavior:contain}
+#railProfileOverlay .rail-pe-views> :not(.rail-pe-current-view){display:none!important}
+#railProfileOverlay .rail-pe-views> [hidden]{display:none!important}
+#railProfileOverlay .rail-profile-badge{margin-bottom:9px;padding:4px 9px;font-size:10px}
+#railProfileOverlay .rail-profile-details,
+#railProfileOverlay .rail-pe-expanded .rail-profile-details{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#railProfileOverlay .rail-profile-details>div{padding:8px 12px;border-radius:10px;min-height:54px;min-width:0}
+#railProfileOverlay .rail-profile-details dt{font-size:10px;margin-bottom:3px}
+#railProfileOverlay .rail-profile-details dd{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+#railProfileOverlay .rail-profile-details #railProfileUidRow{grid-column:1/-1;min-height:auto}
+#railProfileOverlay .rail-pe-overview-shortcuts{display:none}
+#railProfileOverlay #railPeReadStatus:not(:empty){margin-top:9px}
+#railProfileOverlay .rail-profile-footer{flex-shrink:0;margin:9px 0 0;font-size:10px;line-height:1.3}
+#railProfileOverlay .rail-pe-form{margin:0;padding:14px;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border-radius:12px}
+#railProfileOverlay .rail-pe-form h3,#railProfileOverlay .rail-pe-form>.rail-pe-status,
+#railProfileOverlay .rail-pe-form>.rail-pe-actions,#railProfileOverlay .rail-pe-form>.rail-pe-note{grid-column:1/-1}
+#railProfileOverlay .rail-pe-form h3{font-size:16px;margin:0}
+#railProfileOverlay .rail-pe-field label{font-size:11px}
+#railProfileOverlay .rail-pe-field input{min-height:39px}
+#railProfileOverlay .rail-pe-form>.rail-pe-actions{display:flex;justify-content:flex-start;gap:10px}
+#railProfileOverlay .rail-pe-form>.rail-pe-actions .rail-pe-button{min-width:135px}
+#railProfileOverlay .rail-profile-admin-management{margin:0;padding:15px;}
+#railProfileOverlay .rail-profile-admin-management h3{margin:0 0 12px}
+#railProfileOverlay .rail-profile-admin-management .rail-profile-master-link{min-height:61px}
+#railProfileOverlay .rail-pe-directory{margin:0;padding:12px}
+#railProfileOverlay .rail-pe-directory-cards{margin:8px 0}
+#railProfileOverlay .rail-pe-stat{padding:8px 5px}
+#railProfileOverlay .rail-pe-stat strong{font-size:19px}
+/* Preserve the existing accepted Light Theme colors, adjusting only new tabs. */
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tabs{background:#eaf3fb;border-color:#d2e1ed}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab{color:#466781}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab:hover{background:#ddeefa;color:#0f426c}
+html.rail-saved-light body:not(.dark-theme) #railProfileOverlay .rail-pe-tab[aria-selected="true"]{color:#125078;background:#fff;border-color:#bdd8e8;box-shadow:0 1px 5px rgba(26,83,113,.12)}
+@media(max-width:620px){
+  #railProfileOverlay:not([hidden]){align-items:center;justify-content:center;padding:8px}
+  #railProfileOverlay .rail-profile-panel,#railProfileOverlay .rail-profile-panel.rail-pe-expanded{width:calc(100vw - 16px);max-height:calc(100dvh - 16px);padding:13px 12px 10px;border-radius:15px}
+  #railProfileOverlay .rail-profile-header{margin-bottom:9px}
+  #railProfileOverlay .rail-pe-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:9px}
+  #railProfileOverlay .rail-pe-tabs:not(:has(.rail-pe-tab[data-rail-pe-tab="admin"]:not([hidden]))){grid-template-columns:repeat(3,minmax(0,1fr))}
+  #railProfileOverlay .rail-pe-tab{min-height:36px;padding:5px 3px;gap:5px;font-size:11px}
+  #railProfileOverlay .rail-profile-details,#railProfileOverlay .rail-pe-expanded .rail-profile-details{grid-template-columns:1fr;gap:7px}
+  #railProfileOverlay .rail-profile-details>div{min-height:0;padding:8px 10px}
+  #railProfileOverlay .rail-profile-details #railProfileUidRow{grid-column:auto}
+  #railProfileOverlay .rail-pe-form{grid-template-columns:1fr;padding:11px;gap:9px}
+  #railProfileOverlay .rail-pe-form h3,#railProfileOverlay .rail-pe-form>.rail-pe-status,#railProfileOverlay .rail-pe-form>.rail-pe-actions,#railProfileOverlay .rail-pe-form>.rail-pe-note{grid-column:auto}
+  #railProfileOverlay .rail-pe-form>.rail-pe-actions .rail-pe-button{min-width:0;flex:1}
+  #railProfileOverlay .rail-profile-footer{margin-top:7px}
+}
+@media(max-width:360px){#railProfileOverlay .rail-pe-tab span{font-size:10px}}
+</style>
+
 <div id="railProfileOverlay" hidden aria-hidden="true">
   <section class="rail-profile-panel" role="dialog" aria-modal="true" aria-labelledby="railProfileTitle">
     <div class="rail-profile-header">
@@ -17571,15 +17636,60 @@ window.railV44ShowWelcome = function(){
       </div>
       <button type="button" id="railProfileCloseBtn" class="rail-profile-close" aria-label="Close profile" title="Close Profile" onclick="railCloseProfile()"><span aria-hidden="true" style="font-size:22px;line-height:1">×</span></button>
     </div>
+    <nav class="rail-pe-tabs" role="tablist" aria-label="Profile sections">
+      <button type="button" class="rail-pe-tab rail-pe-tab-active" data-rail-pe-tab="overview" role="tab" aria-selected="true" aria-controls="railPeOverview"><i class="fa-solid fa-id-card" aria-hidden="true"></i><span>Overview</span></button>
+      <button type="button" class="rail-pe-tab" data-rail-pe-tab="edit" role="tab" aria-selected="false" aria-controls="railPeEditForm"><i class="fa-solid fa-user-pen" aria-hidden="true"></i><span>Edit Profile</span></button>
+      <button type="button" class="rail-pe-tab" data-rail-pe-tab="security" role="tab" aria-selected="false" aria-controls="railPePasswordForm"><i class="fa-solid fa-lock" aria-hidden="true"></i><span>Security</span></button>
+      <button type="button" class="rail-pe-tab" data-rail-pe-tab="admin" role="tab" aria-selected="false" aria-controls="railProfileAdminManagement" hidden><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>Admin Tools</span></button>
+    </nav>
+    <div class="rail-pe-views">
+    <section id="railPeOverview" class="rail-pe-overview rail-pe-current-view" role="tabpanel" aria-label="Account overview">
     <div class="rail-profile-badge"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span id="railProfileRole">User</span></div>
     <dl class="rail-profile-details">
       <div><dt>Signed in Email ID</dt><dd id="railProfileEmail">—</dd></div>
       <div><dt>Display Name</dt><dd id="railProfileName">—</dd></div>
+      <div><dt>Designation</dt><dd id="railPeDesignation">—</dd></div>
+      <div><dt>Department</dt><dd id="railPeDepartment">—</dd></div>
+      <div><dt>Railway / Zone</dt><dd id="railPeRailway">—</dd></div>
+      <div><dt>Division / Unit</dt><dd id="railPeDivision">—</dd></div>
+      <div><dt>Mobile Number</dt><dd id="railPeMobile">—</dd></div>
       <div><dt>Account Role</dt><dd id="railProfileRoleDetail">—</dd></div>
       <div><dt>Email Verification</dt><dd id="railProfileVerified">—</dd></div>
       <div><dt>Last Sign-in</dt><dd id="railProfileLastLogin">—</dd></div>
       <div id="railProfileUidRow" hidden><dt>Firebase User ID (UID) — Admin only</dt><dd><span id="railProfileUid">—</span> <button type="button" id="railProfileCopyUid" class="rail-profile-copy" onclick="railCopyProfileUid()" title="Copy Firebase UID"><i class="fa-regular fa-copy" aria-hidden="true"></i> Copy</button></dd></div>
     </dl>
+    <div class="rail-pe-actions rail-pe-overview-shortcuts" aria-label="Account settings">
+      <button type="button" id="railPeEditBtn" class="rail-pe-button"><i class="fa-solid fa-user-pen" aria-hidden="true"></i> Edit Profile</button>
+      <button type="button" id="railPePasswordBtn" class="rail-pe-button rail-pe-secondary"><i class="fa-solid fa-key" aria-hidden="true"></i> Change Password</button>
+    </div>
+    <p id="railPeReadStatus" class="rail-pe-status" role="status" aria-live="polite"></p>
+    </section>
+    <form id="railPeEditForm" class="rail-pe-form" hidden autocomplete="on">
+      <h3>Edit Profile</h3>
+      <div class="rail-pe-field"><label for="railPeDisplayName">Display Name *</label><input id="railPeDisplayName" name="name" maxlength="80" required autocomplete="name" placeholder="Your full name"></div>
+      <div class="rail-pe-field"><label for="railPeDesignationInput">Designation</label><input id="railPeDesignationInput" maxlength="100" placeholder="e.g. SSE/Signal"></div>
+      <div class="rail-pe-field"><label for="railPeDepartmentInput">Department</label><input id="railPeDepartmentInput" maxlength="80" placeholder="e.g. S&amp;T"></div>
+      <div class="rail-pe-field"><label for="railPeRailwayInput">Railway / Zone</label><input id="railPeRailwayInput" maxlength="80" placeholder="e.g. SECR"></div>
+      <div class="rail-pe-field"><label for="railPeDivisionInput">Division / Unit</label><input id="railPeDivisionInput" maxlength="80" placeholder="e.g. Bilaspur / HQ"></div>
+      <div class="rail-pe-field"><label for="railPeMobileInput">Mobile Number (optional)</label><input id="railPeMobileInput" maxlength="20" inputmode="tel" type="tel" autocomplete="tel-national" placeholder="10-digit Indian mobile number"></div>
+      <p id="railPeEditStatus" class="rail-pe-status" role="status" aria-live="polite"></p>
+      <div class="rail-pe-actions" style="margin-top:0">
+        <button id="railPeEditSave" type="submit" class="rail-pe-button">Save Changes</button>
+        <button id="railPeEditCancel" type="button" class="rail-pe-button rail-pe-secondary">Cancel</button>
+      </div>
+    </form>
+    <form id="railPePasswordForm" class="rail-pe-form" hidden autocomplete="off">
+      <h3>Change Password</h3>
+      <div class="rail-pe-field"><label for="railPeOldPassword">Current Password</label><input id="railPeOldPassword" type="password" autocomplete="current-password" required></div>
+      <div class="rail-pe-field"><label for="railPeNewPassword">New Password (minimum 8 characters)</label><input id="railPeNewPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+      <div class="rail-pe-field"><label for="railPeConfirmPassword">Confirm New Password</label><input id="railPeConfirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+      <p id="railPePasswordStatus" class="rail-pe-status" role="status" aria-live="polite"></p>
+      <div class="rail-pe-actions" style="margin-top:0">
+        <button id="railPePasswordSave" type="submit" class="rail-pe-button">Update Password</button>
+        <button id="railPePasswordCancel" type="button" class="rail-pe-button rail-pe-secondary">Cancel</button>
+      </div>
+      <p class="rail-pe-note">Forgot your current password? Sign out and use Forgot password? on the login screen to get a reset link by email.</p>
+    </form>
     <!-- Admin-only master data settings: never displayed in regular User profiles. -->
     <section id="railProfileAdminManagement" class="rail-profile-admin-management" hidden aria-label="Admin Management">
       <h3><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> ADMIN MANAGEMENT</h3>
@@ -17589,68 +17699,32 @@ window.railV44ShowWelcome = function(){
         <span><strong>ADD IN DATABASE</strong><small>Stations, Divisions, Agencies, EI/MSDAC OEMs &amp; more</small></span>
         <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
       </button>
-      <button type="button" id="railProfileUserManageBtn" class="rail-profile-master-link"
-        onclick="railOpenUserManager()" title="Create Firebase users, edit profiles, disable accounts and manage passwords"
-        style="margin-top:9px">
-        <i class="fa-solid fa-users-gear" aria-hidden="true"></i>
-        <span><strong>MANAGE USERS</strong><small>Add User · Edit Details · Enable/Disable · Reset Password</small></span>
+      <button type="button" id="railPeDirectoryOpen" class="rail-profile-master-link" style="margin-top:10px" title="Admin-only user directory">
+        <i class="fa-solid fa-users" aria-hidden="true"></i>
+        <span><strong>USER DIRECTORY</strong><small>Registered Users, Profile Details, Mobile &amp; Division</small></span>
         <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
       </button>
     </section>
-    <!-- Firebase user management: visible only in an existing verified Admin Profile. -->
-    <section id="railUserManagerPanel" hidden aria-label="Firebase User Management">
-      <div class="ru-top">
-        <div><h3><i class="fa-solid fa-users-gear" aria-hidden="true"></i> USER MANAGEMENT</h3>
-          <div class="ru-small">Existing Firebase accounts · Secure Admin access</div></div>
-        <div class="ru-actions">
-          <button class="ru-btn" type="button" id="ruBackBtn"><i class="fa-solid fa-arrow-left"></i> Profile</button>
-          <button class="ru-btn ru-primary" type="button" id="ruNewBtn"><i class="fa-solid fa-user-plus"></i> Add User</button>
-        </div>
+    <section id="railPeDirectory" class="rail-pe-directory" hidden aria-label="Admin User Directory">
+      <div class="rail-pe-directory-head">
+        <h3><i class="fa-solid fa-users" aria-hidden="true"></i> User Directory</h3>
+        <button id="railPeDirectoryClose" type="button" class="rail-pe-tiny-btn">Close Directory</button>
       </div>
-      <div class="ru-feedback" id="ruFeedback" role="status" aria-live="polite">Loading existing Firebase users…</div>
-      <div class="ru-columns">
-        <div class="ru-list-wrap">
-          <strong style="font-size:12px">Firebase Accounts <span class="ru-pill" id="ruCount">0</span></strong>
-          <input class="ru-search" id="ruSearch" type="search" autocomplete="off" placeholder="Search name or email" aria-label="Search users">
-          <div id="ruList" class="ru-list" role="list" aria-label="Users"></div>
-          <button type="button" class="ru-btn" id="ruMoreBtn" hidden style="margin-top:8px">Load more accounts</button>
-        </div>
-        <div class="ru-editor">
-          <h4 id="ruFormHeading">Add New User</h4>
-          <form id="ruForm" autocomplete="off">
-            <div class="ru-fields">
-              <label class="ru-wide">Name <input id="ruName" type="text" maxlength="100" required autocomplete="off" placeholder="Full name"></label>
-              <label class="ru-wide">Login Email ID <input id="ruEmail" type="email" maxlength="254" required autocomplete="off" placeholder="user@example.com"></label>
-              <label>Designation <input id="ruDesignation" maxlength="100" placeholder="SSE / JE / ..."></label>
-              <label>Division <input id="ruDivision" maxlength="100" placeholder="BSP / R / NGP"></label>
-              <label>Department <input id="ruDepartment" maxlength="100" placeholder="S&T"></label>
-              <label>Contact number (optional) <input id="ruContact" maxlength="35" inputmode="tel" placeholder="Mobile number"></label>
-              <label class="ru-wide ru-only-create" id="ruCreatePasswordLabel">Temporary password (minimum 10 characters)
-                <input id="ruCreatePassword" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="Enter a strong temporary password"></label>
-            </div>
-            <div class="ru-small ru-only-create" id="ruCreateHint" style="margin-top:8px">The password is sent to Firebase Authentication, not stored in Firestore or this page. Share it privately and ask the user to change it.</div>
-            <div class="ru-small ru-only-edit" id="ruUidRow" hidden style="margin-top:8px">Firebase UID (read only): <span class="ru-uid" id="ruUid"></span></div>
-            <div class="ru-form-actions">
-              <button type="submit" class="ru-btn ru-primary" id="ruSaveBtn">Create User</button>
-              <button type="button" class="ru-btn ru-only-edit" id="ruStatusBtn" hidden>Disable User</button>
-            </div>
-          </form>
-          <div class="ru-pw-section ru-only-edit" id="ruPasswordSection" hidden>
-            <strong style="font-size:12px">Password Management</strong>
-            <p class="ru-small">Existing passwords cannot be viewed. Set a new password or send a reset link.</p>
-            <div class="ru-fields" style="margin-top:7px">
-              <label class="ru-wide">New password (minimum 10 characters)
-                <input type="password" autocomplete="new-password" id="ruNewPassword" minlength="10" maxlength="128" placeholder="New password"></label>
-            </div>
-            <div class="ru-form-actions">
-              <button type="button" class="ru-btn" id="ruSetPasswordBtn">Set New Password</button>
-              <button type="button" class="ru-btn" id="ruResetEmailBtn">Send Reset Email</button>
-            </div>
-          </div>
-          <div class="ru-small" style="margin-top:10px">Admin accounts are protected against modification here. Passwords and service-account secrets are never displayed.</div>
-        </div>
+      <div class="rail-pe-directory-cards" aria-live="polite">
+        <div class="rail-pe-stat"><strong id="railPeCountTotal">—</strong><small id="railPeTotalTitle">Registered Users</small></div>
+        <div class="rail-pe-stat"><strong id="railPeCountCompleted">—</strong><small>Profiles Completed</small></div>
+        <div class="rail-pe-stat"><strong id="railPeCountPending">—</strong><small>Profiles Pending</small></div>
       </div>
+      <p class="rail-pe-note" id="railPeDirectoryNote">Only Admin can view these details.</p>
+      <p class="rail-pe-status" id="railPeDirectoryStatus" role="status" aria-live="polite"></p>
+      <div class="rail-pe-field" style="margin-top:11px"><label for="railPeDirectorySearch">Search users</label><input class="rail-pe-filter" id="railPeDirectorySearch" placeholder="Name, Email, Mobile, Division" type="search" autocomplete="off"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px">
+        <span id="railPeShownCount" class="rail-pe-note">0 shown</span>
+        <button id="railPeDirectoryRefresh" type="button" class="rail-pe-tiny-btn">Refresh</button>
+      </div>
+      <div id="railPeDirectoryList" class="rail-pe-list"></div>
     </section>
+    </div><!-- /rail-pe-views -->
     <p class="rail-profile-footer">Account details are taken from the active Firebase session.</p>
   </section>
 </div>
@@ -17712,11 +17786,12 @@ window.railV44ShowWelcome = function(){
     }catch(e){ console.warn('Profile history entry unavailable',e); }
     const trigger=get('railProfileBtn');if(trigger)trigger.setAttribute('aria-expanded','true');
     get('railProfileCloseBtn')?.focus();
+    if(typeof window.railProfileDetailsOpened==='function')window.railProfileDetailsOpened(current);
   };
   window.railCloseProfile=function(restoreFocus=true,fromPopstate=false){
     const panel=overlay();if(!panel||panel.hidden)return;
-    if(window.railCloseUserManager)window.railCloseUserManager(true);
     panel.hidden=true;panel.setAttribute('aria-hidden','true');
+    if(typeof window.railProfileDetailsClosed==='function')window.railProfileDetailsClosed();
     const trigger=get('railProfileBtn');if(trigger)trigger.setAttribute('aria-expanded','false');
     if(restoreFocus && trigger && document.documentElement.classList.contains('portal-session-auth'))trigger.focus();
     // X / outside tap / Escape / sign-out: remove the temporary profile route.
@@ -17745,174 +17820,264 @@ window.railV44ShowWelcome = function(){
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay()&&!overlay().hidden)window.railCloseProfile();});
 })();
 </script>
-<script src="./assets/rail-user-worker-config.js"></script>
-<script id="rail-admin-users-management-script">
+
+<script id="rail-profile-extended-settings-script">
+/* Profile extension 2026-10-25: scoped, no change to existing auth, data tables or themes. */
 (function(){
  'use strict';
- const get=id=>document.getElementById(id);
- let users=[], selectedUid='', pageToken=null, busy=false, initialized=false;
- const authReady=()=>typeof firebase!=='undefined'&&firebase.auth&&firebase.auth().currentUser&&
-   typeof railAdmin!=='undefined'&&railAdmin===true&&document.documentElement.classList.contains('portal-session-auth');
- const v=id=>get(id)?.value.trim()||'';
- const msg=(s,bad=false)=>{let el=get('ruFeedback');if(!el)return;el.hidden=!s;el.classList.toggle('ru-error',!!bad);el.textContent=s||'';};
- const show=id=>(get(id).hidden=false);
- const hide=id=>(get(id).hidden=true);
- const setBusy=(val)=>{busy=val;get('ruSaveBtn').disabled=val;get('ruStatusBtn').disabled=val;get('ruSetPasswordBtn').disabled=val;
-   get('ruMoreBtn').disabled=val;get('ruNewBtn').disabled=val;
-   const u=users.find(x=>x.uid===selectedUid);if(u?.admin){get('ruSaveBtn').disabled=true;get('ruStatusBtn').disabled=true;get('ruSetPasswordBtn').disabled=true;get('ruResetEmailBtn').disabled=true;}
+ const $=id=>document.getElementById(id);
+ const db=()=>firebase.firestore();
+ const active=()=>firebase.auth().currentUser;
+ const col=()=>db().collection('user_profiles');
+ const isAdmin=()=>{
+   const u=active();
+   return !!u && typeof railAdmin!=='undefined' && railAdmin===true &&
+          document.documentElement.classList.contains('portal-session-auth');
  };
- async function run(action, data={}){
-   if(!authReady())throw new Error('Admin session required. Please sign in again.');
-   const endpoint=(window.RAIL_USER_WORKER_URL||'').trim().replace(/\/$/,'');
-   if(!endpoint)throw new Error('Cloudflare Worker URL is not configured. Open assets/rail-user-worker-config.js and paste your Worker URL (see README).');
-   let url;
-   try{url=new URL(endpoint);}catch{throw new Error('Cloudflare Worker URL is invalid.');}
-   if(url.protocol!=='https:')throw new Error('Cloudflare Worker URL must use HTTPS.');
+ let profileNonce=0, directoryRows=[], directoryMode='profiles';
+ // Changes only the visible Profile pane. Firestore/Auth/business logic is untouched.
+ function compactView(view){
+   if((view==='admin'||view==='directory')&&!isAdmin())view='overview';
+   const selection=view==='directory'?'admin':view;
+   const paneIds={overview:'railPeOverview',edit:'railPeEditForm',security:'railPePasswordForm',admin:'railProfileAdminManagement',directory:'railPeDirectory'};
+   Object.keys(paneIds).forEach(key=>$(paneIds[key])?.classList.toggle('rail-pe-current-view',key===view));
+   document.querySelectorAll('#railProfileOverlay .rail-pe-tab').forEach(button=>{
+     const tab=button.dataset.railPeTab;
+     if(tab==='admin')button.hidden=!isAdmin();
+     const selected=tab===selection;
+     button.classList.toggle('rail-pe-tab-active',selected);
+     button.setAttribute('aria-selected',String(selected));
+     button.tabIndex=selected?0:-1;
+   });
+   const scroller=$('railProfileOverlay')?.querySelector('.rail-pe-views');if(scroller)scroller.scrollTop=0;
+ }
+ document.querySelectorAll('#railProfileOverlay .rail-pe-tab').forEach(button=>{
+   button.addEventListener('click',()=>{
+     const tab=button.dataset.railPeTab;
+     if(tab==='admin'){
+       if(!isAdmin())return;
+       showForm(null);
+       $('railPeDirectory').hidden=true;
+       compactView('admin');
+     }else if(tab==='edit')showForm('railPeEditForm');
+     else if(tab==='security')showForm('railPePasswordForm');
+     else {showForm(null);$('railPeDirectory').hidden=true;compactView('overview');}
+   });
+ });
+ const trim=(v,max)=>String(v||'').trim().slice(0,max);
+ function status(id,message,error){const e=$(id);if(e){e.textContent=message||'';e.dataset.error=error?'true':'false';}}
+ function field(id,value){const e=$(id);if(e)e.value=value||'';}
+ function text(id,value){const e=$(id);if(e)e.textContent=value||'Not provided';}
+ function showForm(id){
+   for(const key of ['railPeEditForm','railPePasswordForm'])$(key).hidden=key!==id;
+   compactView(id==='railPeEditForm'?'edit':id==='railPePasswordForm'?'security':'overview');
+   if(id==='railPeEditForm')$('railPeDisplayName')?.focus();
+   if(id==='railPePasswordForm')$('railPeOldPassword')?.focus();
+ }
+ function completion(p){return ['displayName','designation','department','railway','division'].every(k=>trim(p[k],120));}
+ function display(p){
+   text('railPeDesignation',p.designation);
+   text('railPeDepartment',p.department);
+   text('railPeRailway',p.railway);
+   text('railPeDivision',p.division);
+   text('railPeMobile',p.mobile);
+ }
+ function fillForm(p){
+   field('railPeDisplayName',p.displayName);
+   field('railPeDesignationInput',p.designation);
+   field('railPeDepartmentInput',p.department);
+   field('railPeRailwayInput',p.railway);
+   field('railPeDivisionInput',p.division);
+   field('railPeMobileInput',p.mobile);
+ }
+ function niceError(error){
+   const c=error&&error.code || '';
+   if(c==='permission-denied')return 'Firestore access denied. Add the user_profiles security rules supplied with this update.';
+   if(c==='auth/wrong-password'||c==='auth/invalid-credential')return 'Current password is incorrect.';
+   if(c==='auth/weak-password')return 'Choose a stronger new password.';
+   if(c==='auth/requires-recent-login')return 'Please sign out and sign in again, then retry.';
+   if(c==='auth/too-many-requests')return 'Too many attempts. Please try again later.';
+   if(c==='unavailable'||c==='functions/unavailable')return 'Service unavailable. Check your connection or backend deployment.';
+   return 'Operation failed. Check Firebase configuration and your internet connection.';
+ }
+ window.railProfileDetailsOpened=async function(user){
+   const nonce=++profileNonce;
+   showForm(null);
+   status('railPeEditStatus','');status('railPePasswordStatus','');
+   $('railPeDirectory').hidden=true;
+   $('railProfileOverlay')?.querySelector('.rail-profile-panel')?.classList.remove('rail-pe-expanded');
+   directoryRows=[];
+   display({});
+   fillForm({displayName:user.displayName||''});
+   status('railPeReadStatus','Loading additional profile details…');
    try{
-     const idToken=await firebase.auth().currentUser.getIdToken(true);
-     const response=await fetch(endpoint+'/api/users',{
-       method:'POST',mode:'cors',cache:'no-store',
-       headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-       body:JSON.stringify({action,...data})
-     });
-     let result;try{result=await response.json();}catch{throw new Error('Cloudflare Worker returned an invalid response.');}
-     if(!response.ok)throw new Error(result.error||('Worker request failed (HTTP '+response.status+').'));
-     return result;
-   }catch(e){
-     if(e instanceof TypeError)throw new Error('Could not reach Cloudflare Worker. Check Worker deployment, URL and allowed origin.');
-     throw new Error(e?.message||'User Management request failed.');
+     const doc=await col().doc(user.uid).get();
+     if(nonce!==profileNonce || active()?.uid!==user.uid)return;
+     const p=doc.exists?doc.data():{};
+     display(p);fillForm({...p,displayName:user.displayName||p.displayName||''});
+     if(!user.displayName && p.displayName){text('railProfileName',p.displayName);text('railProfileAvatar',p.displayName.trim()[0]?.toUpperCase()||'U');}
+     status('railPeReadStatus',doc.exists?'':'Complete your profile using Edit Profile.');
+   }catch(err){
+     if(nonce!==profileNonce)return;
+     status('railPeReadStatus',niceError(err),true);
+   }
+ };
+ window.railProfileDetailsClosed=function(){
+   ++profileNonce;
+   for(const id of ['railPeOldPassword','railPeNewPassword','railPeConfirmPassword'])field(id,'');
+   showForm(null);
+   $('railPeDirectory').hidden=true;
+   $('railProfileOverlay')?.querySelector('.rail-profile-panel')?.classList.remove('rail-pe-expanded');
+   directoryRows=[];
+   $('railPeDirectoryList')?.replaceChildren();
+ };
+ $('railPeEditBtn')?.addEventListener('click',()=>showForm('railPeEditForm'));
+ $('railPePasswordBtn')?.addEventListener('click',()=>showForm('railPePasswordForm'));
+ $('railPeEditCancel')?.addEventListener('click',()=>showForm(null));
+ $('railPePasswordCancel')?.addEventListener('click',()=>{
+   for(const id of ['railPeOldPassword','railPeNewPassword','railPeConfirmPassword'])field(id,'');
+   showForm(null);
+ });
+ $('railPeEditForm')?.addEventListener('submit',async function(e){
+   e.preventDefault();
+   const user=active();if(!user)return;
+   const displayName=trim($('railPeDisplayName').value,80);
+   const designation=trim($('railPeDesignationInput').value,100);
+   const department=trim($('railPeDepartmentInput').value,80);
+   const railway=trim($('railPeRailwayInput').value,80);
+   const division=trim($('railPeDivisionInput').value,80);
+   const mobile=trim($('railPeMobileInput').value,20).replace(/[\s()-]/g,'');
+   if(!displayName){status('railPeEditStatus','Display Name is required.',true);return;}
+   if(mobile&&!/^(?:\+91)?[6-9]\d{9}$/.test(mobile)){status('railPeEditStatus','Enter a valid 10-digit Indian mobile number, or leave it blank.',true);return;}
+   const button=$('railPeEditSave');button.disabled=true;
+   status('railPeEditStatus','Saving profile…');
+   try{
+     // The account password, email, UID and admin claim are never stored here.
+     const ref=col().doc(user.uid);
+     const exists=await ref.get();
+     const payload={displayName,designation,department,railway,division,mobile,email:user.email||'',updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+     if(!exists.exists)payload.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+     await ref.set(payload,{merge:true});
+     // Firebase Authentication remains the source for the actual display name.
+     let authWarning='';
+     try{await user.updateProfile({displayName});}catch(err){authWarning=' Saved to Firestore; Firebase Authentication name update could not complete.';}
+     if(active()?.uid!==user.uid)return;
+     text('railProfileName',user.displayName||displayName);
+     text('railProfileAvatar',displayName[0].toUpperCase());
+     display(payload);
+     status('railPeReadStatus','');
+     status('railPeEditStatus','Profile saved successfully.'+authWarning,!!authWarning);
+     if(!authWarning)setTimeout(()=>{if(active()?.uid===user.uid){showForm(null);status('railPeEditStatus','');}},1300);
+   }catch(err){status('railPeEditStatus',niceError(err),true);}
+   finally{button.disabled=false;}
+ });
+ $('railPePasswordForm')?.addEventListener('submit',async function(e){
+   e.preventDefault();
+   const user=active();if(!user || !user.email)return;
+   const old=$('railPeOldPassword').value;
+   const next=$('railPeNewPassword').value;
+   const confirm=$('railPeConfirmPassword').value;
+   if(!old||next.length<8){status('railPePasswordStatus','Enter current password and a new password of at least 8 characters.',true);return;}
+   if(next!==confirm){status('railPePasswordStatus','New password and confirmation do not match.',true);return;}
+   if(old===next){status('railPePasswordStatus','Choose a different new password.',true);return;}
+   const button=$('railPePasswordSave');button.disabled=true;
+   status('railPePasswordStatus','Verifying current password…');
+   try{
+     const credential=firebase.auth.EmailAuthProvider.credential(user.email,old);
+     await user.reauthenticateWithCredential(credential);
+     await user.updatePassword(next);
+     for(const id of ['railPeOldPassword','railPeNewPassword','railPeConfirmPassword'])field(id,'');
+     status('railPePasswordStatus','Password changed successfully. Use your new password next time.');
+   }catch(err){status('railPePasswordStatus',niceError(err),true);}
+   finally{button.disabled=false;}
+ });
+ async function openDirectory(){
+   if(!isAdmin())return;
+   const user=active();
+   try{const token=await user.getIdTokenResult();if(token.claims.admin!==true)return;}catch(err){return;}
+   if(active()?.uid!==user.uid || !isAdmin())return;
+   showForm(null);
+   $('railPeDirectory').hidden=false;
+   compactView('directory');
+   $('railProfileOverlay')?.querySelector('.rail-profile-panel')?.classList.add('rail-pe-expanded');
+   status('railPeDirectoryStatus','Loading user directory…');
+   $('railPeDirectoryList').replaceChildren();
+   field('railPeDirectorySearch','');
+   directoryRows=[];
+   const btn=$('railPeDirectoryOpen');btn.disabled=true;
+   try{
+     // The callable reads Firebase Authentication from Admin SDK (admin claim enforced server-side).
+     // Without backend, only existing self-saved Firestore profile documents can be counted.
+     let exact=false,mode='profiles';
+     try{
+       const response=await firebase.app().functions('asia-south1').httpsCallable('adminUserDirectory')({});
+       const data=response.data||{};
+       if(data.exact===true&&Array.isArray(data.users)){
+         directoryRows=data.users;exact=true;mode='auth';
+       }else throw new Error('Missing user results');
+     }catch(fnError){
+       console.info('Admin directory callable not available; showing saved profiles only:',fnError.code||fnError.message);
+       const snapshot=await col().get();
+       directoryRows=snapshot.docs.map(doc=>({...doc.data(),uid:doc.id}));
+     }
+     if(!isAdmin() || active()?.uid!==user.uid || $('railPeDirectory').hidden)return;
+     directoryMode=mode;
+     $('railPeTotalTitle').textContent=exact?'Registered Users':'Saved Profiles';
+     $('railPeDirectoryNote').textContent=exact?
+       'Registered users include accounts that have not signed in or completed their profile. Mobile number is optional.':
+       'Showing only saved Firestore profiles. For the exact registered-user total and pending accounts, deploy the supplied adminUserDirectory Cloud Function.';
+     const completed=directoryRows.filter(completion).length;
+     text('railPeCountTotal',String(directoryRows.length));
+     text('railPeCountCompleted',String(completed));
+     text('railPeCountPending',String(directoryRows.length-completed));
+     status('railPeDirectoryStatus','');
+     renderDirectory();
+   }catch(err){
+     if(!isAdmin())return;
+     $('railPeTotalTitle').textContent='Directory Unavailable';
+     for(const id of ['railPeCountTotal','railPeCountCompleted','railPeCountPending'])text(id,'—');
+     $('railPeDirectoryNote').textContent='Admin-only Firestore read access is required. Follow the setup instructions included with this update.';
+     status('railPeDirectoryStatus',niceError(err),true);
+   }finally{btn.disabled=false;}
+ }
+ function renderDirectory(){
+   const parent=$('railPeDirectoryList');parent.replaceChildren();
+   if(!isAdmin())return;
+   const q=trim($('railPeDirectorySearch').value,120).toLowerCase();
+   const matches=directoryRows.filter(p=>
+      [p.displayName,p.email,p.mobile,p.designation,p.department,p.railway,p.division,p.uid].some(v=>String(v||'').toLowerCase().includes(q)));
+   $('railPeShownCount').textContent=matches.length+' shown';
+   if(!matches.length){const e=document.createElement('p');e.className='rail-pe-note';e.textContent='No matching users.';parent.append(e);return;}
+   for(const p of matches){
+     const card=document.createElement('div');card.className='rail-pe-profile-card';
+     const top=document.createElement('div');top.className='rail-pe-profile-top';
+     const title=document.createElement('div');
+     const name=document.createElement('strong');name.textContent=p.displayName||p.email||'Unnamed account';
+     const email=document.createElement('small');email.textContent=p.email||'Email not provided';
+     title.append(name,email);
+     const view=document.createElement('button');view.type='button';view.className='rail-pe-tiny-btn';view.textContent='View Profile';view.setAttribute('aria-expanded','false');
+     top.append(title,view);
+     const details=document.createElement('div');details.className='rail-pe-profile-info';details.hidden=true;
+     const data={Designation:p.designation,Department:p.department,Railway:p.railway,Division:p.division,'Mobile Number':p.mobile,
+       'Profile Status':completion(p)?'Completed':'Incomplete','Account Role':directoryMode==='auth'?(p.role||'User'):'Not available',
+       'Account Status':directoryMode==='auth'?(p.disabled?'Disabled':'Enabled'):'Not available',
+       'Last Sign-in':p.lastSignIn||'Not available'};
+     for(const [label,value] of Object.entries(data)){
+       const row=document.createElement('div');const k=document.createElement('span');k.textContent=label;
+       const v=document.createElement('b');v.textContent=value||'Not provided';row.append(k,v);details.append(row);
+     }
+     view.addEventListener('click',()=>{details.hidden=!details.hidden;view.textContent=details.hidden?'View Profile':'Hide Details';view.setAttribute('aria-expanded',String(!details.hidden));});
+     card.append(top,details);parent.append(card);
    }
  }
- const word=(u)=>[u.name||'',u.email||''].join(' ').toLowerCase();
- function render(){
-   const list=get('ruList');list.replaceChildren();const filter=v('ruSearch').toLowerCase();
-   let count=0;
-   users.filter(u=>word(u).includes(filter)).forEach(u=>{
-     count++;
-     const b=document.createElement('button');b.type='button';
-     b.className='ru-person'+(u.uid===selectedUid?' ru-selected':'')+(u.disabled?' ru-disabled':'');
-     const strong=document.createElement('strong');strong.textContent=(u.name||'No name')+(u.admin?' · ADMIN':'');
-     const small=document.createElement('small');small.textContent=u.email+' · '+(u.disabled?'Disabled':'Active');
-     b.append(strong,small);b.addEventListener('click',()=>choose(u.uid));list.appendChild(b);
-   });
-   if(!count){const p=document.createElement('p');p.className='ru-small';p.textContent=users.length?'No matching account.':'No accounts loaded.';list.appendChild(p);}
-   get('ruCount').textContent=String(users.length);
-   get('ruMoreBtn').hidden=!pageToken;
- }
- function pickData(){return {name:v('ruName'),email:v('ruEmail'),designation:v('ruDesignation'),
-    division:v('ruDivision'),department:v('ruDepartment'),contact:v('ruContact')};}
- function choose(uid){
-   selectedUid=uid;
-   const u=users.find(x=>x.uid===uid);
-   if(!u)return;
-   get('ruFormHeading').textContent=u.admin?'View Admin Account':'Edit User Details';
-   for(const [field,key] of [['ruName','name'],['ruEmail','email'],['ruDesignation','designation'],
-     ['ruDivision','division'],['ruDepartment','department'],['ruContact','contact']])get(field).value=u[key]||'';
-   hide('ruCreatePasswordLabel');hide('ruCreateHint');
-   show('ruUidRow');show('ruPasswordSection');show('ruStatusBtn');
-   get('ruUid').textContent=u.uid;
-   get('ruCreatePassword').required=false;
-   get('ruSaveBtn').textContent='Save Changes';
-   get('ruStatusBtn').textContent=u.disabled?'Enable User':'Disable User';
-   const locked=!!u.admin;
-   [...get('ruForm').querySelectorAll('input')].forEach(inp=>inp.disabled=locked);
-   get('ruNewPassword').disabled=locked;
-   get('ruSaveBtn').disabled=locked;
-   get('ruStatusBtn').disabled=locked;
-   get('ruSetPasswordBtn').disabled=locked;
-   get('ruResetEmailBtn').disabled=locked;
-   get('ruNewPassword').value='';
-   render();msg(locked?'Protected Admin account: details are read-only.':'Edit details or manage account access.');
- }
- function newUser(){
-   selectedUid='';get('ruForm').reset();
-   [...get('ruForm').querySelectorAll('input')].forEach(inp=>inp.disabled=false);
-   get('ruFormHeading').textContent='Add New User';show('ruCreatePasswordLabel');show('ruCreateHint');
-   hide('ruUidRow');hide('ruStatusBtn');hide('ruPasswordSection');
-   get('ruCreatePassword').required=true;get('ruSaveBtn').textContent='Create User';get('ruSaveBtn').disabled=false;
-   render();msg('New account will be created in Firebase Authentication.');
- }
- async function load(more=false){
-   if(busy)return;setBusy(true);msg(more?'Loading more users…':'Loading existing Firebase accounts…');
-   try{
-     const result=await run('list',{pageToken:more?pageToken||'':''});
-     users=more?[...users,...result.users]:result.users;
-     pageToken=result.nextPageToken;
-     render();msg(users.length+' Firebase account(s) loaded'+(pageToken?' · Load more available.':'.'));
-   }catch(e){msg(e.message,true);}
-   finally{setBusy(false);}
- }
- async function save(event){
-   event.preventDefault();if(busy||!authReady())return;
-   const values=pickData();
-   if(!values.email||!values.name)return msg('Name and Email ID are required.',true);
-   const creating=!selectedUid;
-   if(creating&&get('ruCreatePassword').value.length<10)return msg('Password needs at least 10 characters.',true);
-   const action=creating?'create':'update';
-   if(!creating&&!window.confirm('Save changes for '+values.email+'?'))return;
-   setBusy(true);msg(creating?'Creating Firebase user…':'Saving user details…');
-   try{
-     const result=await run(action,{...values, ...(creating?{password:get('ruCreatePassword').value}:{uid:selectedUid})});
-     const i=users.findIndex(x=>x.uid===result.user.uid);
-     if(i<0)users.unshift(result.user);else users[i]=result.user;
-     // Never leave a password in the form after submission.
-     get('ruCreatePassword').value='';
-     choose(result.user.uid);
-     msg(creating?'Firebase account created successfully. Share the temporary password privately.':'User details saved.');
-   }catch(e){get('ruCreatePassword').value='';msg(e.message,true);}
-   finally{setBusy(false);}
- }
- async function status(){
-   const u=users.find(x=>x.uid===selectedUid);if(!u||u.admin||busy)return;
-   const disabled=!u.disabled;
-   if(!confirm((disabled?'DISABLE':'ENABLE')+' login for '+u.email+'?'))return;
-   setBusy(true);msg('Updating account access…');
-   try{const result=await run('setDisabled',{uid:u.uid,disabled});users[users.findIndex(x=>x.uid===u.uid)]={...u,...result.user};
-     choose(u.uid);msg(disabled?'User disabled. Existing sessions may remain valid until token expiry.':'User enabled.');}
-   catch(e){msg(e.message,true)}finally{setBusy(false);}
- }
- async function setPassword(){
-   const u=users.find(x=>x.uid===selectedUid);if(!u||u.admin||busy)return;
-   const password=get('ruNewPassword').value;
-   if(password.length<10||password.length>128)return msg('New password must contain 10–128 characters.',true);
-   if(!confirm('Change password for '+u.email+'? The previous password will stop working.'))return;
-   setBusy(true);msg('Updating password…');
-   try{await run('setPassword',{uid:u.uid,password});msg('Password updated. Share new credentials privately.');}
-   catch(e){msg(e.message,true)}finally{get('ruNewPassword').value='';setBusy(false)}
- }
- async function sendResetEmail(){
-   const u=users.find(x=>x.uid===selectedUid);if(!u||u.admin||busy)return;
-   if(!confirm('Send Firebase password reset email to '+u.email+'?'))return;
-   setBusy(true);msg('Sending password reset email…');
-   try{await firebase.auth().sendPasswordResetEmail(u.email);msg('If email delivery is configured, a password reset email has been requested.');}
-   catch(e){msg(e.message||'Could not send password reset email.',true)}finally{setBusy(false)}
- }
- function init(){
-   if(initialized)return;initialized=true;
-   get('ruSearch').addEventListener('input',render);
-   get('ruNewBtn').addEventListener('click',newUser);
-   get('ruBackBtn').addEventListener('click',()=>window.railCloseUserManager());
-   get('ruMoreBtn').addEventListener('click',()=>load(true));
-   get('ruForm').addEventListener('submit',save);
-   get('ruStatusBtn').addEventListener('click',status);
-   get('ruSetPasswordBtn').addEventListener('click',setPassword);
-   get('ruResetEmailBtn').addEventListener('click',sendResetEmail);
- }
- window.railOpenUserManager=function(){
-   if(!authReady()){alert('Only an authenticated admin can manage users.');return;}
-   const parent=get('railProfileOverlay');
-   if(!parent||parent.hidden)return;
-   init();parent.classList.add('rail-users-open');show('railUserManagerPanel');
-   get('railProfileTitle').textContent='User Management';
-   newUser();load();
- };
- window.railCloseUserManager=function(silent=false){
-   const p=get('railProfileOverlay');if(!p)return;
-   p.classList.remove('rail-users-open');hide('railUserManagerPanel');
-   get('railProfileTitle').textContent='My Profile';
-   selectedUid='';get('ruCreatePassword').value='';get('ruNewPassword').value='';
-   if(!silent)get('railProfileMasterDataBtn')?.focus();
- };
+ $('railPeDirectoryOpen')?.addEventListener('click',openDirectory);
+ $('railPeDirectoryClose')?.addEventListener('click',()=>{
+    $('railPeDirectory').hidden=true;
+    $('railProfileOverlay')?.querySelector('.rail-profile-panel')?.classList.remove('rail-pe-expanded');
+    compactView('admin');
+ });
+ $('railPeDirectoryRefresh')?.addEventListener('click',openDirectory);
+ $('railPeDirectorySearch')?.addEventListener('input',renderDirectory);
 })();
 
 </script>

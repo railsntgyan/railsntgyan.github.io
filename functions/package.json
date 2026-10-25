@@ -1,0 +1,12 @@
+{
+  "name": "railsntgyan-admin-directory",
+  "private": true,
+  "description": "Admin-only Firebase Authentication user directory for RailSNTGyan",
+  "engines": {"node": "22"},
+  "main": "index.js",
+  "scripts": {"serve": "firebase emulators:start --only functions"},
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.0.0"
+  }
+}

@@ -1,0 +1,47 @@
+// FIRESTORE RULES SNIPPET ONLY — DO NOT REPLACE OR PUBLISH YOUR FULL EXISTING RULES.
+// Copy the match block below INSIDE your existing:
+// service cloud.firestore { match /databases/{database}/documents { ... HERE ... } }
+// Keep all your existing secr_records and master-data rules unchanged.
+// No public listing / no normal-user cross-account access.
+
+match /user_profiles/{userId} {
+  function self() {
+    return request.auth != null && request.auth.uid == userId;
+  }
+  function isAdmin() {
+    return request.auth != null && request.auth.token.admin == true;
+  }
+  function validProfile() {
+    return request.resource.data.keys().hasOnly([
+        'displayName','designation','department','railway','division',
+        'mobile','email','createdAt','updatedAt'])
+      && request.resource.data.keys().hasAll([
+        'displayName','designation','department','railway','division',
+        'mobile','email','createdAt','updatedAt'])
+      && request.resource.data.email == request.auth.token.email
+      && request.resource.data.displayName is string
+      && request.resource.data.displayName.size() > 0
+      && request.resource.data.displayName.size() <= 80
+      && request.resource.data.designation is string
+      && request.resource.data.designation.size() <= 100
+      && request.resource.data.department is string
+      && request.resource.data.department.size() <= 80
+      && request.resource.data.railway is string
+      && request.resource.data.railway.size() <= 80
+      && request.resource.data.division is string
+      && request.resource.data.division.size() <= 80
+      && request.resource.data.mobile is string
+      && request.resource.data.mobile.size() <= 20
+      && request.resource.data.createdAt is timestamp
+      && request.resource.data.updatedAt is timestamp;
+  }
+  allow get: if self() || isAdmin();
+  allow list: if isAdmin();
+  allow create: if self() && validProfile();
+  allow update: if self() && validProfile()
+      && request.resource.data.email == resource.data.email
+      && request.resource.data.createdAt == resource.data.createdAt
+      && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+           'displayName','designation','department','railway','division','mobile','updatedAt']);
+  allow delete: if false;
+}
