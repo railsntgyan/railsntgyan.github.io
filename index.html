@@ -18006,6 +18006,7 @@ body.dark-theme #railProfileOverlay .rail-pe-verify-badge[data-verified="true"]{
      display(payload);
      status('railPeReadStatus','');
      status('railPeEditStatus','Profile saved successfully.'+authWarning,!!authWarning);
+     window.dispatchEvent(new CustomEvent('rails:profile-saved',{detail:{uid:user.uid,profile:payload}}));
      if(!authWarning)setTimeout(()=>{if(active()?.uid===user.uid){showForm(null);status('railPeEditStatus','');}},1300);
    }catch(err){status('railPeEditStatus',niceError(err),true);}
    finally{button.disabled=false;}
@@ -18025,6 +18026,7 @@ body.dark-theme #railProfileOverlay .rail-pe-verify-badge[data-verified="true"]{
    if(hint)hint.textContent=!signedIn?'Sign in to manage email verification.':
      verified?'Your registered email address is verified.':
      'A verification link will be sent to '+(user.email||'your registered email')+'.';
+   window.dispatchEvent(new CustomEvent('rails:email-status',{detail:{uid:user?.uid||null,verified}}));
  }
  window.railProfileUpdateEmailVerification=updateEmailVerification;
  function verificationError(err){
@@ -23444,3 +23446,171 @@ window.railPreserveMasterRecordValues=function(rec){
 }
 /* Touch/mobile/tablet drawer geometry is unchanged, as is each nav item. */
 </style>
+
+
+<!-- Thin HOME-only Account Reminder: animated news-ticker, scoped to hmisDashboard. -->
+<style id="rail-hmis-profile-reminder-ticker-20261025">
+#hmisDashboard > #railAccountTicker[hidden]{display:none!important}
+#hmisDashboard > #railAccountTicker{
+  display:flex;align-items:center;box-sizing:border-box;flex:0 0 36px;
+  width:100%;max-width:100%;min-width:0;height:36px;min-height:36px;
+  border:1px solid #f2bd63;border-radius:9px;
+  background:linear-gradient(90deg,#fff0ca 0%,#fff8e9 35%,#fff5df 100%);
+  box-shadow:0 1px 5px rgba(133,90,18,.11);color:#70420b;
+  overflow:hidden;position:relative;margin:0 0 2px;padding:0;
+  font-family:inherit;
+}
+#railAccountTicker .rat-icon{
+  display:flex;align-items:center;justify-content:center;align-self:stretch;
+  flex:0 0 38px;background:#ffebbd;color:#b46b09;
+  border-right:1px solid #f2d296;font-size:14px;
+}
+#railAccountTicker .rat-window{flex:1 1 0;min-width:0;overflow:hidden;white-space:nowrap;
+  mask-image:linear-gradient(to right,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%)}
+#railAccountTicker .rat-track{display:flex;align-items:center;width:max-content;height:34px;will-change:transform;
+  animation:rat-scroll 22s linear infinite}
+#railAccountTicker .rat-phrase{display:flex;align-items:center;flex:0 0 auto;gap:9px;
+  padding:0 45px 0 18px;font-weight:750;font-size:12px;line-height:1;letter-spacing:.02px}
+#railAccountTicker .rat-phrase i{color:#da8716;font-size:10px}
+@keyframes rat-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#railAccountTicker:hover .rat-track,#railAccountTicker:focus-within .rat-track{animation-play-state:paused}
+#railAccountTicker .rat-actions{display:flex;flex:0 0 auto;align-items:center;gap:5px;
+  height:100%;border-left:1px solid #f1d7ad;padding:0 7px;background:#fff9ee;z-index:1}
+#railAccountTicker .rat-action{display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  white-space:nowrap;box-sizing:border-box;min-height:26px;min-width:26px;padding:3px 8px;
+  border-radius:6px;border:1px solid #dfad5d;color:#87500b;background:#fff;
+  font-size:10px;font-family:inherit;font-weight:800;cursor:pointer}
+#railAccountTicker .rat-action:hover,#railAccountTicker .rat-action:focus-visible{
+  outline:1px solid #bb801c;background:#fff0d4}
+#railAccountTicker .rat-action:first-child{background:#1865b5;color:#fff;border-color:#1865b5}
+#railAccountTicker .rat-action:first-child:hover,#railAccountTicker .rat-action:first-child:focus-visible{background:#0c4f92}
+body.dark-theme #hmisDashboard > #railAccountTicker{background:linear-gradient(90deg,#453217,#372b20);
+  border-color:#8b642e;color:#ffe6ac;box-shadow:none}
+body.dark-theme #railAccountTicker .rat-icon{background:#543d20;color:#ffd582;border-color:#76572a}
+body.dark-theme #railAccountTicker .rat-actions{background:#342b21;border-color:#72532b}
+body.dark-theme #railAccountTicker .rat-action:not(:first-child){color:#ffe4ae;background:#49351f;border-color:#866334}
+@media(max-width:620px){
+  #hmisDashboard > #railAccountTicker{height:34px;min-height:34px;flex-basis:34px;border-radius:7px}
+  #railAccountTicker .rat-icon{flex-basis:29px;font-size:12px}
+  #railAccountTicker .rat-track{height:32px;animation-duration:17s}
+  #railAccountTicker .rat-phrase{font-size:10.5px;padding:0 30px 0 12px}
+  #railAccountTicker .rat-actions{padding:0 4px;gap:4px}
+  #railAccountTicker .rat-action{width:27px;height:25px;min-width:27px;min-height:25px;padding:2px 4px;font-size:11px}
+  #railAccountTicker .rat-action-label{display:none}
+}
+@media(prefers-reduced-motion:reduce){#railAccountTicker .rat-track{animation:none!important}}
+</style>
+<script id="rail-home-profile-ticker-controller">
+(function(){
+  'use strict';
+  const panel=document.getElementById('hmisDashboard');
+  if(!panel || document.getElementById('railAccountTicker') || !window.firebase)return;
+  const bar=document.createElement('aside');bar.id='railAccountTicker';bar.hidden=true;
+  bar.setAttribute('aria-label','Account completion reminder');
+  bar.setAttribute('role','note');
+  bar.innerHTML='<span class="rat-icon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>'+
+    '<div class="rat-window" aria-hidden="true"><div class="rat-track" id="ratTrack"></div></div>'+
+    '<div class="rat-actions" id="ratActions"></div>';
+  panel.insertBefore(bar,panel.firstChild);
+  const track=bar.querySelector('#ratTrack'), actions=bar.querySelector('#ratActions');
+  const auth=firebase.auth();
+  // The same required profile fields used by the existing Admin User Directory.
+  const required=['displayName','designation','department','railway','division'];
+  let currentUid=null,profile=null,verified=false,nonce=0,lastReload=0;
+  const complete=p=>p && required.every(key=>typeof p[key]==='string'&&p[key].trim().length>0);
+  function phrases(profileNeeded,verifyNeeded){
+    const result=[];
+    if(profileNeeded)result.push('Please complete your RailSNTGyan profile details.');
+    if(verifyNeeded)result.push('Your email address is not verified. Please verify your email.');
+    return result;
+  }
+  function createAction(label,icon,tab){
+    const btn=document.createElement('button');btn.type='button';btn.className='rat-action';
+    btn.innerHTML='<i class="fa-solid '+icon+'" aria-hidden="true"></i><span class="rat-action-label">'+label+'</span>';
+    btn.setAttribute('aria-label',label);btn.title=label;
+    btn.addEventListener('click',()=>{
+      if(!auth.currentUser || auth.currentUser.uid!==currentUid)return;
+      if(typeof window.railOpenProfile==='function')window.railOpenProfile();
+      const target=document.querySelector('#railProfileOverlay .rail-pe-tab[data-rail-pe-tab="'+tab+'"]');
+      if(target && !document.getElementById('railProfileOverlay')?.hidden){
+        target.click();
+        if(tab==='security')requestAnimationFrame(()=>{
+          document.getElementById('railPeVerifyHeading')?.scrollIntoView({block:'nearest',behavior:'smooth'});
+        });
+      }
+    });
+    return btn;
+  }
+  function render(){
+    const user=auth.currentUser;
+    if(!user || !currentUid || user.uid!==currentUid){bar.hidden=true;return;}
+    // Do not mistake a network/permissions error for an incomplete profile.
+    const profileNeeded=profile!==null && !complete(profile);
+    const verifyNeeded=!verified;
+    if(!profileNeeded && !verifyNeeded){bar.hidden=true;return;}
+    const messages=phrases(profileNeeded,verifyNeeded);
+    bar.setAttribute('aria-label',messages.join(' '));
+    track.replaceChildren();
+    for(let copy=0;copy<2;copy++){
+      const group=document.createElement('div');group.className='rat-phrase';
+      group.setAttribute('aria-hidden','true');
+      for(const message of messages){
+        const arrow=document.createElement('i');arrow.className='fa-solid fa-angles-right';
+        const span=document.createElement('span');span.textContent=message;
+        group.append(arrow,span);
+      }
+      track.append(group);
+    }
+    actions.replaceChildren();
+    if(profileNeeded)actions.append(createAction('Edit Profile','fa-user-pen','edit'));
+    if(verifyNeeded)actions.append(createAction('Verify Email','fa-envelope-circle-check','security'));
+    bar.hidden=false;
+  }
+  async function refreshProfile(uid){
+    const marker=++nonce;
+    try{
+      const doc=await firebase.firestore().collection('user_profiles').doc(uid).get();
+      if(marker!==nonce || auth.currentUser?.uid!==uid)return;
+      profile=doc.exists?doc.data():{};
+    }catch(err){
+      if(marker!==nonce || auth.currentUser?.uid!==uid)return;
+      console.info('Home reminder profile check unavailable:',err.code||err.message);
+      profile=null; // A failed read is not proof that the profile is incomplete.
+    }
+    render();
+  }
+  auth.onAuthStateChanged(user=>{
+    ++nonce;
+    currentUid=user?.uid||null;
+    profile=null;
+    verified=user?.emailVerified===true;
+    render();
+    if(user)refreshProfile(user.uid);
+  });
+  window.addEventListener('rails:profile-saved',event=>{
+    if(event.detail?.uid!==currentUid)return;
+    profile=event.detail.profile||{};
+    render();
+  });
+  window.addEventListener('rails:email-status',event=>{
+    if(event.detail?.uid!==currentUid)return;
+    verified=event.detail.verified===true;
+    render();
+  });
+  // Returning from the email-link tab refreshes the verification state automatically.
+  async function checkEmailWhenBack(){
+    const user=auth.currentUser;
+    if(document.hidden || !user || user.uid!==currentUid || verified)return;
+    if(Date.now()-lastReload<15000)return;
+    lastReload=Date.now();
+    try{await user.reload();if(auth.currentUser?.uid!==user.uid)return;
+      verified=user.emailVerified===true;
+      render();
+      if(typeof window.railProfileUpdateEmailVerification==='function')window.railProfileUpdateEmailVerification(user);
+    }catch(err){console.info('Verification refresh deferred:',err.code||err.message);}
+  }
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkEmailWhenBack();});
+  // The ticker is a child of #hmisDashboard, so it inherits existing Home-only visibility.
+  render();
+})();
+</script>
