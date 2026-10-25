@@ -23505,7 +23505,8 @@ body.dark-theme #railAccountTicker .rat-action:not(:first-child){color:#ffe4ae;b
   'use strict';
   const panel=document.getElementById('hmisDashboard');
   if(!panel || document.getElementById('railAccountTicker') || !window.firebase)return;
-  const bar=document.createElement('aside');bar.id='railAccountTicker';bar.hidden=true;
+  // IMPORTANT: do not use <aside> here: this site's mobile CSS slides all aside elements off-screen.
+  const bar=document.createElement('div');bar.id='railAccountTicker';bar.hidden=true;
   bar.setAttribute('aria-label','Account completion reminder');
   bar.setAttribute('role','note');
   bar.innerHTML='<span class="rat-icon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>'+
