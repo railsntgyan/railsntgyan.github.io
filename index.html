@@ -76,7 +76,7 @@ html.rail-saved-light body:not(.dark-theme) {
       z-index:99999 !important; display:flex !important;
       align-items:center !important; justify-content:center !important;
        background:#031329 !important;
-       background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-desktop-4k.webp") !important;
+       background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-technical-railway.webp") !important;
        background-size:cover !important;
        background-position:center center !important;
        background-repeat:no-repeat !important;
@@ -87,13 +87,13 @@ html.rail-saved-light body:not(.dark-theme) {
   <style id="rail-login-background-responsive-first-paint">
     @media (orientation:portrait) {
       html:not(.portal-session-auth) body #loginScreen {
-        background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-mobile-4k.webp") !important;
+        background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-technical-railway.webp") !important;
         background-position:5% bottom !important;
       }
     }
   </style>
-  <link rel="preload" as="image" href="assets/login-desktop-4k.webp" media="(orientation:landscape)">
-  <link rel="preload" as="image" href="assets/login-mobile-4k.webp" media="(orientation:portrait)">
+  
+  
   <style id="rail-auth-welcome-lock-fix-20261024">
     /* AUTH VISIBILITY LOCK. More specific than HMIS display:flex!important.
        Never expose portal while logged out or logged-in login overlay while authed. */
@@ -7235,6 +7235,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
  #rmModal .rm-firestore-note{position:static!important;}
 }
 </style>
+<link rel="preload" as="image" href="assets/login-technical-railway.webp">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -16855,7 +16856,7 @@ html body.dark-theme #loginScreen {
   min-height:0!important; padding:22px 12px!important; overflow:auto!important; z-index:99999!important;
   display:flex!important; align-items:center!important; justify-content:center!important;
   background:#031329!important;
-  background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-desktop-4k.webp")!important;
+  background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-technical-railway.webp")!important;
   background-size:cover!important; background-position:center center!important; background-repeat:no-repeat!important;
   color:#fff!important; color-scheme:dark!important;
   backdrop-filter:none!important; -webkit-backdrop-filter:none!important;
@@ -16863,7 +16864,7 @@ html body.dark-theme #loginScreen {
 /* Railway image is drawn by CSS, while V4.4 canvas remains an animated transparent overlay. */
 @media (orientation:portrait) {
  html body #loginScreen, html body.dark-theme #loginScreen {
-  background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-mobile-4k.webp")!important;
+  background-image:linear-gradient(180deg,rgba(1,12,28,.09),rgba(1,12,28,.22)),url("assets/login-technical-railway.webp")!important;
   background-position:5% bottom!important;
  }
 }
@@ -23615,3 +23616,282 @@ body.dark-theme #railAccountTicker .rat-action:not(:first-child){color:#ffe4ae;b
   render();
 })();
 </script>
+
+
+<style id="railsntgyan-technical-photo-compact-login-final-20261026">
+/* 26 October 2026: Auth screens ONLY; preserve Firebase Auth, profile, Admin and all portal content.
+   Replaces giant old login wallpapers. The small card stays readable and the chosen
+   technical railway photo fills the screen. Responsive checks rely on structural CSS;
+   extremely short/keyboard-open viewports may scroll to preserve access to inputs. */
+html:not(.portal-session-auth) body #loginScreen.hmis-login-page {
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:100dvh!important;
+  min-height:0!important;
+  max-height:100dvh!important;
+  overflow:hidden!important;
+  padding:0!important;
+  margin:0!important;
+  gap:0!important;
+  color:#fff!important;
+  background:
+    linear-gradient(90deg,rgba(6,28,43,.76) 0%,rgba(9,36,49,.55) 40%,rgba(9,36,49,.22) 76%,rgba(6,28,43,.30) 100%),
+    url('assets/login-technical-railway.webp') center center /cover no-repeat!important;
+  background-attachment:scroll!important;
+  scrollbar-gutter:auto!important;
+  color-scheme:light!important;
+}
+html body #loginScreen.hmis-login-page #railV44Canvas,
+html body #loginScreen.hmis-login-page .hmis-header-art,
+html body #loginScreen.hmis-login-page .hmis-head-badge,
+html body #loginScreen.hmis-login-page .hmis-scene-bg,
+html body #loginScreen.hmis-login-page .hmis-scene-signal {
+  display:none!important;
+}
+html body #loginScreen.hmis-login-page .hmis-topbar {
+  display:flex!important;
+  min-height:48px!important;
+  height:48px!important;
+  max-height:48px!important;
+  flex:0 0 48px!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-bottom:1px solid rgba(227,255,247,.16)!important;
+  background:rgba(7,34,45,.24)!important;
+  padding:5px clamp(14px,2.3vw,32px)!important;
+  gap:10px!important;
+  overflow:hidden!important;
+}
+html body #loginScreen.hmis-login-page .hmis-brand-block{gap:8px!important;flex:0 1 auto!important;max-height:42px!important;}
+html body #loginScreen.hmis-login-page .hmis-logo-badge {
+  width:36px!important;height:36px!important;flex:0 0 36px!important;
+  border:1px solid rgba(255,255,255,.30)!important;
+  background:rgba(255,255,255,.90)!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.10)!important;
+}
+html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg{
+  width:33px!important;height:33px!important;max-width:33px!important;max-height:33px!important;
+}
+html body #loginScreen.hmis-login-page .hmis-heading-text{display:flex!important;flex-direction:column!important;justify-content:center!important;gap:0!important;}
+html body #loginScreen.hmis-login-page .hmis-header-name{
+  font-size:18px!important;line-height:1.05!important;letter-spacing:-.4px!important;
+}
+html body #loginScreen.hmis-login-page .hmis-header-name span{color:#fff!important;}
+html body #loginScreen.hmis-login-page .hmis-header-name strong{color:#ffb36d!important;}
+html body #loginScreen.hmis-login-page .hmis-header-subtitle{font-size:9px!important;line-height:1.15!important;color:#ddf7f1!important;}
+html body #loginScreen.hmis-login-page .hmis-header-hindi{display:none!important;}
+html body #loginScreen.hmis-login-page .hmis-mainarea {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,342px)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  align-items:center!important;
+  justify-items:stretch!important;
+  width:min(1200px,100%)!important;
+  max-width:1200px!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  flex:1 1 auto!important;
+  margin:0 auto!important;
+  padding:clamp(10px,2vh,20px) clamp(16px,3.1vw,40px)!important;
+  gap:clamp(28px,5vw,80px)!important;
+  background:none!important;
+  overflow:hidden!important;
+}
+html body #loginScreen.hmis-login-page .hmis-scene{
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  align-self:center!important;min-width:0!important;min-height:0!important;
+  height:auto!important;max-height:none!important;
+  border:0!important;border-radius:0!important;
+  box-shadow:none!important;background:none!important;overflow:visible!important;
+}
+html body #loginScreen.hmis-login-page .hmis-scene::before,
+html body #loginScreen.hmis-login-page .hmis-scene::after{content:none!important;display:none!important;}
+html body #loginScreen.hmis-login-page .hmis-scene-text {
+  width:100%!important;max-width:520px!important;
+  margin:0!important;padding:0!important;text-align:left!important;
+  background:transparent!important;box-shadow:none!important;border:0!important;
+}
+html body #loginScreen.hmis-login-page .hmis-scene h1{
+  font-size:clamp(35px,4.5vw,58px)!important;
+  line-height:1.06!important;margin:0!important;color:#fff!important;
+  text-shadow:0 3px 22px rgba(0,0,0,.40)!important;
+}
+html body #loginScreen.hmis-login-page .hmis-scene h1 span{color:#fff!important;}
+html body #loginScreen.hmis-login-page .hmis-scene h1 strong{color:#ffb46e!important;}
+html body #loginScreen.hmis-login-page .hmis-hero-subtitle {
+  font-size:clamp(11px,1.2vw,16px)!important;color:#e2f7f4!important;
+  text-shadow:0 2px 12px rgba(0,0,0,.48)!important;
+}
+html body #loginScreen.hmis-login-page .hmis-scene-text p{
+  font-size:clamp(15px,1.75vw,22px)!important;color:#f2fcf8!important;
+  line-height:1.35!important;margin:12px 0 0!important;
+  text-shadow:0 2px 14px rgba(0,0,0,.58)!important;
+}
+html body #loginScreen.hmis-login-page .hmis-accentline{height:3px!important;width:56px!important;margin:9px 0!important;}
+html body #loginScreen.hmis-login-page .hmis-features {
+  width:100%!important;max-width:480px!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:9px!important;margin:22px 0 0!important;padding:0!important;
+}
+html body #loginScreen.hmis-login-page .hmis-feature{
+  color:#edfffa!important;font-size:10px!important;text-shadow:0 2px 9px #072d3e!important;
+}
+html body #loginScreen.hmis-login-page .hmis-feature-icon{
+  width:36px!important;height:36px!important;font-size:17px!important;
+  border:1px solid rgba(255,255,255,.44)!important;
+}
+html body #loginScreen.hmis-login-page .login-card.hmis-login-card,
+html body.dark-theme #loginScreen.hmis-login-page .login-card.hmis-login-card {
+  position:relative!important;display:flex!important;flex-direction:column!important;
+  flex:0 0 auto!important;align-self:center!important;justify-self:end!important;
+  width:100%!important;max-width:342px!important;min-width:0!important;
+  min-height:0!important;height:auto!important;max-height:100%!important;
+  margin:0!important;padding:17px 20px 15px!important;
+  border-radius:21px!important;
+  border:1px solid rgba(255,255,255,.79)!important;
+  background:rgba(255,255,255,.96)!important;
+  color:#173b69!important;
+  box-shadow:0 20px 50px rgba(4,27,41,.28)!important;
+  transform:none!important;overflow-y:auto!important;overflow-x:hidden!important;
+  backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;
+  scrollbar-width:thin!important;
+}
+html body #loginScreen.hmis-login-page .hmis-signin-kicker{font-size:9px!important;margin:0 0 7px!important;line-height:1.15!important;}
+html body #loginScreen.hmis-login-page .hmis-signin-title{gap:6px!important;margin:0!important;line-height:1.1!important;}
+html body #loginScreen.hmis-login-page .hmis-signin-title h2{font-size:23px!important;margin:0!important;line-height:1.18!important;}
+html body #loginScreen.hmis-login-page .hmis-signin-title svg{width:21px!important;height:21px!important;}
+html body #loginScreen.hmis-login-page .hmis-form-line {margin:7px auto 10px!important;height:3px!important;}
+html body #loginScreen.hmis-login-page .hmis-signin-intro{font-size:11px!important;line-height:1.35!important;margin:0 0 10px!important;}
+html body #loginScreen.hmis-login-page .login-form-group{margin:0 0 9px!important;}
+html body #loginScreen.hmis-login-page .login-form-group label{
+  font-size:11px!important;line-height:1.18!important;margin:0 0 4px!important;
+}
+html body #loginScreen.hmis-login-page .login-input-wrapper{
+  height:42px!important;min-height:42px!important;border-radius:11px!important;
+  border:1px solid #c5dcda!important;background:#fafffe!important;
+}
+html body #loginScreen.hmis-login-page .login-input{
+  height:40px!important;min-height:40px!important;font-size:13px!important;
+}
+html body #loginScreen.hmis-login-page .hmis-form-help{margin:0 0 10px!important;gap:8px!important;font-size:10px!important;}
+html body #loginScreen.hmis-login-page .hmis-form-help span,
+html body #loginScreen.hmis-login-page .hmis-forgot{font-size:10px!important;}
+html body #loginScreen.hmis-login-page .login-btn{
+  height:43px!important;min-height:43px!important;font-size:14px!important;
+  border-radius:11px!important;
+  background:linear-gradient(115deg,#10ada4,#078375)!important;
+  box-shadow:0 8px 19px rgba(5,127,110,.19)!important;
+}
+html body #loginScreen.hmis-login-page .hmis-auth-note{
+  font-size:9px!important;line-height:1.25!important;margin:8px 0 0!important;padding:6px 8px!important;
+}
+html body #loginScreen.hmis-login-page .hmis-bottom-bar{
+  display:flex!important;flex:0 0 28px!important;min-height:28px!important;
+  height:28px!important;max-height:28px!important;
+  padding:4px 14px!important;background:rgba(3,25,38,.27)!important;
+  border-top:1px solid rgba(229,255,246,.17)!important;
+  color:#eafaf6!important;font-size:9px!important;
+}
+html body #loginScreen.hmis-login-page .hmis-bottom-bar *{font-size:9px!important;color:#e9fcf5!important;}
+/* Real Firebase welcome overlay: circuit is kept prominent, user's technical railway
+   collage replaces the old train-yard photograph. This does NOT change sign-in logic. */
+html body:not(.dark-theme) #loginScreen #railV44Welcome,
+html body.dark-theme #loginScreen #railV44Welcome {
+  background:
+    linear-gradient(180deg,rgba(232,249,242,.08),rgba(235,251,245,.05)),
+    url('assets/welcome-technical-circuit.webp') center center /cover no-repeat!important;
+  background-color:#e1f5eb!important;
+  transform:none!important;
+}
+html body:not(.dark-theme) #loginScreen .railV44WelcomeCard,
+html body.dark-theme #loginScreen .railV44WelcomeCard {
+  width:min(355px,calc(100vw - 30px))!important;max-width:355px!important;
+  max-height:calc(100dvh - 30px)!important;overflow-y:auto!important;
+  border-radius:22px!important;padding:21px 21px 17px!important;
+  background:rgba(251,255,252,.91)!important;
+  color:#1c4653!important;
+  border:1px solid rgba(255,255,255,.9)!important;
+  box-shadow:0 20px 52px rgba(39,87,70,.16)!important;
+  backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;
+}
+html body #loginScreen .railV44WelcomeLogo{font-size:31px!important;margin-bottom:8px!important;}
+html body #loginScreen .railV44WelcomeIntro{font-size:17px!important;margin-bottom:4px!important;color:#406b66!important;}
+html body #loginScreen .railV44WelcomeBrand{font-size:clamp(25px,5vw,33px)!important;line-height:1.08!important;}
+html body #loginScreen .railV44WelcomeBrand span{color:#124e6b!important;}
+html body #loginScreen .railV44WelcomeBrand strong{color:#e9842b!important;}
+html body #loginScreen .railV44WelcomeText{font-size:clamp(15px,3.5vw,20px)!important;color:#286c61!important;}
+html body #loginScreen .railV44HindiLine{color:#286c61!important;}
+html body #loginScreen .railV44HindiAccent{color:#286c61!important;}
+html body #loginScreen .railV44WelcomeText small{font-size:11px!important;color:#66877e!important;}
+/* Regular portrait mobile: one compact form, photo visible AROUND the card. */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px){
+  html body #loginScreen.hmis-login-page .hmis-mainarea{
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    justify-content:center!important;gap:0!important;
+    width:100%!important;max-width:none!important;height:auto!important;
+    padding:8px 12px!important;overflow:hidden!important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-scene{display:none!important;}
+  html body #loginScreen.hmis-login-page .login-card.hmis-login-card,
+  html body.dark-theme #loginScreen.hmis-login-page .login-card.hmis-login-card{
+    width:min(100%,315px)!important;max-width:315px!important;
+    padding:15px 17px 13px!important;align-self:center!important;justify-self:center!important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-bottom-bar{display:none!important;}
+}
+@media (orientation:portrait) and (min-width:701px) and (max-width:1100px){
+  html body #loginScreen.hmis-login-page .login-card.hmis-login-card,
+  html body.dark-theme #loginScreen.hmis-login-page .login-card.hmis-login-card{
+    width:min(100%,365px)!important;max-width:365px!important;
+  }
+}
+/* Android's "Desktop site" virtual portrait viewport (about 980 CSS px wide and tall)
+   needs a larger CSS card to stay finger-readable on a scaled physical phone. */
+@media (orientation:portrait) and (min-width:700px) and (max-width:1100px) and (min-height:1450px){
+  html body #loginScreen.hmis-login-page .login-card.hmis-login-card,
+  html body.dark-theme #loginScreen.hmis-login-page .login-card.hmis-login-card{
+    width:min(100%,525px)!important;max-width:525px!important;
+    padding:25px 29px!important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-signin-title h2{font-size:30px!important;}
+  html body #loginScreen.hmis-login-page .login-input-wrapper{height:58px!important;min-height:58px!important;}
+  html body #loginScreen.hmis-login-page .login-input{height:56px!important;min-height:56px!important;font-size:20px!important;}
+  html body #loginScreen.hmis-login-page .login-btn{height:58px!important;min-height:58px!important;font-size:18px!important;}
+  html body #loginScreen.hmis-login-page .login-form-group label{font-size:17px!important;}
+  html body #loginScreen.hmis-login-page .hmis-form-help span,html body #loginScreen.hmis-login-page .hmis-forgot{font-size:16px!important;}
+}
+/* Very short, phone landscape or keyboard-open: keep input and reset accessible. */
+@media (max-height:590px){
+  html body #loginScreen.hmis-login-page .hmis-topbar {height:37px!important;min-height:37px!important;max-height:37px!important;flex-basis:37px!important;padding-block:2px!important;}
+  html body #loginScreen.hmis-login-page .hmis-mainarea{gap:6px!important;padding:4px 10px!important;}
+  html body #loginScreen.hmis-login-page .hmis-scene{display:none!important;}
+  html body #loginScreen.hmis-login-page .login-card.hmis-login-card,
+  html body.dark-theme #loginScreen.hmis-login-page .login-card.hmis-login-card{
+    max-height:100%!important;max-width:400px!important;overflow-y:auto!important;padding:9px 14px!important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-bottom-bar {display:none!important;}
+  html body #loginScreen.hmis-login-page .hmis-signin-kicker{display:none!important;}
+  html body #loginScreen.hmis-login-page .hmis-signin-title h2{font-size:18px!important;}
+  html body #loginScreen.hmis-login-page .hmis-signin-intro{display:none!important;}
+  html body #loginScreen.hmis-login-page .hmis-form-line{margin:3px auto 5px!important;}
+  html body #loginScreen.hmis-login-page .login-form-group{margin-bottom:5px!important;}
+  html body #loginScreen.hmis-login-page .login-input-wrapper{height:34px!important;min-height:34px!important;}
+  html body #loginScreen.hmis-login-page .login-input{height:32px!important;min-height:32px!important;}
+  html body #loginScreen.hmis-login-page .hmis-form-help{margin-bottom:5px!important;}
+  html body #loginScreen.hmis-login-page .login-btn{height:35px!important;min-height:35px!important;}
+  html body #loginScreen.hmis-login-page .hmis-auth-note{display:none!important;}
+  html body #loginScreen #railV44Welcome{padding:8px!important;}
+  html body #loginScreen .railV44WelcomeCard{padding:12px 15px!important;}
+}
+@media (max-height:360px){
+  html:not(.portal-session-auth) body #loginScreen.hmis-login-page{overflow-y:auto!important;}
+  html body #loginScreen.hmis-login-page .hmis-mainarea{flex:0 0 auto!important;overflow:visible!important;min-height:0!important;}
+  html body #loginScreen.hmis-login-page .login-card.hmis-login-card{max-height:none!important;overflow:visible!important;}
+}
+@media (prefers-reduced-motion:reduce){
+  html body #loginScreen #railV44Welcome,html body #loginScreen #railV44Welcome.railV44Show{transition:none!important;}
+}
+</style>
+
