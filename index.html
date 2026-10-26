@@ -8748,11 +8748,19 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
           <span class="help-hint">Paste Google Drive link for 200MB+ PDF. Set permission to 'Anyone with link can view'.</span>
           <div id="railDriveUploadPanel" style="margin-top:12px;padding:12px;border:1px solid #9bc8b3;border-radius:10px;background:rgba(168,208,187,.12)">
             <label for="railDirectFile" style="display:block;font-weight:650;margin-bottom:7px"><i class="fa-solid fa-cloud-arrow-up"></i> Upload File Directly to Google Drive</label>
-            <input id="railDirectFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" style="display:block;max-width:100%;margin:6px 0 12px" />
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 10px">
+              <button type="button" class="btn btn-outline" id="railDriveConnectButton" onclick="railConnectGoogleDrive()"><i class="fa-brands fa-google-drive"></i> Connect Google Drive</button>
+              <button type="button" class="btn btn-outline" id="railDriveDisconnectButton" onclick="railDisconnectGoogleDrive()" style="display:none">Disconnect</button>
+              <span id="railDriveConnectionState" role="status" style="font-size:.82rem;font-weight:650">Not connected</span>
+            </div>
+            <input id="railDirectFile" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" style="display:block;max-width:100%;margin:6px 0 6px" aria-describedby="railDriveFileHelp" />
+            <div id="railDriveFileHelp" class="help-hint" style="margin-bottom:9px">Choose one or several files. All selected files go to the chosen Section / Subsection / FY folder.</div>
             <label for="railDirectFY" style="display:block;font-size:.85rem">Financial Year (FY)</label>
             <select id="railDirectFY" style="width:100%;margin:6px 0 12px"></select>
-            <button type="button" class="btn btn-outline" id="railDirectUploadButton" onclick="railUploadDriveDocument()"><i class="fa-solid fa-upload"></i> Upload to Drive</button>
-            <div id="railDriveUploadStatus" role="status" aria-live="polite" style="font-size:.82rem;margin-top:9px;word-break:break-word">Old Drive links remain supported. Direct upload needs one-time Google API setup.</div>
+            <button type="button" class="btn btn-outline" id="railDirectUploadButton" onclick="railUploadDriveDocument()"><i class="fa-solid fa-upload"></i> Upload Selected Files</button>
+            <div id="railDriveUploadStatus" role="status" aria-live="polite" style="font-size:.82rem;margin-top:9px;word-break:break-word">Connect Google Drive once, then upload multiple PDFs without selecting Gmail for every file.</div>
+            <div id="railDriveQueue" style="margin-top:10px" aria-label="Uploaded files and record links"></div>
+            <small style="display:block;line-height:1.45;margin-top:8px">Each Firebase record has one PDF link. For multiple PDFs, select each uploaded file's <b>Use for Record</b> link, complete its details and click <b>Save Record</b>. The next uploaded file is prepared automatically.</small>
           </div>
         </div>
 
@@ -8770,116 +8778,339 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
   </div>
 
   <script>
-    // Direct Drive upload (optional). Existing saved links and Firestore schema remain intact.
+    // Direct Google Drive upload. Browser token is deliberately kept ONLY in memory;
+    // Firebase remains the source of truth for a single-link-per-record table.
     const RAIL_DRIVE_CLIENT_ID = '177672020477-1v3uhsaf2koea82q6dnu9ugsk57b494q.apps.googleusercontent.com';
-    const RAIL_DRIVE_ROOT_FOLDER_ID = '1_z_-__GApTLV-ZsvEeuWbtwng-kFIXqQ'; // Optional: pre-existing folder ID owned by the authorized account.
+    const RAIL_DRIVE_ROOT_FOLDER_ID = '1_z_-__GApTLV-ZsvEeuWbtwng-kFIXqQ';
+    const RAIL_DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
     let railDriveToken = null;
     let railDriveTokenExpires = 0;
     let railDriveTokenClient = null;
-    function railDriveStatus(msg, error=false) {
-      const el=document.getElementById('railDriveUploadStatus');
-      if(el){ el.textContent=msg;el.style.color=error?'#b42318':''; }
+    let railDriveAuthorizationPending = null;
+    let railDriveUploading = false;
+    let railDriveQueue = []; // Uploaded links for records in this tab; never used as a Firestore batch.
+    let railDriveQueueCounter = 0;
+    let railDriveSelectedQueueId = null;
+
+    function railDriveStatus(message, error=false) {
+      const el = document.getElementById('railDriveUploadStatus');
+      if (el) { el.textContent = message; el.style.color = error ? '#b42318' : ''; }
+    }
+    function railDriveHasToken() {
+      return Boolean(railDriveToken && Date.now() + 60000 < railDriveTokenExpires);
+    }
+    function railDriveConnectionUI() {
+      const connected = railDriveHasToken();
+      const state = document.getElementById('railDriveConnectionState');
+      const connect = document.getElementById('railDriveConnectButton');
+      const disconnect = document.getElementById('railDriveDisconnectButton');
+      if (state) {
+        state.textContent = connected ? 'Connected for this session' : 'Not connected / token expired';
+        state.style.color = connected ? '#157347' : '';
+      }
+      if (connect) { connect.disabled = railDriveUploading || Boolean(railDriveAuthorizationPending); connect.textContent = connected ? 'Reconnect Google Drive' : 'Connect Google Drive'; }
+      if (disconnect) { disconnect.style.display = connected ? '' : 'none'; disconnect.disabled = railDriveUploading; }
+      const upload = document.getElementById('railDirectUploadButton');
+      if (upload) upload.disabled = railDriveUploading;
+    }
+    function railDriveClearSession() {
+      railDriveToken = null;
+      railDriveTokenExpires = 0;
+      railDriveAuthorizationPending = null;
+      railDriveQueue = [];
+      railDriveSelectedQueueId = null;
+      railDriveQueueRender();
+      railDriveConnectionUI();
     }
     function railFY(date) {
-      const d=date instanceof Date?date:new Date(date);
-      const yr=d.getFullYear();const st=d.getMonth()<3?yr-1:yr;
-      return st+'-'+String((st+1)%100).padStart(2,'0');
+      const d = date instanceof Date ? date : new Date(date);
+      const yr = d.getFullYear(), st = d.getMonth() < 3 ? yr - 1 : yr;
+      return st + '-' + String((st+1)%100).padStart(2,'0');
     }
     function railInitFY() {
-      const sel=document.getElementById('railDirectFY');if(!sel)return;
-      const today=new Date();const nowStart=today.getMonth()<3?today.getFullYear()-1:today.getFullYear();
+      const sel = document.getElementById('railDirectFY'); if (!sel) return;
+      const today = new Date();
+      const start = today.getMonth() < 3 ? today.getFullYear()-1 : today.getFullYear();
       sel.replaceChildren();
-      for(let y=nowStart+1;y>=nowStart-12;y--){
-        const option=document.createElement('option');option.value=y+'-'+String((y+1)%100).padStart(2,'0');option.textContent='FY '+option.value;sel.append(option);
+      for (let y = start+1; y >= start-12; y--) {
+        const option=document.createElement('option');
+        option.value=y+'-'+String((y+1)%100).padStart(2,'0');
+        option.textContent='FY '+option.value;
+        sel.append(option);
       }
       const dateVal=document.getElementById('formDate')?.value;
-      const guessed=dateVal?railFY(new Date(dateVal+'T12:00:00')):railFY(today);
-      if([...sel.options].some(x=>x.value===guessed))sel.value=guessed;
+      const fy=dateVal?railFY(new Date(dateVal+'T12:00:00')):railFY(today);
+      if ([...sel.options].some(o=>o.value===fy)) sel.value=fy;
     }
     function railDriveCategoryPath() {
-      const sel=document.getElementById('formCategory');
-      const opt=sel?.selectedOptions?.[0];
-      if(!opt?.value)throw Error('Select Category before uploading.');
-      const group=opt.closest('optgroup');
-      return [group?.label||'OTHER DOCUMENTS',opt.value.trim(), 'FY '+document.getElementById('railDirectFY').value];
+      const sel = document.getElementById('formCategory');
+      const opt = sel?.selectedOptions?.[0];
+      if (!opt?.value) throw Error('Select Category before uploading.');
+      const group = opt.closest('optgroup');
+      return [group?.label || 'OTHER DOCUMENTS', opt.value.trim(), 'FY '+document.getElementById('railDirectFY').value];
     }
-    async function railDriveAuthorize() {
-      if(RAIL_DRIVE_CLIENT_ID.startsWith('REPLACE_'))throw Error('Google OAuth Client ID not configured. See DRIVE_UPLOAD_SETUP_HINDI.txt.');
-      if(railDriveToken&&Date.now()+60000<railDriveTokenExpires)return railDriveToken;
-      if(!window.google?.accounts?.oauth2)throw Error('Google sign-in library unavailable. Check internet connection.');
-      if(!railDriveTokenClient){
-        railDriveTokenClient=google.accounts.oauth2.initTokenClient({client_id:RAIL_DRIVE_CLIENT_ID,scope:'https://www.googleapis.com/auth/drive.file',callback:()=>{}});
-      }
-      return await new Promise((resolve,reject)=>{
-        railDriveTokenClient.callback=(resp)=>{
-          if(resp.error||!resp.access_token){reject(Error(resp.error||'Google Drive authorization cancelled'));return;}
-          railDriveToken=resp.access_token;railDriveTokenExpires=Date.now()+(Number(resp.expires_in)||3600)*1000;resolve(railDriveToken);
+    function railDriveAuthorize() {
+      if (railDriveHasToken()) return Promise.resolve(railDriveToken);
+      if (railDriveAuthorizationPending) return railDriveAuthorizationPending;
+      if (!railAdmin || !auth.currentUser) return Promise.reject(Error('Only signed-in Admin can connect Google Drive.'));
+      if (!window.google?.accounts?.oauth2) return Promise.reject(Error('Google OAuth library not available. Open the website on HTTPS (GitHub Pages) and check your connection.'));
+      railDriveAuthorizationPending = new Promise((resolve, reject) => {
+        let settled = false;
+        const finish = (error, response) => {
+          if (settled) return;
+          settled = true;
+          if (error) { reject(error); return; }
+          if (!response?.access_token) { reject(Error('Google authorization did not return an access token.')); return; }
+          if (window.google?.accounts?.oauth2?.hasGrantedAllScopes &&
+              !google.accounts.oauth2.hasGrantedAllScopes(response, RAIL_DRIVE_SCOPE)) {
+            reject(Error('Google Drive file permission was not granted.')); return;
+          }
+          railDriveToken = response.access_token;
+          railDriveTokenExpires = Date.now() + (Number(response.expires_in) || 3600) * 1000;
+          resolve(railDriveToken);
         };
-        railDriveTokenClient.requestAccessToken({prompt:'consent'});
+        try {
+          // A fresh handler for each token request avoids stale popup error callbacks.
+          railDriveTokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: RAIL_DRIVE_CLIENT_ID,
+            scope: RAIL_DRIVE_SCOPE,
+            callback: response => {
+              if (response?.error) finish(Error(response.error_description || response.error));
+              else finish(null,response);
+            },
+            error_callback: err => finish(Error('Google popup closed or blocked ('+(err?.type||'unknown')+').'))
+          });
+          railDriveTokenClient.requestAccessToken({prompt: ''});
+        } catch(err) { finish(err); }
+      }).finally(() => {
+        railDriveAuthorizationPending = null;
+        railDriveConnectionUI();
       });
+      railDriveConnectionUI();
+      return railDriveAuthorizationPending;
     }
-    async function railDriveCall(endpoint,opts={}) {
-      const token=railDriveToken;
-      const res=await fetch(endpoint,{...opts,headers:{Authorization:'Bearer '+token,...(opts.headers||{})}});
-      if(!res.ok){let message='Drive API HTTP '+res.status;try{const err=await res.json();message=err.error?.message||message}catch(_){}throw Error(message)}
-      if(res.status===204)return {};
+    async function railConnectGoogleDrive() {
+      if (!railAdmin || !auth.currentUser) { railDriveStatus('Only signed-in Admin can connect.',true);return; }
+      try {
+        railDriveStatus('Connecting to Google Drive...');
+        await railDriveAuthorize();
+        railDriveStatus('Google Drive connected. Select multiple files and upload to the same FY folder.');
+      } catch (err) { railDriveStatus('Connection failed: '+err.message,true); }
+      railDriveConnectionUI();
+    }
+    function railDisconnectGoogleDrive() {
+      if (railDriveUploading) return;
+      // Forget the token locally. Does NOT revoke the user's Google permission.
+      railDriveToken = null;
+      railDriveTokenExpires = 0;
+      railDriveConnectionUI();
+      railDriveStatus('Google Drive disconnected for this browser session. Your uploaded PDFs remain on Drive.');
+    }
+    async function railDriveCall(endpoint, opts={}) {
+      if (!railDriveHasToken()) throw Error('Google Drive connection expired. Click Connect Google Drive, then retry.');
+      const res = await fetch(endpoint,{...opts,headers:{Authorization:'Bearer '+railDriveToken,...(opts.headers||{})}});
+      if (!res.ok) {
+        let message='Drive API HTTP '+res.status;
+        try { const err=await res.json();message=err.error?.message||message; } catch(_) {}
+        throw Error(message);
+      }
+      if (res.status===204) return {};
       return res.json();
     }
     async function railDriveFindOrCreateFolder(name,parentId) {
-      // drive.file only exposes app-created files or files expressly opened with the app.
-      const escapeQ=x=>String(x).replaceAll("'", "\\'");
-      const q="mimeType='application/vnd.google-apps.folder' and name='"+escapeQ(name)+"' and trashed=false"+(parentId?" and '"+escapeQ(parentId)+"' in parents":'');
-      const found=await railDriveCall('https://www.googleapis.com/drive/v3/files?'+new URLSearchParams({q,fields:'nextPageToken,files(id,name)',pageSize:'100'}));
-      if(found.files?.length)return found.files[0].id;
-      const meta={name,mimeType:'application/vnd.google-apps.folder'};
-      if(parentId)meta.parents=[parentId];
-      const created=await railDriveCall('https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)});
+      // drive.file can search app-created folders; existing folders may require access via Picker.
+      const escapeQ = value => String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      const q = "mimeType='application/vnd.google-apps.folder' and name='"+escapeQ(name)+"' and trashed=false"+(parentId?" and '"+escapeQ(parentId)+"' in parents":'');
+      const found = await railDriveCall('https://www.googleapis.com/drive/v3/files?'+new URLSearchParams({q,fields:'nextPageToken,files(id,name)',pageSize:'100'}));
+      if (found.files?.length) return found.files[0].id;
+      const meta = {name,mimeType:'application/vnd.google-apps.folder'};
+      if (parentId) meta.parents = [parentId];
+      const created = await railDriveCall('https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)});
       return created.id;
     }
-    async function railDriveUploadBlob(file,folderId) {
-      const mime=file.type||'application/octet-stream';
-      const metadata={name:file.name,parents:[folderId],description:'Uploaded from RailSNTGyan'};
-      // Resumable session supports larger PDF/Word/Excel files without embedding data in HTML or Firestore.
-      const start=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,name,webViewLink',{method:'POST',headers:{Authorization:'Bearer '+railDriveToken,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':mime,'X-Upload-Content-Length':String(file.size)},body:JSON.stringify(metadata)});
-      if(!start.ok)throw Error('Drive upload session failed: HTTP '+start.status);
-      const location=start.headers.get('Location');if(!location)throw Error('Google Drive did not return upload session URL.');
+    function railDriveProgress(item, value) {
+      item.progress = Math.min(100,Math.max(0,Math.round(value)));
+      railDriveQueueRender();
+    }
+    async function railDriveUploadBlob(file, folderId, item) {
+      const mime = file.type || 'application/octet-stream';
+      const metadata = {name:file.name,parents:[folderId],description:'Uploaded from RailSNTGyan'};
+      const start = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,name,webViewLink',{
+        method:'POST',headers:{Authorization:'Bearer '+railDriveToken,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':mime,'X-Upload-Content-Length':String(file.size)},body:JSON.stringify(metadata)
+      });
+      if (!start.ok) throw Error('Drive upload session failed: HTTP '+start.status);
+      let location=start.headers.get('Location');
+      if (!location) throw Error('Google Drive did not return an upload session URL.');
       const chunkSize=8*1024*1024;
-      for(let offset=0;offset<file.size;offset+=chunkSize){
-        const end=Math.min(file.size,offset+chunkSize);const final=end===file.size;
-        railDriveStatus('Uploading '+file.name+' — '+Math.round(offset/file.size*100)+'%');
+      let offset=0;
+      // Drive requires 256 KiB-aligned non-final chunks. After HTTP 308 check Range.
+      while (offset < file.size) {
+        const end=Math.min(file.size,offset+chunkSize);
         const resp=await fetch(location,{method:'PUT',headers:{'Content-Type':mime,'Content-Range':`bytes ${offset}-${end-1}/${file.size}`},body:file.slice(offset,end)});
-        if(final){if(!resp.ok)throw Error('Upload failed: HTTP '+resp.status);return await resp.json();}
-        if(resp.status!==308)throw Error('Upload interrupted: HTTP '+resp.status);
+        if (resp.ok && resp.status!==308) {
+          railDriveProgress(item,100);
+          return await resp.json();
+        }
+        if (resp.status!==308) throw Error('Upload interrupted: HTTP '+resp.status+'. Re-select the file to retry.');
+        const range=resp.headers.get('Range');
+        // The server's acknowledged byte range, not our request, is authoritative.
+        const match=range && /bytes=0-(\d+)/.exec(range);
+        const next=match?Number(match[1])+1:0;
+        if (next<=offset) throw Error('Google Drive did not acknowledge this chunk. Re-select the file to retry.');
+        offset=next;
+        railDriveProgress(item,offset/file.size*100);
+        location=resp.headers.get('Location')||location;
       }
-      // Empty file: upload using normal single request to session URL.
-      const resp=await fetch(location,{method:'PUT',headers:{'Content-Type':mime,'Content-Range':'bytes */0'},body:file});
-      if(!resp.ok)throw Error('Upload failed: HTTP '+resp.status);return resp.json();
+      throw Error('Upload stopped without final confirmation. Please verify Google Drive before retrying.');
+    }
+    function railDriveQueueRender() {
+      const root=document.getElementById('railDriveQueue'); if (!root) return;
+      root.replaceChildren();
+      const items=railDriveQueue.filter(i=>i.state!=='discarded');
+      if (!items.length) return;
+      const title=document.createElement('div');
+      title.style.cssText='font-weight:650;font-size:.84rem;margin-bottom:6px';
+      const uploaded=items.filter(i=>i.state==='uploaded').length;
+      const saved=items.filter(i=>i.state==='saved').length;
+      title.textContent=`Files: ${items.length} • Ready for records: ${uploaded} • Saved records: ${saved}`;
+      root.append(title);
+      items.forEach(item=>{
+        const box=document.createElement('div');
+        box.style.cssText='padding:8px;margin:6px 0;border:1px solid #b5cbd0;border-radius:8px;background:rgba(255,255,255,.55);font-size:.79rem';
+        if(item.id===railDriveSelectedQueueId)box.style.border='2px solid #07836e';
+        const line=document.createElement('div');
+        line.style.cssText='display:flex;gap:6px;justify-content:space-between;align-items:center;flex-wrap:wrap';
+        const name=document.createElement('span');
+        name.style.cssText='font-weight:650;overflow-wrap:anywhere;flex:1;min-width:110px';
+        name.textContent=item.name;
+        const state=document.createElement('span');
+        state.textContent=item.state==='saved'?'Record saved':item.state==='uploaded'?'Uploaded':item.state==='uploading'?`Uploading ${item.progress}%`:item.state==='error'?'Failed':'Pending';
+        state.style.color=item.state==='error'?'#b42318':(item.state==='uploaded'||item.state==='saved'?'#157347':'');
+        line.append(name,state);box.append(line);
+        if (item.state==='uploading') {
+          const bar=document.createElement('progress');bar.max=100;bar.value=item.progress;
+          bar.style.cssText='width:100%;height:9px;margin-top:6px';box.append(bar);
+        }
+        if(item.state==='error') {
+          const note=document.createElement('div');note.textContent=item.error||'Upload failed';note.style.color='#b42318';box.append(note);
+        }
+        if(item.link){
+          const actions=document.createElement('div');
+          actions.style.cssText='display:flex;gap:8px;margin-top:5px;align-items:center;flex-wrap:wrap';
+          const view=document.createElement('a');view.href=item.link;view.target='_blank';view.rel='noopener noreferrer';view.textContent='Open PDF / file';
+          actions.append(view);
+          if(item.state==='uploaded'){
+            const use=document.createElement('button');use.type='button';use.className='btn btn-outline';
+            use.textContent=item.id===railDriveSelectedQueueId?'Selected for Record':'Use for Record';
+            use.style.cssText='padding:4px 8px;font-size:.75rem';
+            use.onclick=()=>railDriveSelectLink(item.id);
+            actions.append(use);
+          }
+          box.append(actions);
+        }
+        root.append(box);
+      });
+    }
+    function railDriveSelectLink(id) {
+      const item=railDriveQueue.find(i=>i.id===id && i.state==='uploaded');
+      if(!item)return;
+      const destination=document.getElementById('formDriveLink');
+      if(destination?.value && destination.value!==item.link &&
+          destination.value!==railDriveQueue.find(i=>i.id===railDriveSelectedQueueId)?.link &&
+          !confirm('Replace the current PDF link in this form with the selected uploaded file?')) return;
+      const categorySelect=document.getElementById('formCategory');
+      if(!categorySelect.value){
+        categorySelect.value=item.pathKey.split('/')[1] || '';
+        toggleFormFields();
+      }
+      const currentPath=railDriveCategoryPath().join('/');
+      if(item.pathKey!==currentPath && !confirm('This PDF was uploaded into '+item.pathKey+'. Use its link with the current record category/FY anyway?'))return;
+      destination.value=item.link;
+      railDriveSelectedQueueId=id;
+      railDriveQueueRender();
+      railDriveStatus('Selected: '+item.name+'. Fill/check this record details, then click Save Record.');
+    }
+    function railDriveAfterSave(savedLink, edited) {
+      const item=railDriveQueue.find(i=>i.link===savedLink && i.state==='uploaded');
+      if(!item || edited) { if(item){item.state='saved';railDriveQueueRender();} return false; }
+      item.state='saved';
+      const next=railDriveQueue.find(i=>i.state==='uploaded' && i.pathKey===item.pathKey);
+      if(!next){ railDriveSelectedQueueId=null;railDriveQueueRender();return false; }
+      // A fresh Firestore record for each PDF: clear metadata so we cannot silently
+      // duplicate another station's information. Preserve category and chosen FY.
+      const category=document.getElementById('formCategory').value;
+      const fy=document.getElementById('railDirectFY').value;
+      clearFormFields();
+      document.getElementById('formEditRecordId').value='';
+      document.getElementById('formModalHeading').innerHTML='<i class="fa-solid fa-file-circle-plus"></i> Add Next Record';
+      document.getElementById('formCategory').value=category;
+      toggleFormFields();
+      document.getElementById('railDirectFY').value=fy;
+      document.getElementById('formDriveLink').value=next.link;
+      railDriveSelectedQueueId=next.id;
+      railDriveQueueRender();
+      railDriveStatus('Previous record saved. Next PDF selected: '+next.name+'. Enter its details and click Save Record.');
+      document.getElementById('formStation')?.focus();
+      return true;
     }
     async function railUploadDriveDocument() {
-      if(!railAdmin||!auth.currentUser){railDriveStatus('Only signed-in Admin can upload files.',true);return;}
-      const file=document.getElementById('railDirectFile')?.files?.[0];
-      if(!file){railDriveStatus('First choose a file.',true);return;}
-      if(!file.size){railDriveStatus('Cannot upload an empty file.',true);return;}
-      const btn=document.getElementById('railDirectUploadButton');
+      if(!railAdmin || !auth.currentUser){railDriveStatus('Only signed-in Admin can upload files.',true);return;}
+      if(railDriveUploading)return;
+      const input=document.getElementById('railDirectFile');
+      const files=Array.from(input?.files||[]);
+      if(!files.length){railDriveStatus('First select one or more files.',true);return;}
+      if(files.some(f=>!f.size)){railDriveStatus('Empty files cannot be uploaded. Remove them from the selection.',true);return;}
+      let path;
+      try{path=railDriveCategoryPath();}catch(e){railDriveStatus(e.message,true);return;}
+      const pathKey=path.join('/');
+      const seen=new Set();
+      const repeated=[];
+      const selected=[];
+      for(const file of files){
+        const key=pathKey+'|'+file.name.toLowerCase()+'|'+file.size+'|'+file.lastModified;
+        if(seen.has(key)||railDriveQueue.some(i=>i.key===key && ['uploaded','saved','uploading'].includes(i.state))){repeated.push(file.name);continue;}
+        seen.add(key);selected.push({file,key});
+      }
+      if(!selected.length){railDriveStatus('These exact files were already uploaded in this tab. No duplicate upload was started.',true);return;}
+      railDriveUploading=true;
+      railDriveConnectionUI();
+      let success=0, failure=0;
       try {
-        const path=railDriveCategoryPath();
-        btn.disabled=true;railDriveStatus('Connecting to Google Drive. Choose the account that holds your current documents.');
+        // Token authorization directly follows the click before any API awaits.
+        railDriveStatus('Connecting to Google Drive...');
         await railDriveAuthorize();
-        let parent=RAIL_DRIVE_ROOT_FOLDER_ID||await railDriveFindOrCreateFolder('RailSNTGyan',null);
-        for(const part of path)parent=await railDriveFindOrCreateFolder(part,parent);
-        const uploaded=await railDriveUploadBlob(file,parent);
-        if(!uploaded?.id)throw Error('Drive did not confirm file ID.');
-        const link='https://drive.google.com/file/d/'+encodeURIComponent(uploaded.id)+'/view';
-        document.getElementById('formDriveLink').value=link;
-        railDriveStatus('Upload complete. Click Save Record to add/update the Firebase table. File is private unless you change its sharing settings in Google Drive.');
-      } catch(e){railDriveStatus('Upload not completed: '+e.message,true)}
-      finally{btn.disabled=false}
+        let parent=RAIL_DRIVE_ROOT_FOLDER_ID || await railDriveFindOrCreateFolder('RailSNTGyan',null);
+        for(const part of path) parent=await railDriveFindOrCreateFolder(part,parent);
+        // Sequential uploads avoid browser strain and associate each file with a status.
+        for(let ix=0;ix<selected.length;ix++){
+          const {file,key}=selected[ix];
+          const item={id:++railDriveQueueCounter,key,name:file.name,pathKey,state:'uploading',progress:0,link:null,error:null};
+          railDriveQueue.push(item);railDriveQueueRender();
+          railDriveStatus(`Uploading ${ix+1} of ${selected.length}: ${file.name}`);
+          try {
+            if(!railDriveHasToken())throw Error('Connection expired. Click Connect Google Drive and retry this file.');
+            const uploaded=await railDriveUploadBlob(file,parent,item);
+            if(!uploaded?.id)throw Error('Drive upload was not confirmed.');
+            item.link='https://drive.google.com/file/d/'+encodeURIComponent(uploaded.id)+'/view';
+            item.state='uploaded';item.progress=100;success++;
+            if(!railDriveSelectedQueueId && !document.getElementById('formDriveLink').value.trim()){
+              railDriveSelectedQueueId=item.id;
+              document.getElementById('formDriveLink').value=item.link;
+            }
+          } catch(err){item.state='error';item.error=err.message;failure++;}
+          railDriveQueueRender();
+        }
+        input.value='';
+        const suffix=repeated.length?` ${repeated.length} already-uploaded/duplicate selection(s) skipped.`:'';
+        railDriveStatus(`${success} file(s) uploaded to Google Drive; ${failure} failed.${suffix} Choose each "Use for Record" and Save Record individually.` ,Boolean(failure));
+      } catch(err){railDriveStatus('Upload stopped: '+err.message+'. Your earlier successful uploads stay on Drive.',true);}
+      finally{railDriveUploading=false;railDriveConnectionUI();railDriveQueueRender();}
     }
     document.addEventListener('DOMContentLoaded',()=>{
-      railInitFY();
+      railInitFY();railDriveConnectionUI();
       document.getElementById('formDate')?.addEventListener('change',()=>{
-        const sel=document.getElementById('railDirectFY');const val=document.getElementById('formDate').value;
-        if(val&&sel){const fy=railFY(new Date(val+'T12:00:00'));if([...sel.options].some(x=>x.value===fy))sel.value=fy;}
+        const sel=document.getElementById('railDirectFY'),value=document.getElementById('formDate').value;
+        if(value && sel){const fy=railFY(new Date(value+'T12:00:00'));if([...sel.options].some(o=>o.value===fy))sel.value=fy;}
       });
     });
 
@@ -8934,6 +9165,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
     async function railApplyUser(user) {
       railAuthReady = true;
       if (!user) {
+        railDriveClearSession();
         railAdmin = false;
         if (window.railMasterRoleUpdated) window.railMasterRoleUpdated();
         sessionStorage.removeItem('secr_portal_authorized');
@@ -12350,7 +12582,11 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       clearFormFields();
       railInitFY();
       const uploadFile=document.getElementById('railDirectFile');if(uploadFile)uploadFile.value='';
-      railDriveStatus('Choose a file, then Upload to Drive. Or paste an existing Google Drive link.');
+      railDriveConnectionUI();
+      railDriveQueueRender();
+      railDriveStatus(railDriveQueue.some(i=>i.state==='uploaded')
+        ? 'Pending uploaded PDFs are listed below. Choose one for this record, or upload more.'
+        : 'Choose multiple files and Upload to Drive, or paste an existing Google Drive link.');
 
       // Auto-detect Category from the section/subsection where Add New Record was clicked.
       // Only HOME keeps Category blank because no specific section is active there.
@@ -12380,7 +12616,10 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       document.getElementById('formEditRecordId').value = rec.id;
       railInitFY();
       const uploadFile=document.getElementById('railDirectFile');if(uploadFile)uploadFile.value='';
-      railDriveStatus('Existing link is preserved unless you upload a replacement and save this record.');
+      railDriveConnectionUI();
+      railDriveQueueRender();
+      railDriveSelectedQueueId = null;
+      railDriveStatus('Existing link is preserved unless you select an uploaded replacement and save this record.');
       let recCat = rec.category;
       if (recCat === 'PCSTE DISPENSATION') recCat = 'DISPENSATION';
       document.getElementById('formCategory').value = recCat;
@@ -12426,6 +12665,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
     }
 
     function closeAddModal() {
+      if (railDriveUploading) { railDriveStatus('Upload is still running. Keep this window open until it finishes.', true); return; }
       document.getElementById('addRecordModal').style.display = 'none';
     }
 
@@ -12674,6 +12914,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
     }
 
     async function saveRecord() {
+      if (railDriveUploading) { railDriveStatus('Finish uploading before saving the record.',true); return; }
       const editId = document.getElementById('formEditRecordId').value;
       let cat = document.getElementById('formCategory').value;
       if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
@@ -12785,7 +13026,8 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
         } else {
           await recordsCol.add(recordData);
         }
-        closeAddModal();
+        // One Firebase record per PDF: the next pending link is prepared, not auto-saved.
+        if (!railDriveAfterSave(recordData.driveLink, Boolean(editId))) closeAddModal();
       } catch (err) {
         alert("Firestore save error: " + err.message);
       }
