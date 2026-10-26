@@ -7269,6 +7269,58 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
     #loginScreen.hmis-login-page .hmis-auth-form .rails-login-inline-privacy { font-size: 9px; margin-left: 3px; }
   }
 </style>
+
+<style id="railsntgyan-mobile-brand-visibility-fix-20261026">
+/* Mobile light header identity; no login, dashboard, Drive or Firebase logic changes. */
+@media (max-width: 768px) {
+  html body:not(.dark-theme) #mainHeader {
+    background: linear-gradient(110deg,#ffffff 0%,#f4fbff 100%) !important;
+  }
+  html body #mainHeader .header-left {
+    display:flex !important; align-items:center !important;
+    gap:10px !important; min-width:0 !important; flex:1 1 auto !important;
+  }
+  html body #mainHeader .portal-logo-svg {
+    display:block !important; width:70px !important; height:70px !important;
+    min-width:70px !important; flex:0 0 70px !important;
+    opacity:1 !important; visibility:visible !important;
+    filter:contrast(1.28) saturate(1.26) drop-shadow(0 1px 2px rgba(10,40,70,.24)) !important;
+  }
+  html body #mainHeader .header-brand-block {
+    display:flex !important; flex-direction:column !important; flex:1 1 auto !important;
+    min-width:0 !important; padding-right:0 !important;
+    opacity:1 !important; visibility:visible !important;
+  }
+  html body #mainHeader .brand-main-title {
+    display:flex !important; align-items:baseline !important; flex-wrap:nowrap !important;
+    font-size:clamp(23px,6.7vw,30px) !important;
+    font-weight:900 !important; letter-spacing:-.75px !important;
+    line-height:1.08 !important; white-space:nowrap !important;
+    opacity:1 !important; visibility:visible !important; text-shadow:none !important;
+  }
+  html body:not(.dark-theme) #mainHeader .brand-main-title .text-teal {
+    color:#006778 !important; opacity:1 !important; -webkit-text-fill-color:#006778 !important;
+  }
+  html body:not(.dark-theme) #mainHeader .brand-main-title .text-orange {
+    color:#df6413 !important; opacity:1 !important; -webkit-text-fill-color:#df6413 !important;
+  }
+  html body:not(.dark-theme) #mainHeader .brand-subline {
+    color:#284760 !important; opacity:1 !important; -webkit-text-fill-color:#284760 !important;
+  }
+  html body #mainHeader .brand-subline {
+    display:block !important; font-size:clamp(10px,2.6vw,13px) !important;
+    font-weight:750 !important; line-height:1.25 !important; letter-spacing:0 !important;
+    white-space:normal !important; overflow:visible !important; text-overflow:clip !important;
+    margin-top:3px !important;
+  }
+}
+@media (max-width:399px) {
+  html body #mainHeader .header-left{gap:8px !important;}
+  html body #mainHeader .portal-logo-svg{width:60px !important;height:60px !important;min-width:60px !important;flex-basis:60px !important;}
+  html body #mainHeader .brand-main-title{font-size:clamp(21px,6.4vw,25px) !important;}
+}
+</style>
+
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
