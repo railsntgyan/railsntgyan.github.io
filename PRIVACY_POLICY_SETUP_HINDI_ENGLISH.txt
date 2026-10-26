@@ -1,0 +1,29 @@
+RAILSNTGYAN - PRIVACY POLICY / OAUTH BRANDING UPDATE
+Date: 26 October 2026
+
+WHAT CHANGED
+- NEW: privacy.html (public Privacy Policy page)
+- NEW: terms.html (public Terms of Use page; useful for Google's external production branding form)
+- UPDATED: index.html with unobtrusive legal links on login/footer; small mobile Privacy link in existing login help row
+- All other files copied unchanged from uploaded ZIP; no Firebase, Google Drive upload, OAuth client, styling/theme, or record schema changes.
+
+BEFORE PUBLISHING
+- Privacy contact address currently displayed is systemsignalling@gmail.com, the Google account visible in your OAuth screenshots. If you want another PUBLIC support email, replace it in privacy.html and terms.html BEFORE uploading.
+- Read the policy to confirm it matches your operational practices and who can access your records. Update it if you change how data is handled.
+
+GITHUB PAGES UPLOAD
+1. Extract this ZIP.
+2. Keep your current folders and images as they are.
+3. Upload index.html, privacy.html and terms.html to the ROOT of your GitHub Pages repository (same level as existing index.html).
+4. Wait for GitHub Pages deployment; open in an incognito tab:
+    https://railsntgyan.github.io/privacy.html
+    https://railsntgyan.github.io/terms.html
+5. Confirm both links open WITHOUT sign-in and that the login footer has a Privacy Policy link.
+6. In Google Cloud > Google Auth Platform > Branding enter:
+    Application home page: https://railsntgyan.github.io/
+    Privacy policy:       https://railsntgyan.github.io/privacy.html
+    Terms of service:     https://railsntgyan.github.io/terms.html
+7. Save changes and check Google Auth Platform > Audience for publishing status. Production publication/verification may require further steps, including proof of website domain ownership.
+
+SECURITY NOTE
+Do not upload OAuth client secrets or Google access tokens to public GitHub. A Web OAuth Client ID in frontend HTML is public by design.
