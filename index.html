@@ -7236,6 +7236,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
 }
 </style>
 <link rel="preload" as="image" href="assets/login-technical-railway.webp">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8712,6 +8713,14 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
           <label><i class="fa-brands fa-google-drive" style="color: #0f9d58;"></i> Google Drive PDF Link</label>
           <input type="url" id="formDriveLink" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
           <span class="help-hint">Paste Google Drive link for 200MB+ PDF. Set permission to 'Anyone with link can view'.</span>
+          <div id="railDriveUploadPanel" style="margin-top:12px;padding:12px;border:1px solid #9bc8b3;border-radius:10px;background:rgba(168,208,187,.12)">
+            <label for="railDirectFile" style="display:block;font-weight:650;margin-bottom:7px"><i class="fa-solid fa-cloud-arrow-up"></i> Upload File Directly to Google Drive</label>
+            <input id="railDirectFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" style="display:block;max-width:100%;margin:6px 0 12px" />
+            <label for="railDirectFY" style="display:block;font-size:.85rem">Financial Year (FY)</label>
+            <select id="railDirectFY" style="width:100%;margin:6px 0 12px"></select>
+            <button type="button" class="btn btn-outline" id="railDirectUploadButton" onclick="railUploadDriveDocument()"><i class="fa-solid fa-upload"></i> Upload to Drive</button>
+            <div id="railDriveUploadStatus" role="status" aria-live="polite" style="font-size:.82rem;margin-top:9px;word-break:break-word">Old Drive links remain supported. Direct upload needs one-time Google API setup.</div>
+          </div>
         </div>
 
         <div class="form-group" id="formPracticeLinkContainer" style="display:none;">
@@ -8728,6 +8737,119 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
   </div>
 
   <script>
+    // Direct Drive upload (optional). Existing saved links and Firestore schema remain intact.
+    const RAIL_DRIVE_CLIENT_ID = '177672020477-1v3uhsaf2koea82q6dnu9ugsk57b494q.apps.googleusercontent.com';
+    const RAIL_DRIVE_ROOT_FOLDER_ID = '1_z_-__GApTLV-ZsvEeuWbtwng-kFIXqQ'; // Optional: pre-existing folder ID owned by the authorized account.
+    let railDriveToken = null;
+    let railDriveTokenExpires = 0;
+    let railDriveTokenClient = null;
+    function railDriveStatus(msg, error=false) {
+      const el=document.getElementById('railDriveUploadStatus');
+      if(el){ el.textContent=msg;el.style.color=error?'#b42318':''; }
+    }
+    function railFY(date) {
+      const d=date instanceof Date?date:new Date(date);
+      const yr=d.getFullYear();const st=d.getMonth()<3?yr-1:yr;
+      return st+'-'+String((st+1)%100).padStart(2,'0');
+    }
+    function railInitFY() {
+      const sel=document.getElementById('railDirectFY');if(!sel)return;
+      const today=new Date();const nowStart=today.getMonth()<3?today.getFullYear()-1:today.getFullYear();
+      sel.replaceChildren();
+      for(let y=nowStart+1;y>=nowStart-12;y--){
+        const option=document.createElement('option');option.value=y+'-'+String((y+1)%100).padStart(2,'0');option.textContent='FY '+option.value;sel.append(option);
+      }
+      const dateVal=document.getElementById('formDate')?.value;
+      const guessed=dateVal?railFY(new Date(dateVal+'T12:00:00')):railFY(today);
+      if([...sel.options].some(x=>x.value===guessed))sel.value=guessed;
+    }
+    function railDriveCategoryPath() {
+      const sel=document.getElementById('formCategory');
+      const opt=sel?.selectedOptions?.[0];
+      if(!opt?.value)throw Error('Select Category before uploading.');
+      const group=opt.closest('optgroup');
+      return [group?.label||'OTHER DOCUMENTS',opt.value.trim(), 'FY '+document.getElementById('railDirectFY').value];
+    }
+    async function railDriveAuthorize() {
+      if(RAIL_DRIVE_CLIENT_ID.startsWith('REPLACE_'))throw Error('Google OAuth Client ID not configured. See DRIVE_UPLOAD_SETUP_HINDI.txt.');
+      if(railDriveToken&&Date.now()+60000<railDriveTokenExpires)return railDriveToken;
+      if(!window.google?.accounts?.oauth2)throw Error('Google sign-in library unavailable. Check internet connection.');
+      if(!railDriveTokenClient){
+        railDriveTokenClient=google.accounts.oauth2.initTokenClient({client_id:RAIL_DRIVE_CLIENT_ID,scope:'https://www.googleapis.com/auth/drive.file',callback:()=>{}});
+      }
+      return await new Promise((resolve,reject)=>{
+        railDriveTokenClient.callback=(resp)=>{
+          if(resp.error||!resp.access_token){reject(Error(resp.error||'Google Drive authorization cancelled'));return;}
+          railDriveToken=resp.access_token;railDriveTokenExpires=Date.now()+(Number(resp.expires_in)||3600)*1000;resolve(railDriveToken);
+        };
+        railDriveTokenClient.requestAccessToken({prompt:'consent'});
+      });
+    }
+    async function railDriveCall(endpoint,opts={}) {
+      const token=railDriveToken;
+      const res=await fetch(endpoint,{...opts,headers:{Authorization:'Bearer '+token,...(opts.headers||{})}});
+      if(!res.ok){let message='Drive API HTTP '+res.status;try{const err=await res.json();message=err.error?.message||message}catch(_){}throw Error(message)}
+      if(res.status===204)return {};
+      return res.json();
+    }
+    async function railDriveFindOrCreateFolder(name,parentId) {
+      // drive.file only exposes app-created files or files expressly opened with the app.
+      const escapeQ=x=>String(x).replaceAll("'", "\\'");
+      const q="mimeType='application/vnd.google-apps.folder' and name='"+escapeQ(name)+"' and trashed=false"+(parentId?" and '"+escapeQ(parentId)+"' in parents":'');
+      const found=await railDriveCall('https://www.googleapis.com/drive/v3/files?'+new URLSearchParams({q,fields:'nextPageToken,files(id,name)',pageSize:'100'}));
+      if(found.files?.length)return found.files[0].id;
+      const meta={name,mimeType:'application/vnd.google-apps.folder'};
+      if(parentId)meta.parents=[parentId];
+      const created=await railDriveCall('https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)});
+      return created.id;
+    }
+    async function railDriveUploadBlob(file,folderId) {
+      const mime=file.type||'application/octet-stream';
+      const metadata={name:file.name,parents:[folderId],description:'Uploaded from RailSNTGyan'};
+      // Resumable session supports larger PDF/Word/Excel files without embedding data in HTML or Firestore.
+      const start=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,name,webViewLink',{method:'POST',headers:{Authorization:'Bearer '+railDriveToken,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':mime,'X-Upload-Content-Length':String(file.size)},body:JSON.stringify(metadata)});
+      if(!start.ok)throw Error('Drive upload session failed: HTTP '+start.status);
+      const location=start.headers.get('Location');if(!location)throw Error('Google Drive did not return upload session URL.');
+      const chunkSize=8*1024*1024;
+      for(let offset=0;offset<file.size;offset+=chunkSize){
+        const end=Math.min(file.size,offset+chunkSize);const final=end===file.size;
+        railDriveStatus('Uploading '+file.name+' — '+Math.round(offset/file.size*100)+'%');
+        const resp=await fetch(location,{method:'PUT',headers:{'Content-Type':mime,'Content-Range':`bytes ${offset}-${end-1}/${file.size}`},body:file.slice(offset,end)});
+        if(final){if(!resp.ok)throw Error('Upload failed: HTTP '+resp.status);return await resp.json();}
+        if(resp.status!==308)throw Error('Upload interrupted: HTTP '+resp.status);
+      }
+      // Empty file: upload using normal single request to session URL.
+      const resp=await fetch(location,{method:'PUT',headers:{'Content-Type':mime,'Content-Range':'bytes */0'},body:file});
+      if(!resp.ok)throw Error('Upload failed: HTTP '+resp.status);return resp.json();
+    }
+    async function railUploadDriveDocument() {
+      if(!railAdmin||!auth.currentUser){railDriveStatus('Only signed-in Admin can upload files.',true);return;}
+      const file=document.getElementById('railDirectFile')?.files?.[0];
+      if(!file){railDriveStatus('First choose a file.',true);return;}
+      if(!file.size){railDriveStatus('Cannot upload an empty file.',true);return;}
+      const btn=document.getElementById('railDirectUploadButton');
+      try {
+        const path=railDriveCategoryPath();
+        btn.disabled=true;railDriveStatus('Connecting to Google Drive. Choose the account that holds your current documents.');
+        await railDriveAuthorize();
+        let parent=RAIL_DRIVE_ROOT_FOLDER_ID||await railDriveFindOrCreateFolder('RailSNTGyan',null);
+        for(const part of path)parent=await railDriveFindOrCreateFolder(part,parent);
+        const uploaded=await railDriveUploadBlob(file,parent);
+        if(!uploaded?.id)throw Error('Drive did not confirm file ID.');
+        const link='https://drive.google.com/file/d/'+encodeURIComponent(uploaded.id)+'/view';
+        document.getElementById('formDriveLink').value=link;
+        railDriveStatus('Upload complete. Click Save Record to add/update the Firebase table. File is private unless you change its sharing settings in Google Drive.');
+      } catch(e){railDriveStatus('Upload not completed: '+e.message,true)}
+      finally{btn.disabled=false}
+    }
+    document.addEventListener('DOMContentLoaded',()=>{
+      railInitFY();
+      document.getElementById('formDate')?.addEventListener('change',()=>{
+        const sel=document.getElementById('railDirectFY');const val=document.getElementById('formDate').value;
+        if(val&&sel){const fy=railFY(new Date(val+'T12:00:00'));if([...sel.options].some(x=>x.value===fy))sel.value=fy;}
+      });
+    });
+
     // ===================================================
     // FIREBASE INITIALIZATION & REALTIME SYNC
     // ===================================================
@@ -12193,6 +12315,9 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       document.getElementById('formModalHeading').innerHTML = '<i class="fa-solid fa-file-circle-plus"></i> Add New Record';
       document.getElementById('formEditRecordId').value = '';
       clearFormFields();
+      railInitFY();
+      const uploadFile=document.getElementById('railDirectFile');if(uploadFile)uploadFile.value='';
+      railDriveStatus('Choose a file, then Upload to Drive. Or paste an existing Google Drive link.');
 
       // Auto-detect Category from the section/subsection where Add New Record was clicked.
       // Only HOME keeps Category blank because no specific section is active there.
@@ -12220,6 +12345,9 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
 
       document.getElementById('formModalHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Record';
       document.getElementById('formEditRecordId').value = rec.id;
+      railInitFY();
+      const uploadFile=document.getElementById('railDirectFile');if(uploadFile)uploadFile.value='';
+      railDriveStatus('Existing link is preserved unless you upload a replacement and save this record.');
       let recCat = rec.category;
       if (recCat === 'PCSTE DISPENSATION') recCat = 'DISPENSATION';
       document.getElementById('formCategory').value = recCat;

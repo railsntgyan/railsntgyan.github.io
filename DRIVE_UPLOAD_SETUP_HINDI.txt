@@ -1,0 +1,33 @@
+RailSNTGyan: Direct Google Drive Upload (FY-wise)
+==================================================
+
+इस ZIP में पुरानी website का design और Firebase data structure सुरक्षित रखा गया है।
+पुराने Drive links अपने आप migrate/delete/modify नहीं होंगे।
+
+ONE-TIME SETUP (Google account owner करेगा):
+1. जिस EXISTING Google Account में files रखनी हैं, उसी account से Google Cloud Console project खोलें।
+2. APIs & Services > Library > Google Drive API ENABLE करें।
+3. Google Auth Platform/OAuth consent screen configure करें (testing में account को Test users में जोड़ें)।
+4. OAuth client ID बनाएं: Application type = Web application.
+5. Authorized JavaScript origins में https://railsntgyan.github.io और local development के relevant origins डालें।
+6. index.html में REPLACE_WITH_GOOGLE_OAUTH_WEB_CLIENT_ID को वास्तविक Web client ID से बदलें।
+7. Same Google Drive account से upload के समय consent दें। Wrong account चुनने पर file उस account में जाएगी!
+8. यदि मौजूदा Drive में RailSNTGyan नाम का folder निश्चित रूप से इस्तेमाल करना है, उसका ID RAIL_DRIVE_ROOT_FOLDER_ID में भरें। इसे खाली रखने पर app अपना अलग RailSNTGyan folder create करेगा; पुराने folders को अपने-आप manage नहीं कर सकता।
+9. ZIP के संशोधित index.html और बाकी assets GitHub Pages पर deploy करें।
+
+USE:
+Admin login -> Add New Record -> select category/date/FY/file -> Upload to Drive -> Save Record.
+Edit Record में भी नई file upload कर सकते हैं; Save Record तक Firebase link change नहीं होगा।
+FY upload का selected label Drive folder का नाम है; existing Firestore year/date fields untouched.
+
+LIMITATIONS / SAFETY:
+- Upload is NOT active until OAuth Client ID and consent are configured.
+- Direct client OAuth uses drive.file scope. It can create/find app-created folders; it cannot reliably access all old Drive folders from links.
+- New files are PRIVATE by default. If users need PDF preview, explicitly change file sharing or implement role-controlled read access.
+- Upload is confirmed in Google Drive before Firestore Save Record; cancellation may leave an unreferenced Drive file.
+- Client-side Admin UI check is NOT an access-control boundary for Google Drive. Only the authorized Google account can upload; restrict OAuth test users and Drive account access.
+- File names may repeat; Google Drive permits duplicates.
+- Google Drive quota and Google OAuth verification/publishing limits may apply.
+- For production multi-user admin uploads without individual Google authorization, use a securely authenticated backend rather than sharing the Drive account password.
+- Verify each uploaded PDF can be viewed by intended users before production rollout.
+- No Google passwords/service-account secrets should ever be put into GitHub or index.html.
