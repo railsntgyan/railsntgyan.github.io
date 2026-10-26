@@ -7347,7 +7347,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
     <canvas id="railV44Canvas" aria-hidden="true"></canvas>
     <header class="hmis-topbar">
       <div class="hmis-brand-block">
-        <div class="hmis-logo-badge" aria-label="RailSNTGyan logo"><svg class="login-logo-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+        <div class="hmis-logo-badge" aria-label="RailSNTGyan logo"><svg class="login-logo-svg" viewBox="55 45 390 405" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="trainBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stop-color="#b0cddb"/>
@@ -19543,7 +19543,7 @@ html body.dark-theme #loginScreen .railV44WelcomeDots i {background:#8ea995 !imp
   #loginScreen #railV44Welcome.railV44Show {transition:none !important;}
 }
 </style>
-</body>
+
 
 <!-- 22 October 2026 | RailSNTGyan 3CX vivid-blue contrast fix, DARK MODE ONLY -->
 <style id="rails-3cx-contrast-v2-dark-only">
@@ -19666,7 +19666,7 @@ html body.dark-theme table:not(.unfreeze-table) thead th:nth-child(2) {
 
 
 
-</html>
+
 <!-- v100: Samsung/tablet landscape sidebar expansion/bleed fix -->
 <!-- v104: FINAL tablet-landscape drawer flow fix — mobile behavior is master -->
 <!-- v105: Samsung A9+ landscape — force OUTER drawer as the only vertical scroller -->
@@ -24380,3 +24380,137 @@ html body #loginScreen .railV44WelcomeText small{font-size:11px!important;color:
 }
 </style>
 
+<!-- RailSNTGyan: Fix the actual login header (not #mainHeader), after all legacy styles. -->
+<style id="railsntgyan-login-header-legibility-20261026-v2">
+/* The legacy photo login layer sets RailSNT to white on a white header. Explicit
+   final overrides resolve the conflict without touching authenticated screens. */
+html body #loginScreen.hmis-login-page header.hmis-topbar,
+html body.dark-theme #loginScreen.hmis-login-page header.hmis-topbar {
+  background:linear-gradient(105deg,#ffffff 25%,#f3f9fc 100%) !important;
+  border-bottom:1px solid #d7e5ee !important;
+  color:#173b55 !important;
+  isolation:isolate !important;
+}
+html body #loginScreen.hmis-login-page .hmis-brand-block {
+  max-height:none !important;
+  min-width:0 !important;
+  overflow:visible !important;
+  align-items:center !important;
+}
+html body #loginScreen.hmis-login-page .hmis-heading-text {
+  min-width:0 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+html body #loginScreen.hmis-login-page .hmis-header-name {
+  display:flex !important;
+  align-items:baseline !important;
+  white-space:nowrap !important;
+  color:#143f60 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-shadow:none !important;
+  font-weight:900 !important;
+}
+html body #loginScreen.hmis-login-page .hmis-header-name span,
+html body.dark-theme #loginScreen.hmis-login-page .hmis-header-name span {
+  color:#123f66 !important;
+  -webkit-text-fill-color:#123f66 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+html body #loginScreen.hmis-login-page .hmis-header-name strong,
+html body.dark-theme #loginScreen.hmis-login-page .hmis-header-name strong {
+  color:#e96c19 !important;
+  -webkit-text-fill-color:#e96c19 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+html body #loginScreen.hmis-login-page .hmis-header-subtitle,
+html body.dark-theme #loginScreen.hmis-login-page .hmis-header-subtitle {
+  color:#345771 !important;
+  -webkit-text-fill-color:#345771 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-weight:750 !important;
+  text-shadow:none !important;
+}
+html body #loginScreen.hmis-login-page .hmis-logo-badge {
+  display:grid !important;
+  place-items:center !important;
+  width:43px !important;
+  height:43px !important;
+  flex:0 0 43px !important;
+  background:#ffffff !important;
+  border:1px solid #c7ddeb !important;
+  box-shadow:0 2px 6px rgba(19,67,99,.13) !important;
+  overflow:visible !important;
+}
+html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
+  width:40px !important;
+  height:40px !important;
+  max-width:40px !important;
+  max-height:40px !important;
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  filter:saturate(1.13) contrast(1.06) !important;
+}
+/* Normal mobile portrait, incl. handset Android Chrome: leave enough room for
+   the vector logo and two lines of brand text. Sign-in card stays unchanged. */
+@media (max-width:760px) and (min-height:591px) {
+  html body #loginScreen.hmis-login-page header.hmis-topbar {
+    height:65px !important;
+    min-height:65px !important;
+    max-height:65px !important;
+    flex:0 0 65px !important;
+    padding:6px 12px !important;
+    overflow:visible !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-brand-block {
+    gap:9px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge {
+    width:51px !important;
+    height:51px !important;
+    flex:0 0 51px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
+    width:48px !important;
+    height:48px !important;
+    max-width:48px !important;
+    max-height:48px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-header-name {
+    font-size:clamp(22px,6vw,27px) !important;
+    line-height:1.08 !important;
+    letter-spacing:-.65px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-header-subtitle {
+    font-size:clamp(10px,2.65vw,12px) !important;
+    line-height:1.25 !important;
+    white-space:nowrap !important;
+  }
+}
+@media (max-width:350px) and (min-height:591px) {
+  html body #loginScreen.hmis-login-page .hmis-logo-badge {
+    width:46px !important;height:46px !important;flex-basis:46px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
+    width:43px !important;height:43px !important;max-width:43px !important;max-height:43px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-header-name {font-size:21px !important;}
+  html body #loginScreen.hmis-login-page .hmis-header-subtitle {font-size:9px !important;}
+}
+/* Very short landscape/keyboard views retain the existing 37px header. */
+@media (max-height:590px) {
+  html body #loginScreen.hmis-login-page .hmis-logo-badge {
+    width:32px !important;height:32px !important;flex-basis:32px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
+    width:30px !important;height:30px !important;max-width:30px !important;max-height:30px !important;
+  }
+}
+</style>
+</body>
+</html>
