@@ -8759,7 +8759,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
             <select id="railDirectFY" style="width:100%;margin:6px 0 12px"></select>
             <button type="button" class="btn btn-outline" id="railDirectUploadButton" onclick="railUploadDriveDocument()"><i class="fa-solid fa-upload"></i> Upload Selected Files</button>
             <div id="railDriveUploadStatus" role="status" aria-live="polite" style="font-size:.82rem;margin-top:9px;word-break:break-word">Connect Google Drive once, then upload multiple PDFs without selecting Gmail for every file.</div>
-            <div id="railDriveQueue" style="margin-top:10px" aria-label="Uploaded files and record links"></div>
+            <div id="railDriveQueue" style="margin-top:10px" aria-label="Pending upload files awaiting records"></div>
             <small style="display:block;line-height:1.45;margin-top:8px">Each Firebase record has one PDF link. For multiple PDFs, select each uploaded file's <b>Use for Record</b> link, complete its details and click <b>Save Record</b>. The next uploaded file is prepared automatically.</small>
           </div>
         </div>
@@ -8966,13 +8966,13 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
     function railDriveQueueRender() {
       const root=document.getElementById('railDriveQueue'); if (!root) return;
       root.replaceChildren();
-      const items=railDriveQueue.filter(i=>i.state!=='discarded');
+      // Saved records are retained internally for same-tab duplicate detection, but never displayed.
+      const items=railDriveQueue.filter(i=>i.state!=='discarded' && i.state!=='saved');
       if (!items.length) return;
       const title=document.createElement('div');
       title.style.cssText='font-weight:650;font-size:.84rem;margin-bottom:6px';
       const uploaded=items.filter(i=>i.state==='uploaded').length;
-      const saved=items.filter(i=>i.state==='saved').length;
-      title.textContent=`Files: ${items.length} • Ready for records: ${uploaded} • Saved records: ${saved}`;
+      title.textContent=`Pending files: ${items.length} • Ready for records: ${uploaded}`;
       root.append(title);
       items.forEach(item=>{
         const box=document.createElement('div');
@@ -8984,8 +8984,8 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
         name.style.cssText='font-weight:650;overflow-wrap:anywhere;flex:1;min-width:110px';
         name.textContent=item.name;
         const state=document.createElement('span');
-        state.textContent=item.state==='saved'?'Record saved':item.state==='uploaded'?'Uploaded':item.state==='uploading'?`Uploading ${item.progress}%`:item.state==='error'?'Failed':'Pending';
-        state.style.color=item.state==='error'?'#b42318':(item.state==='uploaded'||item.state==='saved'?'#157347':'');
+        state.textContent=item.state==='uploaded'?'Uploaded':item.state==='uploading'?`Uploading ${item.progress}%`:item.state==='error'?'Failed':'Pending';
+        state.style.color=item.state==='error'?'#b42318':(item.state==='uploaded'?'#157347':'');
         line.append(name,state);box.append(line);
         if (item.state==='uploading') {
           const bar=document.createElement('progress');bar.max=100;bar.value=item.progress;
