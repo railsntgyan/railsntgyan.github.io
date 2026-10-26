@@ -8932,6 +8932,34 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       item.progress = Math.min(100,Math.max(0,Math.round(value)));
       railDriveQueueRender();
     }
+    function railDrivePutChunk(url, mime, chunk, offset, end, total, item) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', url, true);
+        xhr.setRequestHeader('Content-Type', mime);
+        xhr.setRequestHeader('Content-Range', `bytes ${offset}-${end-1}/${total}`);
+        let lastPct = -1;
+        xhr.upload.onprogress = event => {
+          if (!event.lengthComputable || !total) return;
+          // 99% means bytes sent; only HTTP success confirms upload at 100%.
+          const percent = Math.min(99, Math.floor((offset + event.loaded) / total * 100));
+          if (percent !== lastPct) {
+            lastPct = percent;
+            railDriveProgress(item, percent);
+          }
+        };
+        xhr.onload = () => resolve({
+          status: xhr.status,
+          ok: xhr.status >= 200 && xhr.status < 300,
+          body: xhr.responseText,
+          getHeader: key => xhr.getResponseHeader(key)
+        });
+        xhr.onerror = () => reject(Error('Network error while uploading to Google Drive. Check Drive before retrying.'));
+        xhr.onabort = () => reject(Error('Upload canceled.'));
+        xhr.ontimeout = () => reject(Error('Upload timed out.'));
+        xhr.send(chunk);
+      });
+    }
     async function railDriveUploadBlob(file, folderId, item) {
       const mime = file.type || 'application/octet-stream';
       const metadata = {name:file.name,parents:[folderId],description:'Uploaded from RailSNTGyan'};
@@ -8946,20 +8974,22 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       // Drive requires 256 KiB-aligned non-final chunks. After HTTP 308 check Range.
       while (offset < file.size) {
         const end=Math.min(file.size,offset+chunkSize);
-        const resp=await fetch(location,{method:'PUT',headers:{'Content-Type':mime,'Content-Range':`bytes ${offset}-${end-1}/${file.size}`},body:file.slice(offset,end)});
+        // XMLHttpRequest exposes upload.onprogress; fetch() does not provide
+        // reliable browser upload progress events for this request body.
+        const resp=await railDrivePutChunk(location,mime,file.slice(offset,end),offset,end,file.size,item);
         if (resp.ok && resp.status!==308) {
           railDriveProgress(item,100);
-          return await resp.json();
+          return JSON.parse(resp.body || '{}');
         }
         if (resp.status!==308) throw Error('Upload interrupted: HTTP '+resp.status+'. Re-select the file to retry.');
-        const range=resp.headers.get('Range');
+        const range=resp.getHeader('Range');
         // The server's acknowledged byte range, not our request, is authoritative.
         const match=range && /bytes=0-(\d+)/.exec(range);
         const next=match?Number(match[1])+1:0;
         if (next<=offset) throw Error('Google Drive did not acknowledge this chunk. Re-select the file to retry.');
         offset=next;
         railDriveProgress(item,offset/file.size*100);
-        location=resp.headers.get('Location')||location;
+        location=resp.getHeader('Location')||location;
       }
       throw Error('Upload stopped without final confirmation. Please verify Google Drive before retrying.');
     }
@@ -8984,7 +9014,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
         name.style.cssText='font-weight:650;overflow-wrap:anywhere;flex:1;min-width:110px';
         name.textContent=item.name;
         const state=document.createElement('span');
-        state.textContent=item.state==='uploaded'?'Uploaded':item.state==='uploading'?`Uploading ${item.progress}%`:item.state==='error'?'Failed':'Pending';
+        state.textContent=item.state==='uploaded'?'Uploaded':item.state==='uploading'?(item.progress>=99?'Finalizing (99%)':`Uploading ${item.progress}%`):item.state==='error'?'Failed':'Pending';
         state.style.color=item.state==='error'?'#b42318':(item.state==='uploaded'?'#157347':'');
         line.append(name,state);box.append(line);
         if (item.state==='uploading') {
