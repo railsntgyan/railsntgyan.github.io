@@ -60,13 +60,24 @@ html.rail-saved-light body:not(.dark-theme) {
   <style id="rail-v44-first-paint-auth-guard">
     /* Paint guard: absolutely no portal UI before Firebase authorizes the session.
        This style is in <head>, before large external assets and all portal content. */
+    /* Opacity on the WHOLE parent prevents a visible child from bypassing a
+       visibility:hidden ancestor. Mobile brand styles explicitly use
+       visibility:visible!important on their SVG/text, causing the refresh flash. */
     html.rail-auth-pending body,
-    html.rail-auth-pending body.dark-theme { visibility:hidden !important; }
+    html.rail-auth-pending body.dark-theme {
+      visibility:hidden !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+    }
 
-    /* While logged out (including interactive sign-in/Welcome), hide the portal
-       even if the full V4.4 stylesheet or Firebase scripts have not loaded yet. */
+    /* Hide the entire portal until Firebase authentication has completed.
+       Keep its layout to avoid changing dashboard/table measurements. */
     html:not(.portal-session-auth) body > #mainHeader,
-    html:not(.portal-session-auth) body > .app-container { visibility:hidden !important; }
+    html:not(.portal-session-auth) body > .app-container {
+      visibility:hidden !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+    }
 
     /* Critical initial paint of V4.4 overlay: never reveal the underlying Home.
        The complete visual theme is applied later by rails-login-v44-final-only. */
