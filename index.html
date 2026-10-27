@@ -21780,6 +21780,12 @@ function ready(){
    copy.id='railsFitTable';
    copy.removeAttribute('style');
    copy.classList.add('rails-fit-preview');
+   // The Fit Screen clone needs the SAME horizontal freeze policy as the live table.
+   // Description-as-second-column sections keep only Sr. No. frozen.
+   const freezeOneOnly=table.classList.contains('rails-freeze-one') ||
+       (table.classList.contains('unfreeze-table') && !table.classList.contains('rails-freeze-two'));
+   copy.classList.toggle('rails-fit-freeze-one',freezeOneOnly);
+   copy.classList.toggle('rails-fit-freeze-two',!freezeOneOnly);
    copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
    copy.setAttribute('aria-label','Scaled table preview');
    copy.style.width=originalWidth+'px';
@@ -21797,6 +21803,17 @@ function ready(){
   }
   const scale=Math.max(.12,Math.min(4,fitBaseScale*zoomFactor));
   copy.style.zoom=String(scale);
+  // Sticky left offsets are expressed in the zoomed table's own CSS units.
+  // Derive the first-column width from the actual clone rather than guessing
+  // from the desktop or normal-scroll layout (they have different widths).
+  const firstCell=copy.querySelector('thead tr > :first-child') ||
+                   copy.querySelector('tbody tr > :first-child');
+  if(firstCell){
+   const firstWidth=firstCell.getBoundingClientRect().width / scale;
+   if(Number.isFinite(firstWidth) && firstWidth>0){
+    copy.style.setProperty('--rails-fit-first-width',firstWidth.toFixed(2)+'px');
+   }
+  }
   bar.querySelector('[data-scale]').textContent=Math.round(scale*100)+'%';
   // Keep the current scroll position while zooming; the same DOM stays mounted.
   if(copy.dataset.railClicksAttached==='yes')return;
@@ -24600,6 +24617,66 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
   }
   html body #loginScreen.hmis-login-page .hmis-header-name {font-size:27px !important;}
   html body #loginScreen.hmis-login-page .hmis-header-subtitle {font-size:12px !important;}
+}
+</style>
+
+
+<!-- Fit Screen mobile/tablet fix: freeze leading columns in the scaled preview. -->
+<style id="rails-fit-screen-frozen-columns-20261027">
+@media screen and (max-width:1366px) {
+  /* Above any scrollable body cell, all column headings stay visible on vertical scroll. */
+  html body #mainTableContainer.rails-fit-mode #railsFitTable thead th {
+    position:sticky !important;
+    top:0 !important;
+    z-index:55 !important;
+    background:var(--brand-navy,#0b3b60) !important;
+  }
+  /* Freeze Sr. No. in both two-column and one-column sections. */
+  html body #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-one tr > :first-child,
+  html body #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two tr > :first-child {
+    position:sticky !important;
+    left:0 !important;
+    right:auto !important;
+    transform:none !important;
+    box-shadow:none !important;
+  }
+  /* Freeze Station/Section only for the sections that have two frozen columns. */
+  html body #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two tr > :nth-child(2) {
+    position:sticky !important;
+    left:var(--rails-fit-first-width,52px) !important;
+    right:auto !important;
+    transform:none !important;
+    box-shadow:3px 0 5px -4px rgba(11,59,96,.4) !important;
+  }
+  /* Solid surfaces hide horizontally moving data without any translucent overlap. */
+  html body:not(.dark-theme) #mainTableContainer.rails-fit-mode #railsFitTable tbody tr:nth-child(odd) > :first-child,
+  html body:not(.dark-theme) #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two tbody tr:nth-child(odd) > :nth-child(2) {
+    background:#fff !important;
+    background-image:none !important;
+  }
+  html body:not(.dark-theme) #mainTableContainer.rails-fit-mode #railsFitTable tbody tr:nth-child(even) > :first-child,
+  html body:not(.dark-theme) #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two tbody tr:nth-child(even) > :nth-child(2) {
+    background:#f8fafc !important;
+    background-image:none !important;
+  }
+  /* Body under the headers; keep first two cells above moving cells. */
+  html body #mainTableContainer.rails-fit-mode #railsFitTable tbody tr > :first-child,
+  html body #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two tbody tr > :nth-child(2) {
+    z-index:30 !important;
+  }
+  /* The top-left intersections must remain above both the body and header row. */
+  html body #mainTableContainer.rails-fit-mode #railsFitTable thead tr > :first-child,
+  html body #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two thead tr > :nth-child(2) {
+    position:sticky !important;
+    top:0 !important;
+    z-index:85 !important;
+  }
+  /* Keep the existing dark-theme gradient on the fixed header intersections. */
+  html body.dark-theme #mainTableContainer.rails-fit-mode #railsFitTable thead tr > :first-child,
+  html body.dark-theme #mainTableContainer.rails-fit-mode #railsFitTable.rails-fit-freeze-two thead tr > :nth-child(2) {
+    background:#064a85 !important;
+    background-image:linear-gradient(180deg,#041d3a 0%,#073969 42%,#0965b2 100%) !important;
+  }
 }
 </style>
 
