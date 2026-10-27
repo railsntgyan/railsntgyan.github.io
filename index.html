@@ -24523,5 +24523,85 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
   }
 }
 </style>
+
+<!-- RailSNTGyan login only: native mobile/tablet pinch-pan and taller tablet/desktop brand bar. -->
+<style id="rails-login-native-zoom-pan-and-taller-header-20261027">
+/* The main portal already permits native pinch zoom. Do not trap gestures inside
+   the fixed-height login overlay: let the visual viewport move after zooming. */
+@media (pointer:coarse), (max-width:1199px) {
+  html:not(.portal-session-auth) body #loginScreen.hmis-login-page {
+    overflow-x:auto !important;
+    overflow-y:auto !important;
+    overscroll-behavior:auto !important;
+    touch-action:pan-x pan-y pinch-zoom !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+  html:not(.portal-session-auth) body #loginScreen.hmis-login-page .hmis-mainarea {
+    overflow:visible !important;
+    touch-action:pan-x pan-y pinch-zoom !important;
+  }
+  html:not(.portal-session-auth) body #loginScreen.hmis-login-page .hmis-topbar,
+  html:not(.portal-session-auth) body #loginScreen.hmis-login-page .hmis-scene {
+    touch-action:pan-x pan-y pinch-zoom !important;
+  }
+}
+/* Leave compact phone portrait header (65px) exactly as it is.
+   On tablet and laptop widths, the 48px header was unnecessarily cramped. */
+@media (min-width:761px) and (min-height:520px) {
+  html body #loginScreen.hmis-login-page header.hmis-topbar {
+    height:76px !important;
+    min-height:76px !important;
+    max-height:76px !important;
+    flex:0 0 76px !important;
+    padding:8px clamp(18px,2.5vw,38px) !important;
+    overflow:visible !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-brand-block {
+    max-height:none !important;
+    gap:12px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge {
+    width:57px !important;
+    height:57px !important;
+    flex:0 0 57px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
+    width:53px !important;
+    height:53px !important;
+    max-width:53px !important;
+    max-height:53px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-header-name {
+    font-size:25px !important;
+    line-height:1.08 !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-header-subtitle {
+    font-size:11px !important;
+    line-height:1.2 !important;
+  }
+}
+@media (min-width:1200px) and (min-height:520px) {
+  html body #loginScreen.hmis-login-page header.hmis-topbar {
+    height:84px !important;
+    min-height:84px !important;
+    max-height:84px !important;
+    flex:0 0 84px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge {
+    width:63px !important;
+    height:63px !important;
+    flex:0 0 63px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
+    width:59px !important;
+    height:59px !important;
+    max-width:59px !important;
+    max-height:59px !important;
+  }
+  html body #loginScreen.hmis-login-page .hmis-header-name {font-size:27px !important;}
+  html body #loginScreen.hmis-login-page .hmis-header-subtitle {font-size:12px !important;}
+}
+</style>
+
 </body>
 </html>
