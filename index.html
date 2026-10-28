@@ -7332,6 +7332,155 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
 }
 </style>
 
+<style id="rail-ldce-practice-style-20261028">
+/* RailSNTGyan LDCE — separate previous-year, topic and mock test tables */
+#ldcePracticeTabs[hidden],#ldcePracticePanel[hidden]{display:none!important}
+#ldcePracticeTabs {display:flex;gap:7px;align-items:center;flex-wrap:wrap;background:var(--glass-bg,#fff);border:1px solid var(--border-color,#dbe2eb);border-left:5px solid #db2777;padding:10px 12px;border-radius:11px;margin:0 0 8px;flex:0 0 auto;box-shadow:0 3px 13px rgba(15,23,42,.05)}
+#ldcePracticeTabs button{padding:9px 13px;background:transparent;color:var(--text-main,#253247);border:1px solid var(--border-color,#cbd5e1);border-radius:9px;cursor:pointer;font:700 12px 'Plus Jakarta Sans',sans-serif;display:flex;align-items:center;gap:7px;text-align:left}
+#ldcePracticeTabs button.active{background:#0b3b60;color:white;border-color:#0b3b60;box-shadow:0 3px 9px rgba(11,59,96,.2)}
+#ldcePracticeTabs button:not(.active):hover{border-color:#0b3b60;background:rgba(11,59,96,.06)}
+#ldcePracticePanel{flex:1;min-height:0;overflow:auto;padding:0 1px 12px;scrollbar-gutter:stable}
+#ldcePracticePanel .ldce-workspace{background:var(--glass-bg,#fff);color:var(--text-main,#1e293b);border:1px solid var(--border-color,#ddd);border-radius:13px;padding:clamp(13px,2vw,24px);min-height:100%;box-shadow:0 5px 18px rgba(15,23,42,.05)}
+#ldcePracticePanel .ldce-topline,#ldcePracticePanel .ldce-test-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:20px;flex-wrap:wrap}
+#ldcePracticePanel h3{font-size:clamp(16px,2vw,21px);color:var(--brand-navy,#0b3b60);font-weight:800;margin:0 0 5px}
+#ldcePracticePanel h3 i{color:#db2777;margin-right:5px}
+#ldcePracticePanel p{line-height:1.5;font-size:13px}
+#ldcePracticePanel .ldce-topline p,#ldcePracticePanel .ldce-test-header p,#ldcePracticePanel .ldce-muted{color:var(--text-muted,#64748b)}
+#ldcePracticePanel .ldce-top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#ldcePracticePanel .ldce-bank-count{font-size:12px;font-weight:800;padding:8px 12px;border-radius:20px;background:rgba(16,185,129,.11);color:#047857}
+#ldcePracticePanel .ldce-config-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:820px;margin:16px 0}
+#ldcePracticePanel label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:800;color:inherit;min-width:0}
+#ldcePracticePanel select,#ldcePracticePanel input:not([type=file]),#ldcePracticePanel textarea{width:100%;border:1px solid #b6c5d8;background:#fff;color:#1e293b;border-radius:8px;padding:10px 12px;font-size:13px;min-height:40px;outline-offset:1px;box-sizing:border-box;font-family:inherit}
+#ldcePracticePanel textarea{resize:vertical}
+#ldcePracticePanel .ldce-button{font-size:12px;font-weight:800;border:1px solid transparent;min-height:38px;padding:9px 13px;display:inline-flex;justify-content:center;align-items:center;gap:7px;border-radius:8px;cursor:pointer;line-height:1.2;white-space:normal}
+#ldcePracticePanel .ldce-button:disabled{opacity:.45;cursor:not-allowed}
+#ldcePracticePanel .ldce-primary{background:#0b3b60;color:#fff}
+#ldcePracticePanel .ldce-secondary{background:rgba(134,149,169,.09);border-color:var(--border-color,#cbd5e1);color:var(--text-main,#334155)}
+#ldcePracticePanel .ldce-danger{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+#ldcePracticePanel .ldce-submit{background:#15803d;color:#fff;width:100%;margin-top:16px}
+#ldcePracticePanel .ldce-exit{width:100%;margin-top:8px}
+#ldcePracticePanel .ldce-start{margin-top:10px;min-width:220px}
+#ldcePracticePanel .ldce-help{display:flex;align-items:flex-start;gap:12px;background:rgba(11,59,96,.055);border:1px solid var(--border-color,#dce3eb);border-radius:11px;padding:14px;max-width:820px;margin:15px 0}
+#ldcePracticePanel .ldce-help>i{color:#059669;margin-top:2px;font-size:17px}
+#ldcePracticePanel .ldce-help strong{display:block;font-size:13px;margin-bottom:3px}
+#ldcePracticePanel .ldce-note{border-radius:8px;padding:10px 12px;margin:7px 0;font-size:12px;background:rgba(234,179,8,.11);border:1px solid rgba(234,179,8,.34);color:inherit;max-width:960px}
+#ldcePracticePanel .ldce-error{color:#b91c1c;background:rgba(239,68,68,.075);border-color:#ef4444}
+#ldcePracticePanel .ldce-empty{padding:14px;border:1px dashed #b3bfd0;border-radius:9px;margin-top:10px;max-width:820px}
+#ldcePracticePanel .ldce-test-stats{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;font-weight:800}
+#ldcePracticePanel .ldce-test-stats span{padding:7px 12px;background:rgba(11,59,96,.08);border-radius:8px}
+#ldcePracticePanel .ldce-progress-track{height:6px;border-radius:10px;background:rgba(148,163,184,.24);overflow:hidden;margin:0 0 18px}
+#ldcePracticePanel .ldce-progress-track div{height:100%;background:#059669;transition:width .3s}
+#ldcePracticePanel .ldce-test-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:18px;align-items:start}
+#ldcePracticePanel .ldce-question-pane{min-width:0}
+#ldcePracticePanel .ldce-question-no{font-size:12px;font-weight:800;color:#db2777;margin:0 0 10px}
+#ldcePracticePanel .ldce-question-pane h4{font-size:clamp(15px,1.8vw,19px);font-weight:800;line-height:1.5;margin-bottom:16px;overflow-wrap:break-word}
+#ldcePracticePanel .ldce-options{display:grid;gap:10px}
+#ldcePracticePanel .ldce-option{display:flex;align-items:flex-start;text-align:left;gap:12px;padding:12px;background:rgba(148,163,184,.055);border:1px solid var(--border-color,#cbd5e1);border-radius:10px;color:inherit;font:600 13px 'Plus Jakarta Sans',sans-serif;cursor:pointer;line-height:1.4;width:100%;overflow-wrap:anywhere}
+#ldcePracticePanel .ldce-option span:first-child{flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;border-radius:6px;background:#e0edf7;color:#0b3b60;font-weight:900}
+#ldcePracticePanel .ldce-option.chosen{border-color:#3b82f6;background:rgba(59,130,246,.1)}
+#ldcePracticePanel .ldce-option.correct{border-color:#16a34a;background:rgba(22,163,74,.14)}
+#ldcePracticePanel .ldce-option.wrong{border-color:#e11d48;background:rgba(225,29,72,.1)}
+#ldcePracticePanel .ldce-option:disabled{cursor:default;opacity:1}
+#ldcePracticePanel .ldce-explanation{margin-top:13px;padding:12px;background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.22);border-radius:9px;font-size:13px;line-height:1.5}
+#ldcePracticePanel .ldce-explanation p{margin-top:5px}
+#ldcePracticePanel .ldce-test-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:center}
+#ldcePracticePanel .ldce-palette{background:rgba(148,163,184,.055);border:1px solid var(--border-color,#d8e1ed);padding:14px;border-radius:10px;min-width:0}
+#ldcePracticePanel .ldce-palette h4{font-size:13px;margin:0 0 12px}
+#ldcePracticePanel .ldce-palette-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+#ldcePracticePanel .ldce-palette-grid button{border:1px solid #cbd5e1;border-radius:7px;background:rgba(148,163,184,.12);color:inherit;padding:7px 0;font-size:12px;font-weight:800;cursor:pointer}
+#ldcePracticePanel .ldce-palette-grid button.answered{background:#16a34a;color:white;border-color:#16a34a}
+#ldcePracticePanel .ldce-palette-grid button.marked{background:#a855f7;color:white;border-color:#a855f7}
+#ldcePracticePanel .ldce-palette-grid button.current{outline:3px solid #f97316;outline-offset:1px}
+#ldcePracticePanel .ldce-key{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;font-size:10px}
+#ldcePracticePanel .ldce-key span{padding:4px;border-radius:5px;background:rgba(148,163,184,.13)}
+#ldcePracticePanel .ldce-result-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:15px 0 20px}
+#ldcePracticePanel .ldce-result-grid>div{border:1px solid var(--border-color,#cbd5e1);background:rgba(148,163,184,.06);padding:14px 6px;border-radius:10px;text-align:center;display:flex;flex-direction:column;gap:5px}
+#ldcePracticePanel .ldce-result-grid b{font-size:clamp(17px,2.5vw,27px);color:#0ea5a4}
+#ldcePracticePanel .ldce-result-grid span{font-size:11px;color:var(--text-muted,#64748b)}
+#ldcePracticePanel .ldce-review-title{font-size:15px;margin:14px 0}
+#ldcePracticePanel .ldce-review-list{display:grid;gap:10px}
+#ldcePracticePanel .ldce-review-row{padding:14px;border:1px solid var(--border-color,#d6e0ed);border-radius:10px;background:rgba(148,163,184,.045);overflow-wrap:anywhere}
+#ldcePracticePanel .ldce-review-row b{font-size:13px;line-height:1.5}
+#ldcePracticePanel .ldce-review-row p{margin-top:6px}
+#ldcePracticePanel .ldce-review-row small{font-size:12px;display:block;margin-top:7px;color:var(--text-muted,#64748b)}
+#ldcePracticePanel .ldce-green{color:#059669}#ldcePracticePanel .ldce-red{color:#e11d48}
+#ldcePracticePanel .ldce-admin-section{border:1px solid var(--border-color,#d6e0ed);background:rgba(148,163,184,.04);border-radius:11px;padding:15px;margin:15px 0}
+#ldcePracticePanel .ldce-admin-section>h4{font-size:15px;margin-bottom:12px}
+#ldcePracticePanel .ldce-admin-section>label{margin:12px 0}
+#ldcePracticePanel .ldce-admin-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+#ldcePracticePanel .ldce-admin-list{max-height:350px;overflow:auto}
+#ldcePracticePanel .ldce-admin-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px;border-bottom:1px solid var(--border-color,#d5dae1)}
+#ldcePracticePanel .ldce-admin-row>div:first-child{min-width:0;overflow-wrap:anywhere}
+#ldcePracticePanel .ldce-admin-row b{font-size:12px}
+#ldcePracticePanel .ldce-admin-row p{font-size:11px}
+#ldcePracticePanel .ldce-admin-row>div:last-child{display:flex;gap:5px}
+#ldcePracticePanel .ldce-admin-section input[type=file]{display:block;width:100%;margin:12px 0;font-size:12px;max-width:600px}
+#ldcePracticePanel .ldce-admin-section small{font-size:11px;line-height:1.5}
+body.dark-theme #ldcePracticeTabs button.active{background:#176f82;border-color:#1f98ab}
+body.dark-theme #ldcePracticePanel h3{color:#c6f6ff}
+body.dark-theme #ldcePracticePanel .ldce-bank-count{color:#6ee7b7}
+body.dark-theme #ldcePracticePanel .ldce-option span:first-child{color:#e0f2fe;background:#0b3b60}
+body.dark-theme #ldcePracticePanel .ldce-red{color:#fda4af}
+body.dark-theme #ldcePracticePanel .ldce-green{color:#6ee7b7}
+body.dark-theme #ldcePracticePanel .ldce-error{color:#fda4af}
+@media(max-width:800px){#ldcePracticePanel .ldce-test-grid{grid-template-columns:1fr}#ldcePracticePanel .ldce-palette{order:2}#ldcePracticePanel .ldce-palette-grid{grid-template-columns:repeat(10,minmax(0,1fr))}}
+@media(max-width:600px){#ldcePracticeTabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}#ldcePracticeTabs button{justify-content:center;padding:9px 5px;font-size:11px}#ldcePracticePanel .ldce-config-grid,#ldcePracticePanel .ldce-admin-options{grid-template-columns:1fr}#ldcePracticePanel .ldce-result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#ldcePracticePanel .ldce-palette-grid{grid-template-columns:repeat(5,minmax(0,1fr))}#ldcePracticePanel .ldce-admin-row{align-items:flex-start;flex-direction:column}#ldcePracticePanel .ldce-top-actions{width:100%}}
+
+
+/* LDCE v2: three separate paper tables; retain existing Previous Year table untouched. */
+#ldcePracticeTabs{display:grid;grid-template-columns:repeat(3,minmax(0,max-content));gap:8px}
+#ldcePracticeTabs button{justify-content:center;min-height:39px}
+#ldcePracticePanel .ldce-table-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:10px 0 13px}
+#ldcePracticePanel .ldce-table-toolbar .ldce-table-search{flex:1 1 230px;min-width:160px;max-width:380px}
+#ldcePracticePanel .ldce-table-toolbar .ldce-filter-subject{flex:0 1 220px;min-width:150px;max-width:280px}
+#ldcePracticePanel .ldce-table-toolbar input,#ldcePracticePanel .ldce-table-toolbar select{height:38px;min-height:38px}
+#ldcePracticePanel .ldce-table-scroll{width:100%;max-width:100%;overflow:auto;border:2px solid var(--table-border,#701616);border-radius:9px;background:#fff;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+#ldcePracticePanel .ldce-data-table{min-width:740px;width:100%;border:0;border-collapse:separate;border-spacing:0;--col-1-w:53px;--col-2-min-w:190px;--col-2-max-w:240px}
+#ldcePracticePanel .ldce-data-table th{position:sticky;top:0;z-index:20;font-size:12px;padding:11px 9px;text-align:center;white-space:normal;line-height:1.25;background:var(--brand-navy,#0b3b60)!important;color:#fff}
+#ldcePracticePanel .ldce-data-table td{font-size:12px;padding:10px 9px;text-align:center;white-space:normal;line-height:1.4;vertical-align:middle}
+#ldcePracticePanel .ldce-data-table th:nth-child(2),#ldcePracticePanel .ldce-data-table td:nth-child(2){text-align:left;word-break:normal;overflow-wrap:break-word}
+#ldcePracticePanel .ldce-data-table td:nth-child(3){min-width:135px}
+#ldcePracticePanel .ldce-data-table td:last-child{min-width:185px}
+#ldcePracticePanel .ldce-cell-title{font-weight:800;display:block;color:var(--brand-navy,#0b3b60)}
+#ldcePracticePanel .ldce-cell-sub{font-size:10.5px;display:block;color:var(--text-muted,#64748b);font-weight:500;margin-top:3px}
+#ldcePracticePanel .ldce-available{display:inline-flex;justify-content:center;min-width:40px;padding:5px 9px;border-radius:7px;background:#dcfce7;color:#166534;font-weight:800}
+#ldcePracticePanel .ldce-unavailable{display:inline-flex;padding:5px 9px;border-radius:7px;background:#fff0e5;color:#9a3412;font-size:11px}
+#ldcePracticePanel .ldce-row-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
+#ldcePracticePanel .ldce-row-actions .ldce-button{min-height:32px;padding:6px 9px;font-size:11px;white-space:nowrap}
+#ldcePracticePanel .ldce-table-footnote{font-size:11px;color:var(--text-muted,#64748b);margin-top:10px}
+#ldcePracticePanel .ldce-empty-row{text-align:center!important;padding:20px!important}
+body.dark-theme #ldcePracticePanel .ldce-table-scroll{background:#111c2f;border-color:#334155}
+body.dark-theme #ldcePracticePanel .ldce-data-table .ldce-cell-title{color:#c6f6ff}
+body.dark-theme #ldcePracticePanel .ldce-data-table .ldce-cell-sub{color:#b0bdce}
+body.dark-theme #ldcePracticePanel .ldce-data-table .ldce-available{background:#064e3b;color:#a7f3d0}
+body.dark-theme #ldcePracticePanel .ldce-data-table .ldce-unavailable{background:#48271d;color:#fed7aa}
+@media(max-width:600px){#ldcePracticeTabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}#ldcePracticeTabs button{padding:8px 3px;font-size:10px;line-height:1.3;min-height:48px;gap:4px}#ldcePracticeTabs button i{display:none}#ldcePracticePanel .ldce-workspace{padding:11px}#ldcePracticePanel .ldce-table-toolbar .ldce-table-search{flex-basis:100%;max-width:none}#ldcePracticePanel .ldce-table-toolbar .ldce-filter-subject{flex-basis:100%;max-width:none}#ldcePracticePanel .ldce-data-table{--col-2-min-w:155px;--col-2-max-w:170px}}
+
+/* Keep test view independent from the original table's realtime rerenders. */
+#tableViewSection.ldce-practicing #mainFilterPanel,#tableViewSection.ldce-practicing #mainTableContainer,#tableViewSection.ldce-practicing #topScrollbarWrapper,#tableViewSection.ldce-practicing .action-toolbar{display:none!important}
+
+
+/* LDCE v3 visibility fix – the portal's legacy desktop layout uses the very
+   specific html body #mainContent #tableViewSection[style*=flex]
+   #mainTableContainer.table-container { display:block!important }. The
+   previous LDCE selector was weaker, so old data remained displayed. */
+html body #mainContent #tableViewSection.ldce-practicing[style*="flex"] #mainTableContainer.table-container,
+html body #mainContent #tableViewSection.ldce-practicing #mainTableContainer.table-container,
+html body #tableViewSection.ldce-practicing #mainTableContainer.table-container {
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+/* Other controls belong exclusively to the unchanged Previous Year table. */
+html body #mainContent #tableViewSection.ldce-practicing #mainFilterPanel.filter-panel,
+html body #mainContent #tableViewSection.ldce-practicing #topScrollbarWrapper.top-scrollbar-wrapper,
+html body #mainContent #tableViewSection.ldce-practicing .content-header-card .action-toolbar,
+html body #tableViewSection.ldce-practicing #mainFilterPanel,
+html body #tableViewSection.ldce-practicing #topScrollbarWrapper,
+html body #tableViewSection.ldce-practicing .action-toolbar {
+  display:none!important;
+}
+</style>
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8364,6 +8513,14 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
             </button>
           </div>
         </div>
+
+        <!-- LDCE Gr. B: preserve existing Previous Year table, offer CBT views beside it. -->
+        <nav id="ldcePracticeTabs" aria-label="LDCE question paper types" hidden>
+          <button type="button" data-tab="previous" class="active" aria-selected="true"><i class="fa-solid fa-calendar-days"></i> Previous Year Papers</button>
+          <button type="button" data-tab="topic" aria-selected="false"><i class="fa-solid fa-list-check"></i> Topic-wise Papers</button>
+          <button type="button" data-tab="mock" aria-selected="false"><i class="fa-solid fa-clipboard-check"></i> Mock Test Papers</button>
+        </nav>
+        <div id="ldcePracticePanel" hidden aria-live="polite"></div>
 
         <!-- 2. FILTER & SEARCH PANEL -->
         <div class="filter-panel sticky-filter-panel" id="mainFilterPanel">
@@ -9588,6 +9745,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       // Do not let Home's protected-exit rule mistake this for an exit attempt.
       if (typeof window.railProfileHandlePopState === 'function' &&
           window.railProfileHandlePopState(event)) return;
+      if (typeof window.railLdceHandlePopState === 'function' && window.railLdceHandlePopState(event)) return;
       const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
       const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
 
@@ -9801,6 +9959,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       document.getElementById('tableViewSection').style.display = 'none';
 
       currentCategory = 'HOME';
+      if (typeof window.railLdceLeave === 'function') window.railLdceLeave();
 
       if (pushState) {
         const hs = history.state || {};
@@ -9985,6 +10144,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       });
 
       renderTable();
+      if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
       updateDashboardView();
 
       // If the page was recreated by Android/mobile Back, restore the
@@ -10228,6 +10388,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       if (normCat === 'PCSTE DISPENSATION') normCat = 'DISPENSATION';
       currentCategory = normCat;
       window.__railsCurrentCategory = normCat;
+      if (typeof window.railLdceSyncView === "function") window.railLdceSyncView(true);
 
       // IMPORTANT LINKS must keep its own sidebar group expanded, including
       // after returning from an external website with the browser/app Back key.
@@ -10731,6 +10892,8 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
         if (recCat === 'IRSEM & CORRECTION SLIP') recCat = 'IRSEM CHAPTER WISE';
         if (recCat === 'IRTEM') recCat = 'IRTEM CHAPTER WISE';
         if (recCat !== currentCategory) return false;
+        // New Topic-wise and Mock Test entries share secr_records, but must NEVER appear in Previous Year papers.
+        if (ldceCategories.includes(currentCategory) && ['topic','mock'].includes(String(item.ldcePaperType || '').toLowerCase())) return false;
         if (filterYear !== 'ALL' && String(item.year) !== filterYear) return false;
         if (hasDivision && filterDiv !== 'ALL' && item.division !== filterDiv) return false;
 
@@ -24689,7 +24852,389 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
     background-image:linear-gradient(180deg,#041d3a 0%,#073969 42%,#0965b2 100%) !important;
   }
 }
+
+/* LDCE four-column paper registers — same visual proportions and Actions as Previous Year. */
+#ldcePracticePanel .ldce-four-col-table{min-width:640px;table-layout:fixed;--col-1-w:55px;--col-2-min-w:220px;--col-2-max-w:360px}
+#ldcePracticePanel .ldce-four-col-table th:nth-child(1),#ldcePracticePanel .ldce-four-col-table td:nth-child(1){width:55px;min-width:55px;max-width:55px;text-align:center}
+#ldcePracticePanel .ldce-four-col-table th:nth-child(2),#ldcePracticePanel .ldce-four-col-table td:nth-child(2){width:39%;min-width:205px;max-width:none;text-align:left;white-space:normal;word-break:normal}
+#ldcePracticePanel .ldce-four-col-table th:nth-child(3),#ldcePracticePanel .ldce-four-col-table td:nth-child(3){width:30%;min-width:195px;text-align:center;white-space:normal}
+#ldcePracticePanel .ldce-four-col-table th:nth-child(4),#ldcePracticePanel .ldce-four-col-table td:nth-child(4){width:185px;min-width:165px;text-align:center;white-space:nowrap}
+#ldcePracticePanel .ldce-four-col-table .ldce-paper-icons{white-space:nowrap;display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:5px}
+#ldcePracticePanel .ldce-four-col-table .ldce-paper-icons .action-icon-btn{display:inline-flex;align-items:center;justify-content:center;min-width:27px;min-height:27px;text-decoration:none}
+#ldcePracticePanel .ldce-four-col-table .work-link{display:inline-flex;gap:5px;align-items:center;justify-content:center;line-height:1.4}
+#ldcePracticePanel .ldce-paper-form{max-width:820px}
+#ldcePracticePanel .ldce-paper-form .ldce-admin-section{display:grid;gap:14px}
+#ldcePracticePanel .ldce-paper-form .ldce-admin-section label{gap:7px}
+@media(max-width:600px){#ldcePracticePanel .ldce-four-col-table{min-width:625px;--col-2-min-w:205px;--col-2-max-w:220px}}
 </style>
 
+<script id="rail-ldce-practice-script-20261028">
+/* RailSNTGyan LDCE topic & mock paper tables + CBT; existing Firebase and role claims. */
+(function () {
+  'use strict';
+  const EXAMS = ['ASTE','AEN','AMM','APO','AFA','AME','ACM','AOM','AEE'];
+  const COLLECTION = 'ldce_practice_questions';
+  const seed = [
+    ['Signalling','Electronic Interlocking','Which system executes approved route interlocking logic electronically?', 'Electronic Interlocking','Public Address System','Battery Charger','Cable Termination Box',0,'Electronic Interlocking executes safety-related interlocking logic using approved hardware and software.'],
+    ['Signalling','Electronic Interlocking','What is the main purpose of interlocking at a station?','To increase train speed in all conditions','To prevent conflicting or unsafe train movements','To reduce the number of signals','To display train timetables',1,'Interlocking enforces safe relationships among routes, points and signals.'],
+    ['Signalling','Electronic Interlocking','In a redundant electronic interlocking arrangement, redundancy primarily improves which property?','Availability','Track gauge','Signal sighting distance','Axle load',0,'Redundant processing or communication elements help maintain availability when a component fails.'],
+    ['Signalling','Track Circuits','A conventional track circuit is primarily used to detect what?','Train occupancy of a track section','Station temperature','OFC attenuation','Rail profile',0,'Track circuits detect occupancy through the electrical behavior of rails.'],
+    ['Signalling','Track Circuits','In a basic DC track circuit, what generally causes the track relay to drop when a train occupies the section?','Axle shunting the rails','Increase in battery voltage','Signal lamp illumination','Opening of a gate',0,'Wheelsets electrically shunt the two rails and affect track relay energization.'],
+    ['Signalling','Axle Counters','An axle counter detects track section occupancy primarily by comparing which counts?','Axles entering and leaving','Signals at ON and OFF','Trains scheduled and cancelled','Number of point machines',0,'Occupancy is determined from axle counts at the section boundaries.'],
+    ['Signalling','Axle Counters','What does a non-zero net axle count generally indicate for a monitored section?','Section potentially occupied','Guaranteed clear section','No power supply needed','A normal telecom channel',0,'A difference in entry and exit counts prevents a clear indication.'],
+    ['Signalling','Signals & Points','Which equipment is used to operate a power-operated turnout?','Point machine','Rail thermometer','OFC joint enclosure','Battery hydrometer',0,'A point machine moves and detects the position of an electrically operated turnout.'],
+    ['Signalling','Signals & Points','Before clearing a route signal, why is the required point position detection important?','It confirms required switch position','It increases speaker volume','It checks attendance','It measures light intensity',0,'Required points must be correctly detected for the intended route.'],
+    ['Signalling','Automatic Block Signalling','What is a fundamental feature of automatic block signalling?','Signal aspects respond to conditions of track sections','Signals operate only by telephone','All automatic signals are always green','Only one track circuit is permitted',0,'Automatic signal aspects depend on occupancy and other relevant block conditions.'],
+    ['Telecommunication','Optical Fibre','Which medium carries information using light pulses?','Optical fibre','Copper busbar','Mechanical wire','Steel rail',0,'Fibre-optic systems transmit optical signals through glass or plastic fibre.'],
+    ['Telecommunication','Optical Fibre','Optical attenuation is commonly expressed in which unit?','dB/km','Ohm-metre','Newton','Hertz per second',0,'Fibre attenuation is commonly stated in decibels per kilometre.'],
+    ['Telecommunication','IP Networking','How many layers are there in the standard OSI reference model?','5','6','7','8',2,'The OSI reference model consists of seven layers.'],
+    ['Telecommunication','IP Networking','Which device primarily forwards IP packets between different IP networks?','Router','Patch panel','Printer','Loudspeaker',0,'Routers use network-layer information to forward IP packets.'],
+    ['Telecommunication','IP Networking','Which protocol is commonly used to assign IPv4 addresses automatically?','DHCP','SMTP','FTP','SNMP',0,'Dynamic Host Configuration Protocol can automatically configure IPv4 addresses and other network parameters.'],
+    ['Telecommunication','VoIP & TCCS','What does VoIP stand for?','Voice over Internet Protocol','Voltage over Inductive Path','Video on Interlocking Panel','Variable Optical Input Power',0,'VoIP transports voice communications over IP-based networks.'],
+    ['Telecommunication','VoIP & TCCS','Which protocol is commonly used to establish and manage VoIP sessions?','SIP','ICMP','ARP','NTP',0,'Session Initiation Protocol (SIP) is commonly used for signalling VoIP sessions.'],
+    ['Rules & Manuals','Signalling Rules','What does the abbreviation G&SR commonly refer to in Indian Railways?','General and Subsidiary Rules','Gauge and Speed Register','Goods and Station Roster','General and Signal Relay',0,'G&SR refers to General and Subsidiary Rules.'],
+    ['Rules & Manuals','Technical Manuals','IRSEM is the abbreviation for which manual?','Indian Railway Signal Engineering Manual','Indian Railway Station Earnings Manual','Indian Road Safety Equipment Manual','Interlocking Relay System Equipment Manual',0,'IRSEM stands for Indian Railway Signal Engineering Manual.'],
+    ['General & IT','Railway IT','What is the principal function of a document management system?','Store, organize and retrieve documents','Power signal lamps','Measure axle load','Regulate track gauge',0,'Document management systems support controlled storage, search and retrieval of records.'],
+    ['General & IT','Computer Basics','Which of the following is a volatile memory?','RAM','SSD','DVD','ROM',0,'RAM ordinarily loses its stored working data when power is removed.'],
+    ['General & IT','Computer Basics','What does PDF stand for?','Portable Document Format','Public Data Folder','Primary Document File','Printer Device Function',0,'PDF stands for Portable Document Format.']
+  ];
+  const demo = seed.map((a,i)=>({id:'demo-'+(i+1),exam:'ASTE',subject:a[0],topic:a[1],question:a[2],options:a.slice(3,7),answerIndex:a[7],explanation:a[8],demo:true}));
+  let published=[], unsubscribe=null, cloudError='', isCloudReady=false, tab='previous', subject='', topic='', quantity=20, testMode='practice', tableSearch='', tableSubject='';
+  let quiz=null, adminOpened=false, editId='', status='', noticeType='';
+  let paperEditing=false, paperEditId='', paperStatus='';
+  const $ = id=>document.getElementById(id);
+  const esc = v => String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  const exam = ()=>EXAMS.includes(window.__railsCurrentCategory) ? window.__railsCurrentCategory : (typeof currentCategory !== 'undefined' && EXAMS.includes(currentCategory) ? currentCategory : 'ASTE');
+  const bank = ()=>{const set=published.filter(q=>q.exam===exam());return set.length ? set : exam()==='ASTE' ? demo : [];};
+  const unique = arr=>[...new Set(arr.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  const randomize = list=>list.map(x=>({x,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(a=>a.x);
+  function notice(text,err=false){status=text;noticeType=err?'error':'info'; const el=$('ldceNotice');if(el){el.textContent=text;el.hidden=!text;el.className='ldce-note '+(err?'ldce-error':'');}}
+  function setVisibility(){
+    const active=EXAMS.includes(typeof currentCategory==='undefined'?'':currentCategory);
+    const tabs=$('ldcePracticeTabs'), panel=$('ldcePracticePanel'), tbl=$('mainTableContainer'), filter=$('mainFilterPanel'), bar=$('topScrollbarWrapper');
+    if(tabs) tabs.hidden=!active;
+    const practicing=active && tab!=='previous';
+    const tableView=$('tableViewSection');if(tableView)tableView.classList.toggle('ldce-practicing',practicing);
+    if(panel){panel.hidden=!practicing;panel.style.display=practicing?'block':'none';}
+    if(tbl)tbl.style.display=practicing?'none':'';
+    if(filter)filter.style.display=practicing?'none':'';
+    if(bar)bar.style.display=practicing?'none':'';
+    const actions=document.querySelector('#tableViewSection .action-toolbar');
+    if(actions)actions.style.display=practicing?'none':'';
+    if(tabs){tabs.querySelectorAll('[data-tab]').forEach(b=>{const selected=b.dataset.tab===tab;b.classList.toggle('active',selected);b.setAttribute('aria-selected',selected?'true':'false');});}
+    const desc=$('activeCategoryDesc');if(desc&&active)desc.textContent=tab==='topic'?'Topic-wise practice papers • '+exam():tab==='mock'?'Mock test papers • '+exam():'Previous year question papers and practice links';
+  }
+  window.railLdceSyncView=function(reset){
+    if(reset){tab='previous';quiz=null;adminOpened=false;paperEditing=false;paperEditId='';paperStatus='';subject='';topic='';tableSearch='';tableSubject='';}
+    setVisibility();
+    if(tab!=='previous')render();
+  };
+  window.railLdceLeave=function(){stopTicker();quiz=null;adminOpened=false;paperEditing=false;paperEditId='';paperStatus='';tab='previous';setVisibility();};
+  window.railLdceHandlePopState=function(){
+    if(!EXAMS.includes(typeof currentCategory==='undefined'?'':currentCategory))return false;
+    if(quiz){stopTicker();quiz=null;render();return true;}
+    if(adminOpened){adminOpened=false;editId='';render();return true;}
+    if(paperEditing){paperEditing=false;paperEditId='';render();return true;}
+    return false;
+  };
+  function switchTab(t){
+    if(!['previous','topic','mock'].includes(t))return;
+    if(quiz && !confirm('The current test will be closed. Continue?'))return;
+    tab=t;quiz=null;adminOpened=false;paperEditing=false;paperEditId='';paperStatus='';subject='';topic='';tableSearch='';tableSubject='';
+    setVisibility();render();if($('ldcePracticePanel'))$('ldcePracticePanel').scrollTop=0;
+    if(t==='previous'){if(typeof renderTable==='function')renderTable();if(typeof updateTopScrollbarWidth==='function')updateTopScrollbarWidth();}
+  }
+  function available(){
+    const data=bank();
+    if(tab==='topic')return data.filter(q=>q.subject===subject && q.topic===topic);
+    return data;
+  }
+  // Topic-wise and Mock papers are independent admin-managed link registers,
+  // like the existing Previous Year Paper register. No second Firestore ruleset is needed:
+  // use the existing secr_records collection and a distinguishing ldcePaperType field.
+  function storedPapers(kind){
+    const rows=(typeof records!=='undefined' && Array.isArray(records)) ? records : [];
+    const papers=rows.filter(r=>r.category===exam() && String(r.ldcePaperType||'').toLowerCase()===kind);
+    // Built-in S1 topic paper: visible to logged-in Users and Admins; no extra
+    // Firestore document required. Preserve existing papers and avoid duplicates.
+    if(kind==='topic' && exam()==='ASTE' && !papers.some(r=>
+      /(^|[^a-z0-9])s\s*[- ]?1([^a-z0-9]|$)|basics of indian railway signalling/i.test(String(r.work||'')) ||
+      /\/practice-papers\/ASTE\/S1\//i.test(String(r.practiceLink||'')))){
+      papers.push({id:'builtin-aste-s1',category:'ASTE',ldcePaperType:'topic',
+        work:'S1 – Basics of Indian Railway Signalling (403 MCQs)',
+        practiceLink:'./practice-papers/ASTE/S1/practice.html',builtIn:true});
+    }
+    return papers.sort((a,b)=>String(a.work||'').localeCompare(String(b.work||''),undefined,{numeric:true,sensitivity:'base'}));
+  }
+  function paperUrl(raw){
+    const input=String(raw||'').trim();if(!input)return '';
+    if(/^(?:javascript|data|vbscript|file):/i.test(input)||input.startsWith('//'))return '';
+    try{
+      const url=new URL(input,window.location.href);
+      return ['https:','http:'].includes(url.protocol)?url.href:'';
+    }catch(_){return '';}
+  }
+  function paperActionButtons(paper){
+    const url=paperUrl(paper.practiceLink);
+    const id=esc(paper.id);
+    const open=url?`<a class="action-icon-btn" href="${esc(url)}" target="${typeof railPracticeLinkTarget==='function'?railPracticeLinkTarget(url):'_blank'}" rel="noopener noreferrer" aria-label="View ${esc(paper.work||'practice paper')}" title="View Practice Paper"><i class="fa-solid fa-eye"></i></a>`:'<button type="button" class="action-icon-btn" disabled title="No practice link"><i class="fa-solid fa-eye"></i></button>';
+    const chain=url?`<a class="action-icon-btn attachment-chain-btn linked" href="${esc(url)}" target="${typeof railPracticeLinkTarget==='function'?railPracticeLinkTarget(url):'_blank'}" rel="noopener noreferrer" title="Practice Paper Linked"><i class="fa-solid fa-link"></i></a>`:'<button type="button" class="action-icon-btn attachment-chain-btn broken" disabled title="No Practice Paper Link"><i class="fa-solid fa-link-slash"></i></button>';
+    const edit=isAdmin()&&!paper.builtIn?`<button type="button" class="action-icon-btn edit-btn" data-action="editpaper" data-id="${id}" aria-label="Edit ${esc(paper.work||'practice paper')}" title="Edit Record (Admin)"><i class="fa-solid fa-pen-to-square" style="color:#0b4f6c"></i></button>`:'';
+    const del=isAdmin()&&!paper.builtIn?`<button type="button" class="action-icon-btn delete-btn" data-action="deletepaper" data-id="${id}" aria-label="Delete ${esc(paper.work||'practice paper')}" title="Delete Record (Admin)"><i class="fa-solid fa-trash-can" style="color:#e11d48"></i></button>`:'';
+    return `<div class="actions-cell ldce-paper-icons">${chain}${open}${edit}${del}</div>`;
+  }
+  function practicePaperCell(paper){
+    const url=paperUrl(paper.practiceLink);
+    return url?`<a class="work-link" href="${esc(url)}" target="${typeof railPracticeLinkTarget==='function'?railPracticeLinkTarget(url):'_blank'}" rel="noopener noreferrer"><i class="fa-solid fa-circle-play" style="color:#059669;"></i> Click Here to Practice</a>`:'<span style="color:#94a3b8">—</span>';
+  }
+  function tableShell(title,description,contents){
+    const count=storedPapers(tab).length;
+    return `<div class="ldce-workspace ldce-paper-index">
+      <div class="ldce-topline"><div><h3><i class="fa-solid fa-table-list"></i> ${esc(exam())} – ${esc(title)}</h3><p>${esc(description)}</p></div>
+      <div class="ldce-top-actions"><span class="ldce-bank-count"><i class="fa-solid fa-file-lines"></i> ${count} Papers</span>
+      ${isAdmin()?`<button type="button" data-action="addpaper" class="ldce-button ldce-primary"><i class="fa-solid fa-plus"></i> Add ${tab==='topic'?'Topic':'Mock Test'} Paper</button><button type="button" data-action="admin" class="ldce-button ldce-secondary"><i class="fa-solid fa-database"></i> Question Bank Manager</button>`:''}
+      </div></div>
+      ${paperStatus?`<p class="ldce-note" role="status">${esc(paperStatus)}</p>`:''}
+      ${contents}
+      <p class="ldce-table-footnote"><i class="fa-solid fa-circle-info"></i> Each paper has its own practice link. Admin can add, edit or delete paper entries here. Previous Year Paper data remains separate.</p>
+    </div>`;
+  }
+  function renderPaperTable(kind){
+    const all=storedPapers(kind);
+    const shown=all.filter(r=>!tableSearch || String(r.work||'').toLowerCase().includes(tableSearch.trim().toLowerCase()));
+    const topic=kind==='topic';
+    const title=topic?'Topic / Chapter Name':'Mock Test No. / Name';
+    const paper=topic?'Practice Paper':'Mock Test Practice Paper';
+    const rows=shown.map((r,i)=>`<tr>
+      <td><b>${i+1}</b></td>
+      <td><span class="ldce-cell-title">${esc(r.work||'—')}</span></td>
+      <td>${practicePaperCell(r)}</td>
+      <td>${paperActionButtons(r)}</td>
+    </tr>`).join('');
+    return `<div class="ldce-table-toolbar"><input class="ldce-table-search" id="ldceTableSearch" type="search" value="${esc(tableSearch)}" placeholder="Search ${topic?'topics / chapters':'mock tests'}" aria-label="Search papers"></div>
+      <div class="ldce-table-scroll" tabindex="0" aria-label="${topic?'Topic-wise':'Mock Test'} paper table">
+      <table class="ldce-data-table ldce-four-col-table" aria-label="${topic?'Topic-wise':'Mock test'} practice papers">
+      <thead><tr><th scope="col">Sr. No.</th><th scope="col">${title}</th><th scope="col">${paper}</th><th scope="col">Action</th></tr></thead>
+      <tbody>${rows||`<tr><td colspan="4" class="ldce-empty-row">${all.length?'No matching records.':'No practice papers added yet.'} ${isAdmin()?'Use Add Paper to create one.':'Please check again after papers have been published.'}</td></tr>`}</tbody></table></div>`;
+  }
+  function renderPaperEditor(){
+    const pane=$('ldcePracticePanel');if(!pane)return;
+    const rec=storedPapers(tab).find(x=>x.id===paperEditId);
+    const name=rec?.work||'',link=rec?.practiceLink||'';
+    pane.innerHTML=`<div class="ldce-workspace ldce-paper-form"><div class="ldce-topline"><div><h3><i class="fa-solid fa-pen-to-square"></i> ${rec?'Edit':'Add'} ${tab==='topic'?'Topic-wise':'Mock Test'} Paper</h3><p>${esc(exam())} • Practice paper register</p></div><button type="button" data-action="cancelpaper" class="ldce-button ldce-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Table</button></div>
+      <div class="ldce-admin-section"><label>${tab==='topic'?'Topic / Chapter Name':'Mock Test No. / Name'}<input type="text" id="ldcePaperName" maxlength="180" required placeholder="${tab==='topic'?'e.g. Electronic Interlocking':'e.g. Mock Test 01'}" value="${esc(name)}"></label>
+      <label>Practice Paper Link (URL)<input type="url" id="ldcePaperLink" required placeholder="https://.../practice-paper.html" value="${esc(link)}"></label>
+      <p class="ldce-muted">Paste the published online practice test link, just like the Previous Year practice-paper field.</p>
+      <div class="ldce-test-buttons"><button type="button" data-action="savepaper" class="ldce-button ldce-primary"><i class="fa-solid fa-floppy-disk"></i> ${rec?'Update':'Save'} Paper</button><button type="button" data-action="cancelpaper" class="ldce-button ldce-secondary">Cancel</button></div></div></div>`;
+  }
+  async function savePaper(){
+    if(!isAdmin())return;
+    const name=String($('ldcePaperName')?.value||'').trim();
+    const raw=String($('ldcePaperLink')?.value||'').trim();
+    const url=paperUrl(raw);
+    if(!name){alert('Please enter the paper name.');$('ldcePaperName')?.focus();return;}
+    if(!url){alert('Please enter a valid http/https practice-paper link.');$('ldcePaperLink')?.focus();return;}
+    const kind=tab;
+    const exists=storedPapers(kind).some(r=>r.id!==paperEditId&&String(r.work||'').trim().toLowerCase()===name.toLowerCase());
+    if(exists){alert('A paper with this name already exists. Please edit that record.');return;}
+    const payload={category:exam(),ldcePaperType:kind,work:name,practiceLink:raw,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+    try{
+      if(paperEditId){await recordsCol.doc(paperEditId).update(payload);} else {await recordsCol.add({...payload,createdAt:firebase.firestore.FieldValue.serverTimestamp()});}
+      paperEditing=false;paperEditId='';paperStatus='Practice paper saved successfully.';render();
+    }catch(err){alert('Unable to save practice paper: '+err.message);}
+  }
+  async function deletePaper(id){
+    if(!isAdmin())return;
+    const rec=storedPapers(tab).find(r=>r.id===id);if(!rec)return;
+    if(!confirm(`Delete "${rec.work}" from ${tab==='topic'?'Topic-wise':'Mock Test'} Papers?`))return;
+    try{await recordsCol.doc(id).delete();paperStatus='Practice paper deleted.';render();}
+    catch(err){alert('Delete failed: '+err.message);}
+  }
+  window.railLdceRefreshPapers=function(){if(tab!=='previous'&&!quiz&&!adminOpened&&!paperEditing)render();};
+  function render(){
+    const pane=$('ldcePracticePanel');if(!pane||pane.hidden)return;
+    if(quiz){renderQuiz();return;}
+    if(adminOpened){renderAdmin();return;}
+    if(paperEditing){renderPaperEditor();return;}
+    if(tab==='topic')pane.innerHTML=tableShell('Topic-wise Practice Papers','Chapter-wise online practice papers with individual links.',renderPaperTable('topic'));
+    else if(tab==='mock')pane.innerHTML=tableShell('Mock Test Papers','Mock test practice papers with individual links.',renderPaperTable('mock'));
+    const search=pane.querySelector('#ldceTableSearch');
+    if(search)search.addEventListener('input',e=>{const pos=e.target.selectionStart;tableSearch=e.target.value;const sc=pane.querySelector('.ldce-table-scroll');const x=sc?.scrollLeft||0;render();const field=pane.querySelector('#ldceTableSearch');field?.focus();try{field?.setSelectionRange(pos,pos);}catch(_){}const newScroll=pane.querySelector('.ldce-table-scroll');if(newScroll)newScroll.scrollLeft=x;});
+  }
+  function begin(){
+    if(tab==='topic'&&(!subject||!topic)){alert('Please select a topic from the table.');return;}
+    const availableSet=available();if(availableSet.length<quantity){alert(`This test needs ${quantity} questions, but only ${availableSet.length} are available.`);return;}
+    const qs=randomize(availableSet).slice(0,quantity);
+    quiz={questions:qs,answers:Array(qs.length).fill(null),review:Array(qs.length).fill(false),checked:Array(qs.length).fill(false),at:0,done:false,startedAt:Date.now(),seconds:testMode==='exam'?Math.max(60,qs.length*60):0,title:tab==='mock'?(window.__ldceMockName||'Mock Test'):topic};
+    render();if($('ldcePracticePanel'))$('ldcePracticePanel').scrollTop=0;setQuizTicker();
+    try{history.pushState({view:'ldce-test',category:exam(),railsntgyan:true},'',window.location.href);}catch(_){}
+  }
+  let ticker=null;
+  function stopTicker(){if(ticker){clearInterval(ticker);ticker=null;}}
+  function setQuizTicker(){
+    stopTicker();if(!quiz||testMode!=='exam'||quiz.done)return;
+    ticker=setInterval(()=>{
+      if(!quiz||quiz.done||tab==='previous'){stopTicker();return;}
+      const elapsed=Math.floor((Date.now()-quiz.startedAt)/1000);
+      const left=Math.max(0,quiz.seconds-elapsed);
+      const clock=$('ldceCountdown');if(clock)clock.textContent=`${String(Math.floor(left/60)).padStart(2,'0')}:${String(left%60).padStart(2,'0')}`;
+      if(left===0){stopTicker();quiz.done=true;render();}
+    },1000);
+  }
+  function renderQuiz(){
+    const el=$('ldcePracticePanel');if(!el||!quiz)return;
+    const q=quiz.questions[quiz.at]; const answered=quiz.answers.filter(v=>v!==null).length;
+    if(quiz.done){renderResult();return;}
+    const remaining=Math.max(0,quiz.seconds-Math.floor((Date.now()-quiz.startedAt)/1000));
+    el.innerHTML=`<div class="ldce-workspace">
+      <div class="ldce-test-header"><div><h3>${esc(exam())} • ${esc(quiz.title|| (tab==='mock'?'Mock Test':'Topic Test'))}</h3><p>${esc(q.subject)} / ${esc(q.topic)}</p></div><div class="ldce-test-stats"><span><i class="fa-solid fa-check-double"></i> ${answered}/${quiz.questions.length} Answered</span>${testMode==='exam'?`<span><i class="fa-regular fa-clock"></i> <b id="ldceCountdown">${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}</b></span>`:''}</div></div>
+      <div class="ldce-progress-track"><div style="width:${100*answered/quiz.questions.length}%"></div></div>
+      <div class="ldce-test-grid"><section class="ldce-question-pane"><div class="ldce-question-no">Question ${quiz.at+1} of ${quiz.questions.length}${q.demo?' • DEMO':''}</div><h4>${esc(q.question)}</h4><div class="ldce-options">${q.options.map((o,i)=>`<button type="button" data-action="answer" data-index="${i}" class="ldce-option ${quiz.answers[quiz.at]===i?'chosen':''} ${testMode==='practice' && quiz.checked[quiz.at] && i===q.answerIndex?'correct':''} ${testMode==='practice' && quiz.checked[quiz.at] && i===quiz.answers[quiz.at] && i!==q.answerIndex?'wrong':''}" ${testMode==='practice' && quiz.checked[quiz.at]?'disabled':''}><span>${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+      ${testMode==='practice'&&quiz.checked[quiz.at]?`<div class="ldce-explanation"><strong>${quiz.answers[quiz.at]===q.answerIndex?'Correct answer':'Correct option: '+ 'ABCD'[q.answerIndex]}</strong><p>${esc(q.explanation||'No explanation provided.')}</p></div>`:''}
+      <div class="ldce-test-buttons"><button type="button" class="ldce-button ldce-secondary" data-action="prev" ${quiz.at===0?'disabled':''}><i class="fa-solid fa-arrow-left"></i> Previous</button><button type="button" class="ldce-button ldce-secondary" data-action="mark">${quiz.review[quiz.at]?'Unmark Review':'Mark for Review'}</button>${testMode==='practice'&&!quiz.checked[quiz.at]?`<button type="button" class="ldce-button ldce-secondary" data-action="check" ${quiz.answers[quiz.at]===null?'disabled':''}>Check Answer</button>`:''}<button type="button" class="ldce-button ldce-primary" data-action="next" ${quiz.at===quiz.questions.length-1?'disabled':''}>Next <i class="fa-solid fa-arrow-right"></i></button></div></section>
+      <div class="ldce-palette"><h4>Question Palette</h4><div class="ldce-palette-grid">${quiz.questions.map((z,i)=>`<button type="button" data-action="jump" data-index="${i}" class="${i===quiz.at?'current':''} ${quiz.answers[i]!==null?'answered':''} ${quiz.review[i]?'marked':''}" title="Question ${i+1}">${i+1}</button>`).join('')}</div><div class="ldce-key"><span>Answered</span><span>Review</span><span>Not answered</span></div><button type="button" class="ldce-button ldce-submit" data-action="submit">Submit Test</button><button type="button" class="ldce-button ldce-secondary ldce-exit" data-action="exit">Exit Test</button></div></div>
+    </div>`;
+    // Original portal uses an <aside> for its sidebar. Keep its styles out of this test palette.
+  }
+  function submit(){
+    if(!quiz)return;
+    const missing=quiz.answers.filter(x=>x===null).length;
+    if(missing && !confirm(`${missing} question(s) are unanswered. Submit the test?`))return;
+    stopTicker();quiz.done=true;render();
+  }
+  function renderResult(){
+    stopTicker();const qs=quiz.questions; const attempted=quiz.answers.filter(x=>x!==null).length;const correct=qs.filter((q,i)=>quiz.answers[i]===q.answerIndex).length;
+    const percent=Math.round(correct/qs.length*100);
+    const el=$('ldcePracticePanel');
+    el.innerHTML=`<div class="ldce-workspace"><div class="ldce-topline"><div><h3><i class="fa-solid fa-square-poll-vertical"></i> Test Result</h3><p>${esc(exam())} • ${esc(quiz.title|| (tab==='mock'?'Mock Test':'Topic Test'))} • ${testMode==='exam'?'Timed Exam':'Practice Mode'}</p></div></div>
+    <div class="ldce-result-grid"><div><b>${qs.length}</b><span>Total</span></div><div><b>${attempted}</b><span>Attempted</span></div><div><b>${correct}</b><span>Correct</span></div><div><b>${attempted-correct}</b><span>Wrong</span></div><div><b>${percent}%</b><span>Accuracy</span></div></div>
+    <h4 class="ldce-review-title">Answer Review</h4><div class="ldce-review-list">${qs.map((q,i)=>`<div class="ldce-review-row"><b>Q${i+1}. ${esc(q.question)}</b><p>Your answer: ${quiz.answers[i]===null?'Not attempted':esc(q.options[quiz.answers[i]])}</p><p class="${quiz.answers[i]===q.answerIndex?'ldce-green':'ldce-red'}">Correct answer: ${esc(q.options[q.answerIndex])}</p>${q.explanation?`<small>${esc(q.explanation)}</small>`:''}</div>`).join('')}</div>
+    <div class="ldce-test-buttons"><button type="button" class="ldce-button ldce-primary" data-action="retry">New Test</button><button type="button" class="ldce-button ldce-secondary" data-action="previous">Previous Year Papers</button></div></div>`;
+  }
+  function isAdmin(){return typeof auth!=='undefined' && !!auth.currentUser && typeof railAdmin!=='undefined' && railAdmin===true;}
+  function sanitizeQuestion(q){
+    if(!q || typeof q!=='object')throw Error('Invalid question row');
+    const e=String(q.exam||'').toUpperCase().trim(),s=String(q.subject||'').trim(),t=String(q.topic||'').trim(),question=String(q.question||'').trim();
+    const options=Array.isArray(q.options)?q.options.map(x=>String(x||'').trim()):['optionA','optionB','optionC','optionD'].map(k=>String(q[k]||'').trim());
+    let ans=q.answerIndex;
+    if(ans===undefined || ans===null || ans==='')ans=q.answer;
+    if(typeof ans==='string'&&/^[A-D]$/i.test(ans.trim()))ans='ABCD'.indexOf(ans.trim().toUpperCase());
+    else if(typeof ans==='string'&&/^[1-4]$/.test(ans.trim()))ans=Number(ans)-1;
+    else ans=Number(ans);
+    if(!EXAMS.includes(e))throw Error('Exam must be one of '+EXAMS.join(', '));
+    if(!s||!t||!question||options.length!==4||options.some(x=>!x)||!Number.isInteger(ans)||ans<0||ans>3)throw Error('Subject, topic, question, four options and answer (A–D) are required');
+    const max=2000;if([s,t,question,...options].some(x=>x.length>max))throw Error('Text is too long');
+    return {exam:e,subject:s,topic:t,question,options,answerIndex:ans,explanation:String(q.explanation||'').trim().slice(0,4000)};
+  }
+  function csvParse(text){
+    const rows=[];let row=[],value='',quoted=false;
+    for(let i=0;i<text.length;i++){const c=text[i];
+      if(c==='"'){if(quoted&&text[i+1]==='"'){value+='"';i++;}else quoted=!quoted;}
+      else if(c===','&&!quoted){row.push(value);value='';}
+      else if((c==='\r'||c==='\n')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(value);if(row.some(x=>x.trim()))rows.push(row);row=[];value='';}
+      else value+=c;
+    }
+    if(quoted)throw Error('Unclosed quoted CSV field');row.push(value);if(row.some(x=>x.trim()))rows.push(row);
+    if(!rows.length)return [];
+    const headers=rows.shift().map(h=>h.trim().replace(/^\uFEFF/,''));
+    return rows.map(row=>Object.fromEntries(headers.map((h,i)=>[h,row[i]||''])));
+  }
+  function csvEscape(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
+  function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+  function renderAdmin(){
+    if(!isAdmin()){adminOpened=false;render();return;}
+    const q=published.find(x=>x.id===editId)||null;
+    const val=(field)=>esc(field==='answer'?String(q?.answerIndex??0):q?.[field]||'');
+    const pane=$('ldcePracticePanel');
+    pane.innerHTML=`<div class="ldce-workspace ldce-admin"><div class="ldce-topline"><div><h3><i class="fa-solid fa-database"></i> LDCE Question Bank Manager</h3><p>Add, import, export, edit or delete published questions • Admin only</p></div><button type="button" data-action="adminback" class="ldce-button ldce-secondary">Back to Practice</button></div>
+    <div class="ldce-help"><i class="fa-solid fa-shield-halved"></i><div><strong>Cloud Question Bank: ${published.length} published questions</strong><p>All authenticated students can practise published questions when Firestore rules permit read access. Only users with the verified admin claim should have write access.</p>${cloudError?`<p class="ldce-error">${esc(cloudError)}</p>`:''}</div></div>
+    <div class="ldce-admin-section"><h4>${q?'Edit':'Add'} MCQ</h4><div class="ldce-config-grid"><label>Exam<select id="ldceEditExam">${EXAMS.map(x=>`<option value="${x}"${(q?.exam||exam())===x?' selected':''}>${x}</option>`).join('')}</select></label><label>Subject<input id="ldceEditSubject" maxlength="200" value="${val('subject')}" placeholder="Signalling"></label><label>Topic<input id="ldceEditTopic" maxlength="200" value="${val('topic')}" placeholder="Electronic Interlocking"></label><label>Correct option<select id="ldceEditAnswer">${[0,1,2,3].map(i=>`<option value="${i}"${Number(q?.answerIndex||0)===i?' selected':''}>${'ABCD'[i]}</option>`).join('')}</select></label></div>
+    <label>Question<textarea id="ldceEditQuestion" rows="2">${esc(q?.question||'')}</textarea></label><div class="ldce-admin-options">${[0,1,2,3].map(i=>`<label>Option ${'ABCD'[i]}<input id="ldceEditOpt${i}" value="${esc(q?.options?.[i]||'')}"></label>`).join('')}</div><label>Explanation (optional)<textarea id="ldceEditExplanation" rows="2">${esc(q?.explanation||'')}</textarea></label><div class="ldce-test-buttons"><button type="button" class="ldce-button ldce-primary" data-action="save">${q?'Update Question':'Add Question'}</button>${q?'<button type="button" class="ldce-button ldce-secondary" data-action="clearedit">Cancel Edit</button>':''}</div></div>
+    <div class="ldce-admin-section"><h4>Bulk Import / Export</h4><p class="ldce-muted">Upload CSV or JSON. CSV fields: exam, subject, topic, question, optionA, optionB, optionC, optionD, answer, explanation. Answer: A, B, C or D.</p><input type="file" id="ldceImportFile" accept=".csv,.json,text/csv,application/json"><div class="ldce-test-buttons"><button type="button" class="ldce-button ldce-primary" data-action="import">Import & Publish</button><button type="button" class="ldce-button ldce-secondary" data-action="template">Download CSV Template</button><button type="button" class="ldce-button ldce-secondary" data-action="export">Export Published JSON</button></div><small>Import adds questions; it does not delete previously published questions. Verify duplicates before importing.</small></div>
+    <div class="ldce-admin-section"><h4>Published Questions (${published.length})</h4><div class="ldce-admin-list">${published.filter(q=>q.exam===exam()).slice(0,100).map(q=>`<div class="ldce-admin-row"><div><b>${esc(q.subject)} • ${esc(q.topic)}</b><p>${esc(q.question)}</p></div><div><button class="ldce-button ldce-secondary" type="button" data-action="edit" data-id="${esc(q.id)}">Edit</button><button class="ldce-button ldce-danger" type="button" data-action="delete" data-id="${esc(q.id)}">Delete</button></div></div>`).join('')||'<p>No questions published for this exam yet.</p>'}</div>${published.filter(x=>x.exam===exam()).length>100?'<small>Showing first 100; export JSON for full question bank.</small>':''}</div>
+    <p id="ldceNotice" class="ldce-note ${noticeType==='error'?'ldce-error':''}" ${status?'':'hidden'}>${esc(status)}</p></div>`;
+    pane.querySelector('#ldceImportFile')?.addEventListener('change',()=>notice(''));
+  }
+  async function save(){
+    if(!isAdmin())return;
+    const obj={exam:$('ldceEditExam').value,subject:$('ldceEditSubject').value,topic:$('ldceEditTopic').value,question:$('ldceEditQuestion').value,options:[0,1,2,3].map(i=>$('ldceEditOpt'+i).value),answerIndex:Number($('ldceEditAnswer').value),explanation:$('ldceEditExplanation').value};
+    let data;try{data=sanitizeQuestion(obj);}catch(e){notice(e.message,true);return;}
+    try{if(editId){await db.collection(COLLECTION).doc(editId).set({...data,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});editId='';notice('Question updated successfully.');}
+    else{await db.collection(COLLECTION).add({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()});notice('Question published successfully.');}
+    renderAdmin();}catch(e){notice('Could not save: '+(e.message||e),true);}
+  }
+  async function importFile(){
+    if(!isAdmin())return;
+    const file=$('ldceImportFile')?.files?.[0];if(!file){notice('Select a CSV or JSON file.',true);return;}
+    if(file.size>5*1024*1024){notice('File exceeds the 5 MB limit.',true);return;}
+    let rows;try{const raw=await file.text();rows=/\.json$/i.test(file.name)?JSON.parse(raw):csvParse(raw);if(!Array.isArray(rows)||!rows.length)throw Error('No question rows found');if(rows.length>2000)throw Error('Import at most 2,000 questions per file');rows=rows.map((r,i)=>{try{return sanitizeQuestion(r);}catch(e){throw Error('Row '+(i+1)+': '+e.message);}});}catch(e){notice('File validation failed: '+e.message,true);return;}
+    const makeKey=q=>[q.exam,q.subject,q.topic,q.question].map(x=>String(x).toLowerCase().replace(/\s+/g,' ').trim()).join('|');
+    const existing=new Set(published.map(makeKey)),inFile=new Set();let skipped=0;
+    rows=rows.filter(q=>{const key=makeKey(q);if(existing.has(key)||inFile.has(key)){skipped++;return false;}inFile.add(key);return true;});
+    if(!rows.length){notice(`No new questions to import (${skipped} duplicates skipped).`,true);return;}
+    if(!confirm(`Publish ${rows.length} new question(s)? ${skipped} duplicate(s) will be skipped. Existing questions will be kept.`))return;
+    try{
+      // Firestore batch limit is 500 operations. Keep well below the limit.
+      let done=0;for(let i=0;i<rows.length;i+=300){if(!isAdmin())throw Error('Admin session expired');const batch=db.batch();rows.slice(i,i+300).forEach(q=>batch.set(db.collection(COLLECTION).doc(),{...q,createdAt:firebase.firestore.FieldValue.serverTimestamp()}));await batch.commit();done+=Math.min(300,rows.length-i);}
+      notice(`Successfully imported ${done} questions; ${skipped} duplicate(s) skipped.`,false);renderAdmin();
+    }catch(e){notice('Import stopped: '+e.message+' Some earlier batches may already be saved.',true);}
+  }
+  function templates(){const row=['exam','subject','topic','question','optionA','optionB','optionC','optionD','answer','explanation'];const sample=['ASTE','Signalling','Electronic Interlocking','Sample question (replace before uploading)','Choice 1','Choice 2','Choice 3','Choice 4','A','Sample explanation'];download('LDCE_Question_Bank_Template.csv',row.map(csvEscape).join(',')+'\r\n'+sample.map(csvEscape).join(',')+'\r\n','text/csv;charset=utf-8');}
+  function exportBank(){if(!isAdmin())return;download('LDCE_Published_Question_Bank.json',JSON.stringify(published.map(q=>{const {id,demo,...rest}=q;return rest;}),null,2),'application/json');}
+  const panelEvents=()=>{
+    $('ldcePracticeTabs')?.addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)switchTab(b.dataset.tab);});
+    $('ldcePracticePanel')?.addEventListener('click',async e=>{
+      const b=e.target.closest('[data-action]');if(!b)return;
+      const action=b.dataset.action;
+      if(action==='addpaper'&&isAdmin()){paperEditing=true;paperEditId='';paperStatus='';render();}
+      else if(action==='editpaper'&&isAdmin()){paperEditing=true;paperEditId=b.dataset.id;paperStatus='';render();}
+      else if(action==='cancelpaper'){paperEditing=false;paperEditId='';render();}
+      else if(action==='savepaper'&&isAdmin()){b.disabled=true;await savePaper();b.disabled=false;}
+      else if(action==='deletepaper'&&isAdmin()){await deletePaper(b.dataset.id);}
+      else if(action==='starttopic'){
+        subject=b.dataset.subject;topic=b.dataset.topic;const chosen=available();quantity=chosen.length;testMode=b.dataset.mode==='exam'?'exam':'practice';begin();
+      }
+      else if(action==='startmock'){
+        subject='';topic='';quantity=Number(b.dataset.quantity);testMode='exam';window.__ldceMockName=b.dataset.mock;begin();
+      }
+      else if(action==='start')begin();
+      else if(action==='answer'&&quiz&&!quiz.done){if(testMode==='practice'&&quiz.checked[quiz.at])return;quiz.answers[quiz.at]=Number(b.dataset.index);renderQuiz();}
+      else if(action==='check'&&quiz){quiz.checked[quiz.at]=true;renderQuiz();}
+      else if(action==='prev'&&quiz){quiz.at=Math.max(0,quiz.at-1);renderQuiz();$('ldcePracticePanel').scrollTop=0;}
+      else if(action==='next'&&quiz){quiz.at=Math.min(quiz.questions.length-1,quiz.at+1);renderQuiz();$('ldcePracticePanel').scrollTop=0;}
+      else if(action==='jump'&&quiz){quiz.at=Number(b.dataset.index);renderQuiz();$('ldcePracticePanel').scrollTop=0;}
+      else if(action==='mark'&&quiz){quiz.review[quiz.at]=!quiz.review[quiz.at];renderQuiz();}
+      else if(action==='submit')submit();
+      else if(action==='exit'){if(confirm('Exit the current test? Answers will be lost.')){stopTicker();quiz=null;render();}}
+      else if(action==='retry'){quiz=null;render();$('ldcePracticePanel').scrollTop=0;}
+      else if(action==='previous'){stopTicker();quiz=null;switchTab('previous');}
+      else if(action==='admin'){if(isAdmin()){adminOpened=true;editId='';status='';render();try{history.pushState({view:'ldce-admin',category:exam(),railsntgyan:true},'',window.location.href);}catch(_){}}}
+      else if(action==='adminback'){adminOpened=false;editId='';render();}
+      else if(action==='save'){b.disabled=true;await save();b.disabled=false;}
+      else if(action==='edit'){editId=b.dataset.id;renderAdmin();}
+      else if(action==='clearedit'){editId='';renderAdmin();}
+      else if(action==='delete'&&isAdmin()){const id=b.dataset.id;if(confirm('Permanently delete this published question?')){try{await db.collection(COLLECTION).doc(id).delete();notice('Question deleted.');renderAdmin();}catch(e){notice('Delete failed: '+e.message,true);}}}
+      else if(action==='import'){b.disabled=true;await importFile();b.disabled=false;}
+      else if(action==='template')templates();
+      else if(action==='export')exportBank();
+    });
+  };
+  function startCloud(){
+    if(unsubscribe){unsubscribe();unsubscribe=null;}
+    published=[];cloudError='';isCloudReady=false;stopTicker();quiz=null;adminOpened=false;
+    if(!auth.currentUser){if(tab!=='previous')render();return;}
+    try{unsubscribe=db.collection(COLLECTION).onSnapshot(snapshot=>{
+      published=snapshot.docs.map(doc=>({id:doc.id,...doc.data()})).filter(q=>{
+        try{sanitizeQuestion(q);return true;}catch(_){return false;}
+      }).map(q=>({...q,answerIndex:Number(q.answerIndex)}));
+      isCloudReady=true;cloudError='';if(tab!=='previous'&&!quiz)render();
+    },err=>{cloudError=err.code||err.message||'Permission denied';if(tab!=='previous'&&!quiz)render();});}
+    catch(e){cloudError=e.message;}
+  }
+  function init(){panelEvents();if(typeof auth!=='undefined')auth.onAuthStateChanged(startCloud);setVisibility();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+</script>
 </body>
 </html>
