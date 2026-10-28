@@ -71,11 +71,14 @@
  }
  function currentQ(){return findQ(state.ids[state.current]);}
  function visual(q,lang){
-   const heading = lang==='hi'?'मूल प्रश्न • English + हिन्दी':lang==='en'?'Original source • English + हिन्दी':'Bilingual question • English + हिन्दी';
-   return `<div class="question-visual"><div class="lang-label">${heading}</div>${visualImg(q)}</div>`;
+   const heading = lang==='hi'?'हिन्दी में प्रश्न एवं विकल्प':lang==='en'?'Question and options in English':'मूल प्रश्न — English + हिन्दी / Both';
+   return `<div class="question-visual"><div class="lang-label">${heading}</div>${visualImg(q,lang)}</div>`;
  }
- function visualImg(q){return `<img src="${BASE}${q.en}" alt="Original bilingual scanned question ${q.paper}-${q.number}" loading="eager" onclick="window.ASTEZoom('${q.id}')"/><button class="image-zoom" onclick="window.ASTEZoom('${q.id}')">⤢ Enlarge question / प्रश्न बड़ा करें</button>`}
- window.ASTEZoom=id=>{const q=findQ(id);if(!q)return;const pic=`<img src="${BASE}${q.en}" alt="Original bilingual scanned question ${q.paper}-${q.number}"/>`;$('zoom-content').innerHTML=pic;$('zoom-dialog').classList.remove('hidden');};
+ function visualImg(q,lang){
+   const source=(lang==='hi'?q.hi:lang==='en'?q.en:q.both)||q.both;
+   return `<img src="${BASE}${source}" alt="${lang} question ${q.paper}-${q.number}" loading="eager" onclick="window.ASTEZoom('${q.id}')"/><button class="image-zoom" onclick="window.ASTEZoom('${q.id}')">⤢ Enlarge question / प्रश्न बड़ा करें</button>`;
+ }
+ window.ASTEZoom=id=>{const q=findQ(id);if(!q)return;const source=(state.language==='hi'?q.hi:state.language==='en'?q.en:q.both)||q.both;const pic=`<img src="${BASE}${source}" alt="Question ${q.paper}-${q.number}"/>`;$('zoom-content').innerHTML=pic;$('zoom-dialog').classList.remove('hidden');};
  function renderQ(){const q=currentQ();if(!q)return;
   $('question-title').textContent=`Question ${state.current+1} of ${state.ids.length}`;
   $('question-meta').textContent=`${paperName(q.paper)} · Q${String(q.number).padStart(2,'0')} · PDF page ${q.sourcePage}`;

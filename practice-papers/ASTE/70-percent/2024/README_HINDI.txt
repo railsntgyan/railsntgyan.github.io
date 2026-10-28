@@ -25,3 +25,12 @@ Upload this 2024 folder with GitHub Desktop (browser uploader limits file batche
 Portal table: LDCE Gr. B QUESTION PAPER → ASTE → 2024 (70%) → Edit → Practice Paper Link → paste URL above → Save Record.
 
 Offline preview: use the separately provided LOCAL_DEMO ZIP (preview.html via VS Code Live Server). Website version requires logged-in Firebase session.
+
+
+LANGUAGE SWITCH (UPDATED)
+-------------------------
+English => only English question and option images.
+हिन्दी => हिन्दी question and option images.
+Both => original bilingual scan.
+Some purely numerical/technical options had no distinct Hindi/English wording in the source PDF; those stay unchanged.
+Images are visually separated from the original scan; no auto-translation is performed.

@@ -6,8 +6,9 @@
     "sourcePage": 1,
     "deleted": false,
     "id": "A_001",
-    "en": "aste/assets/A_001_both.webp",
-    "hi": "aste/assets/A_001_both.webp"
+    "en": "aste/assets/A_001_en.webp",
+    "hi": "aste/assets/A_001_hi.webp",
+    "both": "aste/assets/A_001_both.webp"
   },
   {
     "paper": "A",
@@ -16,8 +17,9 @@
     "sourcePage": 1,
     "deleted": false,
     "id": "A_002",
-    "en": "aste/assets/A_002_both.webp",
-    "hi": "aste/assets/A_002_both.webp"
+    "en": "aste/assets/A_002_en.webp",
+    "hi": "aste/assets/A_002_hi.webp",
+    "both": "aste/assets/A_002_both.webp"
   },
   {
     "paper": "A",
@@ -26,8 +28,9 @@
     "sourcePage": 2,
     "deleted": false,
     "id": "A_003",
-    "en": "aste/assets/A_003_both.webp",
-    "hi": "aste/assets/A_003_both.webp"
+    "en": "aste/assets/A_003_en.webp",
+    "hi": "aste/assets/A_003_hi.webp",
+    "both": "aste/assets/A_003_both.webp"
   },
   {
     "paper": "A",
@@ -36,8 +39,9 @@
     "sourcePage": 2,
     "deleted": false,
     "id": "A_004",
-    "en": "aste/assets/A_004_both.webp",
-    "hi": "aste/assets/A_004_both.webp"
+    "en": "aste/assets/A_004_en.webp",
+    "hi": "aste/assets/A_004_hi.webp",
+    "both": "aste/assets/A_004_both.webp"
   },
   {
     "paper": "A",
@@ -46,8 +50,9 @@
     "sourcePage": 3,
     "deleted": false,
     "id": "A_005",
-    "en": "aste/assets/A_005_both.webp",
-    "hi": "aste/assets/A_005_both.webp"
+    "en": "aste/assets/A_005_en.webp",
+    "hi": "aste/assets/A_005_hi.webp",
+    "both": "aste/assets/A_005_both.webp"
   },
   {
     "paper": "A",
@@ -56,8 +61,9 @@
     "sourcePage": 3,
     "deleted": false,
     "id": "A_006",
-    "en": "aste/assets/A_006_both.webp",
-    "hi": "aste/assets/A_006_both.webp"
+    "en": "aste/assets/A_006_en.webp",
+    "hi": "aste/assets/A_006_hi.webp",
+    "both": "aste/assets/A_006_both.webp"
   },
   {
     "paper": "A",
@@ -66,8 +72,9 @@
     "sourcePage": 4,
     "deleted": false,
     "id": "A_007",
-    "en": "aste/assets/A_007_both.webp",
-    "hi": "aste/assets/A_007_both.webp"
+    "en": "aste/assets/A_007_en.webp",
+    "hi": "aste/assets/A_007_hi.webp",
+    "both": "aste/assets/A_007_both.webp"
   },
   {
     "paper": "A",
@@ -76,8 +83,9 @@
     "sourcePage": 4,
     "deleted": false,
     "id": "A_008",
-    "en": "aste/assets/A_008_both.webp",
-    "hi": "aste/assets/A_008_both.webp"
+    "en": "aste/assets/A_008_en.webp",
+    "hi": "aste/assets/A_008_hi.webp",
+    "both": "aste/assets/A_008_both.webp"
   },
   {
     "paper": "A",
@@ -86,8 +94,9 @@
     "sourcePage": 5,
     "deleted": false,
     "id": "A_009",
-    "en": "aste/assets/A_009_both.webp",
-    "hi": "aste/assets/A_009_both.webp"
+    "en": "aste/assets/A_009_en.webp",
+    "hi": "aste/assets/A_009_hi.webp",
+    "both": "aste/assets/A_009_both.webp"
   },
   {
     "paper": "A",
@@ -96,8 +105,9 @@
     "sourcePage": 5,
     "deleted": false,
     "id": "A_010",
-    "en": "aste/assets/A_010_both.webp",
-    "hi": "aste/assets/A_010_both.webp"
+    "en": "aste/assets/A_010_en.webp",
+    "hi": "aste/assets/A_010_hi.webp",
+    "both": "aste/assets/A_010_both.webp"
   },
   {
     "paper": "A",
@@ -106,8 +116,9 @@
     "sourcePage": 6,
     "deleted": false,
     "id": "A_011",
-    "en": "aste/assets/A_011_both.webp",
-    "hi": "aste/assets/A_011_both.webp"
+    "en": "aste/assets/A_011_en.webp",
+    "hi": "aste/assets/A_011_hi.webp",
+    "both": "aste/assets/A_011_both.webp"
   },
   {
     "paper": "A",
@@ -116,8 +127,9 @@
     "sourcePage": 6,
     "deleted": false,
     "id": "A_012",
-    "en": "aste/assets/A_012_both.webp",
-    "hi": "aste/assets/A_012_both.webp"
+    "en": "aste/assets/A_012_en.webp",
+    "hi": "aste/assets/A_012_hi.webp",
+    "both": "aste/assets/A_012_both.webp"
   },
   {
     "paper": "A",
@@ -126,8 +138,9 @@
     "sourcePage": 7,
     "deleted": false,
     "id": "A_013",
-    "en": "aste/assets/A_013_both.webp",
-    "hi": "aste/assets/A_013_both.webp"
+    "en": "aste/assets/A_013_en.webp",
+    "hi": "aste/assets/A_013_hi.webp",
+    "both": "aste/assets/A_013_both.webp"
   },
   {
     "paper": "A",
@@ -136,8 +149,9 @@
     "sourcePage": 7,
     "deleted": false,
     "id": "A_014",
-    "en": "aste/assets/A_014_both.webp",
-    "hi": "aste/assets/A_014_both.webp"
+    "en": "aste/assets/A_014_en.webp",
+    "hi": "aste/assets/A_014_hi.webp",
+    "both": "aste/assets/A_014_both.webp"
   },
   {
     "paper": "A",
@@ -146,8 +160,9 @@
     "sourcePage": 8,
     "deleted": false,
     "id": "A_015",
-    "en": "aste/assets/A_015_both.webp",
-    "hi": "aste/assets/A_015_both.webp"
+    "en": "aste/assets/A_015_en.webp",
+    "hi": "aste/assets/A_015_hi.webp",
+    "both": "aste/assets/A_015_both.webp"
   },
   {
     "paper": "A",
@@ -156,8 +171,9 @@
     "sourcePage": 8,
     "deleted": false,
     "id": "A_016",
-    "en": "aste/assets/A_016_both.webp",
-    "hi": "aste/assets/A_016_both.webp"
+    "en": "aste/assets/A_016_en.webp",
+    "hi": "aste/assets/A_016_hi.webp",
+    "both": "aste/assets/A_016_both.webp"
   },
   {
     "paper": "A",
@@ -166,8 +182,9 @@
     "sourcePage": 8,
     "deleted": false,
     "id": "A_017",
-    "en": "aste/assets/A_017_both.webp",
-    "hi": "aste/assets/A_017_both.webp"
+    "en": "aste/assets/A_017_en.webp",
+    "hi": "aste/assets/A_017_hi.webp",
+    "both": "aste/assets/A_017_both.webp"
   },
   {
     "paper": "A",
@@ -176,8 +193,9 @@
     "sourcePage": 9,
     "deleted": false,
     "id": "A_018",
-    "en": "aste/assets/A_018_both.webp",
-    "hi": "aste/assets/A_018_both.webp"
+    "en": "aste/assets/A_018_en.webp",
+    "hi": "aste/assets/A_018_hi.webp",
+    "both": "aste/assets/A_018_both.webp"
   },
   {
     "paper": "A",
@@ -186,8 +204,9 @@
     "sourcePage": 9,
     "deleted": false,
     "id": "A_019",
-    "en": "aste/assets/A_019_both.webp",
-    "hi": "aste/assets/A_019_both.webp"
+    "en": "aste/assets/A_019_en.webp",
+    "hi": "aste/assets/A_019_hi.webp",
+    "both": "aste/assets/A_019_both.webp"
   },
   {
     "paper": "A",
@@ -196,8 +215,9 @@
     "sourcePage": 10,
     "deleted": false,
     "id": "A_020",
-    "en": "aste/assets/A_020_both.webp",
-    "hi": "aste/assets/A_020_both.webp"
+    "en": "aste/assets/A_020_en.webp",
+    "hi": "aste/assets/A_020_hi.webp",
+    "both": "aste/assets/A_020_both.webp"
   },
   {
     "paper": "A",
@@ -206,8 +226,9 @@
     "sourcePage": 10,
     "deleted": false,
     "id": "A_021",
-    "en": "aste/assets/A_021_both.webp",
-    "hi": "aste/assets/A_021_both.webp"
+    "en": "aste/assets/A_021_en.webp",
+    "hi": "aste/assets/A_021_hi.webp",
+    "both": "aste/assets/A_021_both.webp"
   },
   {
     "paper": "A",
@@ -216,8 +237,9 @@
     "sourcePage": 11,
     "deleted": false,
     "id": "A_022",
-    "en": "aste/assets/A_022_both.webp",
-    "hi": "aste/assets/A_022_both.webp"
+    "en": "aste/assets/A_022_en.webp",
+    "hi": "aste/assets/A_022_hi.webp",
+    "both": "aste/assets/A_022_both.webp"
   },
   {
     "paper": "A",
@@ -226,8 +248,9 @@
     "sourcePage": 11,
     "deleted": false,
     "id": "A_023",
-    "en": "aste/assets/A_023_both.webp",
-    "hi": "aste/assets/A_023_both.webp"
+    "en": "aste/assets/A_023_en.webp",
+    "hi": "aste/assets/A_023_hi.webp",
+    "both": "aste/assets/A_023_both.webp"
   },
   {
     "paper": "A",
@@ -236,8 +259,9 @@
     "sourcePage": 12,
     "deleted": false,
     "id": "A_024",
-    "en": "aste/assets/A_024_both.webp",
-    "hi": "aste/assets/A_024_both.webp"
+    "en": "aste/assets/A_024_en.webp",
+    "hi": "aste/assets/A_024_hi.webp",
+    "both": "aste/assets/A_024_both.webp"
   },
   {
     "paper": "A",
@@ -246,8 +270,9 @@
     "sourcePage": 12,
     "deleted": false,
     "id": "A_025",
-    "en": "aste/assets/A_025_both.webp",
-    "hi": "aste/assets/A_025_both.webp"
+    "en": "aste/assets/A_025_en.webp",
+    "hi": "aste/assets/A_025_hi.webp",
+    "both": "aste/assets/A_025_both.webp"
   },
   {
     "paper": "A",
@@ -256,8 +281,9 @@
     "sourcePage": 13,
     "deleted": false,
     "id": "A_026",
-    "en": "aste/assets/A_026_both.webp",
-    "hi": "aste/assets/A_026_both.webp"
+    "en": "aste/assets/A_026_en.webp",
+    "hi": "aste/assets/A_026_hi.webp",
+    "both": "aste/assets/A_026_both.webp"
   },
   {
     "paper": "A",
@@ -266,8 +292,9 @@
     "sourcePage": 13,
     "deleted": false,
     "id": "A_027",
-    "en": "aste/assets/A_027_both.webp",
-    "hi": "aste/assets/A_027_both.webp"
+    "en": "aste/assets/A_027_en.webp",
+    "hi": "aste/assets/A_027_hi.webp",
+    "both": "aste/assets/A_027_both.webp"
   },
   {
     "paper": "A",
@@ -276,8 +303,9 @@
     "sourcePage": 14,
     "deleted": false,
     "id": "A_028",
-    "en": "aste/assets/A_028_both.webp",
-    "hi": "aste/assets/A_028_both.webp"
+    "en": "aste/assets/A_028_en.webp",
+    "hi": "aste/assets/A_028_hi.webp",
+    "both": "aste/assets/A_028_both.webp"
   },
   {
     "paper": "A",
@@ -286,8 +314,9 @@
     "sourcePage": 14,
     "deleted": false,
     "id": "A_029",
-    "en": "aste/assets/A_029_both.webp",
-    "hi": "aste/assets/A_029_both.webp"
+    "en": "aste/assets/A_029_en.webp",
+    "hi": "aste/assets/A_029_hi.webp",
+    "both": "aste/assets/A_029_both.webp"
   },
   {
     "paper": "A",
@@ -296,8 +325,9 @@
     "sourcePage": 15,
     "deleted": false,
     "id": "A_030",
-    "en": "aste/assets/A_030_both.webp",
-    "hi": "aste/assets/A_030_both.webp"
+    "en": "aste/assets/A_030_en.webp",
+    "hi": "aste/assets/A_030_hi.webp",
+    "both": "aste/assets/A_030_both.webp"
   },
   {
     "paper": "A",
@@ -306,8 +336,9 @@
     "sourcePage": 15,
     "deleted": false,
     "id": "A_031",
-    "en": "aste/assets/A_031_both.webp",
-    "hi": "aste/assets/A_031_both.webp"
+    "en": "aste/assets/A_031_en.webp",
+    "hi": "aste/assets/A_031_hi.webp",
+    "both": "aste/assets/A_031_both.webp"
   },
   {
     "paper": "A",
@@ -316,8 +347,9 @@
     "sourcePage": 15,
     "deleted": false,
     "id": "A_032",
-    "en": "aste/assets/A_032_both.webp",
-    "hi": "aste/assets/A_032_both.webp"
+    "en": "aste/assets/A_032_en.webp",
+    "hi": "aste/assets/A_032_hi.webp",
+    "both": "aste/assets/A_032_both.webp"
   },
   {
     "paper": "A",
@@ -326,8 +358,9 @@
     "sourcePage": 16,
     "deleted": false,
     "id": "A_033",
-    "en": "aste/assets/A_033_both.webp",
-    "hi": "aste/assets/A_033_both.webp"
+    "en": "aste/assets/A_033_en.webp",
+    "hi": "aste/assets/A_033_hi.webp",
+    "both": "aste/assets/A_033_both.webp"
   },
   {
     "paper": "A",
@@ -336,8 +369,9 @@
     "sourcePage": 16,
     "deleted": false,
     "id": "A_034",
-    "en": "aste/assets/A_034_both.webp",
-    "hi": "aste/assets/A_034_both.webp"
+    "en": "aste/assets/A_034_en.webp",
+    "hi": "aste/assets/A_034_hi.webp",
+    "both": "aste/assets/A_034_both.webp"
   },
   {
     "paper": "A",
@@ -346,8 +380,9 @@
     "sourcePage": 17,
     "deleted": false,
     "id": "A_035",
-    "en": "aste/assets/A_035_both.webp",
-    "hi": "aste/assets/A_035_both.webp"
+    "en": "aste/assets/A_035_en.webp",
+    "hi": "aste/assets/A_035_hi.webp",
+    "both": "aste/assets/A_035_both.webp"
   },
   {
     "paper": "A",
@@ -356,8 +391,9 @@
     "sourcePage": 17,
     "deleted": false,
     "id": "A_036",
-    "en": "aste/assets/A_036_both.webp",
-    "hi": "aste/assets/A_036_both.webp"
+    "en": "aste/assets/A_036_en.webp",
+    "hi": "aste/assets/A_036_hi.webp",
+    "both": "aste/assets/A_036_both.webp"
   },
   {
     "paper": "A",
@@ -366,8 +402,9 @@
     "sourcePage": 18,
     "deleted": false,
     "id": "A_037",
-    "en": "aste/assets/A_037_both.webp",
-    "hi": "aste/assets/A_037_both.webp"
+    "en": "aste/assets/A_037_en.webp",
+    "hi": "aste/assets/A_037_hi.webp",
+    "both": "aste/assets/A_037_both.webp"
   },
   {
     "paper": "A",
@@ -376,8 +413,9 @@
     "sourcePage": 18,
     "deleted": false,
     "id": "A_038",
-    "en": "aste/assets/A_038_both.webp",
-    "hi": "aste/assets/A_038_both.webp"
+    "en": "aste/assets/A_038_en.webp",
+    "hi": "aste/assets/A_038_hi.webp",
+    "both": "aste/assets/A_038_both.webp"
   },
   {
     "paper": "A",
@@ -386,8 +424,9 @@
     "sourcePage": 18,
     "deleted": false,
     "id": "A_039",
-    "en": "aste/assets/A_039_both.webp",
-    "hi": "aste/assets/A_039_both.webp"
+    "en": "aste/assets/A_039_en.webp",
+    "hi": "aste/assets/A_039_hi.webp",
+    "both": "aste/assets/A_039_both.webp"
   },
   {
     "paper": "A",
@@ -396,8 +435,9 @@
     "sourcePage": 19,
     "deleted": false,
     "id": "A_040",
-    "en": "aste/assets/A_040_both.webp",
-    "hi": "aste/assets/A_040_both.webp"
+    "en": "aste/assets/A_040_en.webp",
+    "hi": "aste/assets/A_040_hi.webp",
+    "both": "aste/assets/A_040_both.webp"
   },
   {
     "paper": "A",
@@ -406,8 +446,9 @@
     "sourcePage": 19,
     "deleted": false,
     "id": "A_041",
-    "en": "aste/assets/A_041_both.webp",
-    "hi": "aste/assets/A_041_both.webp"
+    "en": "aste/assets/A_041_en.webp",
+    "hi": "aste/assets/A_041_hi.webp",
+    "both": "aste/assets/A_041_both.webp"
   },
   {
     "paper": "A",
@@ -416,8 +457,9 @@
     "sourcePage": 20,
     "deleted": false,
     "id": "A_042",
-    "en": "aste/assets/A_042_both.webp",
-    "hi": "aste/assets/A_042_both.webp"
+    "en": "aste/assets/A_042_en.webp",
+    "hi": "aste/assets/A_042_hi.webp",
+    "both": "aste/assets/A_042_both.webp"
   },
   {
     "paper": "A",
@@ -426,8 +468,9 @@
     "sourcePage": 20,
     "deleted": false,
     "id": "A_043",
-    "en": "aste/assets/A_043_both.webp",
-    "hi": "aste/assets/A_043_both.webp"
+    "en": "aste/assets/A_043_en.webp",
+    "hi": "aste/assets/A_043_hi.webp",
+    "both": "aste/assets/A_043_both.webp"
   },
   {
     "paper": "A",
@@ -436,8 +479,9 @@
     "sourcePage": 20,
     "deleted": false,
     "id": "A_044",
-    "en": "aste/assets/A_044_both.webp",
-    "hi": "aste/assets/A_044_both.webp"
+    "en": "aste/assets/A_044_en.webp",
+    "hi": "aste/assets/A_044_hi.webp",
+    "both": "aste/assets/A_044_both.webp"
   },
   {
     "paper": "A",
@@ -446,8 +490,9 @@
     "sourcePage": 21,
     "deleted": false,
     "id": "A_045",
-    "en": "aste/assets/A_045_both.webp",
-    "hi": "aste/assets/A_045_both.webp"
+    "en": "aste/assets/A_045_en.webp",
+    "hi": "aste/assets/A_045_hi.webp",
+    "both": "aste/assets/A_045_both.webp"
   },
   {
     "paper": "A",
@@ -456,8 +501,9 @@
     "sourcePage": 21,
     "deleted": false,
     "id": "A_046",
-    "en": "aste/assets/A_046_both.webp",
-    "hi": "aste/assets/A_046_both.webp"
+    "en": "aste/assets/A_046_en.webp",
+    "hi": "aste/assets/A_046_hi.webp",
+    "both": "aste/assets/A_046_both.webp"
   },
   {
     "paper": "A",
@@ -466,8 +512,9 @@
     "sourcePage": 22,
     "deleted": false,
     "id": "A_047",
-    "en": "aste/assets/A_047_both.webp",
-    "hi": "aste/assets/A_047_both.webp"
+    "en": "aste/assets/A_047_en.webp",
+    "hi": "aste/assets/A_047_hi.webp",
+    "both": "aste/assets/A_047_both.webp"
   },
   {
     "paper": "A",
@@ -476,8 +523,9 @@
     "sourcePage": 22,
     "deleted": false,
     "id": "A_048",
-    "en": "aste/assets/A_048_both.webp",
-    "hi": "aste/assets/A_048_both.webp"
+    "en": "aste/assets/A_048_en.webp",
+    "hi": "aste/assets/A_048_hi.webp",
+    "both": "aste/assets/A_048_both.webp"
   },
   {
     "paper": "A",
@@ -486,8 +534,9 @@
     "sourcePage": 23,
     "deleted": false,
     "id": "A_049",
-    "en": "aste/assets/A_049_both.webp",
-    "hi": "aste/assets/A_049_both.webp"
+    "en": "aste/assets/A_049_en.webp",
+    "hi": "aste/assets/A_049_hi.webp",
+    "both": "aste/assets/A_049_both.webp"
   },
   {
     "paper": "A",
@@ -496,8 +545,9 @@
     "sourcePage": 23,
     "deleted": false,
     "id": "A_050",
-    "en": "aste/assets/A_050_both.webp",
-    "hi": "aste/assets/A_050_both.webp"
+    "en": "aste/assets/A_050_en.webp",
+    "hi": "aste/assets/A_050_hi.webp",
+    "both": "aste/assets/A_050_both.webp"
   },
   {
     "paper": "A",
@@ -506,8 +556,9 @@
     "sourcePage": 24,
     "deleted": false,
     "id": "A_051",
-    "en": "aste/assets/A_051_both.webp",
-    "hi": "aste/assets/A_051_both.webp"
+    "en": "aste/assets/A_051_en.webp",
+    "hi": "aste/assets/A_051_hi.webp",
+    "both": "aste/assets/A_051_both.webp"
   },
   {
     "paper": "A",
@@ -516,8 +567,9 @@
     "sourcePage": 24,
     "deleted": false,
     "id": "A_052",
-    "en": "aste/assets/A_052_both.webp",
-    "hi": "aste/assets/A_052_both.webp"
+    "en": "aste/assets/A_052_en.webp",
+    "hi": "aste/assets/A_052_hi.webp",
+    "both": "aste/assets/A_052_both.webp"
   },
   {
     "paper": "A",
@@ -526,8 +578,9 @@
     "sourcePage": 25,
     "deleted": false,
     "id": "A_053",
-    "en": "aste/assets/A_053_both.webp",
-    "hi": "aste/assets/A_053_both.webp"
+    "en": "aste/assets/A_053_en.webp",
+    "hi": "aste/assets/A_053_hi.webp",
+    "both": "aste/assets/A_053_both.webp"
   },
   {
     "paper": "A",
@@ -536,8 +589,9 @@
     "sourcePage": 25,
     "deleted": false,
     "id": "A_054",
-    "en": "aste/assets/A_054_both.webp",
-    "hi": "aste/assets/A_054_both.webp"
+    "en": "aste/assets/A_054_en.webp",
+    "hi": "aste/assets/A_054_hi.webp",
+    "both": "aste/assets/A_054_both.webp"
   },
   {
     "paper": "A",
@@ -546,8 +600,9 @@
     "sourcePage": 25,
     "deleted": false,
     "id": "A_055",
-    "en": "aste/assets/A_055_both.webp",
-    "hi": "aste/assets/A_055_both.webp"
+    "en": "aste/assets/A_055_en.webp",
+    "hi": "aste/assets/A_055_hi.webp",
+    "both": "aste/assets/A_055_both.webp"
   },
   {
     "paper": "A",
@@ -556,8 +611,9 @@
     "sourcePage": 26,
     "deleted": false,
     "id": "A_056",
-    "en": "aste/assets/A_056_both.webp",
-    "hi": "aste/assets/A_056_both.webp"
+    "en": "aste/assets/A_056_en.webp",
+    "hi": "aste/assets/A_056_hi.webp",
+    "both": "aste/assets/A_056_both.webp"
   },
   {
     "paper": "A",
@@ -566,8 +622,9 @@
     "sourcePage": 27,
     "deleted": false,
     "id": "A_057",
-    "en": "aste/assets/A_057_both.webp",
-    "hi": "aste/assets/A_057_both.webp"
+    "en": "aste/assets/A_057_en.webp",
+    "hi": "aste/assets/A_057_hi.webp",
+    "both": "aste/assets/A_057_both.webp"
   },
   {
     "paper": "A",
@@ -576,8 +633,9 @@
     "sourcePage": 27,
     "deleted": false,
     "id": "A_058",
-    "en": "aste/assets/A_058_both.webp",
-    "hi": "aste/assets/A_058_both.webp"
+    "en": "aste/assets/A_058_en.webp",
+    "hi": "aste/assets/A_058_hi.webp",
+    "both": "aste/assets/A_058_both.webp"
   },
   {
     "paper": "A",
@@ -586,8 +644,9 @@
     "sourcePage": 28,
     "deleted": false,
     "id": "A_059",
-    "en": "aste/assets/A_059_both.webp",
-    "hi": "aste/assets/A_059_both.webp"
+    "en": "aste/assets/A_059_en.webp",
+    "hi": "aste/assets/A_059_hi.webp",
+    "both": "aste/assets/A_059_both.webp"
   },
   {
     "paper": "A",
@@ -596,8 +655,9 @@
     "sourcePage": 28,
     "deleted": false,
     "id": "A_060",
-    "en": "aste/assets/A_060_both.webp",
-    "hi": "aste/assets/A_060_both.webp"
+    "en": "aste/assets/A_060_en.webp",
+    "hi": "aste/assets/A_060_hi.webp",
+    "both": "aste/assets/A_060_both.webp"
   },
   {
     "paper": "A",
@@ -606,8 +666,9 @@
     "sourcePage": 29,
     "deleted": false,
     "id": "A_061",
-    "en": "aste/assets/A_061_both.webp",
-    "hi": "aste/assets/A_061_both.webp"
+    "en": "aste/assets/A_061_en.webp",
+    "hi": "aste/assets/A_061_hi.webp",
+    "both": "aste/assets/A_061_both.webp"
   },
   {
     "paper": "A",
@@ -616,8 +677,9 @@
     "sourcePage": 29,
     "deleted": false,
     "id": "A_062",
-    "en": "aste/assets/A_062_both.webp",
-    "hi": "aste/assets/A_062_both.webp"
+    "en": "aste/assets/A_062_en.webp",
+    "hi": "aste/assets/A_062_hi.webp",
+    "both": "aste/assets/A_062_both.webp"
   },
   {
     "paper": "A",
@@ -626,8 +688,9 @@
     "sourcePage": 30,
     "deleted": false,
     "id": "A_063",
-    "en": "aste/assets/A_063_both.webp",
-    "hi": "aste/assets/A_063_both.webp"
+    "en": "aste/assets/A_063_en.webp",
+    "hi": "aste/assets/A_063_hi.webp",
+    "both": "aste/assets/A_063_both.webp"
   },
   {
     "paper": "A",
@@ -636,8 +699,9 @@
     "sourcePage": 30,
     "deleted": false,
     "id": "A_064",
-    "en": "aste/assets/A_064_both.webp",
-    "hi": "aste/assets/A_064_both.webp"
+    "en": "aste/assets/A_064_en.webp",
+    "hi": "aste/assets/A_064_hi.webp",
+    "both": "aste/assets/A_064_both.webp"
   },
   {
     "paper": "A",
@@ -646,8 +710,9 @@
     "sourcePage": 31,
     "deleted": false,
     "id": "A_065",
-    "en": "aste/assets/A_065_both.webp",
-    "hi": "aste/assets/A_065_both.webp"
+    "en": "aste/assets/A_065_en.webp",
+    "hi": "aste/assets/A_065_hi.webp",
+    "both": "aste/assets/A_065_both.webp"
   },
   {
     "paper": "A",
@@ -656,8 +721,9 @@
     "sourcePage": 32,
     "deleted": false,
     "id": "A_066",
-    "en": "aste/assets/A_066_both.webp",
-    "hi": "aste/assets/A_066_both.webp"
+    "en": "aste/assets/A_066_en.webp",
+    "hi": "aste/assets/A_066_hi.webp",
+    "both": "aste/assets/A_066_both.webp"
   },
   {
     "paper": "A",
@@ -666,8 +732,9 @@
     "sourcePage": 32,
     "deleted": true,
     "id": "A_067",
-    "en": "aste/assets/A_067_both.webp",
-    "hi": "aste/assets/A_067_both.webp"
+    "en": "aste/assets/A_067_en.webp",
+    "hi": "aste/assets/A_067_hi.webp",
+    "both": "aste/assets/A_067_both.webp"
   },
   {
     "paper": "A",
@@ -676,8 +743,9 @@
     "sourcePage": 33,
     "deleted": false,
     "id": "A_068",
-    "en": "aste/assets/A_068_both.webp",
-    "hi": "aste/assets/A_068_both.webp"
+    "en": "aste/assets/A_068_en.webp",
+    "hi": "aste/assets/A_068_hi.webp",
+    "both": "aste/assets/A_068_both.webp"
   },
   {
     "paper": "A",
@@ -686,8 +754,9 @@
     "sourcePage": 33,
     "deleted": false,
     "id": "A_069",
-    "en": "aste/assets/A_069_both.webp",
-    "hi": "aste/assets/A_069_both.webp"
+    "en": "aste/assets/A_069_en.webp",
+    "hi": "aste/assets/A_069_hi.webp",
+    "both": "aste/assets/A_069_both.webp"
   },
   {
     "paper": "A",
@@ -696,8 +765,9 @@
     "sourcePage": 33,
     "deleted": false,
     "id": "A_070",
-    "en": "aste/assets/A_070_both.webp",
-    "hi": "aste/assets/A_070_both.webp"
+    "en": "aste/assets/A_070_en.webp",
+    "hi": "aste/assets/A_070_hi.webp",
+    "both": "aste/assets/A_070_both.webp"
   },
   {
     "paper": "A",
@@ -706,8 +776,9 @@
     "sourcePage": 34,
     "deleted": false,
     "id": "A_071",
-    "en": "aste/assets/A_071_both.webp",
-    "hi": "aste/assets/A_071_both.webp"
+    "en": "aste/assets/A_071_en.webp",
+    "hi": "aste/assets/A_071_hi.webp",
+    "both": "aste/assets/A_071_both.webp"
   },
   {
     "paper": "A",
@@ -716,8 +787,9 @@
     "sourcePage": 34,
     "deleted": false,
     "id": "A_072",
-    "en": "aste/assets/A_072_both.webp",
-    "hi": "aste/assets/A_072_both.webp"
+    "en": "aste/assets/A_072_en.webp",
+    "hi": "aste/assets/A_072_hi.webp",
+    "both": "aste/assets/A_072_both.webp"
   },
   {
     "paper": "A",
@@ -726,8 +798,9 @@
     "sourcePage": 35,
     "deleted": false,
     "id": "A_073",
-    "en": "aste/assets/A_073_both.webp",
-    "hi": "aste/assets/A_073_both.webp"
+    "en": "aste/assets/A_073_en.webp",
+    "hi": "aste/assets/A_073_hi.webp",
+    "both": "aste/assets/A_073_both.webp"
   },
   {
     "paper": "A",
@@ -736,8 +809,9 @@
     "sourcePage": 35,
     "deleted": false,
     "id": "A_074",
-    "en": "aste/assets/A_074_both.webp",
-    "hi": "aste/assets/A_074_both.webp"
+    "en": "aste/assets/A_074_en.webp",
+    "hi": "aste/assets/A_074_hi.webp",
+    "both": "aste/assets/A_074_both.webp"
   },
   {
     "paper": "A",
@@ -746,8 +820,9 @@
     "sourcePage": 36,
     "deleted": false,
     "id": "A_075",
-    "en": "aste/assets/A_075_both.webp",
-    "hi": "aste/assets/A_075_both.webp"
+    "en": "aste/assets/A_075_en.webp",
+    "hi": "aste/assets/A_075_hi.webp",
+    "both": "aste/assets/A_075_both.webp"
   },
   {
     "paper": "A",
@@ -756,8 +831,9 @@
     "sourcePage": 36,
     "deleted": false,
     "id": "A_076",
-    "en": "aste/assets/A_076_both.webp",
-    "hi": "aste/assets/A_076_both.webp"
+    "en": "aste/assets/A_076_en.webp",
+    "hi": "aste/assets/A_076_hi.webp",
+    "both": "aste/assets/A_076_both.webp"
   },
   {
     "paper": "A",
@@ -766,8 +842,9 @@
     "sourcePage": 36,
     "deleted": false,
     "id": "A_077",
-    "en": "aste/assets/A_077_both.webp",
-    "hi": "aste/assets/A_077_both.webp"
+    "en": "aste/assets/A_077_en.webp",
+    "hi": "aste/assets/A_077_hi.webp",
+    "both": "aste/assets/A_077_both.webp"
   },
   {
     "paper": "A",
@@ -776,8 +853,9 @@
     "sourcePage": 37,
     "deleted": false,
     "id": "A_078",
-    "en": "aste/assets/A_078_both.webp",
-    "hi": "aste/assets/A_078_both.webp"
+    "en": "aste/assets/A_078_en.webp",
+    "hi": "aste/assets/A_078_hi.webp",
+    "both": "aste/assets/A_078_both.webp"
   },
   {
     "paper": "A",
@@ -786,8 +864,9 @@
     "sourcePage": 37,
     "deleted": true,
     "id": "A_079",
-    "en": "aste/assets/A_079_both.webp",
-    "hi": "aste/assets/A_079_both.webp"
+    "en": "aste/assets/A_079_en.webp",
+    "hi": "aste/assets/A_079_hi.webp",
+    "both": "aste/assets/A_079_both.webp"
   },
   {
     "paper": "A",
@@ -796,8 +875,9 @@
     "sourcePage": 38,
     "deleted": false,
     "id": "A_080",
-    "en": "aste/assets/A_080_both.webp",
-    "hi": "aste/assets/A_080_both.webp"
+    "en": "aste/assets/A_080_en.webp",
+    "hi": "aste/assets/A_080_hi.webp",
+    "both": "aste/assets/A_080_both.webp"
   },
   {
     "paper": "B",
@@ -806,8 +886,9 @@
     "sourcePage": 38,
     "deleted": false,
     "id": "B_001",
-    "en": "aste/assets/B_001_both.webp",
-    "hi": "aste/assets/B_001_both.webp"
+    "en": "aste/assets/B_001_en.webp",
+    "hi": "aste/assets/B_001_hi.webp",
+    "both": "aste/assets/B_001_both.webp"
   },
   {
     "paper": "B",
@@ -816,8 +897,9 @@
     "sourcePage": 38,
     "deleted": false,
     "id": "B_002",
-    "en": "aste/assets/B_002_both.webp",
-    "hi": "aste/assets/B_002_both.webp"
+    "en": "aste/assets/B_002_en.webp",
+    "hi": "aste/assets/B_002_hi.webp",
+    "both": "aste/assets/B_002_both.webp"
   },
   {
     "paper": "B",
@@ -826,8 +908,9 @@
     "sourcePage": 39,
     "deleted": false,
     "id": "B_003",
-    "en": "aste/assets/B_003_both.webp",
-    "hi": "aste/assets/B_003_both.webp"
+    "en": "aste/assets/B_003_en.webp",
+    "hi": "aste/assets/B_003_hi.webp",
+    "both": "aste/assets/B_003_both.webp"
   },
   {
     "paper": "B",
@@ -836,8 +919,9 @@
     "sourcePage": 39,
     "deleted": false,
     "id": "B_004",
-    "en": "aste/assets/B_004_both.webp",
-    "hi": "aste/assets/B_004_both.webp"
+    "en": "aste/assets/B_004_en.webp",
+    "hi": "aste/assets/B_004_hi.webp",
+    "both": "aste/assets/B_004_both.webp"
   },
   {
     "paper": "B",
@@ -846,8 +930,9 @@
     "sourcePage": 40,
     "deleted": false,
     "id": "B_005",
-    "en": "aste/assets/B_005_both.webp",
-    "hi": "aste/assets/B_005_both.webp"
+    "en": "aste/assets/B_005_en.webp",
+    "hi": "aste/assets/B_005_hi.webp",
+    "both": "aste/assets/B_005_both.webp"
   },
   {
     "paper": "B",
@@ -856,8 +941,9 @@
     "sourcePage": 40,
     "deleted": false,
     "id": "B_006",
-    "en": "aste/assets/B_006_both.webp",
-    "hi": "aste/assets/B_006_both.webp"
+    "en": "aste/assets/B_006_en.webp",
+    "hi": "aste/assets/B_006_hi.webp",
+    "both": "aste/assets/B_006_both.webp"
   },
   {
     "paper": "B",
@@ -866,8 +952,9 @@
     "sourcePage": 41,
     "deleted": false,
     "id": "B_007",
-    "en": "aste/assets/B_007_both.webp",
-    "hi": "aste/assets/B_007_both.webp"
+    "en": "aste/assets/B_007_en.webp",
+    "hi": "aste/assets/B_007_hi.webp",
+    "both": "aste/assets/B_007_both.webp"
   },
   {
     "paper": "B",
@@ -876,8 +963,9 @@
     "sourcePage": 41,
     "deleted": false,
     "id": "B_008",
-    "en": "aste/assets/B_008_both.webp",
-    "hi": "aste/assets/B_008_both.webp"
+    "en": "aste/assets/B_008_en.webp",
+    "hi": "aste/assets/B_008_hi.webp",
+    "both": "aste/assets/B_008_both.webp"
   },
   {
     "paper": "B",
@@ -886,8 +974,9 @@
     "sourcePage": 41,
     "deleted": false,
     "id": "B_009",
-    "en": "aste/assets/B_009_both.webp",
-    "hi": "aste/assets/B_009_both.webp"
+    "en": "aste/assets/B_009_en.webp",
+    "hi": "aste/assets/B_009_hi.webp",
+    "both": "aste/assets/B_009_both.webp"
   },
   {
     "paper": "B",
@@ -896,8 +985,9 @@
     "sourcePage": 42,
     "deleted": false,
     "id": "B_010",
-    "en": "aste/assets/B_010_both.webp",
-    "hi": "aste/assets/B_010_both.webp"
+    "en": "aste/assets/B_010_en.webp",
+    "hi": "aste/assets/B_010_hi.webp",
+    "both": "aste/assets/B_010_both.webp"
   },
   {
     "paper": "B",
@@ -906,8 +996,9 @@
     "sourcePage": 42,
     "deleted": false,
     "id": "B_011",
-    "en": "aste/assets/B_011_both.webp",
-    "hi": "aste/assets/B_011_both.webp"
+    "en": "aste/assets/B_011_en.webp",
+    "hi": "aste/assets/B_011_hi.webp",
+    "both": "aste/assets/B_011_both.webp"
   },
   {
     "paper": "B",
@@ -916,8 +1007,9 @@
     "sourcePage": 43,
     "deleted": false,
     "id": "B_012",
-    "en": "aste/assets/B_012_both.webp",
-    "hi": "aste/assets/B_012_both.webp"
+    "en": "aste/assets/B_012_en.webp",
+    "hi": "aste/assets/B_012_hi.webp",
+    "both": "aste/assets/B_012_both.webp"
   },
   {
     "paper": "B",
@@ -926,8 +1018,9 @@
     "sourcePage": 43,
     "deleted": false,
     "id": "B_013",
-    "en": "aste/assets/B_013_both.webp",
-    "hi": "aste/assets/B_013_both.webp"
+    "en": "aste/assets/B_013_en.webp",
+    "hi": "aste/assets/B_013_hi.webp",
+    "both": "aste/assets/B_013_both.webp"
   },
   {
     "paper": "B",
@@ -936,8 +1029,9 @@
     "sourcePage": 43,
     "deleted": false,
     "id": "B_014",
-    "en": "aste/assets/B_014_both.webp",
-    "hi": "aste/assets/B_014_both.webp"
+    "en": "aste/assets/B_014_en.webp",
+    "hi": "aste/assets/B_014_hi.webp",
+    "both": "aste/assets/B_014_both.webp"
   },
   {
     "paper": "B",
@@ -946,8 +1040,9 @@
     "sourcePage": 44,
     "deleted": false,
     "id": "B_015",
-    "en": "aste/assets/B_015_both.webp",
-    "hi": "aste/assets/B_015_both.webp"
+    "en": "aste/assets/B_015_en.webp",
+    "hi": "aste/assets/B_015_hi.webp",
+    "both": "aste/assets/B_015_both.webp"
   },
   {
     "paper": "B",
@@ -956,8 +1051,9 @@
     "sourcePage": 44,
     "deleted": false,
     "id": "B_016",
-    "en": "aste/assets/B_016_both.webp",
-    "hi": "aste/assets/B_016_both.webp"
+    "en": "aste/assets/B_016_en.webp",
+    "hi": "aste/assets/B_016_hi.webp",
+    "both": "aste/assets/B_016_both.webp"
   },
   {
     "paper": "B",
@@ -966,8 +1062,9 @@
     "sourcePage": 45,
     "deleted": false,
     "id": "B_017",
-    "en": "aste/assets/B_017_both.webp",
-    "hi": "aste/assets/B_017_both.webp"
+    "en": "aste/assets/B_017_en.webp",
+    "hi": "aste/assets/B_017_hi.webp",
+    "both": "aste/assets/B_017_both.webp"
   },
   {
     "paper": "B",
@@ -976,8 +1073,9 @@
     "sourcePage": 45,
     "deleted": false,
     "id": "B_018",
-    "en": "aste/assets/B_018_both.webp",
-    "hi": "aste/assets/B_018_both.webp"
+    "en": "aste/assets/B_018_en.webp",
+    "hi": "aste/assets/B_018_hi.webp",
+    "both": "aste/assets/B_018_both.webp"
   },
   {
     "paper": "B",
@@ -986,8 +1084,9 @@
     "sourcePage": 46,
     "deleted": false,
     "id": "B_019",
-    "en": "aste/assets/B_019_both.webp",
-    "hi": "aste/assets/B_019_both.webp"
+    "en": "aste/assets/B_019_en.webp",
+    "hi": "aste/assets/B_019_hi.webp",
+    "both": "aste/assets/B_019_both.webp"
   },
   {
     "paper": "B",
@@ -996,8 +1095,9 @@
     "sourcePage": 46,
     "deleted": false,
     "id": "B_020",
-    "en": "aste/assets/B_020_both.webp",
-    "hi": "aste/assets/B_020_both.webp"
+    "en": "aste/assets/B_020_en.webp",
+    "hi": "aste/assets/B_020_hi.webp",
+    "both": "aste/assets/B_020_both.webp"
   },
   {
     "paper": "B",
@@ -1006,8 +1106,9 @@
     "sourcePage": 47,
     "deleted": false,
     "id": "B_021",
-    "en": "aste/assets/B_021_both.webp",
-    "hi": "aste/assets/B_021_both.webp"
+    "en": "aste/assets/B_021_en.webp",
+    "hi": "aste/assets/B_021_hi.webp",
+    "both": "aste/assets/B_021_both.webp"
   },
   {
     "paper": "B",
@@ -1016,8 +1117,9 @@
     "sourcePage": 47,
     "deleted": false,
     "id": "B_022",
-    "en": "aste/assets/B_022_both.webp",
-    "hi": "aste/assets/B_022_both.webp"
+    "en": "aste/assets/B_022_en.webp",
+    "hi": "aste/assets/B_022_hi.webp",
+    "both": "aste/assets/B_022_both.webp"
   },
   {
     "paper": "B",
@@ -1026,8 +1128,9 @@
     "sourcePage": 47,
     "deleted": false,
     "id": "B_023",
-    "en": "aste/assets/B_023_both.webp",
-    "hi": "aste/assets/B_023_both.webp"
+    "en": "aste/assets/B_023_en.webp",
+    "hi": "aste/assets/B_023_hi.webp",
+    "both": "aste/assets/B_023_both.webp"
   },
   {
     "paper": "B",
@@ -1036,8 +1139,9 @@
     "sourcePage": 48,
     "deleted": false,
     "id": "B_024",
-    "en": "aste/assets/B_024_both.webp",
-    "hi": "aste/assets/B_024_both.webp"
+    "en": "aste/assets/B_024_en.webp",
+    "hi": "aste/assets/B_024_hi.webp",
+    "both": "aste/assets/B_024_both.webp"
   },
   {
     "paper": "B",
@@ -1046,8 +1150,9 @@
     "sourcePage": 49,
     "deleted": false,
     "id": "B_025",
-    "en": "aste/assets/B_025_both.webp",
-    "hi": "aste/assets/B_025_both.webp"
+    "en": "aste/assets/B_025_en.webp",
+    "hi": "aste/assets/B_025_hi.webp",
+    "both": "aste/assets/B_025_both.webp"
   },
   {
     "paper": "B",
@@ -1056,8 +1161,9 @@
     "sourcePage": 49,
     "deleted": false,
     "id": "B_026",
-    "en": "aste/assets/B_026_both.webp",
-    "hi": "aste/assets/B_026_both.webp"
+    "en": "aste/assets/B_026_en.webp",
+    "hi": "aste/assets/B_026_hi.webp",
+    "both": "aste/assets/B_026_both.webp"
   },
   {
     "paper": "B",
@@ -1066,8 +1172,9 @@
     "sourcePage": 50,
     "deleted": true,
     "id": "B_027",
-    "en": "aste/assets/B_027_both.webp",
-    "hi": "aste/assets/B_027_both.webp"
+    "en": "aste/assets/B_027_en.webp",
+    "hi": "aste/assets/B_027_hi.webp",
+    "both": "aste/assets/B_027_both.webp"
   },
   {
     "paper": "B",
@@ -1076,8 +1183,9 @@
     "sourcePage": 50,
     "deleted": false,
     "id": "B_028",
-    "en": "aste/assets/B_028_both.webp",
-    "hi": "aste/assets/B_028_both.webp"
+    "en": "aste/assets/B_028_en.webp",
+    "hi": "aste/assets/B_028_hi.webp",
+    "both": "aste/assets/B_028_both.webp"
   },
   {
     "paper": "B",
@@ -1086,8 +1194,9 @@
     "sourcePage": 50,
     "deleted": false,
     "id": "B_029",
-    "en": "aste/assets/B_029_both.webp",
-    "hi": "aste/assets/B_029_both.webp"
+    "en": "aste/assets/B_029_en.webp",
+    "hi": "aste/assets/B_029_hi.webp",
+    "both": "aste/assets/B_029_both.webp"
   },
   {
     "paper": "B",
@@ -1096,7 +1205,8 @@
     "sourcePage": 51,
     "deleted": true,
     "id": "B_030",
-    "en": "aste/assets/B_030_both.webp",
-    "hi": "aste/assets/B_030_both.webp"
+    "en": "aste/assets/B_030_en.webp",
+    "hi": "aste/assets/B_030_hi.webp",
+    "both": "aste/assets/B_030_both.webp"
   }
 ]
