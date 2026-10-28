@@ -1,6 +1,8 @@
 'use strict';
 (() => {
  const DEMO = window.ASTE_DEMO === true;
+ const REQUIRE_PORTAL_LOGIN = window.ASTE_PORTAL_LOGIN_REQUIRED === true;
+ const PORTAL_URL = 'https://railsntgyan.github.io/';
  const BASE = window.ASTE_ASSET_BASE || '';
  const FIREBASE_CONFIG = {apiKey:'AIzaSyBAB8onFJN5t9k8No2YqCbcuFNFAQ5cbpY',authDomain:'signal-portal-6104.firebaseapp.com',projectId:'signal-portal-6104',storageBucket:'signal-portal-6104.firebasestorage.app',messagingSenderId:'177672020477',appId:'1:177672020477:web:9fe0f9565e53b6a5143994'};
  const state={bank:[],user:null,mode:'test',paper:'A',limit:'25',language:'both',current:0,ids:[],answers:{},marked:{},checked:{},startAt:0,endAt:0,timer:null,submitted:null,pending:false,reviewFilter:'all',reviewId:null};
@@ -139,17 +141,79 @@
  $('zoom-dialog').onclick=e=>{if(e.target===$('zoom-dialog'))$('zoom-dialog').classList.add('hidden')};
  $('exit-test').onclick=()=>{if(confirm('Exit this attempt without saving your answers?')){clearInterval(state.timer);show('home')}};
  document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{state.language=b.dataset.lang;applyLanguage();if(!$('screen-result').classList.contains('hidden')&&!$('review-details').classList.contains('hidden'))showReview(state.reviewId||state.submitted.questions[0].id)});
- $('sign-in').onsubmit=async e=>{e.preventDefault();const email=$('email').value.trim(),pwd=$('password').value;const err=$('auth-error');err.textContent='';$('login-btn').disabled=true;
-  try{await window.firebase.auth().signInWithEmailAndPassword(email,pwd)}catch(ex){err.textContent=ex.message||'Login unsuccessful'}finally{$('login-btn').disabled=false}};
- $('sign-out').onclick=()=>{if(DEMO){state.user=null;show('auth')}else window.firebase.auth().signOut()};
+ $('sign-in').onsubmit=e=>{e.preventDefault();window.location.assign(PORTAL_URL)};
+ // Signing out is always managed by the main portal, not this practice page.
+ $('sign-out').onclick=()=>window.location.assign(PORTAL_URL);
+ let authorizedLoad=null, authRevision=0;
+ async function prepareAuthorizedQuestions(){
+  if(authorizedLoad)return authorizedLoad;
+  authorizedLoad=(async()=>{
+   // In the login-protected version, only load the answer script after
+   // the Firebase session check. Static GitHub files are still public.
+   if(REQUIRE_PORTAL_LOGIN && DEMO && !window.ASTE_DEMO_ANSWERS){
+    await new Promise((resolve,reject)=>{
+     const script=document.createElement('script');script.src='aste/answers.js';
+     script.onload=resolve;script.onerror=()=>reject(Error('Could not load the practice answer file'));
+     document.body.appendChild(script);
+    });
+   }
+   const response=await fetch(BASE+'aste/questions.json',{cache:'no-cache'});
+   if(!response.ok)throw Error('Question assets are unavailable');
+   state.bank=await response.json();
+   if(state.bank.length!==175)throw Error('Expected 175 questions; verify the full asset upload');
+   const query=new URLSearchParams(window.location.search);
+   if(['A','B','C','ALL'].includes((query.get('paper')||'').toUpperCase()))state.paper=query.get('paper').toUpperCase();
+   if(['test','practice'].includes(query.get('mode')))state.mode=query.get('mode');
+   initHome();applyLanguage();
+  })();
+  try {await authorizedLoad} catch(e){authorizedLoad=null;throw e;}
+ }
+ function lockPaper(){
+  state.user=null;state.submitted=null;state.ids=[];state.answers={};state.checked={};
+  clearInterval(state.timer);
+  $('signed-user').textContent='Portal login required';
+  $('confirm-dialog').classList.add('hidden');
+  $('zoom-dialog').classList.add('hidden');
+  show('auth');
+ }
  async function boot(){
-  try{const response=await fetch(BASE+'aste/questions.json',{cache:'no-cache'});if(!response.ok)throw Error('Question assets are unavailable');state.bank=await response.json();if(state.bank.length!==175)throw Error('Expected 175 questions; verify the full asset upload');const query=new URLSearchParams(window.location.search);if(['A','B','C','ALL'].includes((query.get('paper')||'').toUpperCase()))state.paper=query.get('paper').toUpperCase();if(['test','practice'].includes(query.get('mode')))state.mode=query.get('mode');initHome();applyLanguage();
-   if(DEMO){state.user={uid:'demo-local',email:'public@local.example'};$('signed-user').textContent='Open Access';$('auth-email-label').textContent='Public practice (no sign-in required)';show('home');return;}
+  try{
+   if(REQUIRE_PORTAL_LOGIN){
+    if(!window.firebase?.auth)throw Error('Firebase Authentication could not load. Please check your internet connection.');
+    if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+    // Same Firebase project and SESSION persistence as RailSNTGyan Portal.
+    // A new-tab link may not share sessionStorage; use same-tab navigation.
+    firebase.auth().onAuthStateChanged(async user=>{
+     const revision=++authRevision;
+     if(!user){lockPaper();return;}
+     $('load-text').textContent='Preparing your ASTE practice paper…';
+     show('loading');
+     try{
+      await prepareAuthorizedQuestions();
+      if(revision!==authRevision || !firebase.auth().currentUser)return;
+      state.user=user;
+      $('signed-user').textContent=user.email||'Portal user';
+      show('home');
+     }catch(error){
+      $('load-text').textContent='Unable to start: '+(error.message||'Please refresh');
+      show('loading');console.error(error);
+     }
+    },error=>{
+     lockPaper();$('auth-error').textContent='Unable to check portal login: '+(error.message||'Please reload');
+    });
+    return;
+   }
+   await prepareAuthorizedQuestions();
+   if(DEMO){state.user={uid:'demo-local',email:'public@local.example'};$('signed-user').textContent='Open Access';show('home');return;}
    if(!window.firebase)throw Error('Firebase libraries did not load.');
    if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
-   // Shares Firebase SESSION persistence with main portal when opened in the same tab.
-   firebase.auth().onAuthStateChanged(u=>{state.user=u;clearInterval(state.timer);if(!u){$('signed-user').textContent='Guest';show('auth')}else{$('signed-user').textContent=u.email||'Signed in';show('home')}});
+   firebase.auth().onAuthStateChanged(user=>{
+    state.user=user;clearInterval(state.timer);
+    if(!user){$('signed-user').textContent='Guest';show('auth')}
+    else{$('signed-user').textContent=user.email||'Signed in';show('home')}
+   });
   }catch(e){$('load-text').textContent='Unable to start: '+e.message;console.error(e)}
  }
+
  boot();
 })();

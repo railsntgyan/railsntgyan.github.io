@@ -10404,6 +10404,17 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
       // Stay in the current section. Back again will return to HOME.
     }
 
+    // Keep RailSNTGyan practice papers in the same tab. Firebase SESSION
+    // persistence is tab-scoped; opening a new tab may lose the login state.
+    // Other external practice links retain their existing new-tab behavior.
+    function railPracticeLinkTarget(link) {
+      try {
+        const url = new URL(String(link || ''), window.location.href);
+        return url.origin === window.location.origin &&
+               /^\/practice-papers\//i.test(url.pathname) ? '_self' : '_blank';
+      } catch (_) { return '_blank'; }
+    }
+
     function renderTable() {
       const thead = document.getElementById('tableHead');
       const tbody = document.getElementById('tableBody');
@@ -11453,7 +11464,7 @@ body:not(.dark-theme) #rmModal .rm-excel-preview-item.rm-excel-new{background:#e
                 ${rec.driveLink ? `<a class="work-link" href="${escapeHtml(rec.driveLink)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pdf" style="color:#e11d48;"></i> View Question Paper</a>` : '<span style="color:#94a3b8;">—</span>'}
               </td>
               <td style="text-align:center; white-space:nowrap;">
-                ${rec.practiceLink ? `<a class="work-link" href="${escapeHtml(rec.practiceLink)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-circle-play" style="color:#059669;"></i> Click Here to Practice</a>` : '<span style="color:#94a3b8;">—</span>'}
+                ${rec.practiceLink ? `<a class="work-link" href="${escapeHtml(rec.practiceLink)}" target="${railPracticeLinkTarget(rec.practiceLink)}" rel="noopener noreferrer"><i class="fa-solid fa-circle-play" style="color:#059669;"></i> Click Here to Practice</a>` : '<span style="color:#94a3b8;">—</span>'}
               </td>
               <td style="text-align:center; white-space:nowrap;">${actionButtons}</td>
             </tr>
