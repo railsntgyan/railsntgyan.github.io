@@ -31,3 +31,33 @@ LIMITATIONS / SAFETY:
 - For production multi-user admin uploads without individual Google authorization, use a securely authenticated backend rather than sharing the Drive account password.
 - Verify each uploaded PDF can be viewed by intended users before production rollout.
 - No Google passwords/service-account secrets should ever be put into GitHub or index.html.
+
+MULTI-GOOGLE DRIVE ACCOUNTS (UPDATED 30.10.2026)
+--------------------------------------------------
+1. Admin Login > Add New Record > Google Drive upload panel.
+2. First connect the ORIGINAL Drive using "Connect Selected Drive". This identifies
+   its Google account and continues using the existing hardcoded root folder.
+3. In the future click "Add Google Drive Account", choose the new Gmail account,
+   grant permission, and the portal creates/uses that account's own RailSNTGyan
+   root folder. The new account becomes Active.
+4. To change destinations manually use "Active Google Drive" dropdown, then
+   "Connect Selected Drive". Existing PDFs and Firebase links remain unchanged.
+5. The account list (email, label, Drive folder ID) is stored in THIS BROWSER's
+   localStorage only, not synced to other PCs or mobile devices. Re-add/authorize
+   accounts on a new device. OAuth access tokens are kept in memory only.
+6. If Google OAuth is still in "Testing" mode, add EACH new Gmail address under
+   the OAuth consent screen > Test Users or publish to Production as appropriate.
+7. The OAuth popup/Drive integration must be validated on HTTPS after deploy.
+8. Drive files remain private unless Google Drive sharing permissions are granted.
+9. Old files and their existing Drive links are not transferred automatically.
+
+AMM PRACTICE LOGIN UPDATE
+-------------------------
+The AMM 30% (2022), AMM 70% (2023), AMM 70% (2023 Supplementary)
+practice pages all use the shared Firebase login guard. Old AMM previous-year
+portal links for these three papers are routed to these guarded local pages.
+Logged-out visitors see a login-required screen; a previously authenticated
+session may open the link normally without asking for password again.
+NOTE: GitHub Pages is a PUBLIC static host. Standalone questions.json, app.js,
+and HTML source remain downloadable over HTTP; real protection of question-bank
+contents requires moving them behind authenticated server/storage rules.
