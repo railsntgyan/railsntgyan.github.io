@@ -287,9 +287,9 @@
 #divisionReportModal .dr-report-table col.dr-col-sn {width:5%;}
 #divisionReportModal .dr-report-table col.dr-col-station {width:15%;}
 #divisionReportModal .dr-report-table col.dr-col-approval {width:13%;}
-#divisionReportModal .dr-report-table col.dr-col-work {width:28%;}
+#divisionReportModal .dr-report-table col.dr-col-work {width:31%;}
 #divisionReportModal .dr-report-table col.dr-col-agency {width:9%;}
-#divisionReportModal .dr-report-table col.dr-col-authority {width:22%;}
+#divisionReportModal .dr-report-table col.dr-col-authority {width:19%;}
 #divisionReportModal .dr-report-table col.dr-col-date {width:8%;}
 #divisionReportModal .dr-report-table .dr-record td {padding:8px 6px!important;}
 #divisionReportModal .dr-report-table .dr-no-results {
@@ -298,6 +298,10 @@
 }
 .dr-workflow-result {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;line-height:1.35;}
 .dr-workflow-pill {display:inline-block;max-width:100%;overflow-wrap:break-word;padding:3px 7px;border-radius:999px;font:800 9px/1.25 Arial,Helvetica,sans-serif;letter-spacing:.025em;}
+/* Report-only compact wrapping; the main records table keeps its own styling. */
+#divisionReportModal .dr-report-table td.dr-outcome {white-space:normal!important;overflow-wrap:anywhere;word-break:normal;}
+#divisionReportModal .dr-report-table .dr-workflow-result {width:100%;min-width:0;}
+#divisionReportModal .dr-report-table .dr-workflow-pill {box-sizing:border-box;max-width:min(100%,158px);white-space:normal!important;overflow-wrap:anywhere;word-break:normal;border-radius:9px;padding:4px 7px;line-height:1.4;text-align:center;}
 .dr-workflow-approved {background:#e4f7ec;color:#13663a;border:1px solid #b4e2c8;}
 .dr-workflow-forwarded {background:#e6f2ff;color:#195e99;border:1px solid #bbdcf5;}
 .dr-workflow-warn {background:#fff1e2;color:#a05214;border:1px solid #f6cea3;}

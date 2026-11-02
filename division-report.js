@@ -13,7 +13,7 @@
     'LETTER ISSUED BY HQ', 'FILE MOVEMENT REGISTER'
   ];
   const DEFAULT_CATEGORIES = new Set(ALL_CATEGORIES.slice(0, 10));
-  const COLUMNS = ['SN', 'STATION / SECTION', 'APPROVAL FOR', 'WORK', 'AGENCY', 'FILE ACTION / AUTHORITY', 'DATE'];
+  const COLUMNS = ['SN', 'STATION / SECTION', 'FILE CATEGORY', 'WORK', 'AGENCY', 'FILE ACTION / AUTHORITY', 'DATE'];
   const byId = id => document.getElementById(id);
   const clean = value => value === null || value === undefined ? '' : String(value).trim();
   const escape = value => clean(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -72,22 +72,22 @@
 
     if (action === 'APPROVED' || action === 'SANCTION AUTHORITY RECORDED' ||
         action === 'ISSUING AUTHORITY RECORDED') {
-      label = 'SANCTIONED/APPROVED BY: ' + by;
+      label = 'SANCTIONED/APPROVED BY ' + by;
     } else if (action === 'FORWARDED') {
-      label = 'FORWARDED BY: ' + by + ' TO: ' + to;
+      label = 'FORWARDED BY ' + by + ' TO ' + to;
     } else if (action === 'SIGNED & RETURNED') {
-      label = 'SIGNED BY: ' + by + ' / RETURNED TO: ' + to;
+      label = 'SIGNED BY ' + by + ' / RETURNED TO ' + to;
     } else if (action === 'ISSUED') {
-      label = 'ISSUED BY: ' + by;
+      label = 'ISSUED BY ' + by;
     } else if (action === 'RETURNED FOR COMPLIANCE') {
-      label = 'RETURNED BY: ' + by + ' TO: ' + to + ' FOR COMPLIANCE';
+      label = 'RETURNED BY ' + by + ' TO ' + to + ' FOR COMPLIANCE';
     } else if (action === 'UNDER PROCESS') {
-      label = 'UNDER PROCESS' + (info.by ? ' — WITH: ' + info.by : '');
+      label = 'UNDER PROCESS' + (info.by ? ' — WITH ' + info.by : '');
     } else if (action === 'NOT RECORDED') {
       label = 'ACTION NOT RECORDED';
     } else {
       // Keep future / custom workflow actions readable without altering saved data.
-      label = action + (info.by ? ' — BY: ' + info.by : '') + (info.to ? ' — TO: ' + info.to : '');
+      label = action + (info.by ? ' — BY ' + info.by : '') + (info.to ? ' — TO ' + info.to : '');
     }
 
     // Legacy authority details are already visible in the main label.
@@ -384,8 +384,8 @@
         }
       });
       ws.columns = [
-        {width:7}, {width:21}, {width:20}, {width:48},
-        {width:16}, {width:29}, {width:15}
+        {width:7}, {width:21}, {width:20}, {width:52},
+        {width:16}, {width:25}, {width:15}
       ];
       ws.pageSetup.horizontalCentered = true;
       const NAVY = 'FF133956';
@@ -442,7 +442,7 @@
           values.forEach((v,j) => {row.getCell(j+1).value = v;});
           outlineRow(row,{fill: i%2===1 ? 'FFF5F9FC' : WHITE});
           const workLines = Math.max(1, Math.ceil(r.work.length / 52));
-          const outcomeLines = Math.max(1, (values[5].match(/\n/g)||[]).length + 1);
+          const outcomeLines = Math.max(1, Math.ceil(display.label.length / 25) + (display.note ? Math.ceil(display.note.length / 25) : 0));
           row.height = Math.min(105,Math.max(26,workLines*15,outcomeLines*15));
         }
       }
