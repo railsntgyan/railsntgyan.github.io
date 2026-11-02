@@ -165,7 +165,7 @@
     const html = [];
     html.push('<tr><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) + '</th></tr>');
     const total = divisions.reduce((sum,div) => sum+grouped[div].length,0);
-    html.push('<tr><th colspan="7" class="dr-meta">' + selectedCount + ' APPROVAL TYPE' + (selectedCount === 1 ? '' : 'S') + ' SELECTED &nbsp; | &nbsp; TOTAL RECORDS: ' + total + '</th></tr>');
+    html.push('<tr><th colspan="7" class="dr-meta">' + 'TOTAL RECORDS: ' + total + '</th></tr>');
     for (const div of divisions) {
       const entries = grouped[div];
       html.push('<tr><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>');
@@ -294,7 +294,7 @@
       const summaryRow = ws.getRow(2);
       summaryRow.height = 22;
       const grandTotal = divisions.reduce((sum,div) => sum + grouped[div].length,0);
-      summaryRow.getCell(1).value = selectedCount + ' APPROVAL TYPE' + (selectedCount===1?'':'S') + ' SELECTED  |  TOTAL RECORDS: ' + grandTotal;
+      summaryRow.getCell(1).value = 'TOTAL RECORDS: ' + grandTotal;
       outlineRow(summaryRow,{fill:LIGHT,color:BLUE,size:10,bold:true,center:true});
       let rowIndex = 3;
       for (const div of divisions) {
