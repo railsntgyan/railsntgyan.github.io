@@ -40,8 +40,14 @@
     let by = clean(record.actionBy || record.approvedBy || record.forwardedBy || record.signedBy);
     const to = clean(record.actionTo || record.forwardedTo || record.returnedTo);
     let source = 'EXPLICIT';
+    // PCSTE Sanction is a sanctioned category: the sanctioning authority is
+    // always PCSTE. Older records need no extra authority data entry.
+    if (category === 'PCSTE SANCTION') by = 'PCSTE';
     if (!action) {
-      if (category === 'DISPENSATION' && (record.givenBy || record.sanctionBy)) {
+      if (category === 'PCSTE SANCTION') {
+        action = 'APPROVED';
+        source = 'CATEGORY';
+      } else if (category === 'DISPENSATION' && (record.givenBy || record.sanctionBy)) {
         action = 'ISSUING AUTHORITY RECORDED';
         by = by || clean(record.givenBy || record.sanctionBy);
         source = 'LEGACY';
@@ -58,7 +64,7 @@
       by = clean(category === 'DISPENSATION' ? (record.givenBy || record.sanctionBy) :
         category === 'EI TSAA' ? record.sanctionBy : '');
     }
-    return {action, by, to, source, guide:WORKFLOW_GUIDES[category]||''};
+    return {action, by, to, source, category, guide:WORKFLOW_GUIDES[category]||''};
   }
 
   // Use exactly the same clear, authority-first wording in the website, print and Excel.
@@ -72,7 +78,8 @@
 
     if (action === 'APPROVED' || action === 'SANCTION AUTHORITY RECORDED' ||
         action === 'ISSUING AUTHORITY RECORDED') {
-      label = 'SANCTIONED/APPROVED BY ' + by;
+      // Distinguish sanctions from approvals; one universal label is misleading.
+      label = (info.category === 'PCSTE SANCTION' ? 'SANCTIONED BY ' : 'APPROVED BY ') + by;
     } else if (action === 'FORWARDED') {
       label = 'FORWARDED BY ' + by + ' TO ' + to;
     } else if (action === 'SIGNED & RETURNED') {
@@ -456,23 +463,34 @@
       const grandTotal = divisions.reduce((sum,div) => sum + grouped[div].length,0);
       summaryRow.getCell(1).value = 'TOTAL RECORDS: ' + grandTotal;
       outlineRow(summaryRow,{fill:LIGHT,color:BLUE,size:10,bold:true,center:true});
-      // Repeat ONLY the seven column labels when Excel prints subsequent pages;
-      // keep the title, total and division headings in their original locations.
-      const globalHeader = ws.getRow(3);
+      // First page order: FY heading -> TOTAL RECORDS -> DIVISION -> COLUMN HEADER.
+      // Excel repeats ONLY row 4 on subsequent printed pages.
+      const populatedDivisions = divisions.filter(d => grouped[d].length);
+      ws.mergeCells('A3:G3');
+      const firstDivisionRow = ws.getRow(3);
+      firstDivisionRow.height = 28;
+      firstDivisionRow.getCell(1).value = populatedDivisions.length
+        ? 'DIVISION: ' + populatedDivisions[0].toUpperCase() : 'NO DIVISION DATA';
+      outlineRow(firstDivisionRow,{fill:PALE,color:NAVY,size:12,bold:true,center:true});
+      const globalHeader = ws.getRow(4);
       COLUMNS.forEach((col,i) => {globalHeader.getCell(i+1).value = col;});
       outlineRow(globalHeader,{fill:BLUE,color:WHITE,size:10,bold:true});
       globalHeader.height = 34;
-      ws.pageSetup.printTitlesRow = '3:3';
+      ws.pageSetup.printTitlesRow = '4:4';
       ws.headerFooter.oddFooter = '&CPage &P of &N';
-      ws.views = [{state:'frozen',ySplit:3,showGridLines:false}];
-      let rowIndex = 4;
-      for (const div of divisions.filter(d => grouped[d].length)) {
-        ws.mergeCells('A'+rowIndex+':G'+rowIndex);
-        const divRow = ws.getRow(rowIndex);
-        divRow.height = 28;
-        divRow.getCell(1).value = 'DIVISION: ' + div.toUpperCase();
-        outlineRow(divRow,{fill:PALE,color:NAVY,size:12,bold:true,center:true});
-        rowIndex++;
+      ws.views = [{state:'frozen',ySplit:4,showGridLines:false}];
+      let rowIndex = 5;
+      for (let divIndex=0; divIndex<populatedDivisions.length; divIndex++) {
+        const div = populatedDivisions[divIndex];
+        // First division was already written immediately after TOTAL RECORDS.
+        if (divIndex > 0) {
+          ws.mergeCells('A'+rowIndex+':G'+rowIndex);
+          const divRow = ws.getRow(rowIndex);
+          divRow.height = 28;
+          divRow.getCell(1).value = 'DIVISION: ' + div.toUpperCase();
+          outlineRow(divRow,{fill:PALE,color:NAVY,size:12,bold:true,center:true});
+          rowIndex++;
+        }
         const entries = grouped[div];
         for (let i=0; i<entries.length; i++) {
           const r = entries[i];
@@ -488,10 +506,10 @@
           row.height = Math.min(105,Math.max(26,workLines*15,outcomeLines*15));
         }
       }
-      if (rowIndex === 4) {
-        ws.mergeCells('A4:G4');
-        ws.getCell('A4').value = 'NO RECORDS FOUND FOR THE SELECTED FILTERS';
-        outlineRow(ws.getRow(4),{fill:LIGHT,color:BLUE,bold:true,center:true});
+      if (rowIndex === 5) {
+        ws.mergeCells('A5:G5');
+        ws.getCell('A5').value = 'NO RECORDS FOUND FOR THE SELECTED FILTERS';
+        outlineRow(ws.getRow(5),{fill:LIGHT,color:BLUE,bold:true,center:true});
         rowIndex++;
       }
       // A single, right-aligned signature designation follows the last record.

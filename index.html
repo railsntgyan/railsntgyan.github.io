@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css?v=20261103-mobileprintv5">
+  <link rel="stylesheet" href="division-report.css?v=20261103-workflowv6">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8983,6 +8983,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           <label for="formActionBy">Action By / Signed By</label>
           <input id="formActionBy" type="text" list="formActionByOptions" autocomplete="off" placeholder="e.g. PCSTE, CSE, CCE" maxlength="120">
           <datalist id="formActionByOptions"></datalist>
+        </div>
+        <div class="form-group" id="formPcsteAutoAuthority" style="display:none;">
+          <span class="rail-workflow-auto-note">SANCTIONING AUTHORITY: <strong>PCSTE</strong> (automatic — no entry required)</span>
         </div>
         <div class="form-group" id="formActionToContainer" style="display:none;">
           <label for="formActionTo">Forwarded / Returned To (if applicable)</label>
@@ -13065,6 +13068,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       document.getElementById('formFileAction').value = rec.fileAction || '';
       document.getElementById('formActionBy').value = rec.actionBy || '';
       document.getElementById('formActionTo').value = rec.actionTo || '';
+      // Existing PCSTE Sanction records have PCSTE authority automatically.
+      if (recCat === 'PCSTE SANCTION') railSyncPcsteSanctionAuthority();
       document.getElementById('formRoutes').value = rec.routes || '';
       document.getElementById('formOem').value = rec.oem || '';
       document.getElementById('formWagon').value = rec.wagon || '';
@@ -13200,12 +13205,33 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       'SPEED RAISING': ['CSE','CCE','CSTE/Planning','PCSTE'],
       'DISPENSATION': ['PCSTE','PCSTE & PCEE']
     };
+    function railSyncPcsteSanctionAuthority() {
+      const isPcste=document.getElementById('formCategory').value==='PCSTE SANCTION';
+      const by=document.getElementById('formActionBy');
+      const action=document.getElementById('formFileAction');
+      if (by) {
+        if (isPcste) {
+          by.value='PCSTE';
+          by.readOnly=true;
+        } else {
+          if (by.readOnly && by.value==='PCSTE') by.value='';
+          by.readOnly=false;
+        }
+      }
+      // Default only when creating a PCSTE Sanction; retain explicit edited action.
+      if (isPcste && action && (!action.value || !document.getElementById('formEditRecordId').value)) action.value='APPROVED';
+    }
     function railUpdateWorkflowForm(cat) {
       const allowed = Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat);
-      ['formFileActionContainer','formActionByContainer','formActionToContainer'].forEach(id=>{
+      ['formFileActionContainer','formActionToContainer'].forEach(id=>{
         const el=document.getElementById(id);
         if(el) el.style.display=allowed?'flex':'none';
       });
+      const byContainer=document.getElementById('formActionByContainer');
+      if(byContainer) byContainer.style.display=allowed && cat!=='PCSTE SANCTION'?'flex':'none';
+      const autoNote=document.getElementById('formPcsteAutoAuthority');
+      if(autoNote) autoNote.style.display=cat==='PCSTE SANCTION'?'flex':'none';
+      railSyncPcsteSanctionAuthority();
       const datalist=document.getElementById('formActionByOptions');
       if(!datalist) return;
       const entries=railWorkflowGuidance[cat]||[];
@@ -13471,8 +13497,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         oem: isEi ? document.getElementById('formEiOem').value : (isMsdac ? document.getElementById('formOem').value.trim() : ''),
         sanctionBy: isDispensation ? document.getElementById('formGivenBy').value : (isEi ? document.getElementById('formEiSanctionBy').value : ''),
         ...(Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat) ? {
-          fileAction:document.getElementById('formFileAction').value,
-          actionBy:document.getElementById('formActionBy').value.trim(),
+          fileAction: isPcste ? (document.getElementById('formFileAction').value || 'APPROVED') : document.getElementById('formFileAction').value,
+          actionBy: isPcste ? 'PCSTE' : document.getElementById('formActionBy').value.trim(),
           actionTo:document.getElementById('formActionTo').value.trim()
         } : {}),
         routes: isEi ? document.getElementById('formRoutes').value.trim() : '',
@@ -25437,6 +25463,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
-  <script src="division-report.js?v=20261103-mobileprintv5" defer></script>
+  <script src="division-report.js?v=20261103-workflowv6" defer></script>
 </body>
 </html>
