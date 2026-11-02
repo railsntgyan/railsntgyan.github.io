@@ -264,41 +264,73 @@
     pendingRender = setTimeout(() => { pendingRender = null; render(); }, 70);
   }
 
+  // Each division uses a real THEAD. Browsers repeat THEAD when a table flows
+  // onto another printed page, retaining the correct division and column labels.
+  function reportColumnGroup() {
+    return '<colgroup><col class="dr-col-sn"><col class="dr-col-station">' +
+      '<col class="dr-col-approval"><col class="dr-col-work"><col class="dr-col-agency">' +
+      '<col class="dr-col-authority"><col class="dr-col-date"></colgroup>';
+  }
+
   function render() {
     if (!byId('divisionReportRows') || !byId('divisionReportFY').value) return;
     initCategorySelector();
     const {fy, divisions, grouped, selectedCount} = getReportData();
     const visibleDivisions = divisions.filter(div => grouped[div].length > 0);
+    const reportRoot = byId('divisionReportRows');
     byId('divisionReportSelectedCount').textContent = selectedCount + ' OF ' + ALL_CATEGORIES.length + ' SELECTED';
     byId('divisionReportExcelBtn').disabled = selectedCount === 0;
     const printBtn = byId('divisionReportPrintBtn');
     if (printBtn) printBtn.disabled = selectedCount === 0;
     if (!selectedCount) {
-      byId('divisionReportRows').innerHTML = '<tr><td colspan="7" class="dr-no-selection">SELECT AT LEAST ONE FILE / APPROVAL TYPE TO GENERATE THE REPORT.</td></tr>';
+      reportRoot.innerHTML = '<div class="dr-no-selection dr-message">SELECT AT LEAST ONE FILE / APPROVAL TYPE TO GENERATE THE REPORT.</div>';
       setStatus('No categories selected. Select at least one file / approval type.');
       return;
     }
+
+    const total = divisions.reduce((sum, div) => sum + grouped[div].length, 0);
     const html = [];
-    html.push('<tr><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) + '</th></tr>');
-    const total = divisions.reduce((sum,div) => sum+grouped[div].length,0);
-    html.push('<tr><th colspan="7" class="dr-meta">' + 'TOTAL RECORDS: ' + total + '</th></tr>');
     if (!visibleDivisions.length) {
-      html.push('<tr><td colspan="7" class="dr-no-results">NO RECORDS FOUND FOR THE SELECTED FY, DIVISION AND FILE TYPES.</td></tr>');
+      html.push('<table class="dr-report-table dr-empty-table">' + reportColumnGroup() +
+        '<thead><tr><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) +
+        '</th></tr><tr><th colspan="7" class="dr-meta">TOTAL RECORDS: 0</th></tr></thead>' +
+        '<tbody><tr><td colspan="7" class="dr-no-results">NO RECORDS FOUND FOR THE SELECTED FY, DIVISION AND FILE TYPES.</td></tr></tbody></table>');
     }
-    for (const div of visibleDivisions) {
+    for (let divIndex = 0; divIndex < visibleDivisions.length; divIndex++) {
+      const div = visibleDivisions[divIndex];
       const entries = grouped[div];
-      html.push('<tr class="dr-division-row"><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>');
-      html.push('<tr class="dr-fields">' + COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') + '</tr>');
+      // The title and total repeat at the top of printed pages. On screen they
+      // appear only once, at the very beginning of the report.
+      const repeatOnScreen = divIndex === 0 ? '' : ' dr-screen-repeat-hidden';
+      html.push('<table class="dr-report-table dr-division-table">' + reportColumnGroup() +
+        '<thead class="dr-print-repeat">' +
+        '<tr class="dr-report-title-row' + repeatOnScreen + '"><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' +
+        escape(fullFY(fy)) + '</th></tr>' +
+        '<tr class="dr-report-total-row' + repeatOnScreen + '"><th colspan="7" class="dr-meta">TOTAL RECORDS: ' + total + '</th></tr>' +
+        '<tr class="dr-division-row"><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>' +
+        '<tr class="dr-fields">' + COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') + '</tr>' +
+        '</thead><tbody>');
       for (let index = 0; index < entries.length; index++) {
         const row = entries[index];
         const values = [index + 1, row.station, row.category, row.work, row.agency, row.workflow, row.date];
-        html.push('<tr class="dr-record">' + values.map((value,col) =>
+        html.push('<tr class="dr-record' + (divIndex === visibleDivisions.length - 1 && index === entries.length - 1 ? ' dr-last-record' : '') + '">' + values.map((value,col) =>
           '<td class="' + (col===0?'dr-sn':col===2?'dr-type':col===5?'dr-outcome':col===6?'dr-date':'') + '">' +
-          (col === 5 ? workflowMarkup(value) : escape(value)) + '</td>'
+          (col===5 ? workflowMarkup(value) : escape(value)) + '</td>'
         ).join('') + '</tr>');
       }
+      // Keep the prepared-by designation with the last data row rather than
+      // letting it occupy a new, otherwise blank printed page.
+      if (divIndex === visibleDivisions.length - 1) {
+        html.push('<tr class="dr-prepared-row"><td colspan="7">' +
+          '<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>' +
+          '</td></tr>');
+      }
+      html.push('</tbody></table>');
     }
-    byId('divisionReportRows').innerHTML = html.join('');
+    if (!visibleDivisions.length) {
+      html.push('<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>');
+    }
+    reportRoot.innerHTML = html.join('');
     const labels = divisions.map(div => div.toUpperCase() + ': ' + grouped[div].length).join('  |  ');
     setStatus('FY ' + fullFY(fy) + '   •   ' + selectedCount + ' selected categories   •   ' + total +
       ' records   •   ' + labels +
@@ -322,8 +354,15 @@
 
   function print() {
     document.body.classList.add('printing-division-report');
+    // Landscape makes seven report columns legible; limit this page rule to
+    // the report print operation so other website print features are unchanged.
+    const pageStyle = document.createElement('style');
+    pageStyle.id = 'divisionReportPrintPageSize';
+    pageStyle.textContent = '@page { size: A4 landscape; margin: 10mm 9mm 12mm; }';
+    document.head.appendChild(pageStyle);
     const cleanPrintState = () => {
       document.body.classList.remove('printing-division-report');
+      pageStyle.remove();
       window.removeEventListener('afterprint', cleanPrintState);
     };
     window.addEventListener('afterprint', cleanPrintState);
@@ -403,7 +442,7 @@
         const color = options.color || INK;
         row.eachCell({includeEmpty:true}, cell => {
           cell.border = border;
-          cell.font = {name:'Arial',size:options.size || 10,bold:!!options.bold,color:{argb:color}};
+          cell.font = {name:'Times New Roman',size:options.size || 11,bold:!!options.bold,color:{argb:color}};
           cell.alignment = {vertical:'middle',horizontal:'center',wrapText:true};
           cell.fill = {type:'pattern',pattern:'solid',fgColor:{argb:fill}};
         });
@@ -419,7 +458,15 @@
       const grandTotal = divisions.reduce((sum,div) => sum + grouped[div].length,0);
       summaryRow.getCell(1).value = 'TOTAL RECORDS: ' + grandTotal;
       outlineRow(summaryRow,{fill:LIGHT,color:BLUE,size:10,bold:true,center:true});
-      let rowIndex = 3;
+      // Reprint the report title, record count and column headings on EVERY
+      // Excel print page; also freeze these three rows during sheet scrolling.
+      const globalHeader = ws.getRow(3);
+      COLUMNS.forEach((col,i) => {globalHeader.getCell(i+1).value = col;});
+      outlineRow(globalHeader,{fill:BLUE,color:WHITE,size:10,bold:true});
+      globalHeader.height = 34;
+      ws.pageSetup.printTitlesRow = '1:3';
+      ws.views = [{state:'frozen',ySplit:3,showGridLines:false}];
+      let rowIndex = 4;
       for (const div of divisions.filter(d => grouped[d].length)) {
         ws.mergeCells('A'+rowIndex+':G'+rowIndex);
         const divRow = ws.getRow(rowIndex);
@@ -427,10 +474,6 @@
         divRow.getCell(1).value = 'DIVISION: ' + div.toUpperCase();
         outlineRow(divRow,{fill:PALE,color:NAVY,size:12,bold:true,center:true});
         rowIndex++;
-        const header = ws.getRow(rowIndex++);
-        COLUMNS.forEach((col,i) => {header.getCell(i+1).value = col;});
-        outlineRow(header,{fill:BLUE,color:WHITE,size:10,bold:true,center:true});
-        header.height = 32;
         const entries = grouped[div];
         for (let i=0; i<entries.length; i++) {
           const r = entries[i];
@@ -446,12 +489,27 @@
           row.height = Math.min(105,Math.max(26,workLines*15,outcomeLines*15));
         }
       }
-      if (rowIndex === 3) {
-        ws.mergeCells('A3:G3');
-        ws.getCell('A3').value = 'NO RECORDS FOUND FOR THE SELECTED FILTERS';
-        outlineRow(ws.getRow(3),{fill:LIGHT,color:BLUE,bold:true,center:true});
+      if (rowIndex === 4) {
+        ws.mergeCells('A4:G4');
+        ws.getCell('A4').value = 'NO RECORDS FOUND FOR THE SELECTED FILTERS';
+        outlineRow(ws.getRow(4),{fill:LIGHT,color:BLUE,bold:true,center:true});
         rowIndex++;
       }
+      // A single, right-aligned signature designation follows the last record.
+      rowIndex++;
+      ws.mergeCells('F'+rowIndex+':G'+rowIndex);
+      const preparedLabel = ws.getRow(rowIndex);
+      preparedLabel.getCell(6).value = 'PREPARED BY';
+      preparedLabel.getCell(6).alignment = {horizontal:'center',vertical:'middle'};
+      preparedLabel.getCell(6).font = {name:'Times New Roman',size:11,bold:true,color:{argb:INK}};
+      rowIndex++;
+      ws.mergeCells('F'+rowIndex+':G'+rowIndex);
+      const preparedName = ws.getRow(rowIndex);
+      preparedName.getCell(6).value = 'SSE/Signal/QA';
+      preparedName.getCell(6).alignment = {horizontal:'center',vertical:'middle'};
+      preparedName.getCell(6).font = {name:'Times New Roman',size:12,bold:true,color:{argb:INK}};
+      preparedName.height = 23;
+      rowIndex++;
       ws.pageSetup.printArea = 'A1:G' + (rowIndex - 1);
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});

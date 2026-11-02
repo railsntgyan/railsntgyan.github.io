@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css?v=20261102-wrap1">
+  <link rel="stylesheet" href="division-report.css?v=20261103-printtitles1">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8736,12 +8736,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       <div class="dr-status" id="divisionReportStatus" role="status" aria-live="polite"></div>
       <div class="dr-scroll">
         <div class="dr-sheet" id="divisionReportSheet">
-          <table class="dr-report-table" id="divisionReportTable">
-            <colgroup>
-              <col class="dr-col-sn"><col class="dr-col-station"><col class="dr-col-approval"><col class="dr-col-work"><col class="dr-col-agency"><col class="dr-col-authority"><col class="dr-col-date">
-            </colgroup>
-            <tbody id="divisionReportRows"></tbody>
-          </table>
+          <!-- Each division has its own table with a repeating print header. -->
+          <div id="divisionReportRows" class="dr-report-sections"></div>
         </div>
       </div>
     </div>
@@ -25441,6 +25437,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
-  <script src="division-report.js?v=20261102-wrap1" defer></script>
+  <script src="division-report.js?v=20261103-printtitles1" defer></script>
 </body>
 </html>
