@@ -45,7 +45,7 @@
     if (category === 'PCSTE SANCTION') by = 'PCSTE';
     if (!action) {
       if (category === 'PCSTE SANCTION') {
-        action = 'APPROVED';
+        action = 'SANCTIONED';
         source = 'CATEGORY';
       } else if (category === 'DISPENSATION' && (record.givenBy || record.sanctionBy)) {
         action = 'ISSUING AUTHORITY RECORDED';
@@ -60,7 +60,7 @@
         source = 'UNRECORDED';
       }
     }
-    if (!by && source === 'EXPLICIT' && /^(APPROVED|ISSUED)$/.test(action)) {
+    if (!by && source === 'EXPLICIT' && /^(APPROVED|SANCTIONED|ISSUED)$/.test(action)) {
       by = clean(category === 'DISPENSATION' ? (record.givenBy || record.sanctionBy) :
         category === 'EI TSAA' ? record.sanctionBy : '');
     }
@@ -76,10 +76,12 @@
     let label = action;
     let note = '';
 
-    if (action === 'APPROVED' || action === 'SANCTION AUTHORITY RECORDED' ||
-        action === 'ISSUING AUTHORITY RECORDED') {
-      // Distinguish sanctions from approvals; one universal label is misleading.
-      label = (info.category === 'PCSTE SANCTION' ? 'SANCTIONED BY ' : 'APPROVED BY ') + by;
+    if (action === 'APPROVED' || action === 'SANCTIONED' ||
+        action === 'SANCTION AUTHORITY RECORDED' || action === 'ISSUING AUTHORITY RECORDED') {
+      // Existing PCSTE SANCTION records may still store APPROVED; category always
+      // means sanction. Other categories use the separately saved actual outcome.
+      label = ((info.category === 'PCSTE SANCTION' || action === 'SANCTIONED')
+        ? 'SANCTIONED BY ' : 'APPROVED BY ') + by;
     } else if (action === 'FORWARDED') {
       label = 'FORWARDED BY ' + by + ' TO ' + to;
     } else if (action === 'SIGNED & RETURNED') {
@@ -312,6 +314,8 @@
       // children of THEAD and hence repeated on subsequent printed pages.
       html.push('<section class="dr-division-block" aria-label="Division ' + escape(div) + '">' +
         '<h4 class="dr-division-heading">DIVISION: ' + escape(div.toUpperCase()) + '</h4>' +
+        '<div class="dr-mobile-table-note">SWIPE LEFT / RIGHT TO VIEW ALL TABLE COLUMNS</div>' +
+        '<div class="dr-report-table-wrap" role="region" aria-label="' + escape(div) + ' report table, scroll horizontally" tabindex="0">' +
         '<table class="dr-report-table dr-division-table">' + reportColumnGroup() +
         '<thead class="dr-print-repeat"><tr class="dr-fields">' +
         COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') +
@@ -329,7 +333,7 @@
           '<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>' +
           '</td></tr>');
       }
-      html.push('</tbody></table></section>');
+      html.push('</tbody></table></div></section>');
     }
     if (!visibleDivisions.length) {
       html.push('<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>');

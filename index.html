@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css?v=20261103-workflowv6">
+  <link rel="stylesheet" href="division-report.css?v=20261103-printtablev7">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8970,7 +8970,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           <label for="formFileAction">File Action / Disposal</label>
           <select id="formFileAction">
             <option value="">-- Select actual action --</option>
-            <option value="APPROVED">Approved / Sanctioned</option>
+            <option value="APPROVED">Approved</option>
+            <option value="SANCTIONED">Sanctioned</option>
             <option value="FORWARDED">Forwarded</option>
             <option value="SIGNED & RETURNED">Signed &amp; Returned</option>
             <option value="ISSUED">Issued</option>
@@ -13065,7 +13066,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       document.getElementById('formEquipment').value = rec.equipment || '';
       document.getElementById('formEiOem').value = rec.oem || '';
       document.getElementById('formEiSanctionBy').value = rec.sanctionBy || '';
-      document.getElementById('formFileAction').value = rec.fileAction || '';
+      document.getElementById('formFileAction').value = recCat === 'PCSTE SANCTION' && rec.fileAction === 'APPROVED' ? 'SANCTIONED' : (rec.fileAction || '');
       document.getElementById('formActionBy').value = rec.actionBy || '';
       document.getElementById('formActionTo').value = rec.actionTo || '';
       // Existing PCSTE Sanction records have PCSTE authority automatically.
@@ -13219,7 +13220,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         }
       }
       // Default only when creating a PCSTE Sanction; retain explicit edited action.
-      if (isPcste && action && (!action.value || !document.getElementById('formEditRecordId').value)) action.value='APPROVED';
+      if (isPcste && action && (!action.value || !document.getElementById('formEditRecordId').value || action.value==='APPROVED')) action.value='SANCTIONED';
     }
     function railUpdateWorkflowForm(cat) {
       const allowed = Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat);
@@ -13238,7 +13239,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       datalist.replaceChildren();
       entries.forEach(text=>{const option=document.createElement('option');option.value=text;datalist.appendChild(option);});
       const guide={
-        'PCSTE SANCTION':'Normally approved by PCSTE.',
+        'PCSTE SANCTION':'Sanctioned by PCSTE (authority is automatic).',
         'EI TSAA':'PCSTE approves, or PCSTE forwards to RDSO. Record the actual action.',
         'MSDAC TSAA':'Approving authority may be CSE / CCE / CSTE/Planning / PCSTE.',
         'S&T SPEED CERTIFICATE':'Approving authority may be CSE / CCE / CSTE/Planning.',
@@ -13497,7 +13498,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         oem: isEi ? document.getElementById('formEiOem').value : (isMsdac ? document.getElementById('formOem').value.trim() : ''),
         sanctionBy: isDispensation ? document.getElementById('formGivenBy').value : (isEi ? document.getElementById('formEiSanctionBy').value : ''),
         ...(Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat) ? {
-          fileAction: isPcste ? (document.getElementById('formFileAction').value || 'APPROVED') : document.getElementById('formFileAction').value,
+          fileAction: isPcste ? (document.getElementById('formFileAction').value || 'SANCTIONED') : document.getElementById('formFileAction').value,
           actionBy: isPcste ? 'PCSTE' : document.getElementById('formActionBy').value.trim(),
           actionTo:document.getElementById('formActionTo').value.trim()
         } : {}),
@@ -25463,6 +25464,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
-  <script src="division-report.js?v=20261103-workflowv6" defer></script>
+  <script src="division-report.js?v=20261103-printtablev7" defer></script>
 </body>
 </html>
