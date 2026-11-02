@@ -122,3 +122,152 @@
   body.printing-division-report #divisionReportModal .dr-report-table .dr-fields th {font-size:9pt!important;}
   body.printing-division-report #divisionReportModal .dr-report-table tr {break-inside:avoid;page-break-inside:avoid;}
 }
+
+/* V2 — polished division report and its private FILES & APPROVALS selector.
+   Scoped to #divisionReportModal so no site-wide controls/tables change. */
+#divisionReportModal .dr-dialog { background:#f1f5f9; }
+#divisionReportModal .dr-toolbar {
+  background:linear-gradient(115deg,#102f50 0%,#075985 100%);
+  border-bottom:1px solid #40688a; padding:13px 16px;
+}
+#divisionReportModal .dr-toolbar h3 {font-size:16px;letter-spacing:.015em;}
+#divisionReportModal .dr-filter-area {
+  flex-shrink:0; background:#fff; border-bottom:1px solid #cddae5;
+  box-shadow:0 2px 7px rgba(24,60,88,.045);
+}
+#divisionReportModal .dr-filter-top {
+  display:flex;align-items:center;gap:12px;justify-content:space-between;
+  padding:8px 14px;
+}
+#divisionReportModal .dr-filter-toggle {
+  display:inline-flex;gap:9px;align-items:center;justify-content:flex-start;
+  padding:8px 11px; border:1px solid #b9d8ee; background:#e9f4fb;
+  color:#0d496c; font:800 12px/1.3 Arial,Helvetica,sans-serif;
+  border-radius:7px;cursor:pointer;letter-spacing:.025em;
+}
+#divisionReportModal .dr-filter-toggle:hover {background:#dceefa;}
+#divisionReportModal .dr-filter-toggle span {
+  display:inline-block; padding:3px 7px; background:#0c5b86; color:#fff;
+  border-radius:14px;font-size:10px;letter-spacing:0;
+}
+#divisionReportModal .dr-filter-toggle[aria-expanded="false"] .dr-filter-chevron {transform:rotate(180deg);}
+#divisionReportModal .dr-filter-hint {color:#53677b;font-size:11px;font-weight:600;}
+#divisionReportModal .dr-filter-panel {
+  padding:4px 14px 12px; border-top:1px solid #edf2f7;
+  max-height:225px; overflow-y:auto;
+}
+#divisionReportModal .dr-filter-panel[hidden] {display:none!important;}
+#divisionReportModal .dr-filter-actions {display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 10px;}
+#divisionReportModal .dr-filter-actions button {
+  border:1px solid #c4d3e2;background:#f8fbfe;color:#194363;
+  border-radius:6px;padding:6px 11px;font:700 11px Arial,Helvetica,sans-serif;
+  cursor:pointer;min-height:28px;
+}
+#divisionReportModal .dr-filter-actions button:hover {background:#e3f2ff;border-color:#8db6d6;}
+#divisionReportModal .dr-category-grid {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;
+}
+#divisionReportModal .dr-category-option {
+  display:flex;align-items:flex-start;gap:8px;min-width:0;
+  padding:9px 9px;border:1px solid #dce5ee;border-radius:6px;
+  background:#fff;color:#223c55;cursor:pointer;
+  font:700 10.8px/1.35 Arial,Helvetica,sans-serif;
+}
+#divisionReportModal .dr-category-option:hover {border-color:#83b8d5;background:#f7fbff;}
+#divisionReportModal .dr-category-option:has(input:checked) {background:#edf7ff;border-color:#9ac5e1;}
+#divisionReportModal .dr-category-option input {
+  margin:0;flex:none;width:15px;height:15px;accent-color:#0c658e;cursor:pointer;
+}
+#divisionReportModal .dr-category-option span {flex:1;overflow-wrap:anywhere;}
+#divisionReportModal .dr-status {
+  background:#e8f3fb; color:#1c5377; font-size:11px;
+  padding:7px 15px;
+}
+#divisionReportModal .dr-scroll {padding:16px 14px 24px;background:#eef3f8;}
+#divisionReportModal .dr-sheet {
+  padding:17px 15px; max-width:1100px;
+  border:1px solid #d9e4ee;border-radius:5px;
+  box-shadow:0 5px 22px rgba(18,49,79,.10);
+}
+#divisionReportModal .dr-report-table {
+  border-color:#9ab0c2!important;
+  font-size:11px;line-height:1.4;
+}
+#divisionReportModal .dr-report-table th,
+#divisionReportModal .dr-report-table td {
+  border:1px solid #b6cad8!important;
+  padding:7px 6px!important;
+  vertical-align:middle!important;
+  font:400 11px/1.4 Arial,Helvetica,sans-serif;
+}
+#divisionReportModal .dr-report-table .dr-title {
+  background:#123b59!important;color:#fff!important;
+  text-align:center!important;vertical-align:middle!important;
+  font:800 16px/1.45 Arial,Helvetica,sans-serif!important;
+  letter-spacing:.07em;padding:12px 6px!important;
+}
+#divisionReportModal .dr-report-table .dr-meta {
+  background:#eaf2f8!important;color:#1d5577!important;
+  text-align:center!important;vertical-align:middle!important;
+  font:800 10px/1.4 Arial,Helvetica,sans-serif!important;
+  letter-spacing:.05em;padding:7px 6px!important;
+}
+#divisionReportModal .dr-report-table .dr-division {
+  background:#d9edf9!important;color:#143d59!important;
+  text-align:center!important;vertical-align:middle!important;
+  font:800 13px/1.4 Arial,Helvetica,sans-serif!important;
+  letter-spacing:.065em;padding:10px 6px!important;
+}
+#divisionReportModal .dr-report-table .dr-fields th {
+  background:#195983!important;color:#fff!important;
+  text-align:center!important;vertical-align:middle!important;
+  font:800 11px/1.35 Arial,Helvetica,sans-serif!important;
+  letter-spacing:.025em;padding:9px 5px!important;
+}
+#divisionReportModal .dr-report-table .dr-record:nth-of-type(even) td {background:#f5f9fc!important;}
+#divisionReportModal .dr-report-table .dr-sn,
+#divisionReportModal .dr-report-table .dr-type,
+#divisionReportModal .dr-report-table .dr-date {text-align:center!important;}
+#divisionReportModal .dr-report-table .dr-empty td {height:24px;}
+#divisionReportModal .dr-report-table .dr-no-selection {
+  text-align:center!important;padding:32px 10px!important;
+  background:#fff7ea!important;color:#89561c!important;
+  font-weight:800!important;
+}
+@media (max-width:900px) {
+  #divisionReportModal .dr-category-grid {grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media (max-width:650px) {
+  #divisionReportModal .dr-toolbar {padding:10px;}
+  #divisionReportModal .dr-toolbar-actions {width:100%;}
+  #divisionReportModal .dr-filter-top {align-items:flex-start;flex-direction:column;gap:5px;padding:8px 10px;}
+  #divisionReportModal .dr-filter-toggle {font-size:11px;max-width:100%;}
+  #divisionReportModal .dr-filter-panel {padding:4px 10px 10px;max-height:215px;}
+  #divisionReportModal .dr-category-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;}
+  #divisionReportModal .dr-category-option {font-size:10px;padding:8px 6px;}
+  #divisionReportModal .dr-filter-hint {font-size:10px;}
+  #divisionReportModal .dr-sheet {padding:8px;}
+  #divisionReportModal .dr-report-table .dr-title {font-size:14px!important;}
+}
+@media print {
+  body.printing-division-report #divisionReportModal .dr-filter-area {display:none!important;}
+  body.printing-division-report #divisionReportModal .dr-sheet {border:none!important;border-radius:0!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-title {
+    background:#123b59!important;color:#fff!important;font-size:13pt!important;
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-meta {background:#eaf2f8!important;color:#1d5577!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-division {
+    background:#d9edf9!important;color:#143d59!important;
+    font-size:11pt!important;text-align:center!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-fields th {
+    background:#195983!important;color:#fff!important;
+    font-size:8pt!important;text-align:center!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-report-table th,
+  body.printing-division-report #divisionReportModal .dr-report-table td {
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+    border-color:#758a9f!important;
+  }
+}

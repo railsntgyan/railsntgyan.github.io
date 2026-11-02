@@ -4,13 +4,17 @@
   'use strict';
 
   const DIVISIONS = ['Bilaspur', 'Raipur', 'Nagpur'];
-  const INCLUDED_CATEGORIES = new Set([
-    'PCSTE SANCTION', 'EI TSAA', 'MSDAC TSAA', 'GM SANCTION',
-    'DISPENSATION', 'GRADE CONDONATION', 'LINE OPENING', 'SPEED RAISING',
-    'S&T SPEED CERTIFICATE', 'JOINT SAFETY CERTIFICATE (JSC)'
-  ]);
+  // Matches FILES & APPROVALS categories in the existing sidebar, including six optional categories.
+  const ALL_CATEGORIES = [
+    'PCSTE SANCTION', 'EI TSAA', 'MSDAC TSAA', 'S&T SPEED CERTIFICATE',
+    'DISPENSATION', 'GM SANCTION', 'GRADE CONDONATION', 'LINE OPENING',
+    'SPEED RAISING', 'JOINT SAFETY CERTIFICATE (JSC)', 'INSPECTION NOTE',
+    'SECR POLICY', 'SECR TYPICAL', 'JPO (JOINT PROCEDURE ORDER)',
+    'LETTER ISSUED BY HQ', 'FILE MOVEMENT REGISTER'
+  ];
+  const DEFAULT_CATEGORIES = new Set(ALL_CATEGORIES.slice(0, 10));
   const MIN_ROWS_PER_DIVISION = 8;
-  const COLUMNS = ['sn', 'station/section', 'approval for', 'work', 'agency', 'approved by/ forwarded to', 'Date'];
+  const COLUMNS = ['SN', 'STATION / SECTION', 'APPROVAL FOR', 'WORK', 'AGENCY', 'APPROVED BY / FORWARDED TO', 'DATE'];
   const byId = id => document.getElementById(id);
   const clean = value => value === null || value === undefined ? '' : String(value).trim();
   const escape = value => clean(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -53,15 +57,48 @@
     return (typeof records !== 'undefined' && Array.isArray(records)) ? records : [];
   }
 
+  function initCategorySelector() {
+    const grid = byId('divisionReportCategoryGrid');
+    if (!grid || grid.children.length) return;
+    grid.innerHTML = ALL_CATEGORIES.map(category => {
+      const checked = DEFAULT_CATEGORIES.has(category) ? ' checked' : '';
+      return '<label class="dr-category-option"><input type="checkbox" class="dr-category-checkbox" value="' +
+        escape(category) + '"' + checked + ' onchange="renderDivisionReport()">' +
+        '<span>' + escape(category) + '</span></label>';
+    }).join('');
+  }
+
+  function selectedCategories() {
+    return new Set(Array.from(document.querySelectorAll('#divisionReportCategoryGrid .dr-category-checkbox:checked'))
+      .map(input => input.value));
+  }
+
+  function setCategories(mode) {
+    initCategorySelector();
+    document.querySelectorAll('#divisionReportCategoryGrid .dr-category-checkbox').forEach(input => {
+      input.checked = mode === 'all' || (mode === 'default' && DEFAULT_CATEGORIES.has(input.value));
+    });
+    render();
+  }
+
+  function toggleCategories() {
+    const panel = byId('divisionReportFilterPanel');
+    const toggle = byId('divisionReportFilterToggle');
+    const willShow = panel.hidden;
+    panel.hidden = !willShow;
+    toggle.setAttribute('aria-expanded', String(willShow));
+  }
+
   function getReportData() {
     const fy = byId('divisionReportFY').value;
     const selectedDivision = byId('divisionReportDivision').value;
+    const allowedCategories = selectedCategories();
     const divisions = selectedDivision === 'ALL' ? DIVISIONS : [selectedDivision];
     const grouped = Object.fromEntries(divisions.map(div => [div, []]));
     for (const rec of reportSourceRecords()) {
       const category = clean(rec.category).toUpperCase() === 'PCSTE DISPENSATION'
         ? 'DISPENSATION' : clean(rec.category).toUpperCase();
-      if (!INCLUDED_CATEGORIES.has(category)) continue;
+      if (!allowedCategories.has(category)) continue;
       const div = canonicalDivision(rec.division);
       if (!div || !Object.prototype.hasOwnProperty.call(grouped, div)) continue;
       // Existing website uses forwarding date as canonical reporting date, where available.
@@ -69,7 +106,7 @@
       if (!date || date.fy !== fy) continue;
       const authority = clean(rec.approvedBy) || clean(rec.forwardedTo) ||
         clean(rec.approvalBy) || clean(rec.sanctionBy) || clean(rec.givenBy) ||
-        clean(rec.forwardedBy) || '';
+        clean(rec.forwardedBy) || clean(rec.issuedBy) || '';
       grouped[div].push({
         station: clean(rec.station),
         category, work: clean(rec.work) || clean(rec.description),
@@ -80,7 +117,7 @@
       grouped[div].sort((a,b) => a.time - b.time ||
         a.station.localeCompare(b.station) || a.category.localeCompare(b.category));
     }
-    return {fy, divisions, grouped};
+    return {fy, divisions, grouped, selectedCount: allowedCategories.size};
   }
 
   function updateFYChoices() {
@@ -114,14 +151,24 @@
 
   function render() {
     if (!byId('divisionReportRows') || !byId('divisionReportFY').value) return;
-    const {fy, divisions, grouped} = getReportData();
+    initCategorySelector();
+    const {fy, divisions, grouped, selectedCount} = getReportData();
+    byId('divisionReportSelectedCount').textContent = selectedCount + ' OF ' + ALL_CATEGORIES.length + ' SELECTED';
+    byId('divisionReportExcelBtn').disabled = selectedCount === 0;
+    const printBtn = byId('divisionReportPrintBtn');
+    if (printBtn) printBtn.disabled = selectedCount === 0;
+    if (!selectedCount) {
+      byId('divisionReportRows').innerHTML = '<tr><td colspan="7" class="dr-no-selection">SELECT AT LEAST ONE FILE / APPROVAL TYPE TO GENERATE THE REPORT.</td></tr>';
+      setStatus('No categories selected. Select at least one file / approval type.');
+      return;
+    }
     const html = [];
-    html.push('<tr><th colspan="7" class="dr-title">Division wise report of FY ' + escape(fullFY(fy)) + '</th></tr>');
-    let total = 0;
+    html.push('<tr><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) + '</th></tr>');
+    const total = divisions.reduce((sum,div) => sum+grouped[div].length,0);
+    html.push('<tr><th colspan="7" class="dr-meta">' + selectedCount + ' APPROVAL TYPE' + (selectedCount === 1 ? '' : 'S') + ' SELECTED &nbsp; | &nbsp; TOTAL RECORDS: ' + total + '</th></tr>');
     for (const div of divisions) {
       const entries = grouped[div];
-      total += entries.length;
-      html.push('<tr><th colspan="7" class="dr-division">Division ' + escape(div) + '</th></tr>');
+      html.push('<tr><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>');
       html.push('<tr class="dr-fields">' + COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') + '</tr>');
       for (let index = 0; index < Math.max(MIN_ROWS_PER_DIVISION, entries.length); index++) {
         const row = entries[index];
@@ -129,17 +176,19 @@
           html.push('<tr class="dr-empty"><td class="dr-sn"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
         } else {
           const values = [index + 1, row.station, row.category, row.work, row.agency, row.authority, row.date];
-          html.push('<tr>' + values.map((value,col) => '<td' + (col===0?' class="dr-sn"':'') + '>' + escape(value) + '</td>').join('') + '</tr>');
+          html.push('<tr class="dr-record">' + values.map((value,col) => '<td class="' + (col === 0 ? 'dr-sn' : col === 2 ? 'dr-type' : col === 6 ? 'dr-date' : '') + '">' + escape(value) + '</td>').join('') + '</tr>');
         }
       }
     }
     byId('divisionReportRows').innerHTML = html.join('');
-    const labels = divisions.map(div => div + ': ' + grouped[div].length).join('   |   ');
-    setStatus('FY ' + fullFY(fy) + '  •  ' + total + ' record(s)  •  ' + labels +
-      '  •  Only records with a saved Division and a valid date are included. Missing authority fields remain blank.');
+    const labels = divisions.map(div => div.toUpperCase() + ': ' + grouped[div].length).join('  |  ');
+    setStatus('FY ' + fullFY(fy) + '   •   ' + selectedCount + ' selected categories   •   ' + total +
+      ' records   •   ' + labels +
+      '   •   Records must have a saved division and valid date.');
   }
 
   function open() {
+    initCategorySelector();
     updateFYChoices();
     byId('divisionReportDivision').value = 'ALL';
     render();
@@ -194,7 +243,8 @@
   async function exportExcel() {
     const button = byId('divisionReportExcelBtn');
     if (button.disabled) return;
-    const {fy, divisions, grouped} = getReportData();
+    const {fy, divisions, grouped, selectedCount} = getReportData();
+    if (!selectedCount) { setStatus('Select at least one file / approval type.', true); return; }
     button.disabled = true;
     setStatus('Preparing formatted Excel report for FY ' + fullFY(fy) + '…');
     try {
@@ -215,39 +265,49 @@
         {width:16}, {width:29}, {width:15}
       ];
       ws.pageSetup.horizontalCentered = true;
-      const border = {top:{style:'thin',color:{argb:'FF111111'}},
-        left:{style:'thin',color:{argb:'FF111111'}},
-        bottom:{style:'thin',color:{argb:'FF111111'}},
-        right:{style:'thin',color:{argb:'FF111111'}}};
-      const outlineRow = (row, bold=false) => {
+      const NAVY = 'FF133956';
+      const BLUE = 'FF195983';
+      const PALE = 'FFD9EDF9';
+      const LIGHT = 'FFEBF4FA';
+      const WHITE = 'FFFFFFFF';
+      const INK = 'FF183149';
+      const border = {top:{style:'thin',color:{argb:'FFADBFD0'}},
+        left:{style:'thin',color:{argb:'FFADBFD0'}},
+        bottom:{style:'thin',color:{argb:'FFADBFD0'}},
+        right:{style:'thin',color:{argb:'FFADBFD0'}}};
+      const outlineRow = (row, options={}) => {
+        const fill = options.fill || WHITE;
+        const color = options.color || INK;
         row.eachCell({includeEmpty:true}, cell => {
           cell.border = border;
-          cell.font = {name:'Arial',size:10,bold,color:{argb:'FF111111'}};
-          cell.alignment = {vertical:'middle',horizontal:cell.col===1?'center':'left',wrapText:true};
-          cell.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+          cell.font = {name:'Arial',size:options.size || 10,bold:!!options.bold,color:{argb:color}};
+          cell.alignment = {vertical:'middle',horizontal:options.center ? 'center' : cell.col===1||cell.col===7?'center':'left',wrapText:true};
+          cell.fill = {type:'pattern',pattern:'solid',fgColor:{argb:fill}};
         });
       };
       ws.mergeCells('A1:G1');
       const titleRow = ws.getRow(1);
-      titleRow.height = 25;
-      titleRow.getCell(1).value = 'Division wise report of FY ' + fullFY(fy);
-      outlineRow(titleRow);
-      titleRow.getCell(1).font = {name:'Arial',size:13,bold:true,color:{argb:'FF111111'}};
-      titleRow.getCell(1).alignment = {horizontal:'center',vertical:'middle'};
-      let rowIndex = 2;
+      titleRow.height = 32;
+      titleRow.getCell(1).value = 'DIVISION-WISE REPORT OF FY ' + fullFY(fy);
+      outlineRow(titleRow,{fill:NAVY,color:WHITE,size:15,bold:true,center:true});
+      ws.mergeCells('A2:G2');
+      const summaryRow = ws.getRow(2);
+      summaryRow.height = 22;
+      const grandTotal = divisions.reduce((sum,div) => sum + grouped[div].length,0);
+      summaryRow.getCell(1).value = selectedCount + ' APPROVAL TYPE' + (selectedCount===1?'':'S') + ' SELECTED  |  TOTAL RECORDS: ' + grandTotal;
+      outlineRow(summaryRow,{fill:LIGHT,color:BLUE,size:10,bold:true,center:true});
+      let rowIndex = 3;
       for (const div of divisions) {
         ws.mergeCells('A'+rowIndex+':G'+rowIndex);
         const divRow = ws.getRow(rowIndex);
-        divRow.height = 21;
-        divRow.getCell(1).value = 'Division ' + div;
-        outlineRow(divRow,true);
-        divRow.getCell(1).font = {name:'Arial',size:11,bold:true,color:{argb:'FF111111'}};
+        divRow.height = 28;
+        divRow.getCell(1).value = 'DIVISION: ' + div.toUpperCase();
+        outlineRow(divRow,{fill:PALE,color:NAVY,size:12,bold:true,center:true});
         rowIndex++;
         const header = ws.getRow(rowIndex++);
         COLUMNS.forEach((col,i) => {header.getCell(i+1).value = col;});
-        outlineRow(header,true);
-        header.height = 23;
-        header.eachCell(cell => {cell.font = {name:'Arial',size:10,bold:true,color:{argb:'FF111111'}};});
+        outlineRow(header,{fill:BLUE,color:WHITE,size:10,bold:true,center:true});
+        header.height = 32;
         const entries = grouped[div];
         for (let i=0; i<Math.max(MIN_ROWS_PER_DIVISION, entries.length); i++) {
           const r = entries[i];
@@ -255,9 +315,10 @@
             : ['', '', '', '', '', '', ''];
           const row = ws.getRow(rowIndex++);
           values.forEach((v,j) => {row.getCell(j+1).value = v;});
-          outlineRow(row);
-          const workLines = r ? Math.ceil(r.work.length / 55) : 1;
-          row.height = Math.min(60, Math.max(19, workLines * 14));
+          outlineRow(row,{fill: i%2===1 ? 'FFF5F9FC' : WHITE});
+          row.getCell(3).alignment = {horizontal:'center',vertical:'middle',wrapText:true};
+          const workLines = r ? Math.ceil(r.work.length / 52) : 1;
+          row.height = Math.min(90, Math.max(22, workLines * 15));
         }
       }
       ws.pageSetup.printArea = 'A1:G' + (rowIndex - 1);
@@ -284,6 +345,8 @@
   window.openDivisionReportModal = open;
   window.closeDivisionReportModal = close;
   window.renderDivisionReport = render;
+  window.toggleDivisionReportCategories = toggleCategories;
+  window.setDivisionReportCategories = setCategories;
   window.printDivisionReport = print;
   window.exportDivisionReportExcel = exportExcel;
   window.railRefreshOpenDivisionReport = function () {

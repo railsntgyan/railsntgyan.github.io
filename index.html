@@ -8713,10 +8713,26 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             <option value="Nagpur">Nagpur</option>
           </select>
           <button type="button" onclick="exportDivisionReportExcel()" class="dr-excel-button" id="divisionReportExcelBtn"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
-          <button type="button" onclick="printDivisionReport()"><i class="fa-solid fa-print"></i> Print / PDF</button>
+          <button type="button" onclick="printDivisionReport()" id="divisionReportPrintBtn"><i class="fa-solid fa-print"></i> Print / PDF</button>
           <button type="button" class="dr-close" onclick="closeDivisionReportModal()" aria-label="Close report"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
+      <section class="dr-filter-area" aria-label="Select files and approvals for the report">
+        <div class="dr-filter-top">
+          <button type="button" class="dr-filter-toggle" id="divisionReportFilterToggle" onclick="toggleDivisionReportCategories()" aria-expanded="true" aria-controls="divisionReportFilterPanel">
+            <i class="fa-solid fa-list-check"></i> SELECT FILES &amp; APPROVALS <span id="divisionReportSelectedCount">10 OF 16 SELECTED</span> <i class="fa-solid fa-chevron-up dr-filter-chevron"></i>
+          </button>
+          <div class="dr-filter-hint">Choose one or more categories to include in the report.</div>
+        </div>
+        <div class="dr-filter-panel" id="divisionReportFilterPanel">
+          <div class="dr-filter-actions">
+            <button type="button" onclick="setDivisionReportCategories('all')"><i class="fa-solid fa-check-double"></i> Select All</button>
+            <button type="button" onclick="setDivisionReportCategories('none')">Clear All</button>
+            <button type="button" onclick="setDivisionReportCategories('default')">Default Approvals</button>
+          </div>
+          <div class="dr-category-grid" id="divisionReportCategoryGrid" role="group" aria-label="Files and approvals to include"></div>
+        </div>
+      </section>
       <div class="dr-status" id="divisionReportStatus" role="status" aria-live="polite"></div>
       <div class="dr-scroll">
         <div class="dr-sheet" id="divisionReportSheet">
