@@ -61,6 +61,44 @@
     return {action, by, to, source, guide:WORKFLOW_GUIDES[category]||''};
   }
 
+  // Use exactly the same clear, authority-first wording in the website, print and Excel.
+  // A forwarding destination or approving officer is never guessed from a typical route.
+  function workflowPresentation(info, compact=false) {
+    const action = clean(info.action).toUpperCase();
+    const by = clean(info.by) || 'NOT RECORDED';
+    const to = clean(info.to) || 'NOT RECORDED';
+    let label = action;
+    let note = '';
+
+    if (action === 'APPROVED' || action === 'SANCTION AUTHORITY RECORDED' ||
+        action === 'ISSUING AUTHORITY RECORDED') {
+      label = 'SANCTIONED/APPROVED BY: ' + by;
+    } else if (action === 'FORWARDED') {
+      label = 'FORWARDED BY: ' + by + ' TO: ' + to;
+    } else if (action === 'SIGNED & RETURNED') {
+      label = 'SIGNED BY: ' + by + ' / RETURNED TO: ' + to;
+    } else if (action === 'ISSUED') {
+      label = 'ISSUED BY: ' + by;
+    } else if (action === 'RETURNED FOR COMPLIANCE') {
+      label = 'RETURNED BY: ' + by + ' TO: ' + to + ' FOR COMPLIANCE';
+    } else if (action === 'UNDER PROCESS') {
+      label = 'UNDER PROCESS' + (info.by ? ' — WITH: ' + info.by : '');
+    } else if (action === 'NOT RECORDED') {
+      label = 'ACTION NOT RECORDED';
+    } else {
+      // Keep future / custom workflow actions readable without altering saved data.
+      label = action + (info.by ? ' — BY: ' + info.by : '') + (info.to ? ' — TO: ' + info.to : '');
+    }
+
+    if (info.source === 'LEGACY') {
+      note = 'AS PER SAVED ' + (action === 'ISSUING AUTHORITY RECORDED' ? 'GIVEN BY' : 'SANCTION GIVEN BY') + ' FIELD';
+    } else if (info.source === 'UNRECORDED') {
+      note = compact ? 'VERIFY IN EDIT' :
+        (info.guide ? 'STANDARD ROUTE: ' + info.guide + ' (NOT VERIFIED)' : 'UPDATE IN EDIT RECORD');
+    }
+    return {label, note};
+  }
+
   function workflowMarkup(item, compact=false) {
     const info = item && item.action ? item : workflowFor(item || {});
     const style = info.source === 'UNRECORDED' ? 'dr-workflow-unknown' :
@@ -68,20 +106,10 @@
       /FORWARDED/.test(info.action) ? 'dr-workflow-forwarded' :
       /APPROVED|ISSUED|SIGNED|SANCTION/.test(info.action) ? 'dr-workflow-approved' :
       'dr-workflow-neutral';
-    const extra = [];
-    if (info.by) extra.push('<span class="dr-workflow-detail">BY: '+escape(info.by)+'</span>');
-    else if (info.source === 'EXPLICIT' && /^(APPROVED|FORWARDED|SIGNED|ISSUED)/.test(info.action))
-      extra.push('<span class="dr-workflow-hint">BY: NOT RECORDED</span>');
-    if (info.to) extra.push('<span class="dr-workflow-detail">TO: '+escape(info.to)+'</span>');
-    else if (info.source === 'EXPLICIT' && /^(FORWARDED|SIGNED & RETURNED)/.test(info.action))
-      extra.push('<span class="dr-workflow-hint">TO: NOT RECORDED</span>');
-    if (info.source === 'UNRECORDED') {
-      extra.push('<span class="dr-workflow-hint">'+escape(compact?'VERIFY IN EDIT':(info.guide ? 'STANDARD ROUTE: '+info.guide+' (NOT VERIFIED)' : 'UPDATE IN EDIT RECORD'))+'</span>');
-    }
-    if (info.source === 'LEGACY') {
-      extra.push('<span class="dr-workflow-hint">OUTCOME NOT SEPARATELY SAVED</span>');
-    }
-    return '<div class="dr-workflow-result"><span class="dr-workflow-pill '+style+'">'+escape(info.action)+'</span>'+extra.join('')+'</div>';
+    const display = workflowPresentation(info, compact);
+    return '<div class="dr-workflow-result"><span class="dr-workflow-pill ' + style + '">' +
+      escape(display.label) + '</span>' +
+      (display.note ? '<span class="dr-workflow-hint">' + escape(display.note) + '</span>' : '') + '</div>';
   }
   window.railRenderWorkflowCell = rec => workflowMarkup(rec,true);
 
@@ -406,11 +434,9 @@
         const entries = grouped[div];
         for (let i=0; i<entries.length; i++) {
           const r = entries[i];
-          const detail = [r.workflow.action];
-          if (r.workflow.by) detail.push('BY: '+r.workflow.by);
-          if (r.workflow.to) detail.push('TO: '+r.workflow.to);
-          if (r.workflow.source === 'UNRECORDED') detail.push('UPDATE IN EDIT RECORD');
-          if (r.workflow.source === 'LEGACY') detail.push('OUTCOME NOT SEPARATELY SAVED');
+          const display = workflowPresentation(r.workflow);
+          const detail = [display.label];
+          if (display.note) detail.push(display.note);
           const values = [i+1,excelText(r.station),excelText(r.category),excelText(r.work),excelText(r.agency),excelText(detail.join('\n')),r.date];
           const row = ws.getRow(rowIndex++);
           values.forEach((v,j) => {row.getCell(j+1).value = v;});
