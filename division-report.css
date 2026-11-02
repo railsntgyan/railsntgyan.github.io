@@ -1,0 +1,124 @@
+/* ADD-ON ONLY: Division-wise FY detail report. Existing site selectors are untouched. */
+#divisionReportModal { z-index: 1120; }
+#divisionReportModal .dr-dialog {
+  display:flex; flex-direction:column; overflow:hidden;
+  width:min(1130px, 98vw); height:min(92dvh, 960px); max-height:96dvh;
+  border-radius:12px; background:#f3f6fa; color:#142538;
+  box-shadow:0 22px 70px rgba(0,0,0,.34);
+}
+#divisionReportModal .dr-toolbar {
+  background:linear-gradient(125deg,#0b3b60,#07517c); color:#fff;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; padding:12px 16px; flex-wrap:wrap;
+}
+#divisionReportModal .dr-toolbar h3 { color:#fff!important; font-size:16px; line-height:1.3; margin:0; font-weight:800; }
+#divisionReportModal .dr-toolbar-actions { display:flex; align-items:center; flex-wrap:wrap; gap:7px; }
+#divisionReportModal .dr-toolbar label { font-size:12px; color:#fff; font-weight:700; }
+#divisionReportModal .dr-toolbar select {
+  color:#142538!important; background:#fff!important; border:1px solid #dce4ee;
+  padding:7px 8px; border-radius:6px; font-size:12px; font-weight:700;
+}
+#divisionReportModal .dr-toolbar button {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:8px 10px; border:1px solid #adc4db; border-radius:6px;
+  background:#ebf5ff; color:#0b3b60; font-size:12px; font-weight:750;
+  cursor:pointer; min-height:33px;
+}
+#divisionReportModal .dr-toolbar button:hover { filter:brightness(.95); }
+#divisionReportModal .dr-toolbar button:disabled { opacity:.65; cursor:progress; }
+#divisionReportModal .dr-toolbar button.dr-excel-button { background:#19734c; color:#fff; border-color:#38956e; }
+#divisionReportModal .dr-toolbar button.dr-close { color:#fff; background:transparent; border:1px solid #70889f; min-width:34px; }
+#divisionReportModal .dr-status {
+  padding:8px 16px; font-size:12px; font-weight:600; line-height:1.5;
+  background:#e6f2fb; color:#174b6d; border-bottom:1px solid #d0e3f1;
+}
+#divisionReportModal .dr-status.dr-error { color:#8a1f2b; background:#ffe9ea; }
+#divisionReportModal .dr-scroll { overflow:auto; flex:1; padding:16px; overscroll-behavior:contain; }
+#divisionReportModal .dr-sheet {
+  background:white!important; color:#111!important; margin:0 auto; padding:14px 12px;
+  min-width:760px; max-width:1100px; box-shadow:0 3px 12px rgba(22,42,72,.12);
+}
+#divisionReportModal .dr-report-table {
+  width:100%; table-layout:fixed; border-collapse:collapse!important;
+  border:1px solid #111!important; font-family:Arial,Helvetica,sans-serif;
+  color:#111!important; background:#fff!important; font-size:12px; line-height:1.25;
+}
+#divisionReportModal .dr-report-table col.dr-col-sn { width:7%; }
+#divisionReportModal .dr-report-table col.dr-col-station { width:16%; }
+#divisionReportModal .dr-report-table col.dr-col-approval { width:14%; }
+#divisionReportModal .dr-report-table col.dr-col-work { width:23%; }
+#divisionReportModal .dr-report-table col.dr-col-agency { width:11%; }
+#divisionReportModal .dr-report-table col.dr-col-authority { width:19%; }
+#divisionReportModal .dr-report-table col.dr-col-date { width:10%; }
+#divisionReportModal .dr-report-table th,
+#divisionReportModal .dr-report-table td {
+  background:#fff!important; color:#111!important; border:1px solid #111!important;
+  padding:4px 5px!important; vertical-align:top!important; line-height:1.35;
+  overflow-wrap:anywhere; word-break:normal; text-align:left;
+  position:static!important; box-shadow:none!important; white-space:normal!important;
+}
+#divisionReportModal .dr-report-table .dr-title {
+  text-align:center!important; font-size:15px; font-weight:800;
+  padding:7px 5px!important;
+}
+#divisionReportModal .dr-report-table .dr-division {
+  font-size:13px; font-weight:800; padding:6px 5px!important;
+}
+#divisionReportModal .dr-report-table .dr-fields th {
+  font-size:12px; font-weight:800; vertical-align:middle!important;
+}
+#divisionReportModal .dr-report-table .dr-sn { text-align:center!important; }
+#divisionReportModal .dr-report-table .dr-empty td { height:23px; }
+#divisionReportModal .dr-report-table .dr-break-before { break-before:auto; }
+@media(max-width:740px){
+  #divisionReportModal {padding:5px;}
+  #divisionReportModal .dr-dialog {width:100%;height:98dvh;max-height:98dvh;}
+  #divisionReportModal .dr-toolbar {padding:8px 10px; gap:8px;}
+  #divisionReportModal .dr-toolbar h3 {font-size:13px;}
+  #divisionReportModal .dr-toolbar-actions {gap:5px;}
+  #divisionReportModal .dr-toolbar button {font-size:11px; padding:6px 8px;}
+  #divisionReportModal .dr-scroll {padding:7px;}
+  #divisionReportModal .dr-sheet {padding:6px;}
+}
+@media print {
+  /* The existing website has a universal FY-print rule that hides all body children.
+     This more-specific add-on overrides it ONLY for Division Report printing. */
+  body.printing-division-report > *:not(#divisionReportModal) {display:none!important;}
+  body.printing-division-report #fyReportModal,
+  body.printing-division-report #pdfPreviewModal {display:none!important;}
+  body.printing-division-report #divisionReportModal {
+    display:block!important; position:static!important;
+    inset:auto!important; width:100%!important; height:auto!important;
+    margin:0!important; padding:0!important;
+    background:#fff!important; backdrop-filter:none!important;
+    overflow:visible!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-dialog {
+    display:block!important; width:100%!important; height:auto!important;
+    max-height:none!important; border:0!important; border-radius:0!important;
+    box-shadow:none!important; overflow:visible!important; background:#fff!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-toolbar,
+  body.printing-division-report #divisionReportModal .dr-status {display:none!important;}
+  body.printing-division-report #divisionReportModal .dr-scroll {
+    display:block!important; overflow:visible!important; width:100%!important;
+    padding:0!important; height:auto!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-sheet {
+    width:100%!important; min-width:0!important; max-width:none!important;
+    padding:0!important; margin:0!important; box-shadow:none!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-report-table {
+    font-size:9pt!important; width:100%!important; page-break-inside:auto;
+  }
+  body.printing-division-report #divisionReportModal .dr-report-table th,
+  body.printing-division-report #divisionReportModal .dr-report-table td {
+    border:1px solid #000!important; padding:2px 3px!important;
+    color:#000!important; background:#fff!important;
+  }
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-empty td {height:14px!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-title {font-size:12pt!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-division {font-size:10pt!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-fields th {font-size:9pt!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table tr {break-inside:avoid;page-break-inside:avoid;}
+}

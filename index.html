@@ -7481,6 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
+  <link rel="stylesheet" href="division-report.css">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8472,6 +8473,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
               <button class="btn btn-outline" style="padding: 4px 10px; font-size:10.5px;" onclick="openFYReportModal()">
                 <i class="fa-solid fa-chart-column"></i> Detailed FY Report
               </button>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size:10.5px;" onclick="openDivisionReportModal()" title="Division-wise Detailed Report">
+                <i class="fa-solid fa-table-list"></i> Division-wise Report
+              </button>
             </div>
             <div class="chart-wrapper">
               <canvas id="dashBarChart"></canvas>
@@ -8504,6 +8508,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             </button>
             <button class="btn btn-success" onclick="openFYReportModal()" title="FY Report">
               <i class="fa-solid fa-chart-column"></i> <span class="btn-text">FY Report</span>
+            </button>
+            <button class="btn btn-outline" onclick="openDivisionReportModal()" title="Division-wise Report">
+              <i class="fa-solid fa-table-list"></i> <span class="btn-text">Division-wise Report</span>
             </button>
             <button class="btn btn-outline" onclick="exportToCSV()" title="Export CSV">
               <i class="fa-solid fa-file-csv"></i> <span class="btn-text">Export CSV</span>
@@ -8684,6 +8691,41 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
               <tbody id="fyReportTableBody"></tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ADD-ON: Division-wise Detailed FY Report (independent of existing FY report) -->
+  <div class="modal-overlay" id="divisionReportModal" role="dialog" aria-modal="true" aria-labelledby="divisionReportHeading">
+    <div class="dr-dialog">
+      <div class="dr-toolbar">
+        <h3 id="divisionReportHeading"><i class="fa-solid fa-table-list"></i> Division-wise Detailed Report</h3>
+        <div class="dr-toolbar-actions">
+          <label for="divisionReportFY">Select FY:</label>
+          <select id="divisionReportFY" onchange="renderDivisionReport()" aria-label="Select financial year"></select>
+          <label for="divisionReportDivision">Division:</label>
+          <select id="divisionReportDivision" onchange="renderDivisionReport()" aria-label="Select division">
+            <option value="ALL">All Divisions</option>
+            <option value="Bilaspur">Bilaspur</option>
+            <option value="Raipur">Raipur</option>
+            <option value="Nagpur">Nagpur</option>
+          </select>
+          <button type="button" onclick="exportDivisionReportExcel()" class="dr-excel-button" id="divisionReportExcelBtn"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+          <button type="button" onclick="printDivisionReport()"><i class="fa-solid fa-print"></i> Print / PDF</button>
+          <button type="button" class="dr-close" onclick="closeDivisionReportModal()" aria-label="Close report"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="dr-status" id="divisionReportStatus" role="status" aria-live="polite"></div>
+      <div class="dr-scroll">
+        <div class="dr-sheet" id="divisionReportSheet">
+          <table class="dr-report-table" id="divisionReportTable">
+            <colgroup>
+              <col class="dr-col-sn"><col class="dr-col-station"><col class="dr-col-approval"><col class="dr-col-work"><col class="dr-col-agency"><col class="dr-col-authority"><col class="dr-col-date">
+            </colgroup>
+            <tbody id="divisionReportRows"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -9796,6 +9838,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         ['inAppWebModal', closeInAppWebModal],
         ['pdfPreviewModal', closePreviewModal],
         ['fyReportModal', closeFYReportModal],
+        ['divisionReportModal', closeDivisionReportModal],
         ['addRecordModal', closeAddModal]
       ];
 
@@ -10146,6 +10189,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       renderTable();
       if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
       updateDashboardView();
+      if (typeof window.railRefreshOpenDivisionReport === 'function') window.railRefreshOpenDivisionReport();
 
       // If the page was recreated by Android/mobile Back, restore the
       // Important Links section after Firestore has repopulated the table.
@@ -25236,5 +25280,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
+  <script src="division-report.js" defer></script>
 </body>
 </html>
