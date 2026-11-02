@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css?v=20261103-printtitles1">
+  <link rel="stylesheet" href="division-report.css?v=20261103-mobileprintv5">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -22110,7 +22110,7 @@ function ready(){
 <!-- v20: Rebuilt mobile/tablet fit preview. A separate, non-sticky table prevents frozen-column overlap. -->
 <style id="rails-table-v20-css">
 #railsTableModeBar{display:none}
-@media(max-width:1366px){
+@media(min-width:0px){
  #railsTableModeBar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px;border:1px solid #546981;border-radius:9px;background:#17283f;color:#fff;font-size:12px;font-weight:750;flex-shrink:0}
  #railsTableModeBar button{padding:7px 9px;border-radius:6px;border:1px solid #a3b4c8;background:#f7fbff;color:#14304d;font-weight:750;cursor:pointer}
  #railsTableModeBar button[aria-pressed=true]{background:#087e98;color:white;border-color:#087e98}
@@ -22124,19 +22124,19 @@ function ready(){
  #mainTableContainer.rails-fit-mode #railsFitTable tr>:nth-child(2){border-right:2px solid #f97316!important}
  #mainTableContainer.rails-fit-mode #railsFitTable tbody td{white-space:normal!important;overflow:visible!important}
 }
-@media(min-width:1367px){#railsFitTable{display:none!important}}
+
 </style>
 <script id="rails-table-v20-js">
 (function(){
- const mq=matchMedia('(max-width:1366px)');
- // Show table mode controls only on mobile/tablet, never on mouse-driven laptops.
+ const mq=matchMedia('(min-width:0px)');
+ // Offer Fit Screen on phones, tablets and laptops regardless of pixel-density/scaling.
  const isTouchDevice=()=>/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||matchMedia('(pointer: coarse)').matches;
  let mode='scroll',zoomFactor=1,queued=false,needsRebuild=true,fitBaseScale=1;
  const get=()=>({section:document.getElementById('tableViewSection'),box:document.getElementById('mainTableContainer'),table:document.getElementById('mainRecordTable'),bar:document.getElementById('railsTableModeBar')});
  function render(){
   queued=false;
   const {section,box,table,bar}=get();if(!section||!box||!table||!bar)return;
-  const active=mq.matches&&isTouchDevice()&&getComputedStyle(section).display!=='none';
+  const active=mq.matches&&getComputedStyle(section).display!=='none';
   bar.style.display=active?'flex':'none';
   if(!active){box.classList.remove('rails-fit-mode');const preview=document.getElementById('railsFitTable');if(preview)preview.remove();needsRebuild=true;return;}
   if(mode==='scroll'){
@@ -22210,7 +22210,7 @@ function ready(){
  function init(){
   const {box,table}=get();if(!box||!table||document.getElementById('railsTableModeBar'))return;
   const bar=document.createElement('div');bar.id='railsTableModeBar';
-  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="false">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="true">Normal Scroll</button>';
+  bar.innerHTML='<span>Table View:</span><button type="button" data-mode="fit" aria-pressed="false">Fit Screen</button><button type="button" data-mode="scroll" aria-pressed="true">Normal Scroll</button><span data-scale aria-live="polite">100%</span>';
   box.parentNode.insertBefore(bar,box);
   // Two-finger zoom for Fit Screen, with native one-finger vertical/horizontal panning.
   let pinchStartDistance=0, pinchStartFactor=1;
@@ -22243,7 +22243,7 @@ function ready(){
 </script>
 
 <style id="rails-v21-render-tested-fixes">
-@media(max-width:1366px){
+@media(min-width:0px){
  #mainTableContainer.rails-fit-mode{overflow:auto!important; overscroll-behavior:contain;}
  #mainTableContainer.rails-fit-mode #railsFitTable{border:1px solid #f97316!important;border-spacing:0!important;table-layout:fixed!important;}
  #mainTableContainer.rails-fit-mode #railsFitTable th,
@@ -24998,7 +24998,7 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 
 <!-- Fit Screen mobile/tablet fix: freeze leading columns in the scaled preview. -->
 <style id="rails-fit-screen-frozen-columns-20261027">
-@media screen and (max-width:1366px) {
+@media screen and (min-width:0px) {
   /* Above any scrollable body cell, all column headings stay visible on vertical scroll. */
   html body #mainTableContainer.rails-fit-mode #railsFitTable thead th {
     position:sticky !important;
@@ -25437,6 +25437,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
-  <script src="division-report.js?v=20261103-printtitles1" defer></script>
+  <script src="division-report.js?v=20261103-mobileprintv5" defer></script>
 </body>
 </html>

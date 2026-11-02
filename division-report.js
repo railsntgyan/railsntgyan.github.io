@@ -290,42 +290,39 @@
 
     const total = divisions.reduce((sum, div) => sum + grouped[div].length, 0);
     const html = [];
+    // One-time document heading; never part of the repeating print table THEAD.
+    html.push('<header class="dr-report-intro">' +
+      '<div class="dr-report-main-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) + '</div>' +
+      '<div class="dr-report-grand-total">TOTAL RECORDS: ' + total + '</div>' +
+      '</header>');
     if (!visibleDivisions.length) {
-      html.push('<table class="dr-report-table dr-empty-table">' + reportColumnGroup() +
-        '<thead><tr><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) +
-        '</th></tr><tr><th colspan="7" class="dr-meta">TOTAL RECORDS: 0</th></tr></thead>' +
-        '<tbody><tr><td colspan="7" class="dr-no-results">NO RECORDS FOUND FOR THE SELECTED FY, DIVISION AND FILE TYPES.</td></tr></tbody></table>');
+      html.push('<div class="dr-no-results dr-message">NO RECORDS FOUND FOR THE SELECTED FY, DIVISION AND FILE TYPES.</div>');
     }
     for (let divIndex = 0; divIndex < visibleDivisions.length; divIndex++) {
       const div = visibleDivisions[divIndex];
       const entries = grouped[div];
-      // The title and total repeat at the top of printed pages. On screen they
-      // appear only once, at the very beginning of the report.
-      const repeatOnScreen = divIndex === 0 ? '' : ' dr-screen-repeat-hidden';
-      html.push('<table class="dr-report-table dr-division-table">' + reportColumnGroup() +
-        '<thead class="dr-print-repeat">' +
-        '<tr class="dr-report-title-row' + repeatOnScreen + '"><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' +
-        escape(fullFY(fy)) + '</th></tr>' +
-        '<tr class="dr-report-total-row' + repeatOnScreen + '"><th colspan="7" class="dr-meta">TOTAL RECORDS: ' + total + '</th></tr>' +
-        '<tr class="dr-division-row"><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>' +
-        '<tr class="dr-fields">' + COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') + '</tr>' +
-        '</thead><tbody>');
+      // Division heading occurs ONCE per division. Only column headings are
+      // children of THEAD and hence repeated on subsequent printed pages.
+      html.push('<section class="dr-division-block" aria-label="Division ' + escape(div) + '">' +
+        '<h4 class="dr-division-heading">DIVISION: ' + escape(div.toUpperCase()) + '</h4>' +
+        '<table class="dr-report-table dr-division-table">' + reportColumnGroup() +
+        '<thead class="dr-print-repeat"><tr class="dr-fields">' +
+        COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') +
+        '</tr></thead><tbody>');
       for (let index = 0; index < entries.length; index++) {
         const row = entries[index];
         const values = [index + 1, row.station, row.category, row.work, row.agency, row.workflow, row.date];
-        html.push('<tr class="dr-record' + (divIndex === visibleDivisions.length - 1 && index === entries.length - 1 ? ' dr-last-record' : '') + '">' + values.map((value,col) =>
-          '<td class="' + (col===0?'dr-sn':col===2?'dr-type':col===5?'dr-outcome':col===6?'dr-date':'') + '">' +
-          (col===5 ? workflowMarkup(value) : escape(value)) + '</td>'
-        ).join('') + '</tr>');
+        html.push('<tr class="dr-record' + (divIndex === visibleDivisions.length - 1 && index === entries.length - 1 ? ' dr-last-record' : '') + '">' +
+          values.map((value,col) => '<td data-label="' + escape(COLUMNS[col]) + '" class="' +
+            (col===0?'dr-sn':col===2?'dr-type':col===5?'dr-outcome':col===6?'dr-date':'') + '">' +
+            (col===5 ? workflowMarkup(value) : escape(value)) + '</td>').join('') + '</tr>');
       }
-      // Keep the prepared-by designation with the last data row rather than
-      // letting it occupy a new, otherwise blank printed page.
       if (divIndex === visibleDivisions.length - 1) {
         html.push('<tr class="dr-prepared-row"><td colspan="7">' +
           '<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>' +
           '</td></tr>');
       }
-      html.push('</tbody></table>');
+      html.push('</tbody></table></section>');
     }
     if (!visibleDivisions.length) {
       html.push('<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>');
@@ -358,7 +355,8 @@
     // the report print operation so other website print features are unchanged.
     const pageStyle = document.createElement('style');
     pageStyle.id = 'divisionReportPrintPageSize';
-    pageStyle.textContent = '@page { size: A4 landscape; margin: 10mm 9mm 12mm; }';
+    pageStyle.textContent = '@page { size: A4 landscape; margin: 10mm 9mm 16mm; ' +
+      '@bottom-center { content: counter(page) " of " counter(pages); font-family: "Times New Roman", serif; font-size: 10pt; color: #243747; } }';
     document.head.appendChild(pageStyle);
     const cleanPrintState = () => {
       document.body.classList.remove('printing-division-report');
@@ -458,13 +456,14 @@
       const grandTotal = divisions.reduce((sum,div) => sum + grouped[div].length,0);
       summaryRow.getCell(1).value = 'TOTAL RECORDS: ' + grandTotal;
       outlineRow(summaryRow,{fill:LIGHT,color:BLUE,size:10,bold:true,center:true});
-      // Reprint the report title, record count and column headings on EVERY
-      // Excel print page; also freeze these three rows during sheet scrolling.
+      // Repeat ONLY the seven column labels when Excel prints subsequent pages;
+      // keep the title, total and division headings in their original locations.
       const globalHeader = ws.getRow(3);
       COLUMNS.forEach((col,i) => {globalHeader.getCell(i+1).value = col;});
       outlineRow(globalHeader,{fill:BLUE,color:WHITE,size:10,bold:true});
       globalHeader.height = 34;
-      ws.pageSetup.printTitlesRow = '1:3';
+      ws.pageSetup.printTitlesRow = '3:3';
+      ws.headerFooter.oddFooter = '&CPage &P of &N';
       ws.views = [{state:'frozen',ySplit:3,showGridLines:false}];
       let rowIndex = 4;
       for (const div of divisions.filter(d => grouped[d].length)) {
