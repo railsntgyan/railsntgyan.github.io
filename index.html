@@ -8479,14 +8479,12 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           <div class="chart-card">
             <div class="chart-header">
               <h3><i class="fa-solid fa-chart-bar" style="color:var(--brand-orange);"></i> Category-wise Records Distribution (Current FY)</h3>
-              <div class="rail-chart-report-actions">
-                <button type="button" class="btn btn-outline" onclick="openFYReportModal()">
-                  <i class="fa-solid fa-chart-column" aria-hidden="true"></i> Detailed FY Report
-                </button>
-                <button type="button" class="btn btn-outline" onclick="openDivisionReportModal()" title="Division-wise Detailed Report">
-                  <i class="fa-solid fa-table-list" aria-hidden="true"></i> Division-wise Report
-                </button>
-              </div>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size:10.5px;" onclick="openFYReportModal()">
+                <i class="fa-solid fa-chart-column"></i> Detailed FY Report
+              </button>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size:10.5px;" onclick="openDivisionReportModal()" title="Division-wise Detailed Report">
+                <i class="fa-solid fa-table-list"></i> Division-wise Report
+              </button>
             </div>
             <div class="chart-wrapper">
               <canvas id="dashBarChart"></canvas>
@@ -25476,11 +25474,10 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 
 </script>
 
-<!-- v8: mobile report entry visibility; only Home chart toolbar and Division modal controls. -->
-<style id="rail-division-report-mobile-entry-v8">
+<!-- v9: mobile report visibility while restoring untouched desktop chart toolbar. -->
+<style id="rail-division-report-mobile-entry-v9">
 #dashboardView .rail-mobile-reports-entry{display:none;}
-#dashboardView .rail-chart-report-actions{display:flex;flex-wrap:wrap;align-items:center;gap:7px;min-width:0;}
-#dashboardView .rail-chart-report-actions .btn{padding:6px 10px;font-size:11px;white-space:normal;line-height:1.4;}
+/* Desktop: preserve the original chart header and its two direct child buttons. */
 @media screen and (max-width:768px){
   #dashboardView .rail-mobile-reports-entry{
     display:block!important;width:100%!important;max-width:100%!important;
@@ -25498,21 +25495,17 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
   #dashboardView .rail-mobile-division-shortcut > span{min-width:0;}
   #dashboardView .rail-mobile-shortcut-arrow{margin-left:auto!important;font-size:12px;}
   #dashboardView .chart-card .chart-header{
-    display:grid!important;grid-template-columns:minmax(0,1fr)!important;
-    gap:10px!important;width:100%!important;min-width:0!important;
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px 7px!important;width:100%!important;min-width:0!important;
     align-items:start!important;overflow:visible!important;
   }
   #dashboardView .chart-card .chart-header > h3{
+    grid-column:1 / -1!important;
     width:100%!important;max-width:100%!important;min-width:0!important;
     margin:0!important;white-space:normal!important;overflow-wrap:break-word!important;
     font-size:13px!important;line-height:1.35!important;
   }
-  #dashboardView .chart-card .rail-chart-report-actions{
-    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    width:100%!important;max-width:100%!important;min-width:0!important;
-    gap:7px!important;box-sizing:border-box!important;
-  }
-  #dashboardView .chart-card .rail-chart-report-actions > button{
+  #dashboardView .chart-card .chart-header > button{
     display:flex!important;align-items:center!important;justify-content:center!important;
     width:100%!important;min-width:0!important;max-width:100%!important;
     height:auto!important;min-height:40px!important;
