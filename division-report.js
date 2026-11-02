@@ -1,5 +1,5 @@
-/* ADD-ON: Division-wise detailed FY report, read-only access to loaded Firestore records.
-   No changes to existing records, Firebase schema, FY summary or table filters. */
+/* ADD-ON: Division-wise detailed FY report, reading the existing Firestore records.
+   Explicit outcome fields are optional and saved by the existing Add/Edit form. */
 (function () {
   'use strict';
 
@@ -13,11 +13,77 @@
     'LETTER ISSUED BY HQ', 'FILE MOVEMENT REGISTER'
   ];
   const DEFAULT_CATEGORIES = new Set(ALL_CATEGORIES.slice(0, 10));
-  const MIN_ROWS_PER_DIVISION = 8;
-  const COLUMNS = ['SN', 'STATION / SECTION', 'APPROVAL FOR', 'WORK', 'AGENCY', 'APPROVED BY / FORWARDED TO', 'DATE'];
+  const COLUMNS = ['SN', 'STATION / SECTION', 'APPROVAL FOR', 'WORK', 'AGENCY', 'FILE ACTION / AUTHORITY', 'DATE'];
   const byId = id => document.getElementById(id);
   const clean = value => value === null || value === undefined ? '' : String(value).trim();
   const escape = value => clean(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+
+  const WORKFLOW_GUIDES = Object.freeze({
+    'PCSTE SANCTION':'PCSTE is the normal sanctioning authority',
+    'EI TSAA':'PCSTE sanction or PCSTE forwarding to RDSO',
+    'MSDAC TSAA':'CSE / CCE / CSTE/Planning / PCSTE',
+    'S&T SPEED CERTIFICATE':'CSE / CCE / CSTE/Planning',
+    'GM SANCTION':'PCSTE forwarding to PCSO for GM sanction',
+    'JOINT SAFETY CERTIFICATE (JSC)':'PCSTE signature and return to department',
+    'LINE OPENING':'PCSTE signature and return to department',
+    'GRADE CONDONATION':'PCSTE signature and return to department',
+    'SPEED RAISING':'CSE / CCE / CSTE/Planning / PCSTE signature',
+    'DISPENSATION':'PCSTE / PCSTE & PCEE approval, or forwarding'
+  });
+
+  // A normal workflow is guidance, not evidence that a specific file was approved.
+  // Only explicit saved outcomes are shown as completed actions.
+  function workflowFor(record) {
+    const category = clean(record.category).toUpperCase() === 'PCSTE DISPENSATION'
+      ? 'DISPENSATION' : clean(record.category).toUpperCase();
+    let action = clean(record.fileAction || record.actionTaken || record.disposalAction);
+    let by = clean(record.actionBy || record.approvedBy || record.forwardedBy || record.signedBy);
+    const to = clean(record.actionTo || record.forwardedTo || record.returnedTo);
+    let source = 'EXPLICIT';
+    if (!action) {
+      if (category === 'DISPENSATION' && (record.givenBy || record.sanctionBy)) {
+        action = 'ISSUING AUTHORITY RECORDED';
+        by = by || clean(record.givenBy || record.sanctionBy);
+        source = 'LEGACY';
+      } else if (category === 'EI TSAA' && record.sanctionBy) {
+        action = 'SANCTION AUTHORITY RECORDED';
+        by = by || clean(record.sanctionBy);
+        source = 'LEGACY';
+      } else {
+        action = 'NOT RECORDED';
+        source = 'UNRECORDED';
+      }
+    }
+    if (!by && source === 'EXPLICIT' && /^(APPROVED|ISSUED)$/.test(action)) {
+      by = clean(category === 'DISPENSATION' ? (record.givenBy || record.sanctionBy) :
+        category === 'EI TSAA' ? record.sanctionBy : '');
+    }
+    return {action, by, to, source, guide:WORKFLOW_GUIDES[category]||''};
+  }
+
+  function workflowMarkup(item, compact=false) {
+    const info = item && item.action ? item : workflowFor(item || {});
+    const style = info.source === 'UNRECORDED' ? 'dr-workflow-unknown' :
+      /RETURNED FOR COMPLIANCE/.test(info.action) ? 'dr-workflow-warn' :
+      /FORWARDED/.test(info.action) ? 'dr-workflow-forwarded' :
+      /APPROVED|ISSUED|SIGNED|SANCTION/.test(info.action) ? 'dr-workflow-approved' :
+      'dr-workflow-neutral';
+    const extra = [];
+    if (info.by) extra.push('<span class="dr-workflow-detail">BY: '+escape(info.by)+'</span>');
+    else if (info.source === 'EXPLICIT' && /^(APPROVED|FORWARDED|SIGNED|ISSUED)/.test(info.action))
+      extra.push('<span class="dr-workflow-hint">BY: NOT RECORDED</span>');
+    if (info.to) extra.push('<span class="dr-workflow-detail">TO: '+escape(info.to)+'</span>');
+    else if (info.source === 'EXPLICIT' && /^(FORWARDED|SIGNED & RETURNED)/.test(info.action))
+      extra.push('<span class="dr-workflow-hint">TO: NOT RECORDED</span>');
+    if (info.source === 'UNRECORDED') {
+      extra.push('<span class="dr-workflow-hint">'+escape(compact?'VERIFY IN EDIT':(info.guide ? 'STANDARD ROUTE: '+info.guide+' (NOT VERIFIED)' : 'UPDATE IN EDIT RECORD'))+'</span>');
+    }
+    if (info.source === 'LEGACY') {
+      extra.push('<span class="dr-workflow-hint">OUTCOME NOT SEPARATELY SAVED</span>');
+    }
+    return '<div class="dr-workflow-result"><span class="dr-workflow-pill '+style+'">'+escape(info.action)+'</span>'+extra.join('')+'</div>';
+  }
+  window.railRenderWorkflowCell = rec => workflowMarkup(rec,true);
 
   function canonicalDivision(raw) {
     const div = clean(raw).toUpperCase().replace(/[._/\\-]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -110,13 +176,11 @@
       if (!division) continue;
       const rawCategory = clean(rec.category).toUpperCase();
       const category = rawCategory === 'PCSTE DISPENSATION' ? 'DISPENSATION' : rawCategory;
-      const authority = clean(rec.approvedBy) || clean(rec.forwardedTo) ||
-        clean(rec.approvalBy) || clean(rec.sanctionBy) || clean(rec.givenBy) ||
-        clean(rec.forwardedBy) || clean(rec.issuedBy) || '';
       rows.push({
-        fy:date.fy, division, station:clean(rec.station), category,
-        work:clean(rec.work) || clean(rec.description), agency:clean(rec.agency),
-        authority, date:date.text, time:date.time
+        fy:date.fy, division,
+        station:clean(rec.station) || clean(rec.wagon) || clean(rec.department),
+        category, work:clean(rec.work) || clean(rec.description), agency:clean(rec.agency),
+        workflow:workflowFor(rec), date:date.text, time:date.time
       });
     }
     rows.sort((a,b) => a.time-b.time ||
@@ -176,6 +240,7 @@
     if (!byId('divisionReportRows') || !byId('divisionReportFY').value) return;
     initCategorySelector();
     const {fy, divisions, grouped, selectedCount} = getReportData();
+    const visibleDivisions = divisions.filter(div => grouped[div].length > 0);
     byId('divisionReportSelectedCount').textContent = selectedCount + ' OF ' + ALL_CATEGORIES.length + ' SELECTED';
     byId('divisionReportExcelBtn').disabled = selectedCount === 0;
     const printBtn = byId('divisionReportPrintBtn');
@@ -189,18 +254,20 @@
     html.push('<tr><th colspan="7" class="dr-title">DIVISION-WISE REPORT OF FY ' + escape(fullFY(fy)) + '</th></tr>');
     const total = divisions.reduce((sum,div) => sum+grouped[div].length,0);
     html.push('<tr><th colspan="7" class="dr-meta">' + 'TOTAL RECORDS: ' + total + '</th></tr>');
-    for (const div of divisions) {
+    if (!visibleDivisions.length) {
+      html.push('<tr><td colspan="7" class="dr-no-results">NO RECORDS FOUND FOR THE SELECTED FY, DIVISION AND FILE TYPES.</td></tr>');
+    }
+    for (const div of visibleDivisions) {
       const entries = grouped[div];
-      html.push('<tr><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>');
+      html.push('<tr class="dr-division-row"><th colspan="7" class="dr-division">DIVISION: ' + escape(div.toUpperCase()) + '</th></tr>');
       html.push('<tr class="dr-fields">' + COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') + '</tr>');
-      for (let index = 0; index < Math.max(MIN_ROWS_PER_DIVISION, entries.length); index++) {
+      for (let index = 0; index < entries.length; index++) {
         const row = entries[index];
-        if (!row) {
-          html.push('<tr class="dr-empty"><td class="dr-sn"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
-        } else {
-          const values = [index + 1, row.station, row.category, row.work, row.agency, row.authority, row.date];
-          html.push('<tr class="dr-record">' + values.map((value,col) => '<td class="' + (col === 0 ? 'dr-sn' : col === 2 ? 'dr-type' : col === 6 ? 'dr-date' : '') + '">' + escape(value) + '</td>').join('') + '</tr>');
-        }
+        const values = [index + 1, row.station, row.category, row.work, row.agency, row.workflow, row.date];
+        html.push('<tr class="dr-record">' + values.map((value,col) =>
+          '<td class="' + (col===0?'dr-sn':col===2?'dr-type':col===5?'dr-outcome':col===6?'dr-date':'') + '">' +
+          (col === 5 ? workflowMarkup(value) : escape(value)) + '</td>'
+        ).join('') + '</tr>');
       }
     }
     byId('divisionReportRows').innerHTML = html.join('');
@@ -214,6 +281,8 @@
     initCategorySelector();
     updateFYChoices();
     byId('divisionReportDivision').value = 'ALL';
+    byId('divisionReportFilterPanel').hidden = true;
+    byId('divisionReportFilterToggle').setAttribute('aria-expanded','false');
     render();
     byId('divisionReportModal').style.display = 'flex';
     try { history.pushState({view:'modal', modal:'divisionReport'}, '', ''); } catch (err) { console.warn('History unavailable', err); }
@@ -307,7 +376,7 @@
         row.eachCell({includeEmpty:true}, cell => {
           cell.border = border;
           cell.font = {name:'Arial',size:options.size || 10,bold:!!options.bold,color:{argb:color}};
-          cell.alignment = {vertical:'middle',horizontal:options.center ? 'center' : cell.col===1||cell.col===7?'center':'left',wrapText:true};
+          cell.alignment = {vertical:'middle',horizontal:'center',wrapText:true};
           cell.fill = {type:'pattern',pattern:'solid',fgColor:{argb:fill}};
         });
       };
@@ -323,7 +392,7 @@
       summaryRow.getCell(1).value = 'TOTAL RECORDS: ' + grandTotal;
       outlineRow(summaryRow,{fill:LIGHT,color:BLUE,size:10,bold:true,center:true});
       let rowIndex = 3;
-      for (const div of divisions) {
+      for (const div of divisions.filter(d => grouped[d].length)) {
         ws.mergeCells('A'+rowIndex+':G'+rowIndex);
         const divRow = ws.getRow(rowIndex);
         divRow.height = 28;
@@ -335,17 +404,27 @@
         outlineRow(header,{fill:BLUE,color:WHITE,size:10,bold:true,center:true});
         header.height = 32;
         const entries = grouped[div];
-        for (let i=0; i<Math.max(MIN_ROWS_PER_DIVISION, entries.length); i++) {
+        for (let i=0; i<entries.length; i++) {
           const r = entries[i];
-          const values = r ? [i+1,excelText(r.station),excelText(r.category),excelText(r.work),excelText(r.agency),excelText(r.authority),r.date]
-            : ['', '', '', '', '', '', ''];
+          const detail = [r.workflow.action];
+          if (r.workflow.by) detail.push('BY: '+r.workflow.by);
+          if (r.workflow.to) detail.push('TO: '+r.workflow.to);
+          if (r.workflow.source === 'UNRECORDED') detail.push('UPDATE IN EDIT RECORD');
+          if (r.workflow.source === 'LEGACY') detail.push('OUTCOME NOT SEPARATELY SAVED');
+          const values = [i+1,excelText(r.station),excelText(r.category),excelText(r.work),excelText(r.agency),excelText(detail.join('\n')),r.date];
           const row = ws.getRow(rowIndex++);
           values.forEach((v,j) => {row.getCell(j+1).value = v;});
           outlineRow(row,{fill: i%2===1 ? 'FFF5F9FC' : WHITE});
-          row.getCell(3).alignment = {horizontal:'center',vertical:'middle',wrapText:true};
-          const workLines = r ? Math.ceil(r.work.length / 52) : 1;
-          row.height = Math.min(90, Math.max(22, workLines * 15));
+          const workLines = Math.max(1, Math.ceil(r.work.length / 52));
+          const outcomeLines = Math.max(1, (values[5].match(/\n/g)||[]).length + 1);
+          row.height = Math.min(105,Math.max(26,workLines*15,outcomeLines*15));
         }
+      }
+      if (rowIndex === 3) {
+        ws.mergeCells('A3:G3');
+        ws.getCell('A3').value = 'NO RECORDS FOUND FOR THE SELECTED FILTERS';
+        outlineRow(ws.getRow(3),{fill:LIGHT,color:BLUE,bold:true,center:true});
+        rowIndex++;
       }
       ws.pageSetup.printArea = 'A1:G' + (rowIndex - 1);
       const buffer = await workbook.xlsx.writeBuffer();

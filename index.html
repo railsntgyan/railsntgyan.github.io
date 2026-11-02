@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css">
+  <link rel="stylesheet" href="division-report.css?v=20261102-workflow4">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8719,12 +8719,12 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       </div>
       <section class="dr-filter-area" aria-label="Select files and approvals for the report">
         <div class="dr-filter-top">
-          <button type="button" class="dr-filter-toggle" id="divisionReportFilterToggle" onclick="toggleDivisionReportCategories()" aria-expanded="true" aria-controls="divisionReportFilterPanel">
+          <button type="button" class="dr-filter-toggle" id="divisionReportFilterToggle" onclick="toggleDivisionReportCategories()" aria-expanded="false" aria-controls="divisionReportFilterPanel">
             <i class="fa-solid fa-list-check"></i> SELECT FILES &amp; APPROVALS <span id="divisionReportSelectedCount">10 OF 16 SELECTED</span> <i class="fa-solid fa-chevron-up dr-filter-chevron"></i>
           </button>
-          <div class="dr-filter-hint">Choose one or more categories to include in the report.</div>
+          <div class="dr-filter-hint">Click to change the report categories</div>
         </div>
-        <div class="dr-filter-panel" id="divisionReportFilterPanel">
+        <div class="dr-filter-panel" id="divisionReportFilterPanel" hidden>
           <div class="dr-filter-actions">
             <button type="button" onclick="setDivisionReportCategories('all')"><i class="fa-solid fa-check-double"></i> Select All</button>
             <button type="button" onclick="setDivisionReportCategories('none')">Clear All</button>
@@ -8966,6 +8966,36 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             <option value="PCSTE">PCSTE</option>
             <option value="RDSO">RDSO</option>
           </select>
+        </div>
+
+
+        <!-- NEW OPTIONAL WORKFLOW FIELDS: save what actually happened to a file. -->
+        <div class="form-group" id="formFileActionContainer" style="display:none;">
+          <label for="formFileAction">File Action / Disposal</label>
+          <select id="formFileAction">
+            <option value="">-- Select actual action --</option>
+            <option value="APPROVED">Approved / Sanctioned</option>
+            <option value="FORWARDED">Forwarded</option>
+            <option value="SIGNED & RETURNED">Signed &amp; Returned</option>
+            <option value="ISSUED">Issued</option>
+            <option value="RETURNED FOR COMPLIANCE">Returned for Compliance</option>
+            <option value="UNDER PROCESS">Under Process</option>
+          </select>
+          <small class="rail-workflow-help" id="formFileActionHelp">Record actual action only. Category alone does not establish approval.</small>
+        </div>
+        <div class="form-group" id="formActionByContainer" style="display:none;">
+          <label for="formActionBy">Action By / Signed By</label>
+          <input id="formActionBy" type="text" list="formActionByOptions" autocomplete="off" placeholder="e.g. PCSTE, CSE, CCE" maxlength="120">
+          <datalist id="formActionByOptions"></datalist>
+        </div>
+        <div class="form-group" id="formActionToContainer" style="display:none;">
+          <label for="formActionTo">Forwarded / Returned To (if applicable)</label>
+          <input id="formActionTo" type="text" list="formActionToOptions" autocomplete="off" placeholder="e.g. RDSO, PCSO, respective department" maxlength="150">
+          <datalist id="formActionToOptions">
+            <option value="RDSO"><option value="PCSO"><option value="Concerned Division">
+            <option value="Concerned Department"><option value="Project"><option value="Construction">
+            <option value="CRS"><option value="Railway Board">
+          </datalist>
         </div>
 
         <div class="form-group" id="formRoutesContainer" style="display:none;">
@@ -10219,6 +10249,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     // DASHBOARD LIVE CALCULATION & CHART LOGIC
     let dashBarChartInstance = null;
     let dashDoughnutChartInstance = null;
+    // Keep live charts alive: repeated Home/FY/theme refreshes must not
+    // destroy and recreate two Chart.js canvases unnecessarily.
+    let railDashboardLastChartSignature = null;
 
     const dashTrackedCategories = [
       { key: 'PCSTE SANCTION', label: 'PCSTE SANCTION', domId: 'kpi-PCSTE_SANCTION', nodeCountId: 'nodeCount-PCSTE_SANCTION', color: '#b91c1c' },
@@ -10307,6 +10340,15 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       const labels = dashTrackedCategories.map(c => c.label);
       const dataValues = dashTrackedCategories.map(c => countsMap[c.key] || 0);
 
+      // Only redraw when chart data or theme actually changes. All other
+      // dashboard calls (Home, repeated navigation, same Firestore values)
+      // keep the existing charts instead of starting their animation again.
+      const isDarkNow = document.body.classList.contains('dark-theme');
+      const chartSignature = (isDarkNow ? 'dark:' : 'light:') + dataValues.join(',');
+      if (chartSignature === railDashboardLastChartSignature &&
+          dashBarChartInstance && dashDoughnutChartInstance) return;
+      if (typeof Chart === 'undefined') return;
+
       // Canvas text cannot be fixed with CSS alone. Use high-contrast
       // Chart.js colors when RailSNTGyan is in Dark Theme.
       const isDarkChart = document.body.classList.contains('dark-theme');
@@ -10324,8 +10366,12 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       if (barCanvas) {
         const ctxBar = barCanvas.getContext('2d');
         if (dashBarChartInstance) {
-          dashBarChartInstance.destroy();
-        }
+          dashBarChartInstance.data.datasets[0].data = dataValues;
+          dashBarChartInstance.options.scales.y.grid.color = chartGridColor;
+          dashBarChartInstance.options.scales.y.ticks.color = chartTextColor;
+          dashBarChartInstance.options.scales.x.ticks.color = chartTextColor;
+          dashBarChartInstance.update('none');
+        } else {
         dashBarChartInstance = new Chart(ctxBar, {
           type: 'bar',
           data: {
@@ -10343,6 +10389,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            animation: false,
             plugins: {
               legend: { display: false },
               tooltip: {
@@ -10375,6 +10422,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             }
           }
         });
+        }
       }
 
       // 2. DOUGHNUT CHART
@@ -10382,8 +10430,11 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       if (doughnutCanvas) {
         const ctxDoughnut = doughnutCanvas.getContext('2d');
         if (dashDoughnutChartInstance) {
-          dashDoughnutChartInstance.destroy();
-        }
+          dashDoughnutChartInstance.data.datasets[0].data = dataValues;
+          dashDoughnutChartInstance.data.datasets[0].borderColor = chartBorderColor;
+          dashDoughnutChartInstance.options.plugins.legend.labels.color = chartTextColor;
+          dashDoughnutChartInstance.update('none');
+        } else {
         dashDoughnutChartInstance = new Chart(ctxDoughnut, {
           type: 'doughnut',
           data: {
@@ -10398,6 +10449,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            animation: false,
             plugins: {
               legend: {
                 position: 'bottom',
@@ -10417,6 +10469,10 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             cutout: '66%'
           }
         });
+        }
+      }
+      if (dashBarChartInstance && dashDoughnutChartInstance) {
+        railDashboardLastChartSignature = chartSignature;
       }
     }
 
@@ -10939,6 +10995,19 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             <th style="width: 155px; text-align:center;">Action</th>
           </tr>
         `;
+      }
+
+      // Include file action/authority as a dedicated column only in approval tables.
+      const hasRailWorkflowColumn = Object.prototype.hasOwnProperty.call(railWorkflowGuidance,currentCategory) &&
+        typeof window.railRenderWorkflowCell === 'function';
+      if (hasRailWorkflowColumn) {
+        const heading=thead.querySelector('tr');
+        if (heading && heading.lastElementChild) {
+          const cell=document.createElement('th');
+          cell.className='rail-workflow-header';
+          cell.textContent='FILE ACTION / AUTHORITY';
+          heading.insertBefore(cell,heading.lastElementChild);
+        }
       }
 
       const hasDivision = !['S&T SPEED CERTIFICATE', 'GRADE CONDONATION', 'LINE OPENING', 'JOINT SAFETY CERTIFICATE (JSC)',
@@ -11907,6 +11976,16 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       });
 
       tbody.innerHTML = html;
+      // Additional decision/status field for approval categories only (no changes to other tables).
+      if (hasRailWorkflowColumn) {
+        Array.from(tbody.rows).forEach((tr,i)=>{
+          if(!filtered[i] || !tr.lastElementChild) return;
+          const cell=document.createElement('td');
+          cell.className='rail-workflow-column';
+          cell.innerHTML=window.railRenderWorkflowCell(filtered[i]);
+          tr.insertBefore(cell,tr.lastElementChild);
+        });
+      }
       setTimeout(updateTopScrollbarWidth, 60);
     }
 
@@ -12974,6 +13053,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       document.getElementById('formEquipment').value = rec.equipment || '';
       document.getElementById('formEiOem').value = rec.oem || '';
       document.getElementById('formEiSanctionBy').value = rec.sanctionBy || '';
+      document.getElementById('formFileAction').value = rec.fileAction || '';
+      document.getElementById('formActionBy').value = rec.actionBy || '';
+      document.getElementById('formActionTo').value = rec.actionTo || '';
       document.getElementById('formRoutes').value = rec.routes || '';
       document.getElementById('formOem').value = rec.oem || '';
       document.getElementById('formWagon').value = rec.wagon || '';
@@ -12998,6 +13080,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
 
     function clearFormFields() {
       document.getElementById('formStation').value = '';
+      document.getElementById('formFileAction').value = '';
+      document.getElementById('formActionBy').value = '';
+      document.getElementById('formActionTo').value = '';
       setAgencyValue('');
       document.getElementById('formJpoNo').value = '';
       document.getElementById('formAddressedTo').value = '';
@@ -13092,6 +13177,47 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       return `<div class="jpo-dept-badges">${deps.map(d => `<span class="jpo-dept-badge">${escapeHtml(d)}</span>`).join('')}</div>`;
     }
 
+
+    // Advisory route only; it never sets the actual outcome in Firestore.
+    const railWorkflowGuidance = {
+      'PCSTE SANCTION': ['PCSTE'],
+      'EI TSAA': ['PCSTE','RDSO'],
+      'MSDAC TSAA': ['CSE','CCE','CSTE/Planning','PCSTE'],
+      'S&T SPEED CERTIFICATE': ['CSE','CCE','CSTE/Planning'],
+      'GM SANCTION': ['PCSTE','PCSO','GM'],
+      'JOINT SAFETY CERTIFICATE (JSC)': ['PCSTE'],
+      'LINE OPENING': ['PCSTE'],
+      'GRADE CONDONATION': ['PCSTE'],
+      'SPEED RAISING': ['CSE','CCE','CSTE/Planning','PCSTE'],
+      'DISPENSATION': ['PCSTE','PCSTE & PCEE']
+    };
+    function railUpdateWorkflowForm(cat) {
+      const allowed = Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat);
+      ['formFileActionContainer','formActionByContainer','formActionToContainer'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.style.display=allowed?'flex':'none';
+      });
+      const datalist=document.getElementById('formActionByOptions');
+      if(!datalist) return;
+      const entries=railWorkflowGuidance[cat]||[];
+      datalist.replaceChildren();
+      entries.forEach(text=>{const option=document.createElement('option');option.value=text;datalist.appendChild(option);});
+      const guide={
+        'PCSTE SANCTION':'Normally approved by PCSTE.',
+        'EI TSAA':'PCSTE approves, or PCSTE forwards to RDSO. Record the actual action.',
+        'MSDAC TSAA':'Approving authority may be CSE / CCE / CSTE/Planning / PCSTE.',
+        'S&T SPEED CERTIFICATE':'Approving authority may be CSE / CCE / CSTE/Planning.',
+        'GM SANCTION':'Normally PCSTE forwards the case to PCSO for GM sanction.',
+        'JOINT SAFETY CERTIFICATE (JSC)':'Normally signed by PCSTE and returned to originating department.',
+        'LINE OPENING':'Normally signed by PCSTE and returned to originating department.',
+        'GRADE CONDONATION':'Normally signed by PCSTE and returned to originating department.',
+        'SPEED RAISING':'CSE / CCE / CSTE/Planning / PCSTE may sign and return the file.',
+        'DISPENSATION':'PCSTE or PCSTE & PCEE may approve, or PCSTE may return/forward the file.'
+      };
+      const help=document.getElementById('formFileActionHelp');
+      if(help) help.textContent=(guide[cat]||'')+' Select only what is confirmed in the case record.';
+    }
+
     function toggleFormFields() {
       let cat = document.getElementById('formCategory').value;
       if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
@@ -13124,7 +13250,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
 
       document.getElementById('formDivisionContainer').style.display = 
-        (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection) ? 'flex' : 'none';
+        (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection || isSpeedCert || isJsc) ? 'flex' : 'none';
 
       document.getElementById('formJpoNoContainer').style.display = isJpo ? 'flex' : 'none';
       document.getElementById('formAddressedToContainer').style.display = isHqLetter ? 'flex' : 'none';
@@ -13154,6 +13280,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       document.getElementById('formEquipmentContainer').style.display = isPcste ? 'flex' : 'none';
       document.getElementById('formEiOemContainer').style.display = isEi ? 'flex' : 'none';
       document.getElementById('formEiSanctionByContainer').style.display = isEi ? 'flex' : 'none';
+      railUpdateWorkflowForm(cat);
       document.getElementById('formRoutesContainer').style.display = isEi ? 'flex' : 'none';
       document.getElementById('formOemContainer').style.display = isMsdac ? 'flex' : 'none';
       document.getElementById('formWagonContainer').style.display = (isSpeedCert || isJsc) ? 'flex' : 'none';
@@ -13312,7 +13439,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         category: cat,
         station: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
           ? document.getElementById('formStation').value.trim() : '',
-        division: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
+        division: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection || isSpeedCert || isJsc)
           ? document.getElementById('formDivision').value : '',
         jpoNo: isJpo ? document.getElementById('formJpoNo').value.trim() : '',
         addressedTo: isHqLetter ? document.getElementById('formAddressedTo').value.trim() : '',
@@ -13334,6 +13461,11 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         equipment: isPcste ? document.getElementById('formEquipment').value.trim() : '',
         oem: isEi ? document.getElementById('formEiOem').value : (isMsdac ? document.getElementById('formOem').value.trim() : ''),
         sanctionBy: isDispensation ? document.getElementById('formGivenBy').value : (isEi ? document.getElementById('formEiSanctionBy').value : ''),
+        ...(Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat) ? {
+          fileAction:document.getElementById('formFileAction').value,
+          actionBy:document.getElementById('formActionBy').value.trim(),
+          actionTo:document.getElementById('formActionTo').value.trim()
+        } : {}),
         routes: isEi ? document.getElementById('formRoutes').value.trim() : '',
         wagon: (isSpeedCert || isJsc) ? document.getElementById('formWagon').value.trim() : '',
         docNo: isPolicyOrTypical ? document.getElementById('formDocNo').value.trim() : '',
@@ -25296,6 +25428,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
-  <script src="division-report.js?v=20261102-fix3" defer></script>
+  <script src="division-report.js?v=20261102-workflow4" defer></script>
 </body>
 </html>

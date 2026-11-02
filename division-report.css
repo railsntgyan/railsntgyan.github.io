@@ -271,3 +271,54 @@
     border-color:#758a9f!important;
   }
 }
+
+/* V3: Compact selector, immediate division transitions, centered rows,
+   unambiguous recorded file action. No global table styling changes. */
+#divisionReportModal .dr-filter-area { flex-shrink:0; }
+#divisionReportModal .dr-filter-top {padding:7px 13px;min-height:42px;}
+#divisionReportModal .dr-filter-toggle {padding:6px 12px;}
+#divisionReportModal .dr-filter-toggle:focus-visible {outline:3px solid #4c9bd0;outline-offset:2px;}
+#divisionReportModal .dr-filter-panel[hidden] {display:none!important;}
+#divisionReportModal .dr-scroll {padding:12px 12px 18px;}
+#divisionReportModal .dr-sheet {padding:12px 11px;}
+#divisionReportModal .dr-report-table td,
+#divisionReportModal .dr-report-table th {text-align:center!important;vertical-align:middle!important;}
+#divisionReportModal .dr-report-table td {overflow-wrap:break-word;word-break:normal;}
+#divisionReportModal .dr-report-table col.dr-col-sn {width:5%;}
+#divisionReportModal .dr-report-table col.dr-col-station {width:15%;}
+#divisionReportModal .dr-report-table col.dr-col-approval {width:13%;}
+#divisionReportModal .dr-report-table col.dr-col-work {width:28%;}
+#divisionReportModal .dr-report-table col.dr-col-agency {width:9%;}
+#divisionReportModal .dr-report-table col.dr-col-authority {width:22%;}
+#divisionReportModal .dr-report-table col.dr-col-date {width:8%;}
+#divisionReportModal .dr-report-table .dr-record td {padding:8px 6px!important;}
+#divisionReportModal .dr-report-table .dr-no-results {
+  padding:22px 10px!important; background:#f7fafc!important;
+  color:#42566d!important;font-weight:700!important;text-align:center!important;
+}
+.dr-workflow-result {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;line-height:1.35;}
+.dr-workflow-pill {display:inline-block;max-width:100%;overflow-wrap:break-word;padding:3px 7px;border-radius:999px;font:800 9px/1.25 Arial,Helvetica,sans-serif;letter-spacing:.025em;}
+.dr-workflow-approved {background:#e4f7ec;color:#13663a;border:1px solid #b4e2c8;}
+.dr-workflow-forwarded {background:#e6f2ff;color:#195e99;border:1px solid #bbdcf5;}
+.dr-workflow-warn {background:#fff1e2;color:#a05214;border:1px solid #f6cea3;}
+.dr-workflow-unknown {background:#f5f2f0;color:#795d49;border:1px solid #dfd4cd;}
+.dr-workflow-neutral {background:#edf2f8;color:#485b70;border:1px solid #c9d4df;}
+.dr-workflow-detail {font:700 10px/1.35 Arial,Helvetica,sans-serif;color:#17384e;overflow-wrap:anywhere;}
+.dr-workflow-hint {font:500 9px/1.35 Arial,Helvetica,sans-serif;color:#657587;overflow-wrap:anywhere;}
+#mainRecordTable th.rail-workflow-header {min-width:164px;max-width:230px;white-space:normal!important;text-align:center!important;}
+#mainRecordTable td.rail-workflow-column {min-width:164px;max-width:230px;text-align:center!important;vertical-align:middle!important;white-space:normal!important;}
+#mainRecordTable .dr-workflow-detail {font-size:11px;}
+#mainRecordTable .dr-workflow-hint {font-size:9px;}
+#addRecordModal .rail-workflow-help {display:block;font-size:11px;line-height:1.45;color:#607489;margin-top:5px;}
+#addRecordModal #formFileActionContainer,#addRecordModal #formActionByContainer,#addRecordModal #formActionToContainer {min-width:0;}
+@media print {
+  body.printing-division-report #divisionReportModal .dr-dialog {background:#fff!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table td,
+  body.printing-division-report #divisionReportModal .dr-report-table th {text-align:center!important;vertical-align:middle!important;}
+  body.printing-division-report #divisionReportModal .dr-report-table .dr-record td {padding:3px 4px!important;}
+  body.printing-division-report #divisionReportModal .dr-division-row,
+  body.printing-division-report #divisionReportModal .dr-fields {break-after:avoid;page-break-after:avoid;}
+  body.printing-division-report #divisionReportModal .dr-workflow-pill {font-size:7pt!important;}
+  body.printing-division-report #divisionReportModal .dr-workflow-detail {font-size:7pt!important;}
+  body.printing-division-report #divisionReportModal .dr-workflow-hint {font-size:6pt!important;}
+}
