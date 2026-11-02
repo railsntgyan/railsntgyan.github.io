@@ -10039,6 +10039,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     }
 
     function goHome(pushState = true) {
+      const enteringDashboard = currentCategory !== 'HOME';
       resetAccordionToDefault();
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       const homeBtn = document.getElementById('sideHomeBtn');
@@ -10062,6 +10063,14 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       }
 
       updateDashboardView();
+      // Reproduce the familiar growing chart effect on return to Home, without
+      // destroying/recreating the charts or re-fetching any Firebase records.
+      if (enteringDashboard && dashBarChartInstance && dashDoughnutChartInstance) {
+        dashBarChartInstance.reset();
+        dashDoughnutChartInstance.reset();
+        dashBarChartInstance.update();
+        dashDoughnutChartInstance.update();
+      }
       closeSidebarDrawer();
     }
 
@@ -10345,6 +10354,10 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       // keep the existing charts instead of starting their animation again.
       const isDarkNow = document.body.classList.contains('dark-theme');
       const chartSignature = (isDarkNow ? 'dark:' : 'light:') + dataValues.join(',');
+      // Animate when record counts change (including when Firestore first loads).
+      // Theme-only refreshes should update colors without restarting animation.
+      const chartCountsChanged = !railDashboardLastChartSignature ||
+        railDashboardLastChartSignature.slice(railDashboardLastChartSignature.indexOf(':') + 1) !== dataValues.join(',');
       if (chartSignature === railDashboardLastChartSignature &&
           dashBarChartInstance && dashDoughnutChartInstance) return;
       if (typeof Chart === 'undefined') return;
@@ -10370,7 +10383,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           dashBarChartInstance.options.scales.y.grid.color = chartGridColor;
           dashBarChartInstance.options.scales.y.ticks.color = chartTextColor;
           dashBarChartInstance.options.scales.x.ticks.color = chartTextColor;
-          dashBarChartInstance.update('none');
+          dashBarChartInstance.update(chartCountsChanged ? 'default' : 'none');
         } else {
         dashBarChartInstance = new Chart(ctxBar, {
           type: 'bar',
@@ -10389,7 +10402,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false,
+            animation: { duration: 850, easing: 'easeOutQuart' },
             plugins: {
               legend: { display: false },
               tooltip: {
@@ -10433,7 +10446,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           dashDoughnutChartInstance.data.datasets[0].data = dataValues;
           dashDoughnutChartInstance.data.datasets[0].borderColor = chartBorderColor;
           dashDoughnutChartInstance.options.plugins.legend.labels.color = chartTextColor;
-          dashDoughnutChartInstance.update('none');
+          dashDoughnutChartInstance.update(chartCountsChanged ? 'default' : 'none');
         } else {
         dashDoughnutChartInstance = new Chart(ctxDoughnut, {
           type: 'doughnut',
@@ -10449,7 +10462,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false,
+            animation: { duration: 850, easing: 'easeOutQuart' },
             plugins: {
               legend: {
                 position: 'bottom',
@@ -25428,6 +25441,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 })();
 
 </script>
-  <script src="division-report.js?v=20261102-actions5" defer></script>
+  <script src="division-report.js?v=20261102-actions6-animation" defer></script>
 </body>
 </html>

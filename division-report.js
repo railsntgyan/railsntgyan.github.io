@@ -90,9 +90,9 @@
       label = action + (info.by ? ' — BY: ' + info.by : '') + (info.to ? ' — TO: ' + info.to : '');
     }
 
-    if (info.source === 'LEGACY') {
-      note = 'AS PER SAVED ' + (action === 'ISSUING AUTHORITY RECORDED' ? 'GIVEN BY' : 'SANCTION GIVEN BY') + ' FIELD';
-    } else if (info.source === 'UNRECORDED') {
+    // Legacy authority details are already visible in the main label.
+    // Do not print redundant internal field descriptions under the badge.
+    if (info.source === 'UNRECORDED') {
       note = compact ? 'VERIFY IN EDIT' :
         (info.guide ? 'STANDARD ROUTE: ' + info.guide + ' (NOT VERIFIED)' : 'UPDATE IN EDIT RECORD');
     }
