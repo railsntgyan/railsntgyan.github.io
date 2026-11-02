@@ -10219,9 +10219,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     // DASHBOARD LIVE CALCULATION & CHART LOGIC
     let dashBarChartInstance = null;
     let dashDoughnutChartInstance = null;
-    // Keep live charts alive: repeated Home/FY/theme refreshes must not
-    // destroy and recreate two Chart.js canvases unnecessarily.
-    let railDashboardLastChartSignature = null;
 
     const dashTrackedCategories = [
       { key: 'PCSTE SANCTION', label: 'PCSTE SANCTION', domId: 'kpi-PCSTE_SANCTION', nodeCountId: 'nodeCount-PCSTE_SANCTION', color: '#b91c1c' },
@@ -10310,15 +10307,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       const labels = dashTrackedCategories.map(c => c.label);
       const dataValues = dashTrackedCategories.map(c => countsMap[c.key] || 0);
 
-      // Only redraw when chart data or theme actually changes. All other
-      // dashboard calls (Home, repeated navigation, same Firestore values)
-      // keep the existing charts instead of starting their animation again.
-      const isDarkNow = document.body.classList.contains('dark-theme');
-      const chartSignature = (isDarkNow ? 'dark:' : 'light:') + dataValues.join(',');
-      if (chartSignature === railDashboardLastChartSignature &&
-          dashBarChartInstance && dashDoughnutChartInstance) return;
-      if (typeof Chart === 'undefined') return;
-
       // Canvas text cannot be fixed with CSS alone. Use high-contrast
       // Chart.js colors when RailSNTGyan is in Dark Theme.
       const isDarkChart = document.body.classList.contains('dark-theme');
@@ -10336,12 +10324,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       if (barCanvas) {
         const ctxBar = barCanvas.getContext('2d');
         if (dashBarChartInstance) {
-          dashBarChartInstance.data.datasets[0].data = dataValues;
-          dashBarChartInstance.options.scales.y.grid.color = chartGridColor;
-          dashBarChartInstance.options.scales.y.ticks.color = chartTextColor;
-          dashBarChartInstance.options.scales.x.ticks.color = chartTextColor;
-          dashBarChartInstance.update('none');
-        } else {
+          dashBarChartInstance.destroy();
+        }
         dashBarChartInstance = new Chart(ctxBar, {
           type: 'bar',
           data: {
@@ -10359,7 +10343,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false,
             plugins: {
               legend: { display: false },
               tooltip: {
@@ -10392,7 +10375,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             }
           }
         });
-        }
       }
 
       // 2. DOUGHNUT CHART
@@ -10400,11 +10382,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       if (doughnutCanvas) {
         const ctxDoughnut = doughnutCanvas.getContext('2d');
         if (dashDoughnutChartInstance) {
-          dashDoughnutChartInstance.data.datasets[0].data = dataValues;
-          dashDoughnutChartInstance.data.datasets[0].borderColor = chartBorderColor;
-          dashDoughnutChartInstance.options.plugins.legend.labels.color = chartTextColor;
-          dashDoughnutChartInstance.update('none');
-        } else {
+          dashDoughnutChartInstance.destroy();
+        }
         dashDoughnutChartInstance = new Chart(ctxDoughnut, {
           type: 'doughnut',
           data: {
@@ -10419,7 +10398,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false,
             plugins: {
               legend: {
                 position: 'bottom',
@@ -10439,10 +10417,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             cutout: '66%'
           }
         });
-        }
-      }
-      if (dashBarChartInstance && dashDoughnutChartInstance) {
-        railDashboardLastChartSignature = chartSignature;
       }
     }
 
