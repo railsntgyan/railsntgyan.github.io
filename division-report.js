@@ -63,7 +63,7 @@
     grid.innerHTML = ALL_CATEGORIES.map(category => {
       const checked = DEFAULT_CATEGORIES.has(category) ? ' checked' : '';
       return '<label class="dr-category-option"><input type="checkbox" class="dr-category-checkbox" value="' +
-        escape(category) + '"' + checked + ' onchange="renderDivisionReport()">' +
+        escape(category) + '"' + checked + ' onchange="scheduleDivisionReportRender()">' +
         '<span>' + escape(category) + '</span></label>';
     }).join('');
   }
@@ -89,33 +89,53 @@
     toggle.setAttribute('aria-expanded', String(willShow));
   }
 
+  // Cache only this report's derived read-only data. Existing Firestore listener creates
+  // a new records array whenever cloud data changes, so a fresh snapshot is picked up
+  // automatically. This avoids repeatedly parsing every date for each checkbox click.
+  let preparedCache = null;
+  let cachedSource = null;
+  let cachedLength = -1;
+  function preparedReportRecords() {
+    const source = reportSourceRecords();
+    if (preparedCache && source === cachedSource && source.length === cachedLength) {
+      return preparedCache;
+    }
+    const rows = [];
+    const financialYears = new Set();
+    for (const rec of source) {
+      const date = parseReportDate(typeof getReportingDate === 'function' ? getReportingDate(rec) : rec.date);
+      if (!date) continue;
+      financialYears.add(date.fy);
+      const division = canonicalDivision(rec.division);
+      if (!division) continue;
+      const rawCategory = clean(rec.category).toUpperCase();
+      const category = rawCategory === 'PCSTE DISPENSATION' ? 'DISPENSATION' : rawCategory;
+      const authority = clean(rec.approvedBy) || clean(rec.forwardedTo) ||
+        clean(rec.approvalBy) || clean(rec.sanctionBy) || clean(rec.givenBy) ||
+        clean(rec.forwardedBy) || clean(rec.issuedBy) || '';
+      rows.push({
+        fy:date.fy, division, station:clean(rec.station), category,
+        work:clean(rec.work) || clean(rec.description), agency:clean(rec.agency),
+        authority, date:date.text, time:date.time
+      });
+    }
+    rows.sort((a,b) => a.time-b.time ||
+      a.station.localeCompare(b.station) || a.category.localeCompare(b.category));
+    cachedSource = source;
+    cachedLength = source.length;
+    preparedCache = {rows, financialYears};
+    return preparedCache;
+  }
+
   function getReportData() {
     const fy = byId('divisionReportFY').value;
     const selectedDivision = byId('divisionReportDivision').value;
     const allowedCategories = selectedCategories();
     const divisions = selectedDivision === 'ALL' ? DIVISIONS : [selectedDivision];
     const grouped = Object.fromEntries(divisions.map(div => [div, []]));
-    for (const rec of reportSourceRecords()) {
-      const category = clean(rec.category).toUpperCase() === 'PCSTE DISPENSATION'
-        ? 'DISPENSATION' : clean(rec.category).toUpperCase();
-      if (!allowedCategories.has(category)) continue;
-      const div = canonicalDivision(rec.division);
-      if (!div || !Object.prototype.hasOwnProperty.call(grouped, div)) continue;
-      // Existing website uses forwarding date as canonical reporting date, where available.
-      const date = parseReportDate(typeof getReportingDate === 'function' ? getReportingDate(rec) : rec.date);
-      if (!date || date.fy !== fy) continue;
-      const authority = clean(rec.approvedBy) || clean(rec.forwardedTo) ||
-        clean(rec.approvalBy) || clean(rec.sanctionBy) || clean(rec.givenBy) ||
-        clean(rec.forwardedBy) || clean(rec.issuedBy) || '';
-      grouped[div].push({
-        station: clean(rec.station),
-        category, work: clean(rec.work) || clean(rec.description),
-        agency: clean(rec.agency), authority, date: date.text, time: date.time
-      });
-    }
-    for (const div of divisions) {
-      grouped[div].sort((a,b) => a.time - b.time ||
-        a.station.localeCompare(b.station) || a.category.localeCompare(b.category));
+    for (const row of preparedReportRecords().rows) {
+      if (row.fy !== fy || !allowedCategories.has(row.category) || !Object.prototype.hasOwnProperty.call(grouped, row.division)) continue;
+      grouped[row.division].push(row);
     }
     return {fy, divisions, grouped, selectedCount: allowedCategories.size};
   }
@@ -129,10 +149,7 @@
     for (let year = 2023; year <= currentStart + 1; year++) {
       years.add(year + '-' + String(year + 1).slice(-2));
     }
-    for (const rec of reportSourceRecords()) {
-      const parsed = parseReportDate(typeof getReportingDate === 'function' ? getReportingDate(rec) : rec.date);
-      if (parsed) years.add(parsed.fy);
-    }
+    for (const fy of preparedReportRecords().financialYears) years.add(fy);
     const preserve = dropdown.value;
     dropdown.innerHTML = [...years].sort((a,b) => Number(b.slice(0,4)) - Number(a.slice(0,4)))
       .map(fy => '<option value="' + escape(fy) + '">' + escape(fullFY(fy)) + '</option>').join('');
@@ -147,6 +164,12 @@
     if (!status) return;
     status.textContent = message;
     status.classList.toggle('dr-error', error);
+  }
+
+  let pendingRender = null;
+  function scheduleRender() {
+    if (pendingRender !== null) clearTimeout(pendingRender);
+    pendingRender = setTimeout(() => { pendingRender = null; render(); }, 70);
   }
 
   function render() {
@@ -195,7 +218,10 @@
     byId('divisionReportModal').style.display = 'flex';
     try { history.pushState({view:'modal', modal:'divisionReport'}, '', ''); } catch (err) { console.warn('History unavailable', err); }
   }
-  function close() { byId('divisionReportModal').style.display = 'none'; }
+  function close() {
+    if (pendingRender !== null) { clearTimeout(pendingRender); pendingRender = null; }
+    byId('divisionReportModal').style.display = 'none';
+  }
 
   function print() {
     document.body.classList.add('printing-division-report');
@@ -345,6 +371,7 @@
   window.openDivisionReportModal = open;
   window.closeDivisionReportModal = close;
   window.renderDivisionReport = render;
+  window.scheduleDivisionReportRender = scheduleRender;
   window.toggleDivisionReportCategories = toggleCategories;
   window.setDivisionReportCategories = setCategories;
   window.printDivisionReport = print;
