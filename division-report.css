@@ -727,3 +727,76 @@ html body #mainTableContainer #railsFitTable td.rail-workflow-column .dr-workflo
     display:table-header-group!important;
   }
 }
+
+
+/* V9 - A4 Portrait / Landscape print layouts for Division-wise Report only.
+   A full-width table with orientation-specific proportions and readable type.
+   The screen layout, PDF header repetition, and other sections are unchanged. */
+@media print {
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table,
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table {
+    width:100%!important;max-width:100%!important;
+    table-layout:fixed!important;border-collapse:collapse!important;
+    font-family:'Times New Roman',serif!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-sn {width:5%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-station {width:15%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-approval {width:14%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-work {width:28%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-agency {width:9%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-authority {width:19%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-date {width:10%!important;}
+
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-sn {width:6%!important;}
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-station {width:16%!important;}
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-approval {width:13%!important;}
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-work {width:27%!important;}
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-agency {width:10%!important;}
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-authority {width:19%!important;}
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table col.dr-col-date {width:9%!important;}
+
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table th,
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table td {
+    font-size:9.5pt!important;line-height:1.18!important;
+    padding:3.5px 3px!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
+    word-break:normal!important;vertical-align:middle!important;
+  }
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table th,
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table td {
+    font-size:10.5pt!important;line-height:1.22!important;
+    padding:4px 4px!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
+    word-break:normal!important;vertical-align:middle!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table .dr-fields th {
+    font-size:9.5pt!important;line-height:1.14!important;padding:5px 2px!important;
+  }
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-table .dr-fields th {
+    font-size:10.5pt!important;line-height:1.15!important;padding:5px 3px!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-workflow-pill {
+    font-size:9pt!important;line-height:1.17!important;
+    max-width:100%!important;white-space:normal!important;
+    overflow-wrap:anywhere!important;padding:2.5px 3px!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-workflow-hint {
+    font-size:8.5pt!important;line-height:1.15!important;
+    max-width:100%!important;overflow-wrap:anywhere!important;
+  }
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-workflow-pill {
+    font-size:10pt!important;line-height:1.2!important;
+    max-width:100%!important;white-space:normal!important;
+    overflow-wrap:anywhere!important;padding:3px 4px!important;
+  }
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-workflow-hint {
+    font-size:9.5pt!important;line-height:1.2!important;
+    max-width:100%!important;overflow-wrap:anywhere!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-main-title,
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-main-title {font-size:14pt!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-grand-total,
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-report-grand-total {font-size:10.5pt!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-division-heading,
+  body.printing-division-report.dr-print-landscape #divisionReportModal .dr-division-heading {font-size:12pt!important;}
+}

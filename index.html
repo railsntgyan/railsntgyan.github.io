@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css?v=20261103-mobileentryv8">
+  <link rel="stylesheet" href="division-report.css?v=20261103-print-orientation-v9">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -8720,6 +8720,11 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             <option value="Bilaspur">Bilaspur</option>
             <option value="Raipur">Raipur</option>
             <option value="Nagpur">Nagpur</option>
+          </select>
+          <label for="divisionReportPrintOrientation">Print Layout:</label>
+          <select id="divisionReportPrintOrientation" aria-label="Print paper orientation">
+            <option value="landscape" selected>Landscape</option>
+            <option value="portrait">Portrait</option>
           </select>
           <button type="button" onclick="exportDivisionReportExcel()" class="dr-excel-button" id="divisionReportExcelBtn"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
           <button type="button" onclick="printDivisionReport()" id="divisionReportPrintBtn"><i class="fa-solid fa-print"></i> Print / PDF</button>
@@ -25532,11 +25537,13 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
   #divisionReportModal .dr-toolbar-actions{
     display:grid!important;width:100%!important;max-width:100%!important;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
-    grid-template-areas:"fylabel divlabel" "fy div" "excel print"!important;
+    grid-template-areas:"fylabel divlabel" "fy div" "paperlabel paper" "excel print"!important;
     gap:5px 8px!important;align-items:center!important;
   }
   #divisionReportModal .dr-toolbar-actions label[for="divisionReportFY"]{grid-area:fylabel!important;}
   #divisionReportModal .dr-toolbar-actions label[for="divisionReportDivision"]{grid-area:divlabel!important;}
+  #divisionReportModal .dr-toolbar-actions label[for="divisionReportPrintOrientation"]{grid-area:paperlabel!important;}
+  #divisionReportModal #divisionReportPrintOrientation{grid-area:paper!important;}
   #divisionReportModal #divisionReportFY{grid-area:fy!important;}
   #divisionReportModal #divisionReportDivision{grid-area:div!important;}
   #divisionReportModal #divisionReportExcelBtn{grid-area:excel!important;}
@@ -25561,6 +25568,6 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 }
 </style>
 
-  <script src="division-report.js?v=20261103-mobileentryv8" defer></script>
+  <script src="division-report.js?v=20261103-print-orientation-v9" defer></script>
 </body>
 </html>

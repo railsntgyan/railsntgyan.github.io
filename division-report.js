@@ -360,17 +360,30 @@
     byId('divisionReportModal').style.display = 'none';
   }
 
+  // Print orientation is a report-only choice; screen, other print flows and
+  // Excel export keep their existing behaviour.
   function print() {
-    document.body.classList.add('printing-division-report');
-    // Landscape makes seven report columns legible; limit this page rule to
-    // the report print operation so other website print features are unchanged.
+    const chooser = byId('divisionReportPrintOrientation');
+    const orientation = chooser && chooser.value === 'portrait' ? 'portrait' : 'landscape';
+    const modeClass = orientation === 'portrait' ? 'dr-print-portrait' : 'dr-print-landscape';
+    document.body.classList.add('printing-division-report', modeClass);
+
+    // Browser print preview follows the orientation selected in the report.
+    // This style is temporary and does not affect other website printing.
+    const previousStyle = byId('divisionReportPrintPageSize');
+    if (previousStyle) previousStyle.remove();
     const pageStyle = document.createElement('style');
     pageStyle.id = 'divisionReportPrintPageSize';
-    pageStyle.textContent = '@page { size: A4 landscape; margin: 10mm 9mm 16mm; ' +
+    const margins = orientation === 'portrait' ? '10mm 8mm 16mm' : '10mm 9mm 16mm';
+    pageStyle.textContent = '@page { size: A4 ' + orientation + '; margin: ' + margins + '; ' +
       '@bottom-center { content: counter(page) " of " counter(pages); font-family: "Times New Roman", serif; font-size: 10pt; color: #243747; } }';
     document.head.appendChild(pageStyle);
+
+    let cleaned = false;
     const cleanPrintState = () => {
-      document.body.classList.remove('printing-division-report');
+      if (cleaned) return;
+      cleaned = true;
+      document.body.classList.remove('printing-division-report', modeClass);
       pageStyle.remove();
       window.removeEventListener('afterprint', cleanPrintState);
     };
