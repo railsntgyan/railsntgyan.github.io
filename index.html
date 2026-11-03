@@ -10255,9 +10255,12 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         });
       });
 
-      renderTable();
-      if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
+      // Loading-only optimization: records and graph counts first, without
+      // rebuilding a hidden main table while the user is on Home.
+      // This leaves the existing Chart.js animation/rendering code untouched.
       updateDashboardView();
+      if (currentCategory !== 'HOME') renderTable();
+      if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
       if (typeof window.railRefreshOpenDivisionReport === 'function') window.railRefreshOpenDivisionReport();
 
       // If the page was recreated by Android/mobile Back, restore the
