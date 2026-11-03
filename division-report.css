@@ -800,3 +800,60 @@ html body #mainTableContainer #railsFitTable td.rail-workflow-column .dr-workflo
   body.printing-division-report.dr-print-portrait #divisionReportModal .dr-division-heading,
   body.printing-division-report.dr-print-landscape #divisionReportModal .dr-division-heading {font-size:12pt!important;}
 }
+
+
+/* V10 — Android Portrait print pagination and legibility.
+   Print-only: existing screen tables, modal and dashboard are untouched. */
+@media print {
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table-wrap {
+    /* A real block, not display:contents. The latter produces fragmented
+       page flows in some Android Chromium print providers. */
+    display:block!important; width:100%!important; max-width:100%!important;
+    min-width:0!important; height:auto!important; max-height:none!important;
+    overflow:visible!important; border:0!important; margin:0!important;
+    break-inside:auto!important; page-break-inside:auto!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-division-block,
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-sections,
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-sheet {
+    height:auto!important; max-height:none!important; min-height:0!important;
+    overflow:visible!important; break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-division-table {
+    display:table!important; width:100%!important; max-width:100%!important;
+    margin:0!important; border-spacing:0!important;
+    table-layout:fixed!important; break-inside:auto!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-division-table thead {
+    display:table-header-group!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-division-table tbody {
+    display:table-row-group!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-sn {width:5%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-station {width:14%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-approval {width:13%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-work {width:31%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-agency {width:9%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-authority {width:18%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table col.dr-col-date {width:10%!important;}
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table th,
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table td {
+    font-family:'Times New Roman',serif!important;
+    font-size:10pt!important; line-height:1.22!important;
+    padding:3px 2px!important; overflow-wrap:break-word!important;
+    word-break:normal!important; white-space:normal!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-report-table .dr-fields th {
+    font-size:9.5pt!important; line-height:1.14!important; padding:5px 2px!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-workflow-pill {
+    max-width:100%!important; white-space:normal!important;
+    overflow-wrap:break-word!important; font-size:9pt!important;
+    padding:2px 3px!important;
+  }
+  body.printing-division-report.dr-print-portrait #divisionReportModal .dr-workflow-hint {
+    font-size:8.5pt!important; line-height:1.15!important;
+  }
+}

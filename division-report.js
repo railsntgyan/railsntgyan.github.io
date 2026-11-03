@@ -355,40 +355,39 @@
     byId('divisionReportModal').style.display = 'flex';
     try { history.pushState({view:'modal', modal:'divisionReport'}, '', ''); } catch (err) { console.warn('History unavailable', err); }
   }
+  // Keep report-only print rules alive while Android's native print UI is
+  // producing the preview. Android can request pages several seconds after
+  // window.print() returns; a 2-second timeout caused inconsistent layouts.
+  function clearDivisionPrintState() {
+    document.body.classList.remove('printing-division-report', 'dr-print-portrait', 'dr-print-landscape');
+    const style = byId('divisionReportPrintPageSize');
+    if (style) style.remove();
+  }
   function close() {
     if (pendingRender !== null) { clearTimeout(pendingRender); pendingRender = null; }
+    clearDivisionPrintState();
     byId('divisionReportModal').style.display = 'none';
   }
 
-  // Print orientation is a report-only choice; screen, other print flows and
-  // Excel export keep their existing behaviour.
+  // Orientation is scoped to this report only. Android's Save as PDF dialog
+  // may override CSS @page; users should select A4 and the same orientation
+  // there. No website can force a native Android printer's paper setting.
   function print() {
     const chooser = byId('divisionReportPrintOrientation');
     const orientation = chooser && chooser.value === 'portrait' ? 'portrait' : 'landscape';
-    const modeClass = orientation === 'portrait' ? 'dr-print-portrait' : 'dr-print-landscape';
-    document.body.classList.add('printing-division-report', modeClass);
-
-    // Browser print preview follows the orientation selected in the report.
-    // This style is temporary and does not affect other website printing.
-    const previousStyle = byId('divisionReportPrintPageSize');
-    if (previousStyle) previousStyle.remove();
+    clearDivisionPrintState();
+    document.body.classList.add('printing-division-report', 'dr-print-' + orientation);
     const pageStyle = document.createElement('style');
     pageStyle.id = 'divisionReportPrintPageSize';
-    const margins = orientation === 'portrait' ? '10mm 8mm 16mm' : '10mm 9mm 16mm';
-    pageStyle.textContent = '@page { size: A4 ' + orientation + '; margin: ' + margins + '; ' +
-      '@bottom-center { content: counter(page) " of " counter(pages); font-family: "Times New Roman", serif; font-size: 10pt; color: #243747; } }';
+    const margins = orientation === 'portrait' ? '8mm 7mm 12mm 7mm' : '9mm 8mm 12mm 8mm';
+    pageStyle.textContent = '@page { size: A4 ' + orientation + '; margin: ' + margins + '; } ' +
+      '@page { @bottom-center { content: counter(page) " of " counter(pages); ' +
+      'font-family: "Times New Roman", serif; font-size: 10pt; color: #243747; } }';
     document.head.appendChild(pageStyle);
-
-    let cleaned = false;
-    const cleanPrintState = () => {
-      if (cleaned) return;
-      cleaned = true;
-      document.body.classList.remove('printing-division-report', modeClass);
-      pageStyle.remove();
-      window.removeEventListener('afterprint', cleanPrintState);
-    };
-    window.addEventListener('afterprint', cleanPrintState);
-    try { window.print(); } finally { setTimeout(cleanPrintState, 2000); }
+    try { window.print(); } catch (err) { clearDivisionPrintState(); throw err; }
+    // Deliberately no afterprint/timeout removal: Android print preview is
+    // asynchronous. Rules are removed when the report modal is closed or
+    // when a different orientation is printed next.
   }
 
   let excelLoader = null;
