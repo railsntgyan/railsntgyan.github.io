@@ -8380,15 +8380,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
           </div>
         </div>
 
-        <!-- Small, temporary live-data state; never shows an unverified zero as a final count. -->
-        <div id="railRecordsLoadNotice" role="status" aria-live="polite" hidden
-             style="margin:8px 14px 0;padding:9px 13px;border:1px solid #b7d9ed;border-radius:9px;background:#edf8ff;color:#124362;font-size:12px;font-weight:700;">
-          <i class="fa-solid fa-circle-notch fa-spin" id="railRecordsLoadSpinner" aria-hidden="true"></i>
-          <span id="railRecordsLoadMessage">Loading live records…</span>
-          <button type="button" id="railRecordsRetryButton" onclick="railRetryRecordsLoading()" hidden
-                  style="margin-left:9px;padding:3px 10px;border:1px solid #7aa9c8;border-radius:6px;background:#fff;color:#124362;cursor:pointer;font-weight:700;">Retry</button>
-        </div>
-
         <!-- Mobile-only entry point: the chart buttons can otherwise be below the fold. -->
         <div class="rail-mobile-reports-entry" aria-label="Reports">
           <button type="button" class="rail-mobile-division-shortcut" onclick="openDivisionReportModal()" title="Open Division-wise Detailed Report">
@@ -9500,47 +9491,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     let railAdmin = false;
     let railAuthReady = false;
     let railRecordsUnsubscribe = null;
-    let railRecordsFeedState = 'idle';
-    let railRecordsSlowNoticeTimer = null;
-    let railRecordsDeferredRender = null;
-
-    function railSetRecordsFeedState(state, explanation) {
-      railRecordsFeedState = state;
-      if (railRecordsSlowNoticeTimer) {
-        clearTimeout(railRecordsSlowNoticeTimer);
-        railRecordsSlowNoticeTimer = null;
-      }
-      const notice = document.getElementById('railRecordsLoadNotice');
-      const message = document.getElementById('railRecordsLoadMessage');
-      const retry = document.getElementById('railRecordsRetryButton');
-      const spinner = document.getElementById('railRecordsLoadSpinner');
-      if (notice) notice.hidden = state === 'ready' || state === 'idle';
-      if (message) message.textContent = explanation || (
-        state === 'loading' ? 'Loading live records…' :
-        state === 'error' ? 'Unable to load records. Check your network and try again.' : ''
-      );
-      if (retry) retry.hidden = state !== 'error';
-      if (spinner) spinner.style.display = state === 'loading' ? '' : 'none';
-      if (state === 'loading') {
-        // This is a loading indicator, not a stored record cache.
-        document.querySelectorAll('[id^="nodeCount-"]').forEach(el => { el.textContent = '…'; });
-        const total = document.getElementById('dashTotalRecordsCount');
-        if (total) total.textContent = '…';
-        railRecordsSlowNoticeTimer = setTimeout(() => {
-          if (railRecordsFeedState === 'loading' && message)
-            message.textContent = 'Still connecting to Firebase. A slow network may delay the first load…';
-        }, 12000);
-      }
-    }
-
-    function railRetryRecordsLoading() {
-      if (!auth.currentUser) return;
-      if (railRecordsUnsubscribe) {
-        railRecordsUnsubscribe();
-        railRecordsUnsubscribe = null;
-      }
-      railStartRecordsListener();
-    }
 
     function railSetLoginVisible(visible) {
       if (visible && typeof window.railCloseProfile === 'function') window.railCloseProfile(false);
@@ -9572,8 +9522,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         if (window.railMasterRoleUpdated) window.railMasterRoleUpdated();
         sessionStorage.removeItem('secr_portal_authorized');
         if (railRecordsUnsubscribe) { railRecordsUnsubscribe(); railRecordsUnsubscribe = null; }
-        if (railRecordsDeferredRender !== null) { cancelAnimationFrame(railRecordsDeferredRender); railRecordsDeferredRender = null; }
-        railSetRecordsFeedState('idle');
         if (typeof records !== 'undefined') {
           records = [];
           try { renderTable(); updateDashboardView(); } catch(e) {}
@@ -9582,12 +9530,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         return;
       }
       try {
-        // Firestore enforces read permissions server-side. Begin its independent
-        // request as soon as Firebase Auth has restored the signed-in user,
-        // instead of waiting for a separate role-token network round trip.
-        // Login visibility and admin privileges are STILL decided below only
-        // after getIdTokenResult() succeeds.
-        railStartRecordsListener();
         const token = await user.getIdTokenResult();
         // Ignore an obsolete async result if sign-out occurred in the meantime.
         if (auth.currentUser !== user) return;
@@ -9599,12 +9541,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         if (typeof railStartRecordsListener === 'function') railStartRecordsListener();
       } catch (error) {
         console.error('Firebase authorization error:', error);
-        // Do not keep an early subscription if token/role verification fails.
-        if (auth.currentUser === user && railRecordsUnsubscribe) {
-          railRecordsUnsubscribe();
-          railRecordsUnsubscribe = null;
-        }
-        railSetRecordsFeedState('idle');
         railAdmin = false;
         sessionStorage.removeItem('secr_portal_authorized');
         railSetLoginVisible(true);
@@ -10302,59 +10238,35 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     // REAL-TIME CLOUD LISTENER
     function railStartRecordsListener() {
       if (!auth.currentUser || railRecordsUnsubscribe) return;
-      const listeningUser = auth.currentUser;
-      railSetRecordsFeedState('loading');
       railRecordsUnsubscribe = recordsCol.onSnapshot((snapshot) => {
-        if (auth.currentUser !== listeningUser) return;
-        const freshRecords = [];
-        snapshot.forEach(doc => {
-          if (doc.id === '1') return;
-          const r = doc.data();
-          let cat = (r.category || '').toUpperCase().trim();
-          if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
-          if (cat === 'IRSEM & CORRECTION SLIP') cat = 'IRSEM CHAPTER WISE';
-          if (cat === 'IRTEM') cat = 'IRTEM CHAPTER WISE';
-          freshRecords.push({
-            ...r,
-            id: doc.id,
-            category: cat,
-            date: formatDateToDDMMYYYY(r.date)
-          });
+      records = [];
+      snapshot.forEach(doc => {
+        if (doc.id === '1') return;
+        const r = doc.data();
+        let cat = (r.category || '').toUpperCase().trim();
+        if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
+        if (cat === 'IRSEM & CORRECTION SLIP') cat = 'IRSEM CHAPTER WISE';
+        if (cat === 'IRTEM') cat = 'IRTEM CHAPTER WISE';
+        records.push({
+          ...r,
+          id: doc.id,
+          category: cat,
+          date: formatDateToDDMMYYYY(r.date)
         });
-        records = freshRecords;
-        // Never label an empty, offline/cache-only snapshot as confirmed zero.
-        if (records.length || !snapshot.metadata?.fromCache) railSetRecordsFeedState('ready');
-
-        // User is on Home: display the new KPI counts and animate the two charts
-        // immediately. Building an invisible main table first is wasteful and
-        // makes the live dashboard feel delayed on slower laptops/phones.
-        updateDashboardView();
-
-        // Coalesce rapid cache/server updates into one non-blocking table refresh.
-        if (railRecordsDeferredRender !== null) cancelAnimationFrame(railRecordsDeferredRender);
-        railRecordsDeferredRender = requestAnimationFrame(() => {
-          // Let the browser actually paint the counters before doing any
-          // potentially heavy table/auxiliary-view work on the next frame.
-          railRecordsDeferredRender = requestAnimationFrame(() => {
-            railRecordsDeferredRender = null;
-            if (auth.currentUser !== listeningUser) return;
-            if (currentCategory !== 'HOME') renderTable();
-            if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
-            if (typeof window.railRefreshOpenDivisionReport === 'function') window.railRefreshOpenDivisionReport();
-            // Preserve the Important Links return behavior after Android Back.
-            restoreImportantLinksReturnState();
-          });
-        });
-      }, (error) => {
-        if (auth.currentUser !== listeningUser) return;
-        console.error('Firestore sync error:', error);
-        railRecordsUnsubscribe = null;
-        const denial = error.code === 'permission-denied';
-        railSetRecordsFeedState('error', denial
-          ? 'Firestore access denied. Check login and security rules.'
-          : 'Records could not be loaded. Check your connection and select Retry.');
-        if (denial) alert('Firestore access denied. Check deployed Security Rules.');
       });
+
+      renderTable();
+      if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
+      updateDashboardView();
+      if (typeof window.railRefreshOpenDivisionReport === 'function') window.railRefreshOpenDivisionReport();
+
+      // If the page was recreated by Android/mobile Back, restore the
+      // Important Links section after Firestore has repopulated the table.
+      restoreImportantLinksReturnState();
+    }, (error) => {
+      console.error("Firestore sync error: ", error);
+      if (error.code === 'permission-denied') alert('Firestore access denied. Check deployed Security Rules.');
+    });
     }
 
     // DASHBOARD LIVE CALCULATION & CHART LOGIC
@@ -10416,7 +10328,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
 
     function updateDashboardView() {
       railRefreshDashboardFYOptions();
-      if (railRecordsFeedState === 'loading' || railRecordsFeedState === 'error') return;
       const currentFY = railSelectedDashboardFY || getCurrentFinancialYearString();
       const allYears = currentFY === 'ALL';
       const currentFYLabel = allYears ? 'All Years' : `FY ${currentFY}`;
