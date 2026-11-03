@@ -8375,7 +8375,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
             </div>
             <div class="dash-total-badge">
               <i class="fa-solid fa-layer-group" style="color: #38bdf8;"></i>
-              <span><span id="dashRecordsRangeLabel">Total Selected FY:</span> <b id="dashTotalRecordsCount">0</b></span>
+              <span>Total Selected FY: <b id="dashTotalRecordsCount">0</b></span>
             </div>
           </div>
         </div>
@@ -8478,7 +8478,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         <div class="dash-charts-grid">
           <div class="chart-card">
             <div class="chart-header">
-              <h3><i class="fa-solid fa-chart-bar" style="color:var(--brand-orange);"></i> Category-wise Records Distribution (<span id="dashChartRangeLabel">Current FY</span>)</h3>
+              <h3><i class="fa-solid fa-chart-bar" style="color:var(--brand-orange);"></i> Category-wise Records Distribution (Current FY)</h3>
               <button class="btn btn-outline" style="padding: 4px 10px; font-size:10.5px;" onclick="openFYReportModal()">
                 <i class="fa-solid fa-chart-column"></i> Detailed FY Report
               </button>
@@ -8996,20 +8996,20 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         </div>
         <div class="form-group" id="formActionByContainer" style="display:none;">
           <label for="formActionBy">Action By / Signed By</label>
-          <select id="formActionBy" onchange="railWorkflowCustomChanged('formActionBy')" aria-label="Choose action authority">
-            <option value="">-- Select authority --</option>
-          </select>
-          <input id="formActionByCustom" type="text" autocomplete="off" placeholder="Enter other authority / signed by" maxlength="120" style="display:none;margin-top:7px;" aria-label="Other action authority">
+          <input id="formActionBy" type="text" list="formActionByOptions" autocomplete="off" placeholder="e.g. PCSTE, CSE, CCE" maxlength="120">
+          <datalist id="formActionByOptions"></datalist>
         </div>
         <div class="form-group" id="formPcsteAutoAuthority" style="display:none;">
           <span class="rail-workflow-auto-note">SANCTIONING AUTHORITY: <strong>PCSTE</strong> (automatic — no entry required)</span>
         </div>
         <div class="form-group" id="formActionToContainer" style="display:none;">
           <label for="formActionTo">Forwarded / Returned To (if applicable)</label>
-          <select id="formActionTo" onchange="railWorkflowCustomChanged('formActionTo')" aria-label="Choose forwarding destination">
-            <option value="">-- Select forwarded / returned to --</option>
-          </select>
-          <input id="formActionToCustom" type="text" autocomplete="off" placeholder="Enter other destination / department" maxlength="150" style="display:none;margin-top:7px;" aria-label="Other forwarding destination">
+          <input id="formActionTo" type="text" list="formActionToOptions" autocomplete="off" placeholder="e.g. RDSO, PCSO, respective department" maxlength="150">
+          <datalist id="formActionToOptions">
+            <option value="RDSO"><option value="PCSO"><option value="Concerned Division">
+            <option value="Concerned Department"><option value="Project"><option value="Construction">
+            <option value="CRS"><option value="Railway Board">
+          </datalist>
         </div>
 
         <div class="form-group" id="formRoutesContainer" style="display:none;">
@@ -10255,12 +10255,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         });
       });
 
-      // Loading-only optimization: records and graph counts first, without
-      // rebuilding a hidden main table while the user is on Home.
-      // This leaves the existing Chart.js animation/rendering code untouched.
-      updateDashboardView();
-      if (currentCategory !== 'HOME') renderTable();
+      renderTable();
       if (typeof window.railLdceRefreshPapers === 'function') window.railLdceRefreshPapers();
+      updateDashboardView();
       if (typeof window.railRefreshOpenDivisionReport === 'function') window.railRefreshOpenDivisionReport();
 
       // If the page was recreated by Android/mobile Back, restore the
@@ -10304,20 +10301,15 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       const actualFY = getCurrentFinancialYearString();
       if (!railSelectedDashboardFY) railSelectedDashboardFY = actualFY;
       if (!select) return;
-      const years = new Set([actualFY]);
-      if (railSelectedDashboardFY && railSelectedDashboardFY !== 'ALL') years.add(railSelectedDashboardFY);
+      const years = new Set([actualFY, railSelectedDashboardFY]);
       records.forEach(rec => {
         const info = getFinancialYearAndMonth(rec.date);
         if (info) years.add(info.fy);
       });
       const ordered = [...years].sort((a,b) => Number(b.slice(0,4)) - Number(a.slice(0,4)));
-      const signature = 'ALL|' + ordered.join('|');
+      const signature = ordered.join('|');
       if (select.dataset.years !== signature) {
         select.replaceChildren();
-        const allOption = document.createElement('option');
-        allOption.value = 'ALL';
-        allOption.textContent = 'All Years';
-        select.appendChild(allOption);
         ordered.forEach(fy => {
           const opt = document.createElement('option');
           opt.value = fy;
@@ -10332,12 +10324,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     function updateDashboardView() {
       railRefreshDashboardFYOptions();
       const currentFY = railSelectedDashboardFY || getCurrentFinancialYearString();
-      const allYears = currentFY === 'ALL';
-      const currentFYLabel = allYears ? 'All Years' : `FY ${currentFY}`;
-      const rangeLabel = document.getElementById('dashRecordsRangeLabel');
-      if (rangeLabel) rangeLabel.textContent = allYears ? 'Total Records:' : 'Total Selected FY:';
-      const chartRangeLabel = document.getElementById('dashChartRangeLabel');
-      if (chartRangeLabel) chartRangeLabel.textContent = allYears ? 'All Years' : 'Current FY';
+      const currentFYLabel = `FY ${currentFY}`;
 
       const fyElem = document.getElementById('dashCurrentFYText');
       if (fyElem) fyElem.innerText = currentFYLabel;
@@ -10351,7 +10338,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
 
       records.forEach(rec => {
         const fyInfo = getFinancialYearAndMonth(rec.date);
-        if (allYears || (fyInfo && fyInfo.fy === currentFY)) {
+        if (fyInfo && fyInfo.fy === currentFY) {
           totalCurrentFY++;
           let cat = (rec.category || '').toUpperCase().trim();
           if (cat === 'PCSTE DISPENSATION') cat = 'DISPENSATION';
@@ -13094,8 +13081,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       document.getElementById('formEiOem').value = rec.oem || '';
       document.getElementById('formEiSanctionBy').value = rec.sanctionBy || '';
       document.getElementById('formFileAction').value = recCat === 'PCSTE SANCTION' && rec.fileAction === 'APPROVED' ? 'SANCTIONED' : (rec.fileAction || '');
-      railWorkflowSetFieldValue('formActionBy', rec.actionBy || '');
-      railWorkflowSetFieldValue('formActionTo', rec.actionTo || '');
+      document.getElementById('formActionBy').value = rec.actionBy || '';
+      document.getElementById('formActionTo').value = rec.actionTo || '';
       // Existing PCSTE Sanction records have PCSTE authority automatically.
       if (recCat === 'PCSTE SANCTION') railSyncPcsteSanctionAuthority();
       document.getElementById('formRoutes').value = rec.routes || '';
@@ -13123,8 +13110,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     function clearFormFields() {
       document.getElementById('formStation').value = '';
       document.getElementById('formFileAction').value = '';
-      railWorkflowSetFieldValue('formActionBy', '');
-      railWorkflowSetFieldValue('formActionTo', '');
+      document.getElementById('formActionBy').value = '';
+      document.getElementById('formActionTo').value = '';
       setAgencyValue('');
       document.getElementById('formJpoNo').value = '';
       document.getElementById('formAddressedTo').value = '';
@@ -13233,91 +13220,38 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       'SPEED RAISING': ['CSE','CCE','CSTE/Planning','PCSTE'],
       'DISPENSATION': ['PCSTE','PCSTE & PCEE']
     };
-    // Use real <select> elements, not browser-dependent <datalist> popups.
-    // Preserve manually entered legacy values via the Other text field.
-    const railWorkflowDestinations = [
-      'RDSO','PCSO','Concerned Division','Concerned Department','Project',
-      'Construction','CRS','Railway Board','GM','PCSTE','CSE','CCE',
-      'CSTE/Planning','PCEE'
-    ];
-    function railWorkflowCustomChanged(id, clearWhenNotOther = true) {
-      const select = document.getElementById(id);
-      const custom = document.getElementById(id + 'Custom');
-      if (!select || !custom) return;
-      const isOther = select.value === '__OTHER__';
-      custom.style.display = isOther ? 'block' : 'none';
-      custom.required = isOther && select.closest('.form-group').style.display !== 'none';
-      if (!isOther && clearWhenNotOther) custom.value = '';
-    }
-    function railWorkflowGetFieldValue(id) {
-      const select = document.getElementById(id);
-      const custom = document.getElementById(id + 'Custom');
-      if (!select) return '';
-      return select.value === '__OTHER__' ? (custom ? custom.value.trim() : '') : select.value;
-    }
-    function railWorkflowSetFieldValue(id, value) {
-      const select = document.getElementById(id);
-      const custom = document.getElementById(id + 'Custom');
-      if (!select || !custom) return;
-      const text = String(value || '').trim();
-      const knownOption = Array.from(select.options).find(o => o.value && o.value !== '__OTHER__' && o.value.toLowerCase() === text.toLowerCase());
-      if (!text) {
-        select.value = '';
-        custom.value = '';
-      } else if (knownOption) {
-        select.value = knownOption.value;
-        custom.value = '';
-      } else {
-        select.value = '__OTHER__';
-        custom.value = text;
-      }
-      railWorkflowCustomChanged(id, false);
-    }
-    function railWorkflowFillChoices(id, choices, placeholder) {
-      const select = document.getElementById(id);
-      if (!select) return;
-      const previouslyEntered = railWorkflowGetFieldValue(id);
-      select.replaceChildren();
-      const empty = document.createElement('option');
-      empty.value = '';
-      empty.textContent = placeholder;
-      select.appendChild(empty);
-      [...new Set(choices)].forEach(value => {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = value;
-        select.appendChild(option);
-      });
-      const other = document.createElement('option');
-      other.value = '__OTHER__';
-      other.textContent = 'Other (enter manually)';
-      select.appendChild(other);
-      railWorkflowSetFieldValue(id, previouslyEntered);
-    }
     function railSyncPcsteSanctionAuthority() {
-      const isPcste = document.getElementById('formCategory').value === 'PCSTE SANCTION';
-      const by = document.getElementById('formActionBy');
-      const action = document.getElementById('formFileAction');
+      const isPcste=document.getElementById('formCategory').value==='PCSTE SANCTION';
+      const by=document.getElementById('formActionBy');
+      const action=document.getElementById('formFileAction');
       if (by) {
-        by.disabled = isPcste;
-        if (isPcste) railWorkflowSetFieldValue('formActionBy', 'PCSTE');
+        if (isPcste) {
+          by.value='PCSTE';
+          by.readOnly=true;
+        } else {
+          if (by.readOnly && by.value==='PCSTE') by.value='';
+          by.readOnly=false;
+        }
       }
       // Default only when creating a PCSTE Sanction; retain explicit edited action.
-      if (isPcste && action && (!action.value || !document.getElementById('formEditRecordId').value || action.value === 'APPROVED')) action.value = 'SANCTIONED';
+      if (isPcste && action && (!action.value || !document.getElementById('formEditRecordId').value || action.value==='APPROVED')) action.value='SANCTIONED';
     }
     function railUpdateWorkflowForm(cat) {
-      const allowed = Object.prototype.hasOwnProperty.call(railWorkflowGuidance, cat);
-      ['formFileActionContainer','formActionToContainer'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = allowed ? 'flex' : 'none';
+      const allowed = Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat);
+      ['formFileActionContainer','formActionToContainer'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.style.display=allowed?'flex':'none';
       });
-      const byContainer = document.getElementById('formActionByContainer');
-      if (byContainer) byContainer.style.display = allowed && cat !== 'PCSTE SANCTION' ? 'flex' : 'none';
-      const autoNote = document.getElementById('formPcsteAutoAuthority');
-      if (autoNote) autoNote.style.display = cat === 'PCSTE SANCTION' ? 'flex' : 'none';
-      railWorkflowFillChoices('formActionBy', railWorkflowGuidance[cat] || [], '-- Select authority --');
-      railWorkflowFillChoices('formActionTo', railWorkflowDestinations, '-- Select forwarded / returned to --');
+      const byContainer=document.getElementById('formActionByContainer');
+      if(byContainer) byContainer.style.display=allowed && cat!=='PCSTE SANCTION'?'flex':'none';
+      const autoNote=document.getElementById('formPcsteAutoAuthority');
+      if(autoNote) autoNote.style.display=cat==='PCSTE SANCTION'?'flex':'none';
       railSyncPcsteSanctionAuthority();
+      const datalist=document.getElementById('formActionByOptions');
+      if(!datalist) return;
+      const entries=railWorkflowGuidance[cat]||[];
+      datalist.replaceChildren();
+      entries.forEach(text=>{const option=document.createElement('option');option.value=text;datalist.appendChild(option);});
       const guide={
         'PCSTE SANCTION':'Sanctioned by PCSTE (authority is automatic).',
         'EI TSAA':'PCSTE approves, or PCSTE forwards to RDSO. Record the actual action.',
@@ -13551,17 +13485,6 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         return;
       }
 
-      for (const id of ['formActionBy', 'formActionTo']) {
-        const selector = document.getElementById(id);
-        const other = document.getElementById(id + 'Custom');
-        if (selector && other && selector.value === '__OTHER__' &&
-            selector.closest('.form-group').style.display !== 'none' && !other.value.trim()) {
-          alert('Please enter the selected Other value.');
-          other.focus();
-          return;
-        }
-      }
-
       const recordData = {
         category: cat,
         station: (isPcste || isDispensation || isEi || isMsdac || isGm || isGradeOrLine || isSpeedRaising || isInspection)
@@ -13590,8 +13513,8 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         sanctionBy: isDispensation ? document.getElementById('formGivenBy').value : (isEi ? document.getElementById('formEiSanctionBy').value : ''),
         ...(Object.prototype.hasOwnProperty.call(railWorkflowGuidance,cat) ? {
           fileAction: isPcste ? (document.getElementById('formFileAction').value || 'SANCTIONED') : document.getElementById('formFileAction').value,
-          actionBy: isPcste ? 'PCSTE' : railWorkflowGetFieldValue('formActionBy'),
-          actionTo: railWorkflowGetFieldValue('formActionTo')
+          actionBy: isPcste ? 'PCSTE' : document.getElementById('formActionBy').value.trim(),
+          actionTo:document.getElementById('formActionTo').value.trim()
         } : {}),
         routes: isEi ? document.getElementById('formRoutes').value.trim() : '',
         wagon: (isSpeedCert || isJsc) ? document.getElementById('formWagon').value.trim() : '',
