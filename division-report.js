@@ -355,13 +355,16 @@
     byId('divisionReportModal').style.display = 'flex';
     try { history.pushState({view:'modal', modal:'divisionReport'}, '', ''); } catch (err) { console.warn('History unavailable', err); }
   }
-  // Keep report-only print rules alive while Android's native print UI is
-  // producing the preview. Android can request pages several seconds after
-  // window.print() returns; a 2-second timeout caused inconsistent layouts.
+  /* Print report in its own document.  The main website contains several
+     global @page {size:A4 landscape} rules for DIFFERENT reports.  Printing
+     directly from the website may give the browser a stale landscape layout
+     even when Portrait is selected.  A clean new document removes those rules
+     entirely, including on Android print providers. */
   function clearDivisionPrintState() {
+    // Compatibility cleanup in case the user had the previous print version.
     document.body.classList.remove('printing-division-report', 'dr-print-portrait', 'dr-print-landscape');
-    const style = byId('divisionReportPrintPageSize');
-    if (style) style.remove();
+    const oldStyle = byId('divisionReportPrintPageSize');
+    if (oldStyle) oldStyle.remove();
   }
   function close() {
     if (pendingRender !== null) { clearTimeout(pendingRender); pendingRender = null; }
@@ -369,25 +372,145 @@
     byId('divisionReportModal').style.display = 'none';
   }
 
-  // Orientation is scoped to this report only. Android's Save as PDF dialog
-  // may override CSS @page; users should select A4 and the same orientation
-  // there. No website can force a native Android printer's paper setting.
+  function isolatedPrintDocument(orientation) {
+    const portrait = orientation === 'portrait';
+    // Explicit millimetre sizes avoid inheriting the FY report's CSS page size.
+    const dimensions = portrait ? '210mm 297mm' : '297mm 210mm';
+    const maxScreenWidth = portrait ? '210mm' : '297mm';
+    const typeSize = portrait ? '9.5pt' : '10.5pt';
+    const headerSize = portrait ? '9pt' : '10pt';
+    const pillSize = portrait ? '8.7pt' : '9.6pt';
+    const columnWidths = portrait ? [5,14,13,31,9,18,10] : [6,16,13,27,10,19,9];
+    const font = '"Times New Roman", Times, serif';
+    const colCSS = columnWidths.map((width, i) =>
+      '.dr-report-table col:nth-child(' + (i+1) + '){width:' + width + '%}').join('\n');
+    const contents = byId('divisionReportRows').innerHTML;
+    const filename = 'Division-wise FY ' + fullFY(byId('divisionReportFY').value) +
+      ' (' + (portrait ? 'Portrait' : 'Landscape') + ')';
+    const css = `
+      @page {
+        size: ${dimensions};
+        margin: 8mm 7mm 14mm 7mm;
+        @bottom-center { content: counter(page) " of " counter(pages); font-family: ${font}; font-size: 9pt; color:#243747; }
+      }
+      * { box-sizing:border-box; }
+      html,body {margin:0;padding:0; width:100%;background:white;color:#0c2030;font-family:${font};}
+      html {color-scheme:light;}
+      #reportPrintPanel {position:sticky;top:0;z-index:20;padding:11px 14px;
+        display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+        background:#0b3b60;color:#fff;font:600 14px Arial,sans-serif;}
+      #reportPrintPanel button {min-height:36px;padding:8px 13px;border:0;border-radius:7px;
+        font:700 13px Arial,sans-serif;cursor:pointer;background:#eaf6ff;color:#0b3b60;}
+      #reportPrintPanel .print-help {font:400 12px Arial,sans-serif;opacity:.9;}
+      .print-sheet {width:100%; max-width:${maxScreenWidth};margin:16px auto;
+        background:white;padding:0 7mm 5mm;}
+      .dr-report-intro{margin:0;border:1px solid #9bb9cc;border-bottom:0;
+        break-after:avoid;page-break-after:avoid;}
+      .dr-report-main-title {padding:6px 4px;text-align:center;background:#123b59;color:white;
+        font:800 14pt/1.3 ${font};letter-spacing:.015em;}
+      .dr-report-grand-total {padding:4px;text-align:center;background:#eaf2f8;
+        color:#173c56;font:bold 10.5pt/1.25 ${font};}
+      .dr-division-block{margin:0;padding:0;break-inside:auto;page-break-inside:auto;}
+      .dr-division-heading{margin:0;padding:5px;background:#d9edf9;text-align:center;
+        border:1px solid #9bb9cc;font:bold 11.5pt/1.3 ${font};color:#143d59;
+        break-after:avoid;page-break-after:avoid;}
+      .dr-report-table-wrap {display:block;width:100%;height:auto;overflow:visible;}
+      .dr-mobile-table-note{display:none!important;}
+      .dr-report-table {display:table;width:100%;table-layout:fixed;border-collapse:collapse;
+        border-spacing:0;background:white;font:${typeSize}/1.2 ${font};}
+      ${colCSS}
+      .dr-report-table thead{display:table-header-group!important;}
+      .dr-report-table tbody{display:table-row-group!important;}
+      .dr-report-table tr {break-inside:avoid;page-break-inside:avoid;}
+      .dr-report-table th,.dr-report-table td {border:1px solid #91aabd;
+        padding:3px 2px;vertical-align:middle;text-align:center;
+        font:${typeSize}/1.2 ${font};color:#12283b;
+        overflow-wrap:anywhere;word-break:normal;white-space:normal;}
+      .dr-report-table th{font:bold ${headerSize}/1.15 ${font};background:#195983;
+        color:#fff;padding:5px 2px;}
+      .dr-report-table tr.dr-record:nth-child(even) td{background:#f2f7fb;}
+      .dr-report-table .dr-outcome{text-align:center;}
+      .dr-workflow-result {display:flex;flex-direction:column;align-items:center;
+        justify-content:center;text-align:center;min-width:0;gap:3px;}
+      .dr-workflow-pill{display:inline-block;max-width:100%;padding:2px 3px;
+        border-radius:7px;white-space:normal;overflow-wrap:anywhere;
+        word-break:normal;font:bold ${pillSize}/1.2 ${font};}
+      .dr-workflow-approved{background:#e4f7ec;color:#13663a;border:1px solid #b4e2c8;}
+      .dr-workflow-forwarded{background:#e6f2ff;color:#195e99;border:1px solid #bbdcf5;}
+      .dr-workflow-warn{background:#fff1e2;color:#a05214;border:1px solid #f6cea3;}
+      .dr-workflow-unknown{background:#f5f2f0;color:#795d49;border:1px solid #dfd4cd;}
+      .dr-workflow-neutral{background:#edf2f8;color:#485b70;border:1px solid #c9d4df;}
+      .dr-workflow-hint{font:8pt/1.15 ${font};color:#607489;overflow-wrap:anywhere;}
+      .dr-prepared-row td{border:0!important;background:#fff!important;text-align:right!important;}
+      .dr-prepared-by{margin:7mm 5mm 2mm auto;max-width:55mm;min-width:35mm;
+        display:flex;flex-direction:column;text-align:center;gap:4px;}
+      .dr-prepared-by span{font:700 9pt ${font};}
+      .dr-prepared-by strong{font:700 11pt ${font};}
+      .dr-no-results,.dr-message{padding:14px;text-align:center;}
+      @media screen {
+        body{background:#e9eff5;}
+        .print-sheet{box-shadow:0 6px 25px rgba(0,0,0,.15); min-height:120mm;}
+        @media (max-width:600px) {
+          .print-sheet{margin:9px auto;}
+          #reportPrintPanel{font-size:12px;}
+        }
+      }
+      @media print {
+        html,body{background:#fff!important;margin:0!important;padding:0!important;
+          width:100%!important;height:auto!important;overflow:visible!important;}
+        #reportPrintPanel{display:none!important;}
+        .print-sheet{width:100%!important;max-width:none!important;min-width:0!important;
+          margin:0!important;padding:0!important;box-shadow:none!important;}
+        .dr-division-block,.dr-report-table-wrap{break-inside:auto!important;overflow:visible!important;}
+        .dr-report-table thead{display:table-header-group!important;}
+        .dr-report-table{page-break-inside:auto!important;}
+        .dr-report-table .dr-prepared-row{break-inside:avoid!important;}
+        .dr-report-main-title,.dr-report-grand-total,.dr-division-heading,.dr-report-table th,
+        .dr-workflow-pill {print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+      }
+    `;
+    // The report renderer already HTML-escapes every input field. The print
+    // window uses this rendered content, never raw Firebase/user text.
+    const title = escape(filename);
+    return '<!doctype html><html lang="en"><head><meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+      '<title>' + title + '</title><style>' + css + '</style></head><body>' +
+      '<nav id="reportPrintPanel"><button type="button" onclick="window.print()">Print / Save as PDF</button>' +
+      '<strong>A4 ' + (portrait ? 'Portrait' : 'Landscape') + '</strong>' +
+      '<span class="print-help">In your device print settings, select A4 and ' +
+      (portrait ? 'Portrait' : 'Landscape') + ' if prompted.</span></nav>' +
+      '<main class="print-sheet">' + contents + '</main>' +
+      '<script>window.addEventListener("load",function(){' +
+      'setTimeout(function(){try{window.focus();window.print();}catch(e){}},250);' +
+      '});<\/script></body></html>';
+  }
+
   function print() {
     const chooser = byId('divisionReportPrintOrientation');
     const orientation = chooser && chooser.value === 'portrait' ? 'portrait' : 'landscape';
+    if (pendingRender !== null) { clearTimeout(pendingRender); pendingRender = null; render(); }
+    const root = byId('divisionReportRows');
+    if (!root || !root.querySelector('.dr-division-table')) {
+      setStatus('No report records available to print.', true);
+      return;
+    }
     clearDivisionPrintState();
-    document.body.classList.add('printing-division-report', 'dr-print-' + orientation);
-    const pageStyle = document.createElement('style');
-    pageStyle.id = 'divisionReportPrintPageSize';
-    const margins = orientation === 'portrait' ? '8mm 7mm 12mm 7mm' : '9mm 8mm 12mm 8mm';
-    pageStyle.textContent = '@page { size: A4 ' + orientation + '; margin: ' + margins + '; } ' +
-      '@page { @bottom-center { content: counter(page) " of " counter(pages); ' +
-      'font-family: "Times New Roman", serif; font-size: 10pt; color: #243747; } }';
-    document.head.appendChild(pageStyle);
-    try { window.print(); } catch (err) { clearDivisionPrintState(); throw err; }
-    // Deliberately no afterprint/timeout removal: Android print preview is
-    // asynchronous. Rules are removed when the report modal is closed or
-    // when a different orientation is printed next.
+    // Open synchronously inside the click event to avoid popup blockers.
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      setStatus('Your browser blocked the print view. Please allow pop-ups for this website and try Print / PDF again.', true);
+      alert('Please allow pop-ups for this website to open the A4 ' + orientation + ' print view.');
+      return;
+    }
+    try {
+      printWindow.document.open();
+      printWindow.document.write(isolatedPrintDocument(orientation));
+      printWindow.document.close();
+    } catch (err) {
+      try { printWindow.close(); } catch (ignored) {}
+      setStatus('The print view could not be opened. Please retry from Chrome.', true);
+      console.error('Division report print view:', err);
+    }
   }
 
   let excelLoader = null;
