@@ -1,0 +1,224 @@
+/* Sign-in layout and controls. Specificity matches the portal's legacy login rules. */
+html:not(.portal-session-auth) body #loginScreen.hmis-login-page {
+  overflow-y: auto !important;
+  scroll-padding-block: 12px;
+  background:
+    linear-gradient(90deg, rgba(6, 29, 37, .89), rgba(8, 36, 46, .51)),
+    url("login-technical-railway.webp") center / cover no-repeat !important;
+}
+
+html body #loginScreen.hmis-login-page .hmis-mainarea {
+  flex: 1 0 auto !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 416px) !important;
+  grid-template-rows: auto !important;
+  padding-block: clamp(24px, 5vh, 64px) !important;
+  overflow: visible !important;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-card.hmis-login-card {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  max-width: 416px !important;
+  max-height: none !important;
+  padding: clamp(20px, 3.3vw, 36px) !important;
+  border-radius: 20px !important;
+  background: #fff !important;
+  color: #133442 !important;
+  box-shadow: 0 16px 54px rgba(0, 25, 33, .30) !important;
+  overflow: visible !important;
+}
+
+html body #loginScreen.hmis-login-page .hmis-signin-title {
+  justify-content: flex-start;
+  color: #153645;
+  margin-block-end: 24px !important;
+}
+
+html body #loginScreen.hmis-login-page .hmis-signin-title h2 {
+  font-size: clamp(26px, 3vw, 34px) !important;
+}
+
+#railLoginFields {
+  border: 0;
+  min-inline-size: 0;
+}
+
+#railLoginFields:disabled {
+  opacity: .55;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-form-group {
+  margin-block-end: 14px !important;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-form-group label {
+  color: #254556 !important;
+  font-size: 14px !important;
+  margin-block-end: 6px !important;
+}
+
+html body #loginScreen.hmis-login-page .login-input-wrapper {
+  height: 50px !important;
+  min-height: 50px !important;
+  border-color: #829ca5 !important;
+  background: #f8fbfc !important;
+}
+
+html body #loginScreen.hmis-login-page .login-input-wrapper:focus-within {
+  border-color: #06685f !important;
+  box-shadow: 0 0 0 2px #06685f !important;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-input {
+  height: 48px !important;
+  min-height: 48px !important;
+  color: #153645 !important;
+  font-size: 16px !important;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-input::placeholder {
+  color: #526a76 !important;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .rail-password-eye {
+  right: 3px !important;
+  width: 44px;
+  height: 44px;
+  color: #325966 !important;
+}
+
+html body #loginScreen.hmis-login-page #pagePasswordInput {
+  padding-inline-end: 50px !important;
+}
+
+#loginScreen .rail-password-eye[aria-pressed="false"] .rail-password-slash {
+  display: none;
+}
+
+html body #loginScreen.hmis-login-page .hmis-form-help {
+  justify-content: flex-end;
+  margin: -3px 0 8px !important;
+}
+
+html body #loginScreen.hmis-login-page .hmis-forgot {
+  min-height: 44px;
+  padding-inline: 4px;
+  color: #075e56 !important;
+  font-size: 13px !important;
+  text-underline-offset: 3px;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-btn {
+  height: 50px !important;
+  min-height: 50px !important;
+  color: #fff !important;
+  background: #07665d !important;
+  box-shadow: none !important;
+  font-size: 16px !important;
+}
+
+html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-btn:hover:not(:disabled) {
+  background: #044f49 !important;
+}
+
+#loginScreen button:focus-visible,
+#loginScreen .rails-legal-links a:focus-visible {
+  outline: 2px solid #0a7268 !important;
+  outline-offset: 2px;
+}
+
+#loginScreen .rail-login-unavailable {
+  padding: 12px 14px;
+  margin-block: 0 18px;
+  border-inline-start: 3px solid #a34b16;
+  border-radius: 8px;
+  color: #682e0d;
+  background: #fff3e6;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#loginScreen .rail-login-unavailable button {
+  min-height: 44px;
+  margin-top: 6px;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+html body #loginScreen.hmis-login-page .hmis-bottom-bar {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 22px;
+  height: auto !important;
+  min-height: 48px !important;
+  max-height: none !important;
+  padding: 2px 16px !important;
+  background: #0b2a36 !important;
+}
+
+html body #loginScreen.hmis-login-page .hmis-bottom-bar * {
+  color: #f0f7fa !important;
+  font-size: 13px !important;
+}
+
+html body #loginScreen.hmis-login-page .hmis-bottom-bar .rails-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 14px;
+}
+
+html body #loginScreen.hmis-login-page .hmis-bottom-bar .rails-legal-links a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: 2px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+#loginScreen .rails-legal-links a:focus-visible {
+  outline-color: #c5f5ed !important;
+  outline-offset: -2px;
+}
+
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1100px), (max-height: 590px) {
+  html body #loginScreen.hmis-login-page .hmis-mainarea {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    padding: 18px 14px !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 420px) {
+  html body #loginScreen.hmis-login-page .hmis-mainarea {
+    padding-block: 10px !important;
+  }
+
+  html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-card.hmis-login-card {
+    padding-block: 16px !important;
+  }
+
+  html body #loginScreen.hmis-login-page .hmis-signin-title {
+    margin-block-end: 12px !important;
+  }
+
+  html :is(body, body.dark-theme) #loginScreen.hmis-login-page .login-form-group {
+    margin-block-end: 8px !important;
+  }
+
+  html body #loginScreen.hmis-login-page .hmis-form-help {
+    margin-block-end: 3px !important;
+  }
+}

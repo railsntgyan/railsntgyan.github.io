@@ -52,28 +52,38 @@ html.rail-saved-light body:not(.dark-theme) {
 }
 </style>
   <script>
-    // Prevent the login overlay from flashing while an authenticated user
-    // returns from an Important Link using the browser Back button.
-    // Keep the entire interface hidden until Firebase resolves the saved session.
+    // Keep the portal covered while Firebase restores the browser session.
     document.documentElement.classList.add('rail-auth-pending');
+    let railAuthStartupTimer;
+
+    function railFinishAuthStartup(message = '') {
+      clearTimeout(railAuthStartupTimer);
+      const fields = document.getElementById('railLoginFields');
+      const notice = document.getElementById('railLoginUnavailable');
+      document.getElementById('railLoginUnavailableMessage').textContent = message;
+      notice.hidden = !message;
+      fields.disabled = Boolean(message);
+      document.documentElement.classList.remove('rail-auth-pending');
+    }
   </script>
   <style id="rail-v44-first-paint-auth-guard">
-    /* Paint guard: absolutely no portal UI before Firebase authorizes the session.
-       This style is in <head>, before large external assets and all portal content. */
-    /* Opacity on the WHOLE parent prevents a visible child from bypassing a
-       visibility:hidden ancestor. Mobile brand styles explicitly use
-       visibility:visible!important on their SVG/text, causing the refresh flash. */
-    html.rail-auth-pending body,
-    html.rail-auth-pending body.dark-theme {
+    #railAuthLoading { display:none; }
+    html.rail-auth-pending #railAuthLoading {
+      position:fixed; inset:0; z-index:100000;
+      display:grid; place-content:center; text-align:center; padding:24px;
+      color:#f0f7fa; background:#092733;
+      font:600 16px/1.5 system-ui,sans-serif;
+    }
+    html.rail-auth-pending body #loginScreen.hmis-login-page {
       visibility:hidden !important;
-      opacity:0 !important;
       pointer-events:none !important;
     }
 
     /* Hide the entire portal until Firebase authentication has completed.
        Keep its layout to avoid changing dashboard/table measurements. */
     html:not(.portal-session-auth) body > #mainHeader,
-    html:not(.portal-session-auth) body > .app-container {
+    html:not(.portal-session-auth) body > .app-container,
+    html:not(.portal-session-auth) body > footer {
       visibility:hidden !important;
       opacity:0 !important;
       pointer-events:none !important;
@@ -116,6 +126,7 @@ html.rail-saved-light body:not(.dark-theme) {
     }
   </style>
   <title>RailSNTGyan - Railway S&T Knowledge Portal</title>
+  <meta name="description" content="RailSNTGyan is a Railway Signalling and Telecom knowledge portal for technical references, files and approvals, and LDCE preparation.">
   <!-- Hindi calligraphy only for the V4.4 welcome message; serif fallback works offline. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,17 +134,6 @@ html.rail-saved-light body:not(.dark-theme) {
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
-
-  <!-- Chart.js for Dashboard Visualizations -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- v32: PDF.js renders every page into normal document flow for reliable multi-page zoom -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
@@ -7481,7 +7481,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
   display:none!important;
 }
 </style>
-  <link rel="stylesheet" href="division-report.css?v=20261103-android-portrait-v10">
+  <link rel="stylesheet" href="division-report.css?v=20261121">
 </head>
 <script id="rn-theme-prebody-v33">
 (function(){
@@ -7495,6 +7495,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
 })();
 </script>
 <body>
+  <div id="railAuthLoading" role="status">Connecting to RailSNTGyan…</div>
 <script id="rn-theme-body-first-v33">
 (function(){
  var dark=!document.documentElement.classList.contains('rail-saved-light');
@@ -7649,37 +7650,39 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       </section>
 
       <section class="login-card hmis-login-card" id="hmisSignIn" aria-labelledby="hmisSignInTitle">
-        <div class="hmis-signin-kicker"><span class="hmis-kicker-dot"></span> RAILSNTGYAN MEMBER ACCESS</div>
-        <div class="hmis-signin-title"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg><h2 id="hmisSignInTitle">Welcome Back</h2></div>
-        <div class="hmis-accentline hmis-form-line" aria-hidden="true"></div>
-        <p class="hmis-signin-intro">Sign in to your secure RailSNTGyan account</p>
+        <div class="hmis-signin-title"><h2 id="hmisSignInTitle">Sign in</h2></div>
         <div id="hmisNavInfo" class="hmis-nav-notice" role="status" hidden></div>
+        <div id="railLoginUnavailable" class="rail-login-unavailable" hidden>
+          <p id="railLoginUnavailableMessage" role="alert"></p>
+          <button type="button" onclick="location.reload()">Retry connection</button>
+        </div>
+        <noscript><p class="rail-login-unavailable">Enable JavaScript and reload the page to sign in.</p></noscript>
         <form class="hmis-auth-form" onsubmit="event.preventDefault();checkPortalPassword();">
-          <div class="login-form-group">
-            <label for="pageEmailInput">Email Address <em>*</em></label>
-            <div class="login-input-wrapper"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/></svg>
-              <input type="email" id="pageEmailInput" class="login-input" placeholder="Enter your registered email" autocomplete="username" spellcheck="false" required>
+          <fieldset id="railLoginFields" disabled aria-labelledby="hmisSignInTitle">
+            <div class="login-form-group">
+              <label for="pageEmailInput">Email address</label>
+              <div class="login-input-wrapper"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/></svg>
+                <input type="email" id="pageEmailInput" class="login-input" placeholder="Enter your registered email" autocomplete="username" spellcheck="false" required>
+              </div>
             </div>
-          </div>
-          <div class="login-form-group">
-            <label for="pagePasswordInput">Password <em>*</em></label>
-            <div class="login-input-wrapper"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="11" rx="2"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></svg>
-              <input type="password" id="pagePasswordInput" class="login-input" placeholder="Enter your password" autocomplete="current-password" required>
-              <button type="button" class="rail-password-eye" aria-label="Show password" aria-pressed="false" title="Show password" onclick="toggleRailPasswordVisibility(this)"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6"/><circle cx="12" cy="12" r="2.5"/></svg></button>
+            <div class="login-form-group">
+              <label for="pagePasswordInput">Password</label>
+              <div class="login-input-wrapper"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="11" rx="2"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></svg>
+                <input type="password" id="pagePasswordInput" class="login-input" placeholder="Enter your password" autocomplete="current-password" required>
+                <button type="button" class="rail-password-eye" aria-label="Show password" aria-pressed="false" title="Show password" onclick="toggleRailPasswordVisibility(this)"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6"/><circle cx="12" cy="12" r="2.5"/><path class="rail-password-slash" d="M3 3l18 18"/></svg></button>
+              </div>
             </div>
-          </div>
-          <div class="hmis-form-help"><span><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 6 3 9 8 11 5-2 8-5 8-11V5z"/><path d="M12 2v20"/></svg> Secure Firebase Sign-in <a class="rails-login-inline-privacy" href="privacy.html" target="_blank" rel="noopener noreferrer" aria-label="Read RailSNTGyan Privacy Policy">Privacy</a></span>
-            <button type="button" class="hmis-forgot" onclick="railHmisPasswordReset()">Forgot password?</button>
-          </div>
-          <button type="submit" class="login-btn"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 4h7v16h-7M3 12h13m-5-5 5 5-5 5"/></svg> Login</button>
+            <div class="hmis-form-help">
+              <button type="button" class="hmis-forgot" onclick="railHmisPasswordReset()">Forgot password?</button>
+            </div>
+            <button type="submit" class="login-btn"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 4h7v16h-7M3 12h13m-5-5 5 5-5 5"/></svg><span id="railLoginButtonLabel">Sign in</span></button>
+          </fieldset>
           <div id="loginErrorMsg" class="login-error-msg" role="alert"></div>
         </form>
-        
-        <div class="hmis-auth-note"><svg class="hmis-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 6 3 9 8 11 5-2 8-5 8-11V5z"/><path d="M12 2v20"/></svg><span>Secure access for registered RailSNTGyan users only.</span></div>
       </section>
     </div>
-    <footer class="hmis-bottom-bar"><span>© 2026 RailSNTGyan &nbsp; | &nbsp; Railway S&amp;T Knowledge Portal</span><span class="rails-legal-links"><a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a><span aria-hidden="true">•</span><a href="terms.html" target="_blank" rel="noopener noreferrer">Terms of Use</a></span><span>LEARN <b>|</b> EXPLORE <b>|</b> APPLY <b>|</b> EXCEL</span></footer>
-<div id="railV44Welcome" aria-hidden="true" role="status">
+    <footer class="hmis-bottom-bar"><span>© 2026 RailSNTGyan</span><span class="rails-legal-links"><a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a><a href="terms.html" target="_blank" rel="noopener noreferrer">Terms of Use</a></span></footer>
+    <div id="railV44Welcome" aria-hidden="true" role="status">
       <div class="railV44WelcomeCard">
         <div class="railV44WelcomeLogo">🙏</div>
         <div class="railV44WelcomeIntro">Welcome to</div>
@@ -7693,6 +7696,12 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       </div>
     </div>
   </div>
+
+  <script>
+    railAuthStartupTimer = setTimeout(() => {
+      railFinishAuthStartup('Connection is taking longer than expected. Check your internet connection and retry.');
+    }, 8000);
+  </script>
 
   <!-- HEADER -->
   <header id="mainHeader">
@@ -9108,6 +9117,13 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
     </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <script>
     // Direct Google Drive upload. Browser token is deliberately kept ONLY in memory;
     // Firebase remains the source of truth for a single-link-per-record table.
@@ -9488,15 +9504,21 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       measurementId: "G-Z3PPG9WJBQ"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const recordsCol = db.collection('secr_records');
-
     // Firebase Authentication is the sole authority for login and roles.
-    // No password or service-account credential is read from Firestore.
-    const auth = firebase.auth();
-    // Keep Firebase login only for the current browser session (not local persistence).
-    const railSessionPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    let db = null;
+    let recordsCol = null;
+    let auth = null;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      recordsCol = db.collection('secr_records');
+      auth = firebase.auth();
+    } catch (error) {
+      console.warn('Firebase initialization failed:', error.message);
+    }
+    const railSessionPersistenceReady = auth
+      ? Promise.resolve().then(() => auth.setPersistence(firebase.auth.Auth.Persistence.SESSION))
+      : null;
     let railAdmin = false;
     let railAuthReady = false;
     let railRecordsUnsubscribe = null;
@@ -9549,7 +9571,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       // During a fresh interactive sign-in, wait until the real Firebase success
       // and Welcome transition finish before uncovering the portal.
       if (!visible && window.railV44LoginInProgress) {
-        document.documentElement.classList.remove('rail-auth-pending');
+        railFinishAuthStartup();
         return;
       }
       // On BOTH login completion and logout, clear the V4.4 welcome overlay.
@@ -9561,7 +9583,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       // Inline !important below definitively closes the login screen after auth.
       screen.style.setProperty('display', visible ? 'flex' : 'none', 'important');
       screen.style.setProperty('visibility', visible ? 'visible' : 'hidden', 'important');
-      document.documentElement.classList.remove('rail-auth-pending');
+      railFinishAuthStartup();
     }
 
     async function railApplyUser(user) {
@@ -9598,9 +9620,9 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         railSetLoginVisible(false);
         if (typeof railStartRecordsListener === 'function') railStartRecordsListener();
       } catch (error) {
+        if (auth.currentUser !== user) return;
         console.error('Firebase authorization error:', error);
-        // Do not keep an early subscription if token/role verification fails.
-        if (auth.currentUser === user && railRecordsUnsubscribe) {
+        if (railRecordsUnsubscribe) {
           railRecordsUnsubscribe();
           railRecordsUnsubscribe = null;
         }
@@ -9608,17 +9630,25 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         railAdmin = false;
         sessionStorage.removeItem('secr_portal_authorized');
         railSetLoginVisible(true);
+        if (!window.railV44LoginInProgress) {
+          railFinishAuthStartup('Your session could not be verified. Check your internet connection and retry.');
+        }
       }
     }
-    railSessionPersistenceReady.then(() => {
-      auth.onAuthStateChanged(railApplyUser);
-    }).catch(error => {
+    function railAuthRestoreFailed(error) {
       console.error('Firebase session persistence initialization failed:', error);
-      railSetLoginVisible(true);
-    });
+      railFinishAuthStartup('Sign-in is unavailable. Check your connection and browser storage settings, then retry.');
+    }
+    if (railSessionPersistenceReady) {
+      railSessionPersistenceReady.then(() => {
+        auth.onAuthStateChanged(railApplyUser, railAuthRestoreFailed);
+      }).catch(railAuthRestoreFailed);
+    } else {
+      railFinishAuthStartup('Sign-in could not load. Check your internet connection and retry.');
+    }
 
     async function checkPortalPassword() {
-      if (window.railV44LoginInProgress) return;
+      if (!auth || document.getElementById('railLoginFields').disabled || window.railV44LoginInProgress) return;
       const email = document.getElementById('pageEmailInput').value.trim();
       const password = document.getElementById('pagePasswordInput').value;
       const errorMsg = document.getElementById('loginErrorMsg');
@@ -9633,7 +9663,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         railAdmin = result.claims.admin === true;
         await railApplyUser(credential.user);
         if (!sessionStorage.getItem('secr_portal_authorized')) throw new Error('Authorization not completed');
-        document.getElementById('pagePasswordInput').value = '';
+        railClearLoginPassword();
         sessionStorage.removeItem('importantLinksReturnState');
         document.querySelectorAll('.modal-overlay').forEach(modal => { modal.style.display = 'none'; });
         goHome(false);
@@ -9651,7 +9681,12 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
         if (window.railV44SetLoading) window.railV44SetLoading(false);
         railSetLoginVisible(true);
         console.error('Firebase sign-in failed:', error.code || error.message);
-        errorMsg.textContent = 'Login failed. Check email/password and your connection.';
+        const messages = {
+          'auth/network-request-failed': 'Could not connect. Check your internet connection and try again.',
+          'auth/too-many-requests': 'Too many sign-in attempts. Wait a few minutes and try again.',
+          'auth/user-disabled': 'This account is disabled. Contact your RailSNTGyan administrator.'
+        };
+        errorMsg.textContent = messages[error.code] || 'Could not sign in. Check your email address and password, then try again.';
         errorMsg.style.display = 'block';
       }
     }
@@ -9674,7 +9709,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       if (typeof window.railApplyTheme === 'function') window.railApplyTheme('light');
       sessionStorage.setItem('railsntgyan_allow_exit', 'true');
       sessionStorage.removeItem('secr_portal_authorized');
-      document.getElementById('pagePasswordInput').value = '';
+      railClearLoginPassword();
       document.getElementById('loginErrorMsg').style.display = 'none';
       railSetLoginVisible(true);
       document.getElementById('pageEmailInput').focus();
@@ -9682,7 +9717,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
 
     window.addEventListener('DOMContentLoaded', () => {
       // Session flags are navigation hints, never proof of authentication.
-      const isAuth = auth.currentUser ? 'true' : null;
+      const isAuth = auth?.currentUser ? 'true' : null;
       // Do not show login here: Firebase may still be restoring the session.
       // The auth-state callback alone decides which screen to reveal.
 
@@ -9912,6 +9947,7 @@ html body #tableViewSection.ldce-practicing .action-toolbar {
       if (typeof window.railProfileHandlePopState === 'function' &&
           window.railProfileHandlePopState(event)) return;
       if (typeof window.railLdceHandlePopState === 'function' && window.railLdceHandlePopState(event)) return;
+      if (typeof window.railDivisionReportHandlePopState === 'function' && window.railDivisionReportHandlePopState(event)) return;
       const isAuth = sessionStorage.getItem('secr_portal_authorized') === 'true';
       const allowExit = sessionStorage.getItem('railsntgyan_allow_exit') === 'true';
 
@@ -17341,11 +17377,14 @@ function toggleRailPasswordVisibility(button) {
   if (!field) return;
   const showing = field.type === 'password';
   field.type = showing ? 'text' : 'password';
-  button.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
   button.setAttribute('title', showing ? 'Hide password' : 'Show password');
   button.setAttribute('aria-pressed', String(showing));
-  const icon = button.querySelector('i');
-  if (icon) { icon.classList.toggle('fa-eye', !showing); icon.classList.toggle('fa-eye-slash', showing); }
+}
+
+function railClearLoginPassword() {
+  const field = document.getElementById('pagePasswordInput');
+  field.value = '';
+  if (field.type === 'text') toggleRailPasswordVisibility(document.querySelector('#loginScreen .rail-password-eye'));
 }
 </script>
 
@@ -18544,7 +18583,8 @@ window.railV44LoginInProgress = false;
 window.railV44SetLoading = function(loading){
   var button=document.querySelector('#loginScreen .login-btn');if(!button)return;
   button.disabled=!!loading;
-  button.innerHTML=loading?'<i class="fa-solid fa-spinner fa-spin"></i> Logging in...':'<i class="fa-solid fa-right-to-bracket"></i> Login';
+  button.setAttribute('aria-busy', String(loading));
+  document.getElementById('railLoginButtonLabel').textContent=loading?'Signing in…':'Sign in';
 };
 window.railV44ResetWelcome = function(){
   var w=document.getElementById('railV44Welcome');if(w){w.classList.remove('railV44Show');w.setAttribute('aria-hidden','true');}
@@ -19948,14 +19988,13 @@ html body #loginScreen.hmis-login-page .login-btn{height:49px!important;min-heig
  };
  window.railHmisPasswordReset=async function(){
   const input=document.getElementById('pageEmailInput');
-  if(!input)return;
+  if(!input || !auth || document.getElementById('railLoginFields').disabled)return;
   const email=input.value.trim();
   if(!email||!input.checkValidity()){notice('Enter your registered email address in the Email Address field, then choose Forgot password again.');input.focus();return;}
   const btn=document.querySelector('#loginScreen .hmis-forgot');if(btn)btn.disabled=true;
   notice('Submitting password-reset request…');
   try{
-   if(typeof firebase==='undefined'||!firebase.auth)throw new Error('Firebase is not ready.');
-   await firebase.auth().sendPasswordResetEmail(email);
+   await auth.sendPasswordResetEmail(email);
    notice('If this email is registered and password reset is enabled, you will receive a reset link. Please check your inbox and spam folder.');
   }catch(err){
    console.warn('Firebase password reset could not be completed:',err?.code||'network error');
@@ -23831,7 +23870,7 @@ const fs=()=>firebase.firestore();
 const cloud=()=>fs().collection('rail_master_data');
 const clean=v=>String(v===undefined||v===null?'':v).trim();
 const key=v=>clean(v).normalize('NFKC').toLocaleLowerCase('en-IN');
-const hasAdmin=()=>!!(firebase.auth().currentUser && typeof railAdmin!=='undefined' && railAdmin===true);
+const hasAdmin=()=>!!(auth?.currentUser && railAdmin===true);
 const alertBox=(msg,isError=false)=>{let el=$('rmFeedback');if(el){el.textContent=msg;el.className='rm-feedback'+(isError?' bad':'');}else if(isError)console.error(msg);};
 const activeGroup=t=>docs.filter(x=>x.type===t&&x.active!==false).sort((a,b)=>((+a.sortOrder||0)-(+b.sortOrder||0))||a.name.localeCompare(b.name));
 // Live Firestore master records are the ONLY source of dropdown values.
@@ -24477,6 +24516,7 @@ function initExcelBulkEvents(){
  window.addEventListener('beforeunload',e=>{if(bulkExcelBusy){e.preventDefault();e.returnValue='';}});
 }
 function init(){
+ if(!auth)return;
  ui();
  initExcelBulkEvents();
  // File Movement modal is created lazily by original code; update its controls on open.
@@ -24484,7 +24524,7 @@ function init(){
    const original=window.openFileMovementModal;
    window.openFileMovementModal=function(){const result=original.apply(this,arguments);queueMicrotask(()=>updateAllSelects());return result};
  }
- firebase.auth().onAuthStateChanged(user=>{
+ auth.onAuthStateChanged(user=>{
  showRoleNav();
  if(user){user.getIdTokenResult().then(()=>{showRoleNav()}).catch(()=>{});}
  startListening(user);
@@ -24597,7 +24637,7 @@ body.dark-theme #railAccountTicker .rat-action:not(:first-child){color:#ffe4ae;b
 (function(){
   'use strict';
   const panel=document.getElementById('hmisDashboard');
-  if(!panel || document.getElementById('railAccountTicker') || !window.firebase)return;
+  if(!panel || document.getElementById('railAccountTicker') || !auth)return;
   // IMPORTANT: do not use <aside> here: this site's mobile CSS slides all aside elements off-screen.
   const bar=document.createElement('div');bar.id='railAccountTicker';bar.hidden=true;
   bar.setAttribute('aria-label','Account completion reminder');
@@ -24607,7 +24647,6 @@ body.dark-theme #railAccountTicker .rat-action:not(:first-child){color:#ffe4ae;b
     '<div class="rat-actions" id="ratActions"></div>';
   panel.insertBefore(bar,panel.firstChild);
   const track=bar.querySelector('#ratTrack'), actions=bar.querySelector('#ratActions');
-  const auth=firebase.auth();
   // The same required profile fields used by the existing Admin User Directory.
   const required=['displayName','designation','department','railway','division'];
   let currentUid=null,profile=null,verified=false,nonce=0,lastReload=0;
@@ -25516,7 +25555,7 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
     <h4 class="ldce-review-title">Answer Review</h4><div class="ldce-review-list">${qs.map((q,i)=>`<div class="ldce-review-row"><b>Q${i+1}. ${esc(q.question)}</b><p>Your answer: ${quiz.answers[i]===null?'Not attempted':esc(q.options[quiz.answers[i]])}</p><p class="${quiz.answers[i]===q.answerIndex?'ldce-green':'ldce-red'}">Correct answer: ${esc(q.options[q.answerIndex])}</p>${q.explanation?`<small>${esc(q.explanation)}</small>`:''}</div>`).join('')}</div>
     <div class="ldce-test-buttons"><button type="button" class="ldce-button ldce-primary" data-action="retry">New Test</button><button type="button" class="ldce-button ldce-secondary" data-action="previous">Previous Year Papers</button></div></div>`;
   }
-  function isAdmin(){return typeof auth!=='undefined' && !!auth.currentUser && typeof railAdmin!=='undefined' && railAdmin===true;}
+  function isAdmin(){return !!auth?.currentUser && railAdmin===true;}
   function sanitizeQuestion(q){
     if(!q || typeof q!=='object')throw Error('Invalid question row');
     const e=String(q.exam||'').toUpperCase().trim(),s=String(q.subject||'').trim(),t=String(q.topic||'').trim(),question=String(q.question||'').trim();
@@ -25636,7 +25675,7 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
     },err=>{cloudError=err.code||err.message||'Permission denied';if(tab!=='previous'&&!quiz)render();});}
     catch(e){cloudError=e.message;}
   }
-  function init(){panelEvents();if(typeof auth!=='undefined')auth.onAuthStateChanged(startCloud);setVisibility();}
+  function init(){panelEvents();auth?.onAuthStateChanged(startCloud);setVisibility();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 
@@ -25731,6 +25770,7 @@ html body #loginScreen.hmis-login-page .hmis-logo-badge .login-logo-svg {
 }
 </style>
 
-  <script src="division-report.js?v=20261103-isolated-a4-print-v11" defer></script>
+  <link rel="stylesheet" href="assets/sign-in.css?v=20261121">
+  <script src="division-report.js?v=20261121" defer></script>
 </body>
 </html>

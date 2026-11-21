@@ -25,9 +25,13 @@
   cursor:pointer; min-height:33px;
 }
 #divisionReportModal .dr-toolbar button:hover { filter:brightness(.95); }
-#divisionReportModal .dr-toolbar button:disabled { opacity:.65; cursor:progress; }
+#divisionReportModal .dr-toolbar button:disabled { opacity:.65; cursor:default; }
+#divisionReportModal .dr-toolbar button[aria-disabled="true"] { opacity:.65; cursor:progress; }
 #divisionReportModal .dr-toolbar button.dr-excel-button { background:#19734c; color:#fff; border-color:#38956e; }
 #divisionReportModal .dr-toolbar button.dr-close { color:#fff; background:transparent; border:1px solid #70889f; min-width:34px; }
+#divisionReportModal .dr-toolbar :is(button, select):focus-visible {
+  outline:3px solid #ffda72; outline-offset:2px;
+}
 #divisionReportModal .dr-status {
   padding:8px 16px; font-size:12px; font-weight:600; line-height:1.5;
   background:#e6f2fb; color:#174b6d; border-bottom:1px solid #d0e3f1;
@@ -277,7 +281,11 @@
 #divisionReportModal .dr-filter-area { flex-shrink:0; }
 #divisionReportModal .dr-filter-top {padding:7px 13px;min-height:42px;}
 #divisionReportModal .dr-filter-toggle {padding:6px 12px;}
-#divisionReportModal .dr-filter-toggle:focus-visible {outline:3px solid #4c9bd0;outline-offset:2px;}
+#divisionReportModal .dr-filter-toggle:focus-visible,
+#divisionReportModal .dr-filter-actions button:focus-visible,
+#divisionReportModal .dr-category-option input:focus-visible {
+  outline:3px solid #176298; outline-offset:2px;
+}
 #divisionReportModal .dr-filter-panel[hidden] {display:none!important;}
 #divisionReportModal .dr-scroll {padding:12px 12px 18px;}
 #divisionReportModal .dr-sheet {padding:12px 11px;}
@@ -628,6 +636,9 @@ html body #mainTableContainer #railsFitTable td.rail-workflow-column .dr-workflo
 }
 #divisionReportModal .dr-mobile-table-note {display:none;}
 #divisionReportModal .dr-report-table-wrap {display:block;overflow:visible;max-width:100%;}
+#divisionReportModal .dr-report-table-wrap:focus-visible {
+  outline:3px solid #176298; outline-offset:2px;
+}
 
 /* Restore proper seven-column TABLE on phones. Users can swipe horizontally;
    no tiny auto-scaled font and no card-based transformation. */
