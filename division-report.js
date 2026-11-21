@@ -252,10 +252,8 @@
     }
     for (const fy of preparedReportRecords().financialYears) years.add(fy);
     const preserve = dropdown.value;
-    const options = [...years].sort((a,b) => Number(b.slice(0,4)) - Number(a.slice(0,4)));
-    if (options.length !== dropdown.options.length || options.some((fy, index) => dropdown.options[index].value !== fy)) {
-      dropdown.replaceChildren(...options.map(fy => new Option(fullFY(fy), fy)));
-    }
+    dropdown.innerHTML = [...years].sort((a,b) => Number(b.slice(0,4)) - Number(a.slice(0,4)))
+      .map(fy => '<option value="' + escape(fy) + '">' + escape(fullFY(fy)) + '</option>').join('');
     const selectedFromHome = typeof railSelectedDashboardFY !== 'undefined' ? railSelectedDashboardFY : null;
     const wanted = preserve || selectedFromHome || (typeof getCurrentFinancialYearString === 'function'
       ? getCurrentFinancialYearString() : currentStart + '-' + String(currentStart+1).slice(-2));
@@ -265,12 +263,11 @@
   function setStatus(message, error=false) {
     const status = byId('divisionReportStatus');
     if (!status) return;
-    if (status.textContent !== message) status.textContent = message;
+    status.textContent = message;
     status.classList.toggle('dr-error', error);
   }
 
   let pendingRender = null;
-  let exportInProgress = false;
   function scheduleRender() {
     if (pendingRender !== null) clearTimeout(pendingRender);
     pendingRender = setTimeout(() => { pendingRender = null; render(); }, 70);
@@ -286,17 +283,14 @@
 
   function render() {
     if (!byId('divisionReportRows') || !byId('divisionReportFY').value) return;
-    if (pendingRender !== null) { clearTimeout(pendingRender); pendingRender = null; }
     initCategorySelector();
     const {fy, divisions, grouped, selectedCount} = getReportData();
     const visibleDivisions = divisions.filter(div => grouped[div].length > 0);
     const reportRoot = byId('divisionReportRows');
-    const focusedTable = document.activeElement?.closest('.dr-report-table-wrap');
-    const focusedTableScroll = focusedTable?.scrollLeft;
     byId('divisionReportSelectedCount').textContent = selectedCount + ' OF ' + ALL_CATEGORIES.length + ' SELECTED';
     byId('divisionReportExcelBtn').disabled = selectedCount === 0;
     const printBtn = byId('divisionReportPrintBtn');
-    if (printBtn) printBtn.disabled = visibleDivisions.length === 0;
+    if (printBtn) printBtn.disabled = selectedCount === 0;
     if (!selectedCount) {
       reportRoot.innerHTML = '<div class="dr-no-selection dr-message">SELECT AT LEAST ONE FILE / APPROVAL TYPE TO GENERATE THE REPORT.</div>';
       setStatus('No categories selected. Select at least one file / approval type.');
@@ -320,8 +314,8 @@
       // children of THEAD and hence repeated on subsequent printed pages.
       html.push('<section class="dr-division-block" aria-label="Division ' + escape(div) + '">' +
         '<h4 class="dr-division-heading">DIVISION: ' + escape(div.toUpperCase()) + '</h4>' +
-        '<div class="dr-mobile-table-note">Swipe left or right, or use the arrow keys, to see all columns.</div>' +
-        '<div class="dr-report-table-wrap" id="divisionReportTable' + escape(div) + '" role="region" aria-label="' + escape(div) + ' report table" tabindex="0">' +
+        '<div class="dr-mobile-table-note">SWIPE LEFT / RIGHT TO VIEW ALL TABLE COLUMNS</div>' +
+        '<div class="dr-report-table-wrap" role="region" aria-label="' + escape(div) + ' report table, scroll horizontally" tabindex="0">' +
         '<table class="dr-report-table dr-division-table">' + reportColumnGroup() +
         '<thead class="dr-print-repeat"><tr class="dr-fields">' +
         COLUMNS.map(name => '<th scope="col">' + escape(name) + '</th>').join('') +
@@ -345,75 +339,21 @@
       html.push('<div class="dr-prepared-by"><span>PREPARED BY</span><strong>SSE/Signal/QA</strong></div>');
     }
     reportRoot.innerHTML = html.join('');
-    if (focusedTable) {
-      const replacement = byId(focusedTable.id);
-      if (replacement) {
-        replacement.scrollLeft = focusedTableScroll;
-        replacement.focus({preventScroll:true});
-      } else {
-        byId('divisionReportDivision').focus({preventScroll:true});
-      }
-    }
     const labels = divisions.map(div => div.toUpperCase() + ': ' + grouped[div].length).join('  |  ');
-    if (!exportInProgress) {
-      setStatus('FY ' + fullFY(fy) + '   •   ' + selectedCount + ' selected ' +
-        (selectedCount === 1 ? 'category' : 'categories') + '   •   ' + total +
-        (total === 1 ? ' record' : ' records') + '   •   ' + labels +
-        '   •   Records must have a saved division and valid date.');
-    }
+    setStatus('FY ' + fullFY(fy) + '   •   ' + selectedCount + ' selected categories   •   ' + total +
+      ' records   •   ' + labels +
+      '   •   Records must have a saved division and valid date.');
   }
 
-  let reportOpener = null;
-  let closingReport = false;
-  function isReportOpen() {
-    return byId('divisionReportModal')?.style.display === 'flex';
-  }
-
-  function showReport() {
-    const modal = byId('divisionReportModal');
-    reportOpener = document.activeElement;
-    closingReport = false;
+  function open() {
     initCategorySelector();
     updateFYChoices();
     byId('divisionReportDivision').value = 'ALL';
     byId('divisionReportFilterPanel').hidden = true;
     byId('divisionReportFilterToggle').setAttribute('aria-expanded','false');
     render();
-    modal.style.display = 'flex';
-    modal.querySelector('.dr-scroll').scrollTop = 0;
-    const heading = byId('divisionReportHeading');
-    heading.tabIndex = -1;
-    heading.focus({preventScroll:true});
-  }
-
-  function open() {
-    if (isReportOpen()) return;
-    showReport();
+    byId('divisionReportModal').style.display = 'flex';
     try { history.pushState({view:'modal', modal:'divisionReport'}, '', ''); } catch (err) { console.warn('History unavailable', err); }
-  }
-
-  function handleReportKeys(event) {
-    if (!isReportOpen() || event.defaultPrevented) return;
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      close();
-      return;
-    }
-    if (event.key !== 'Tab') return;
-    const modal = byId('divisionReportModal');
-    const focusable = Array.from(modal.querySelectorAll('button, select, input, [tabindex="0"]'))
-      .filter(control => !control.disabled && control.getClientRects().length > 0);
-    const active = document.activeElement;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (!first) return;
-    if (event.shiftKey && (active === first || active === byId('divisionReportHeading') || !modal.contains(active))) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && (active === last || !modal.contains(active))) {
-      event.preventDefault();
-      first.focus();
-    }
   }
   /* Print report in its own document.  The main website contains several
      global @page {size:A4 landscape} rules for DIFFERENT reports.  Printing
@@ -426,39 +366,10 @@
     const oldStyle = byId('divisionReportPrintPageSize');
     if (oldStyle) oldStyle.remove();
   }
-  function hideReport() {
-    closingReport = false;
+  function close() {
     if (pendingRender !== null) { clearTimeout(pendingRender); pendingRender = null; }
     clearDivisionPrintState();
     byId('divisionReportModal').style.display = 'none';
-    if (reportOpener?.isConnected && reportOpener.getClientRects().length) {
-      reportOpener.focus({preventScroll:true});
-    }
-    reportOpener = null;
-  }
-
-  function close() {
-    if (!isReportOpen() || closingReport) return;
-    if (history.state?.modal === 'divisionReport') {
-      closingReport = true;
-      history.back();
-    } else {
-      hideReport();
-    }
-  }
-
-  document.addEventListener('keydown', handleReportKeys);
-  // Handle Back before the portal's page-level navigation closes another section.
-  function handleReportPopState(event) {
-    if (isReportOpen()) {
-      hideReport();
-      return true;
-    }
-    if (event.state?.modal === 'divisionReport' && typeof auth !== 'undefined' && auth?.currentUser) {
-      showReport();
-      return true;
-    }
-    return false;
   }
 
   function isolatedPrintDocument(orientation) {
@@ -637,11 +548,10 @@
 
   async function exportExcel() {
     const button = byId('divisionReportExcelBtn');
-    if (button.disabled || exportInProgress) return;
+    if (button.disabled) return;
     const {fy, divisions, grouped, selectedCount} = getReportData();
     if (!selectedCount) { setStatus('Select at least one file / approval type.', true); return; }
-    exportInProgress = true;
-    button.setAttribute('aria-disabled', 'true');
+    button.disabled = true;
     setStatus('Preparing formatted Excel report for FY ' + fullFY(fy) + '…');
     try {
       const ExcelJS = await ensureExcelJS();
@@ -773,14 +683,12 @@
       console.error('Division-wise Excel export failed',err);
       setStatus('Excel export failed: ' + (err && err.message || String(err)), true);
     } finally {
-      exportInProgress = false;
-      button.removeAttribute('aria-disabled');
+      button.disabled = false;
     }
   }
 
   window.openDivisionReportModal = open;
   window.closeDivisionReportModal = close;
-  window.railDivisionReportHandlePopState = handleReportPopState;
   window.renderDivisionReport = render;
   window.scheduleDivisionReportRender = scheduleRender;
   window.toggleDivisionReportCategories = toggleCategories;
